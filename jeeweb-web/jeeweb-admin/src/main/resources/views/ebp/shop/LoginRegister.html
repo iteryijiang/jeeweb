@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>登录与注册</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/swiper-3.4.2.min.css">
+<link rel="stylesheet" href="css/fileinput.min.css">
+<link rel="stylesheet" href="css/ProjectGlobal.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="icomoon/style.css">
+<script src='js/jquery-3.3.1.min.js'></script>
+<script src='js/bootstrap.min.js'></script>
+<script src='js/fileinput.min.js'></script>
+<script src='js/fileinput.min.js'></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+<body>
+    <div class='help'>
+        帮助中心
+    </div>
+    <div class='main_container row login_register'>
+        <div class='col-md-6'>
+            <img src="img/imglist1.jpg" alt="">
+        </div>
+        <div class='col-md-offset-1 col-md-5 content'>
+            <div class='l_nav'>
+                <span class='active'>密码登录</span>
+                <span>手机无密码登录</span>
+            </div>
+            <div class='l_nav_item'>
+                <div>
+                    <p>
+                        <i class='icon-person'></i>
+                        <input type="text" placeholder="账号">
+                    </p>
+                    <span>请输入账号或已验证的手机号</span>
+                </div>
+                <div>
+                    <p>
+                        <i class='icon-lock'></i>
+                        <input type="text" placeholder="登录密码">
+                        <i class='icon-invisible'></i>
+                    </p>
+                    <span>请输入密码</span>
+                </div>
+            </div>
+            <div class='l_nav_item' style='display:none;'>
+                <div>
+                   <p>
+                    <i class='icon-mobile'></i>
+                    <input type="text" placeholder="请输入已经验证的手机号">
+                   </p>
+                    <span>请输入账号或已验证的手机号</span>
+                </div>
+                <div>
+                    <div class='get_code'>
+                        <div>
+                            <i class='icon-safe'></i>
+                            <input type="text" placeholder="请输入手机验证码">
+                        </div>
+                        <button id='getCode'>获取验证码</button>
+                    </div>
+                    <span>请输入密码</span>
+                </div>
+            </div>
+            <button id='login'>登录</button>
+            <div>
+                <a class='lf' href="#">忘记密码</a>
+                <a class='rt' href="#">商家注册</a>
+            </div>
+        </div>
+    </div>
+</body>
+<script src='global.js'></script>
+<script>
+    $('.l_nav span').click(function(){
+        var index=$(this).index()
+        $('.l_nav span').removeClass('active').eq(index).addClass('active')
+        $('.l_nav_item').hide().eq(index).show()
+    })
+    $('.l_nav_item input').bind('blur',function(){
+        inputDefocus($(this))
+    })
+  
+</script>
+</html>
