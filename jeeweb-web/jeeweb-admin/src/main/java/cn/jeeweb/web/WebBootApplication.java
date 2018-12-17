@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @package cn.jeeweb.web
  * @title: Web启动入口
  * @description: Web启动入口
- * @author: 王存见
+ * @author: iteryi
  * @date: 2018/5/22 14:56
  * @copyright: 2017 www.jeeweb.cn Inc. All rights reserved.
  */
