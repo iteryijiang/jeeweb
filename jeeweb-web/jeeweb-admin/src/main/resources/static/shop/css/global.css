@@ -1,0 +1,57 @@
+ul,li{
+    list-style: none;
+}
+a,a:hover,a:visited,a:link{
+   text-decoration: none;
+}
+b,button,input,label{
+    margin:0;
+    padding:0;
+}
+.lf{
+    float:left
+}
+.rt{
+    float: right;
+}
+body{
+    background-color:#ddd;
+}
+.user_info,.main_container,.main_tab div.row{
+    width:1000px;
+    margin:0 auto;
+}
+.user_info{
+    font-size:.15rem;
+}
+.user_info .col-md-6 span{
+    display: inline-block;
+    padding:0 5px;
+    margin:3px 0;
+}
+.margin_0{
+    margin-left:15px;
+}
+.border_0{
+    border-top:1px solid #aaa;
+    border-bottom:1px dashed #aaa;
+}
+.border_r{
+    border-right:1px solid #aaa;
+}
+.line_0{
+    line-height: 40px;
+}
+.color_0{
+    color:#aaa;
+}
+span.error {
+    background: url(../img/tips.png) no-repeat scroll 0px -48px;
+    padding-left: 18px;
+    color: #fd2e0c;
+    margin-left: 10px;
+    height: 18px;
+    line-height: 18px;
+    display: inline-block;
+    height:100%;
+}
