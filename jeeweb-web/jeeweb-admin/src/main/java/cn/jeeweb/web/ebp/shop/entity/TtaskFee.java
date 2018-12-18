@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.enums.IdType;
 
 import java.util.Date;
 
-@TableName("t_task_base")
+@TableName("T_task_Fee")
 @SuppressWarnings("serial")
 public class TtaskFee extends DataEntity<String> {
 
