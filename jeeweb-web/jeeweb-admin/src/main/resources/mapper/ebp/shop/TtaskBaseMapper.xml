@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TtaskBaseMapper" >
+  <resultMap id="TtaskBase" type="cn.jeeweb.web.ebp.shop.entity.TtaskBase" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="tType" column="t_type" jdbcType="VARCHAR" />
+    <result property="shopid" column="shopid" jdbcType="VARCHAR" />
+    <result property="tUrl" column="t_url" jdbcType="VARCHAR" />
+    <result property="tTitle" column="t_title" jdbcType="VARCHAR" />
+    <result property="tPrice" column="t_price" jdbcType="NUMERIC" />
+    <result property="tNum" column="t_num" jdbcType="NUMERIC" />
+    <result property="totalPrice" column="totalPrice" jdbcType="NUMERIC" />
+    <result property="searchPrice" column="searchPrice" jdbcType="NUMERIC" />
+    <result property="isPcView" column="isPcView" jdbcType="VARCHAR" />
+    <result property="keyword" column="keyword" jdbcType="VARCHAR" />
+    <result property="spec1" column="spec1" jdbcType="VARCHAR" />
+    <result property="spec2" column="spec2" jdbcType="VARCHAR" />
+    <result property="classify1" column="classify1" jdbcType="VARCHAR" />
+    <result property="classify2" column="classify2" jdbcType="VARCHAR" />
+    <result property="classify3" column="classify3" jdbcType="VARCHAR" />
+    <result property="classify4" column="classify4" jdbcType="VARCHAR" />
+    <result property="isMobileview" column="is_mobileview" jdbcType="VARCHAR" />
+    <result property="expressway" column="expressway" jdbcType="VARCHAR" />
+    <result property="tasknum" column="tasknum" jdbcType="NUMERIC" />
+    <result property="status" column="status" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    DISTINCT
+    t.id
+  </sql>
+  
+  <select id="selectUserList" resultMap="TtaskBase">
+	  select 
+   	    <include refid="Base_Column_List" />
+      from T_task_Base t
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment} 
+		  </where>
+	   </if> 
+  </select>
+
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TshopInfoMapper" >
+  <resultMap id="TshopInfo" type="cn.jeeweb.web.ebp.shop.entity.TshopInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="tbid" column="tbid" jdbcType="VARCHAR" />
+    <result property="tfClass" column="tfClass" jdbcType="VARCHAR" />
+    <result property="tfDetail" column="tfDetail" jdbcType="VARCHAR" />
+    <result property="subTotal" column="subTotal" jdbcType="NUMERIC" />
+    <result property="discount" column="discount" jdbcType="NUMERIC" />
+    <result property="total" column="total" jdbcType="NUMERIC" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    DISTINCT
+    t.id
+  </sql>
+  
+  <select id="selectUserList" resultMap="TshopInfo">
+	  select
+   	    <include refid="Base_Column_List" />
+      from T_shop_Info t
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+</mapper>

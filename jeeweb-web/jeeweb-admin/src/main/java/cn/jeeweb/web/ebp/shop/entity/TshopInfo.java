@@ -23,8 +23,6 @@ public class TshopInfo extends DataEntity<String> {
 	private Double extractDeposit;//	double	10	2	-1	0	0	0	0		0	提现冻结押金				0	0
 	private Double AvailableDeposit;//	double	10	2	-1	0	0	0	0		0	可用押金				0	0
 	private String status;//	varchar	32	0	-1	0	0	0	0		0	状态	utf8	utf8_general_ci		0	0
-	private Date createDate;//	datetime	0	0	-1	0	0	0	0		0	创建时间				0	0
-	private String createUser;//	varchar	32	0	-1	0	0	0	0		0	创建人	utf8	utf8_general_ci		0	0
 
 
 	@Override
@@ -101,21 +99,4 @@ public class TshopInfo extends DataEntity<String> {
 		this.status = status;
 	}
 
-	@Override
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	@Override
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getCreateUser() {
-		return createUser;
-	}
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
-	}
 }

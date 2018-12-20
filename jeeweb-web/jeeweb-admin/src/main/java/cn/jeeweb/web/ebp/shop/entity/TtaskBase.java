@@ -36,6 +36,8 @@ public class TtaskBase extends DataEntity<String> {
 	private Date createDate;//	datetime	0	0	-1	0	0	0	0		0	创建时间				0	0
 	private String createUser;//	varchar	32	0	-1	0	0	0	0		0	创建人	utf8	utf8_general_ci		0	0
 
+	private String status;//	varchar	4	0	0	0	0	0	0		0	发布状态	utf8	utf8_general_ci		0	0
+
 
 	@Override
 	public String getId() {
@@ -215,5 +217,13 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setCreateUser(String createUser) {
 		this.createUser = createUser;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

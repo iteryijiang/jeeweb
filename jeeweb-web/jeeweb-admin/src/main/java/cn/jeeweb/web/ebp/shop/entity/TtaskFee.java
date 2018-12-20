@@ -21,9 +21,6 @@ public class TtaskFee extends DataEntity<String> {
 	private Double subTotal;//	double	10	2	-1	0	0	0	0		0	费用小计				0	0
 	private Double discount;//	double	10	2	-1	0	0	0	0		0	优惠折扣				0	0
 	private Double total;//	double	10	2	-1	0	0	0	0		0	合计				0	0
-	private Date createDate;//	datetime	0	0	-1	0	0	0	0		0	创建时间				0	0
-	private String createUser;//	varchar	32	0	-1	0	0	0	0		0	创建人	utf8	utf8_general_ci		0	0
-
 
 	@Override
 	public String getId() {
@@ -93,11 +90,4 @@ public class TtaskFee extends DataEntity<String> {
 		this.createDate = createDate;
 	}
 
-	public String getCreateUser() {
-		return createUser;
-	}
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
-	}
 }

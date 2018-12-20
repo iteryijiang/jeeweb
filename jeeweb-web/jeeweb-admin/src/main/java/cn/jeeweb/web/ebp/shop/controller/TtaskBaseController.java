@@ -43,6 +43,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public ModelAndView TaskDetail(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("TaskDetail");
         System.out.println(mav.getViewName());
+        add(null,null,request,response);
         return mav;
     }
 
@@ -51,10 +52,38 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("add")
     public Response add(TtaskBase entity, BindingResult result,
                         HttpServletRequest request, HttpServletResponse response) {
-
-        ttaskBaseService.insert(entity);
+        entity = new TtaskBase();
+        entity.settType("addd");
+        entity.setStatus("1");
+        try {
+            ttaskBaseService.insert(entity);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //保存之后
         return Response.ok("添加成功");
+    }
+
+    @PostMapping("update")
+    @Log(logType = LogType.UPDATE)
+    @RequiresMethodPermissions("update")
+    public Response update(TtaskBase entity, BindingResult result,
+                        HttpServletRequest request, HttpServletResponse response) {
+        try {
+            TtaskBase tb = ttaskBaseService.selectById(entity.getId());
+            ttaskBaseService.insertOrUpdate(tb);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return Response.ok("更新成功");
+    }
+
+    @PostMapping("delete")
+    @Log(logType = LogType.DELETE)
+    @RequiresMethodPermissions("delete")
+    public Response delete(@PathVariable("id") String id) {
+        ttaskBaseService.deleteById(id);
+        return Response.ok("删除成功");
     }
 
 }
