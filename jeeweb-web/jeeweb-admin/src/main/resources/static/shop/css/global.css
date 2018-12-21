@@ -55,3 +55,6 @@ span.error {
     display: inline-block;
     height:100%;
 }
+.red{
+    border:1px solid red;
+}

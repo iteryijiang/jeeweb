@@ -194,7 +194,7 @@
     line-height:30px;
     padding-left:5px;
 }
-.good_detail .good_cond{
+.good_detail .good_cond,.good_keyword .good_cond{
     border-bottom:1px dashed #aaa;
     padding:20px 0;
     margin-bottom:10px;
@@ -205,6 +205,7 @@
 .good_upload >div:first-child{
     width:120px;
     height:120px;
+    background:url(../img/goods_pic.png) no-repeat center center;
 }
 .good_upload >div{
     margin-top:10px;
@@ -216,7 +217,8 @@
     padding:0;
 }
 .good_upload div img{
-    width:100%
+    width:100%;
+    height:100%;
 }
 .good_keyword{
     display:block;
@@ -227,7 +229,13 @@
 .good_keyword .item{
     margin-bottom: 15px;
 }
-.good_keyword input{
+.good_keyword .item p button{
+    border:none;
+    float: right;
+    background-color:transparent;
+    color:#1f9cd8;
+}
+.good_keyword input:not('[type=checkbox]'){
     width:80px;
 }
 .good_detail{
@@ -255,7 +263,7 @@
     text-align: center;
     padding-bottom:50px;
 }
-.prev_next .prev{
+.prev_next a.prev{
     display: inline-block;
     height: 30px;
     line-height: 30px;
@@ -265,7 +273,27 @@
     padding-left: 20px;
     margin-left: 20px;
 }
-.prev_next .next{
+.prev_next a.prev_n{
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    font-size: 24px;
+    color: #A6A6A6;
+    background: url(../img/previous_step.gif) no-repeat left 50%;
+    padding-left: 20px;
+    margin-left: 20px;
+}
+.prev_next a.next{
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    font-size: 24px;
+    color: #0697da;
+    background: url(../img/next_step.gif) no-repeat right 50%;
+    padding-right: 20px;
+    margin-left: 20px;
+}
+.prev_next a.next_n{
     display: inline-block;
     height: 30px;
     line-height: 30px;
@@ -274,6 +302,21 @@
     background: url(../img/next_step_no.gif) no-repeat right 50%;
     padding-right: 20px;
     margin-left: 20px;
+}
+/* 手风琴 */
+/* #task_accordin{
+    border:1px dashed red;
+} */
+#task_accordin .item_area{
+    display:none;
+    padding:15px;
+    text-align: left;
+}
+#task_accordin .item_area p{
+    line-height:30px;
+}
+.good_detail label{
+    padding-left:0;
 }
 /* 登录注册页面 */
 .login_register{
@@ -590,4 +633,54 @@
 }
 .task_area_goodinfo div:last-child b{
     font-size:16px;
+}
+/* 发布任务页面 */
+.choose_task_number,.task_keyword_settings,.task_order_tips,.task_free_total{
+    text-align: left;
+    padding:20px;
+    border-top:1px solid #aaa;
+}
+.choose_task_number div:nth-child(2) label{
+    margin-right:10px;
+}
+.choose_task_number input[type=number],.task_keyword_settings input[type=number]{
+    width:80px;
+}
+.task_free_total div.row{
+    background-color:#ddd;
+    padding:0 20px;
+}
+.task_free_total div.row .lf{
+    width:85%;
+}
+.task_free_total div.row .rt{
+    width:10%;
+    overflow: hidden;
+}
+/* 选择增值服务 */
+.task_return_money,.task_finish_quick,.task_release_intime,.task_safe_more,.task_good_praise,.task_target_label{
+    padding:20px;
+    text-align: left;
+    border-top:1px solid #ddd;
+}
+.task_cost_total{
+    background-color:#fff;
+    padding:20px;
+}
+.task_cost_total tbody tr td:nth-child(1){
+    color:red;
+}
+.task_cost_total thead{
+    background-color:#eee;
+}
+.task_cost_total div{
+    text-align:right;
+}
+.step_1,.step_2,.step_3,.step_4{
+    margin:5px 0;
+}
+.tips{
+    color:#aaa;
+    font-size:12px;
+    margin-left:10px;
 }

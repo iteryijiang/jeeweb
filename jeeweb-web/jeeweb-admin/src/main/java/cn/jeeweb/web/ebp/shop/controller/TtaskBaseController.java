@@ -34,7 +34,6 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("view")
     public ModelAndView list(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("ReleaseTask");
-        System.out.println(mav.getViewName());
         return mav;
     }
 
@@ -42,18 +41,15 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("TaskDetail")
     public ModelAndView TaskDetail(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("TaskDetail");
-        System.out.println(mav.getViewName());
-        add(null,null,request,response);
         return mav;
     }
 
     @PostMapping("add")
     @Log(logType = LogType.INSERT)
     @RequiresMethodPermissions("add")
-    public Response add(TtaskBase entity, BindingResult result,
-                        HttpServletRequest request, HttpServletResponse response) {
-        entity = new TtaskBase();
-        entity.settType("addd");
+    public Response add(HttpServletRequest request, HttpServletResponse response) {
+        TtaskBase entity = new TtaskBase();
+        System.out.println(request.getParameter("taskBase"));
         entity.setStatus("1");
         try {
             ttaskBaseService.insert(entity);

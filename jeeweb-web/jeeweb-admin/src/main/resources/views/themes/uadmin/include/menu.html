@@ -1,11 +1,11 @@
-<li <% if(currentMenu == null){%>class="active"<%}%>>
-<a href="${adminPath}">
-    <i class="fa fa-tachometer fa-fw">
-        <div class="icon-bg bg-orange"></div>
-    </i>
-    <span class="menu-title">控制台</span>
-</a>
-</li>
+<!--<li <% if(currentMenu == null){%>class="active"<%}%>>-->
+<!--<a href="${adminPath}">-->
+    <!--<i class="fa fa-tachometer fa-fw">-->
+        <!--<div class="icon-bg bg-orange"></div>-->
+    <!--</i>-->
+    <!--<span class="menu-title">控制台</span>-->
+<!--</a>-->
+<!--</li>-->
 <%for(menu in menus){%>
 <% if(menu.parentId == null && menu.enabled == 1 && menu.type != 3){%>
 <li <% if(strutil.contain(pmenuids,menu.id)==true||menu.id == currentMenu.id){%>class="active"<%}%>>
