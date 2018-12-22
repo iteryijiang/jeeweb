@@ -9,6 +9,10 @@ import cn.jeeweb.common.http.ValidResponse;
 import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
+import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
+import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
+import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.modules.sys.entity.*;
 import cn.jeeweb.web.modules.sys.service.*;
 import cn.jeeweb.web.utils.UserUtils;
@@ -71,6 +75,10 @@ public class UserController extends BaseBeanController<User> {
 	private IOrganizationService organizationService;
 	@Autowired
 	private IUserOrganizationService userOrganizationService;
+	@Autowired
+	private TshopInfoService tshopInfoService;
+	@Autowired
+	private TbuyerInfoService tbuyerInfoService;
 
 
 	@GetMapping
@@ -251,6 +259,27 @@ public class UserController extends BaseBeanController<User> {
 				userRole.setUserId(entity.getId());
 				userRole.setRoleId(roleid);
 				userRoleList.add(userRole);
+				if("".equals(roleid)){//保存商铺用户
+					TshopInfo tshopInfo = new TshopInfo();
+					tshopInfo.setShopName(entity.getRealname());
+					tshopInfo.setLoginName(entity.getUsername());
+					tshopInfo.setAccountLevel("1");
+					tshopInfo.setTotalDeposit(0d);
+					tshopInfo.setTaskDeposit(0d);
+					tshopInfo.setExtractDeposit(0d);
+					tshopInfo.setAvailableDeposit(0d);
+					tshopInfo.setStatus("0");
+					tshopInfoService.insert(tshopInfo);
+				}else if("".equals(roleid)){//保存买手用户
+					TbuyerInfo tbi = new TbuyerInfo();
+					tbi.setBuyerName(entity.getRealname());
+					tbi.setLoginName(entity.getUsername());
+					tbi.setAccountLevel("1");
+					tbi.setPhoneNum(0d);
+					tbi.setTotalMoney(0d);
+					tbi.setWithdrawalMoney("0");
+					tbuyerInfoService.insert(tbi);
+				}
 			}
 			userRoleService.insertBatch(userRoleList);
 		}

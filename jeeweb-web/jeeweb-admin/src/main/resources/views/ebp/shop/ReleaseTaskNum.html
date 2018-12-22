@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <title>发布任务数量</title>
-<link rel="stylesheet" href="${staticPath}/shop/css/bootstrap.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/swiper-3.4.2.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/fileinput.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/ProjectGlobal.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/global.css">
-<script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
-<script src='${staticPath}/shop/js/bootstrap.min.js'></script>
-<script src='${staticPath}/shop/js/fileinput.min.js'></script>
-<script src='${staticPath}/shop/js/fileinput.min.js'></script>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/swiper-3.4.2.min.css">
+<link rel="stylesheet" href="css/fileinput.min.css">
+<link rel="stylesheet" href="css/ProjectGlobal.css">
+<link rel="stylesheet" href="css/global.css">
+<script src='js/jquery-3.3.1.min.js'></script>
+<script src='js/bootstrap.min.js'></script>
+<script src='js/fileinput.min.js'></script>
+<script src='js/fileinput.min.js'></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
@@ -214,7 +214,7 @@
             </div>
     </div>
 </body>
-<script src='${staticPath}/shop/js/swiper-3.4.2.min.js'></script>
+<script src='js/swiper-3.4.2.min.js'></script>
 <script>
         var mySwiper = new Swiper('.swiper-container', {
             autoplay: 2000,//可选选项，自动滑动
@@ -234,7 +234,7 @@
             if(len>3){
                 return
             }
-            var item= '<div class='item'>
+            var item= `<div class='item'>
                             <p>关键字来源${len+1}：</p>
                             <label for="">让买手在<b class='red_font'>taobao.com</b>搜索关键字进入“搜索列表”</label>
                             <input type="text must-fill">
@@ -255,7 +255,7 @@
                                     <span class='color_0'>最多四个分类，非必填</span>
                                 </p>
                              </div>
-                        </div>';
+                        </div>`
             
             $('.good_keyword').append(item)
             console.log($('.good_keyword'))

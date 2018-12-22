@@ -1,4 +1,4 @@
-package cn.jeeweb.web.ebp.shop.controller;
+package cn.jeeweb.web.ebp.buyer.controller;
 
 import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
@@ -7,6 +7,7 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermission
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +20,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-
 @RestController
-@RequestMapping("${jeeweb.admin.url.prefix}/shop/TtaskBase")
-@ViewPrefix("ebp/shop")
-@RequiresPathPermission("shop:TtaskBase")
-@Log(title = "订单管理")
-public class TtaskBaseController extends BaseBeanController<TtaskBase> {
+@RequestMapping("${jeeweb.admin.url.prefix}/shop/TmyTask")
+@ViewPrefix("ebp/buyer")
+@RequiresPathPermission("shop:TmyTask")
+@Log(title = "抢单管理")
+public class TmyTaskController extends BaseBeanController<TmyTask> {
 
     @Autowired
     private TtaskBaseService ttaskBaseService;

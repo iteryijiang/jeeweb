@@ -344,7 +344,7 @@
                                                                 <label for="">元</label>
                                                             </div>
                                                         </form>
-                                                        <div class="row" style='margin:0' id='discount_service'>
+                                                        <div class="row discount_service" style='margin:0'>
                                                             <label for="" class='col-md-2' >折扣和服务：</label>
                                                             <div class="radio col-md-10" style='margin:0;'>
                                                                     <label class="checkbox-inline">
@@ -551,18 +551,18 @@
             });
         function loadFile(file,i){
             console.log(file)
-            var item="<img src='imgfile.name'>";
+            var item=`<img src='imgfile.name}'>`
             $('#good_pic'+i).append(item)
         }
         //  增加关键字
         function addKeyword(num){
-           //  var len=$('.good_keyword').eq(num).children('.item').length
-           //  var text='';
-           //  var item=''
-           // if(num=='0'){
-           //  text='taobao.com'
-           //  item= "<div class='item'>
-           //                  <p>关键字来源len+1：<button onclick="deleteItem(num})">删除</button></p>
+            var len=$('.good_keyword').eq(num).children('.item').length
+            var text='';
+            var item=''
+           if(num=='0'){
+            text='taobao.com'
+           //  item= `<div class='item'>
+           //                  <p>关键字来源len+1}：<button onclick="deleteItem(num})">删除</button></p>
            //                  <label for="">让买手在<b class='red_font'>text}</b>搜索关键字进入“搜索列表”</label>
            //                  <input type="text" class='must-fill'>
            //                  <span class='red_font'>必填</span>
@@ -582,7 +582,7 @@
            //                          <span class='color_0'>最多四个分类，非必填</span>
            //                      </p>
            //                   </div>
-           //              </div>"
+           //              </div>`
            // }else{
            //     text='手机淘宝'
            //     item= `<div class='item'>
@@ -611,7 +611,7 @@
            //                                                      <label for="">元</label>
            //                                                  </div>
            //                                              </form>
-           //                                              <div class="row" style="margin:0" id="discount_service">
+           //                                              <div class="row discount_service" style="margin:0">
            //                                                  <label for="" class="col-md-2">折扣和服务：</label>
            //                                                  <div class="radio col-md-10" style="margin:0;">
            //                                                          <label class="checkbox-inline">
@@ -684,11 +684,11 @@
            //                                      </div>
            //              </div>`
            // }
-           //  if(len>3){
-           //      return
-           //  }
-           //  $('.good_keyword').eq(num).append(item)
-           //  console.log($('.good_keyword'))
+            if(len>3){
+                return
+            }
+            $('.good_keyword').eq(num).append(item)
+            console.log($('.good_keyword'))
         }
         // 必填项失去焦点基本验证
         $('.must-fill').bind('blur',function(){
@@ -712,7 +712,7 @@
             $('#task_accordin .item_area').hide()
             $('#task_accordin .item_area').eq(index).show()
             good_detail_info.method=$(this).val()
-        });
+        })
        function TaskConfirm(index){
            if(index=='0'){//第一次提交确认信息
              //手机商品基本信息good_basic_info
@@ -724,42 +724,42 @@
                     $(this).removeClass('red')
                     switch(index){
                         case 1:
-                        good_basic_info.goodLink=$(ele).val()
+                        good_basic_info.tUrl=$(ele).val()
                         break;
                         case 2:
-                        good_basic_info.goodTitle=$(ele).val()
+                        good_basic_info.tTitle=$(ele).val()
                         break;
                         case 3:
-                        good_basic_info.goodSalePrice=$(ele).val()
+                        good_basic_info.tPrice=$(ele).val()
                         break;
                         case 4:
-                        good_basic_info.goodSaleNum=$(ele).val()
+                        good_basic_info.tNum=$(ele).val()
                         break;
                         case 5:
-                        good_basic_info.goodDisplayPrice=$(ele).val()
+                        good_basic_info.totalPrice=$(ele).val()
                     }
                 }
              })
-             // console.log(good_basic_info)
-               console.log({data : good_basic_info})
+             console.log(good_basic_info)
                $.ajax({
                    type: "POST",
                    url: "${adminPath}/shop/TtaskBase/add",
-                   data: {"taskBase" : JSON.stringify(good_basic_info)},
+                   contentType:'application/json;charset=utf-8',
+                   data: JSON.stringify(good_basic_info),
                    dataType: "json",
                    success: function(data){
+                       alert("保存成功");
                    },
                    error: function(data){
-                       alert("111111111111111111111");
                    }
                });
              //商品具体信息
-             //      if($('#task_accordin input[type=radio]').prop('checked')==false){
-             //          $('#task_accordin').addClass('red')
-             //      }else{
-             //        $('#task_accordin').removeClass('red')
-             //      }
-            // GetCheckboxInfo(good_detail_info.method)
+                  if($('#task_accordin input[type=radio]').prop('checked')==false){
+                      $('#task_accordin').addClass('red')
+                  }else{
+                    $('#task_accordin').removeClass('red')
+                  }
+            GetCheckboxInfo(good_detail_info.method)
            }
        }
         //checkbox各项信息搜集
@@ -779,7 +779,7 @@
                 good_detail_info.TaskPriceSection.low_point=$('.mobile_low').val()?$('.mobile_low').val():'';//手机端价格区间最低
                 good_detail_info.TaskPriceSection.high_point=$('.mobile_high').val()?$('.mobile_high').val():'';//手机端价格区间最高
                 good_detail_info.TaskDeliverLocation=$('.drop1').html()?$('.drop1').html():'';//手机端发货地
-                good_detail_info.TaskDisService=GetDiscountAndService($('#discount_service'))?GetDiscountAndService($('#discount_service')):'';//手机端商品折扣与服务
+                good_detail_info.TaskDisService=GetDiscountAndService($('.discount_service'))?GetDiscountAndService($('#discount_service')):'';//手机端商品折扣与服务
                 good_detail_info.TaskSpecify=$('.good_spec').val()?$('.good_spec').val():'';
                 //
                 good_detail_info.TaskSort=$('.drop2').html()?$('.drop2').html():'';//手机端商品排序
@@ -811,45 +811,68 @@
             })
         }
         //下拉框的点击
-        $('.dropdown-menu li').bind('click',function(){
+            $(document).on('click','.dropdown-menu li',function(){
+            console.log("click")
             var text=$(this).html()
+            var target;
             if(good_detail_info.method=='pc_taobao'){
-                $('.drop0').html(text)
+                target=$(this).parent().parent().siblings().children('.drop0')
+                target.html(text)
             }else{
                 if($(this).parent().hasClass('sort')==true){
-                    $('.drop2').html(text)
+                    target=$(this).parent().siblings().children('.drop2')
+                    target.html(text)
                 }else{
-                    $('.drop1').html(text)
+                    console.log(333)
+                    target=$(this).parent().parent().siblings().children('.drop1')
+                    target.html(text)
                 }
             }
         })
         //折扣与服务
        function GetDiscountAndService(ele){
-           var arr=[]
-            $(ele).find('input[type=checkbox]').each(function(index,item){
+                var arr=[]
+           $(ele).each(function(i,element){
+            var arr_0=[]
+               $(element).find('input[type=checkbox]').each(function(index,item){
                 if($(item).prop('checked')==true){
                     console.log($(item).val())
-                    arr.push($(item).val())
+                    arr_0.push($(item).val())
                 }
             })
+            arr=arr_0
+            console.log(arr)
+           })
+            
             return arr;
         }
         //获取手机端关键字项
         function GetMobileKeywords(){
-            good_detail_info.KeywordsArray=[]
-            var obj={}
+            var arr=[]
             $('#keyword1 .item').each(function(index,item){
-                console.log("829")
-                console.log(index,item)
+                // console.log("829")
+                // console.log(index,item)
+                var obj={}
                 //1.关键字
-                object.search_keyword=$(item).find('.must-fill').val()
-                //2.规格
-                
+                obj.search_keyword=$(item).find('.must-fill').val()
                 //3.价格区间
+                obj.TaskPriceSection={}
+                obj.TaskPriceSection.low_point=$(item).find('.mobile_low').val();
+                obj.TaskPriceSection.high_point=$(item).find('.mobile_high').val();
                 //4.折扣和服务
+                obj.TaskDisService=GetDiscountAndService($('.discount_service'))?GetDiscountAndService($('.discount_service')):'';//手机端商品折扣与服务
+                console.log(obj.TaskDisService)
                 //5.发货地
+                obj.TaskDeliverLocation=$(item).find('.drop1').html()?$(item).find('.drop1').html():'';//手机端发货地
+                console.log($(item).find('.drop1').html())
                 //6.商品分类
+                obj.TaskSpecify=$(item).find('.good_spec').val()?$(item).find('.good_spec').val():'';//手机端商品分类
+                arr.push(obj)
+
+                //
             })
+            console.log('这是一条数据')
+            console.log(arr)
         }
 </script>
 </html>

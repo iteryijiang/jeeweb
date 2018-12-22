@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TmyTaskDetailMapper" >
+  <resultMap id="TmyTaskDetail" type="cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="orderNo" column="orderNo" jdbcType="VARCHAR" />
+    <result property="fileId" column="fileId" jdbcType="VARCHAR" />
+    <result property="state" column="state" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    DISTINCT
+    t.id
+  </sql>
+  
+  <select id="selectUserList" resultMap="TmyTaskDetail">
+	  select
+   	    <include refid="Base_Column_List" />
+      from T_shop_Info t
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+</mapper>
