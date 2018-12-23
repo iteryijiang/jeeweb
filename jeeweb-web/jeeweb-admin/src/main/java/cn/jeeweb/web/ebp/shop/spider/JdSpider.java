@@ -5,17 +5,22 @@ package cn.jeeweb.web.ebp.shop.spider;
  * QQ号：1132017151
  * 京东 爬虫
  */
+import cn.jeeweb.common.utils.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,15 +29,69 @@ import java.util.Map;
 public class JdSpider {
 
     public static void main(String[] args)  {
-        String url = "https://item.jd.com/37560650497.html";
+        String url = "https://item.jd.com/34807716016.html";
         try {
-           String title = getGoodInfos("36716998968");
-           System.out.println("商品信息: " + title);
+            //String goodis = getGoodId_ByURL(url);
+            String goodsrc = getGoodImgByurl(url);
+            System.out.println("商品src: " + goodsrc);
+//            System.out.println("商品信息: " + goodis);
+//            if(!StringUtils.isEmpty(goodis)){
+//                String result = getGoodInfos(goodis);
+//                System.out.println("商品信息: " + result);
+//                String good_price  = getGoodPrice_ByResult(result);
+//                System.out.println("商品价格: " + good_price);
+//            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
+
     }
 
+
+    /**
+     *
+     * @Title: getGoodId_ByURL
+     * @Description: 根据商品URL  截取 goodID
+     * @param @param url
+     * @return void 返回类型
+     * @author  iter
+     * @date 2018-12-22 下午2:11:23
+     * @throws
+     */
+    public  static String getGoodId_ByURL(String url) throws Exception{
+        String goodId = "";
+        if(url!=null && url.length()>0){
+            int s = url.lastIndexOf("/");
+            int e = url.lastIndexOf(".");
+            if(s>0 && e>0){
+                goodId = url.substring(s+1,e);
+            }
+        }
+        return goodId;
+    }
+
+    /**
+     *
+     * @Title: getGoodPrice_ByResult
+     * @Description: 根据爬虫结果  截取 商品价格
+     * @param @param url
+     * @return void 返回类型
+     * @author  iter
+     * @date 2018-12-22 下午2:11:23
+     * @throws
+     */
+    public  static String getGoodPrice_ByResult(String result) throws Exception{
+        String good_price = "";
+        if(StringUtils.isNotEmpty(result)){
+            int s = result.lastIndexOf("\"op\":\"");
+            int e = result.lastIndexOf("\",\"m\"");
+            if(s>0 && e>0){
+                good_price = result.substring(s+6,e);
+            }
+        }
+        return good_price;
+    }
 
     /**
      *
@@ -91,6 +150,29 @@ public class JdSpider {
 
     /**
      *
+     * @Title: getGoodTitle_one
+     * @Description: 获取  商品图片
+     * @param @param url
+     * @return void 返回类型
+     * @author  iter
+     * @date 2018-12-22 下午2:11:23
+     * @throws
+     */
+    public  static String getGoodImgByurl(String url) throws Exception{
+        //根据url  获取html内容
+        Document document = Jsoup.connect(url).maxBodySize(0).get();
+        //select 获取标签
+        String src = document.select("img[id='spec-img']").get(0).attr("data-origin");
+        if(src!=null && src.length()>0){
+            src = "https://"+src;
+        }
+        return src;
+    }
+
+
+
+    /**
+     *
      * @Title: getGoodInfos
      * @Description: 获取 商品详细信息
      * @param @param url
@@ -107,16 +189,19 @@ public class JdSpider {
         String result = "";
         HttpClient httpClient = new SSLClient();
         HttpPost httpPost  = new HttpPost(getPriceUrl);
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(new ArrayList<>(), "utf-8");
-        httpPost.setEntity(entity);
+        //UrlEncodedFormEntity entity = new UrlEncodedFormEntity(new ArrayList<>(), "utf-8");
+        //httpPost.setEntity(entity);
+        httpPost.addHeader("Content-type","application/json;charset=utf-8");
+        httpPost.addHeader("Accept","application/json");
+        httpPost.setEntity(new StringEntity(new JSONObject().toString(), Charset.forName("UTF-8")));
         HttpResponse response = httpClient.execute(httpPost);
+        //URLDecoder.decode() response.getEntity().getContentEncoding().getValue().
         if(response != null){
             HttpEntity resEntity = response.getEntity();
             if(resEntity != null){
                 result = EntityUtils.toString(resEntity, "utf-8");
             }
         }
-        System.out.println(result);
         return result;
     }
 
