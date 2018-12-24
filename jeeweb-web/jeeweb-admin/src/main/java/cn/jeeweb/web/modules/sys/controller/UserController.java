@@ -259,7 +259,7 @@ public class UserController extends BaseBeanController<User> {
 				userRole.setUserId(entity.getId());
 				userRole.setRoleId(roleid);
 				userRoleList.add(userRole);
-				if("".equals(roleid)){//保存商铺用户
+				if("3a0e855344644a7a904ec74846d46cc3".equals(roleid)){//保存商铺用户
 					TshopInfo tshopInfo = new TshopInfo();
 					tshopInfo.setShopName(entity.getRealname());
 					tshopInfo.setLoginName(entity.getUsername());
@@ -269,8 +269,12 @@ public class UserController extends BaseBeanController<User> {
 					tshopInfo.setExtractDeposit(0d);
 					tshopInfo.setAvailableDeposit(0d);
 					tshopInfo.setStatus("0");
-					tshopInfoService.insert(tshopInfo);
-				}else if("".equals(roleid)){//保存买手用户
+					try {
+						tshopInfoService.insert(tshopInfo);
+					}catch (Exception e){
+						e.printStackTrace();
+					}
+				}else if("402880e45b5d7636015b5d8baca60000".equals(roleid)){//保存买手用户
 					TbuyerInfo tbi = new TbuyerInfo();
 					tbi.setBuyerName(entity.getRealname());
 					tbi.setLoginName(entity.getUsername());

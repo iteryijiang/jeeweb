@@ -18,7 +18,7 @@ public class TshopInfo extends DataEntity<String> {
 	private String shopName;//	varchar	200	0	-1	0	0	0	0		0	商户名称	utf8	utf8_general_ci		0	0
 	private String loginName;//	varchar	50	0	-1	0	0	0	0		0	登录账号	utf8	utf8_general_ci		0	0
 	private String accountLevel;//	varchar	32	0	-1	0	0	0	0		0	账号等级	utf8	utf8_general_ci		0	0
-	private Double TotalDeposit;//	double	10	2	-1	0	0	0	0		0	总押金				0	0
+	private Double totalDeposit;//	double	10	2	-1	0	0	0	0		0	总押金				0	0
 	private Double taskDeposit;//	double	10	2	-1	0	0	0	0		0	任务冻结押金				0	0
 	private Double extractDeposit;//	double	10	2	-1	0	0	0	0		0	提现冻结押金				0	0
 	private Double AvailableDeposit;//	double	10	2	-1	0	0	0	0		0	可用押金				0	0
@@ -60,11 +60,11 @@ public class TshopInfo extends DataEntity<String> {
 	}
 
 	public Double getTotalDeposit() {
-		return TotalDeposit;
+		return totalDeposit;
 	}
 
 	public void setTotalDeposit(Double totalDeposit) {
-		TotalDeposit = totalDeposit;
+		totalDeposit = totalDeposit;
 	}
 
 	public Double getTaskDeposit() {
@@ -98,5 +98,7 @@ public class TshopInfo extends DataEntity<String> {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+
 
 }

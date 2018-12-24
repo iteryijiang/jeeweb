@@ -3,12 +3,14 @@
 <mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TshopInfoMapper" >
   <resultMap id="TshopInfo" type="cn.jeeweb.web.ebp.shop.entity.TshopInfo" >
     <id column="id" property="id" jdbcType="VARCHAR" />
-    <result property="tbid" column="tbid" jdbcType="VARCHAR" />
-    <result property="tfClass" column="tfClass" jdbcType="VARCHAR" />
-    <result property="tfDetail" column="tfDetail" jdbcType="VARCHAR" />
-    <result property="subTotal" column="subTotal" jdbcType="NUMERIC" />
-    <result property="discount" column="discount" jdbcType="NUMERIC" />
-    <result property="total" column="total" jdbcType="NUMERIC" />
+    <result property="shopName" column="shopName" jdbcType="VARCHAR" />
+    <result property="loginName" column="loginName" jdbcType="VARCHAR" />
+    <result property="accountLevel" column="accountLevel" jdbcType="VARCHAR" />
+    <result property="TotalDeposit" column="TotalDeposit" jdbcType="NUMERIC" />
+    <result property="taskDeposit" column="taskDeposit" jdbcType="NUMERIC" />
+    <result property="extractDeposit" column="extractDeposit" jdbcType="NUMERIC" />
+    <result property="AvailableDeposit" column="AvailableDeposit" jdbcType="NUMERIC" />
+    <result property="status" column="status" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >

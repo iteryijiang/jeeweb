@@ -20,9 +20,9 @@ public class TtaskBase extends DataEntity<String> {
 	private String tTitle;//	varchar	300	0	-1	0	0	0	0		0	商品标题	utf8	utf8_general_ci		0	0
 	private Double tPrice;//	double	10	2	-1	0	0	0	0		0	单品价格				0	0
 	private Long tNum;//	int	8	0	-1	0	0	0	0		0	每单几件				0	0
-	private Double totalPrice;//	double	10	2	-1	0	0	0	0		0	下单总金额				0	0
-	private Double searchPrice;//	double	10	2	-1	0	0	0	0		0	搜索页面展示价格				0	0
-	private String isPcView;//	varchar	32	0	-1	0	0	0	0		0	是否 淘宝搜索框	utf8	utf8_general_ci		0	0
+	private Double totalprice;//	double	10	2	-1	0	0	0	0		0	下单总金额				0	0
+	private Double searchprice;//	double	10	2	-1	0	0	0	0		0	搜索页面展示价格				0	0
+	private String ispcview;//	varchar	32	0	-1	0	0	0	0		0	是否 淘宝搜索框	utf8	utf8_general_ci		0	0
 	private String keyword;//	varchar	200	0	-1	0	0	0	0		0	搜索关键字	utf8	utf8_general_ci		0	0
 	private String spec1;//	varchar	50	0	-1	0	0	0	0		0	规格1	utf8	utf8_general_ci		0	0
 	private String spec2;//	varchar	50	0	-1	0	0	0	0		0	规格2	utf8	utf8_general_ci		0	0
@@ -30,12 +30,9 @@ public class TtaskBase extends DataEntity<String> {
 	private String classify2;//	varchar	50	0	-1	0	0	0	0		0	分类2	utf8	utf8_general_ci		0	0
 	private String classify3;//	varchar	50	0	-1	0	0	0	0		0	分类3	utf8	utf8_general_ci		0	0
 	private String classify4;//	varchar	50	0	-1	0	0	0	0		0	分类4	utf8	utf8_general_ci		0	0
-	private String isMobileView;//	varchar	32	0	-1	0	0	0	0		0	是否 手机淘宝	utf8	utf8_general_ci		0	0
-	private String expressWay;//	varchar	32	0	-1	0	0	0	0		0	运费收取方式	utf8	utf8_general_ci		0	0
-	private Long taskNum;//	int	8	0	-1	0	0	0	0		0	任务单数				0	0
-	private Date createDate;//	datetime	0	0	-1	0	0	0	0		0	创建时间				0	0
-	private String createUser;//	varchar	32	0	-1	0	0	0	0		0	创建人	utf8	utf8_general_ci		0	0
-
+	private String isMobileview;//	varchar	32	0	-1	0	0	0	0		0	是否 手机淘宝	utf8	utf8_general_ci		0	0
+	private String expressway;//	varchar	32	0	-1	0	0	0	0		0	运费收取方式	utf8	utf8_general_ci		0	0
+	private Long tasknum;//	int	8	0	-1	0	0	0	0		0	任务单数				0	0
 	private String status;//	varchar	4	0	0	0	0	0	0		0	发布状态	utf8	utf8_general_ci		0	0
 
 
@@ -97,28 +94,28 @@ public class TtaskBase extends DataEntity<String> {
 		this.tNum = tNum;
 	}
 
-	public Double getTotalPrice() {
-		return totalPrice;
+	public Double getTotalprice() {
+		return totalprice;
 	}
 
-	public void setTotalPrice(Double totalPrice) {
-		this.totalPrice = totalPrice;
+	public void setTotalprice(Double totalprice) {
+		this.totalprice = totalprice;
 	}
 
-	public Double getSearchPrice() {
-		return searchPrice;
+	public Double getSearchprice() {
+		return searchprice;
 	}
 
-	public void setSearchPrice(Double searchPrice) {
-		this.searchPrice = searchPrice;
+	public void setSearchprice(Double searchprice) {
+		this.searchprice = searchprice;
 	}
 
-	public String getIsPcView() {
-		return isPcView;
+	public String getIspcview() {
+		return ispcview;
 	}
 
-	public void setIsPcView(String isPcView) {
-		this.isPcView = isPcView;
+	public void setIspcview(String ispcview) {
+		this.ispcview = ispcview;
 	}
 
 	public String getKeyword() {
@@ -177,46 +174,28 @@ public class TtaskBase extends DataEntity<String> {
 		this.classify4 = classify4;
 	}
 
-	public String getIsMobileView() {
-		return isMobileView;
+	public String getIsMobileview() {
+		return isMobileview;
 	}
 
-	public void setIsMobileView(String isMobileView) {
-		this.isMobileView = isMobileView;
+	public void setIsMobileview(String isMobileview) {
+		this.isMobileview = isMobileview;
 	}
 
-	public String getExpressWay() {
-		return expressWay;
+	public String getExpressway() {
+		return expressway;
 	}
 
-	public void setExpressWay(String expressWay) {
-		this.expressWay = expressWay;
+	public void setExpressway(String expressway) {
+		this.expressway = expressway;
 	}
 
-	public Long getTaskNum() {
-		return taskNum;
+	public Long getTasknum() {
+		return tasknum;
 	}
 
-	public void setTaskNum(Long taskNum) {
-		this.taskNum = taskNum;
-	}
-
-	@Override
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	@Override
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getCreateUser() {
-		return createUser;
-	}
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
+	public void setTasknum(Long tasknum) {
+		this.tasknum = tasknum;
 	}
 
 	public String getStatus() {

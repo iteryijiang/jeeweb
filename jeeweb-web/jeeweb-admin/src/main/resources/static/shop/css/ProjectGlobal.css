@@ -202,7 +202,7 @@
 .good_upload {
     margin-bottom:15px;
 }
-.good_upload >div:first-child{
+#good_pic0,#good_pic1,#good_pic2{
     width:120px;
     height:120px;
     background:url(../img/goods_pic.png) no-repeat center center;
@@ -235,7 +235,11 @@
     background-color:transparent;
     color:#1f9cd8;
 }
-.good_keyword input:not('[type=checkbox]'){
+.good_keyword .item input.must-fill{
+    width:80px;
+    height:30px;
+}
+.good_cond p input{
     width:80px;
 }
 .good_detail{
@@ -302,6 +306,28 @@
     background: url(../img/next_step_no.gif) no-repeat right 50%;
     padding-right: 20px;
     margin-left: 20px;
+}
+.good_last div:last-child{
+    display:flex;
+}
+.good_last div:last-child label{
+    padding-left:0;
+}
+.dropdown-menu{
+    padding:10px;
+}
+.add{
+    color:#00A7E8;
+}
+.warn_info{
+        background: url(../img/tips.png) no-repeat scroll 0px -48px;
+        padding-left: 18px;
+        color: #fd2e0c;
+        margin-left: 10px;
+        height: 18px;
+        line-height: 18px;
+        display: inline-block;
+        height:100%;
 }
 /* 手风琴 */
 /* #task_accordin{
@@ -431,7 +457,10 @@
 .error{
     border:1px dashed red;
 }
-
+.make-sure{
+    text-align: left;
+    padding:0 5%;
+}
 /* 确定后 */
 .task_confirm{
     background-color:#fff;

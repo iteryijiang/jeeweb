@@ -9,9 +9,9 @@
     <result property="tTitle" column="t_title" jdbcType="VARCHAR" />
     <result property="tPrice" column="t_price" jdbcType="NUMERIC" />
     <result property="tNum" column="t_num" jdbcType="NUMERIC" />
-    <result property="totalPrice" column="totalPrice" jdbcType="NUMERIC" />
-    <result property="searchPrice" column="searchPrice" jdbcType="NUMERIC" />
-    <result property="isPcView" column="isPcView" jdbcType="VARCHAR" />
+    <result property="totalprice" column="totalprice" jdbcType="NUMERIC" />
+    <result property="searchprice" column="searchprice" jdbcType="NUMERIC" />
+    <result property="ispcview" column="ispcview" jdbcType="VARCHAR" />
     <result property="keyword" column="keyword" jdbcType="VARCHAR" />
     <result property="spec1" column="spec1" jdbcType="VARCHAR" />
     <result property="spec2" column="spec2" jdbcType="VARCHAR" />
@@ -27,10 +27,14 @@
   
   <sql id="Base_Column_List" >
     DISTINCT
-    t.id
+    t.id,
+    t.t_type,
+    t.shopid,t.t_url,t.t_title,t.t_price,t.t_num,t.totalPrice,t.searchPrice,t.isPcView,t.keyword,t.spec1,t.spec2,
+    t.classify1,t.classify2,
+    t.classify3,t.classify4,t.isMobileview,t.expressway,t.tasknum,t.status
   </sql>
   
-  <select id="selectUserList" resultMap="TtaskBase">
+  <select id="selectTtaskBaseList" resultMap="TtaskBase">
 	  select 
    	    <include refid="Base_Column_List" />
       from T_task_Base t
@@ -41,4 +45,7 @@
 	   </if> 
   </select>
 
+  <select id="selectShopTask" resultMap="TtaskBase">
+    select * from T_task_Base t where
+  </select>
 </mapper>

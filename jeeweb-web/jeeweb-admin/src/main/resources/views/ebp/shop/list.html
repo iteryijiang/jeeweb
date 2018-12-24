@@ -1,0 +1,8 @@
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单管理',''), libs: 'bootstrap-treeview'}){ %>
+	<#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList">
+		<#grid:column label="商品标题"  name="tTitle"  query="true"  condition="like" />
+		<#grid:column label="商品单价"  name="tPrice"  query="true" condition="like"   />
+		<#grid:column label="每单几件"  name="tNum"  />
+		<#grid:column label="下单总金额"  name="totalprice" />
+	</#grid:grid>
+<% } %>

@@ -10,6 +10,7 @@ import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -68,6 +69,7 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
                         HttpServletRequest request, HttpServletResponse response) {
         try {
             TtaskBase tb = ttaskBaseService.selectById(entity.getId());
+            BeanUtils.copyProperties(tb,entity,"tType,tUrl,tTitle,tPrice,tNum,totalPrice,searchPrice");
             ttaskBaseService.insertOrUpdate(tb);
         }catch (Exception e){
             e.printStackTrace();

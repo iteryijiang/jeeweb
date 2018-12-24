@@ -12,5 +12,5 @@ import java.util.List;
 @Mapper
 public interface TtaskBaseMapper extends BaseMapper<TtaskBase> {
 	
-	List<TtaskBase> selectUserList(Pagination page, @Param("ew") Wrapper<TtaskBase> wrapper);
+	List<TtaskBase> selectTtaskBaseList(Pagination page, @Param("ew") Wrapper<TtaskBase> wrapper);
 }
