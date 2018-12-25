@@ -1,21 +1,16 @@
-<% layout('/layouts/list.html', {title: '任务列表', libs: ''}){ %>
+<% layout('/layouts/list.html', {title: '我的列表', libs: ''}){ %>
 <#grid:grid id="taskbase" url="${adminPath}/buyer/TmyTask/ajaxList">
     <#grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
+
     <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="40"/>
-    <#grid:button   groupname="opt" function="delete" />
-    <#grid:column label="商家"  name="shopid"  query="true"  queryModel="input" width="60"   condition="like" />
-    <#grid:column label="购买件数"  name="t_url"  query="true"  queryModel="input" width="100"  condition="like" />
-    <#grid:column label="买手需垫付资金"  name="t_title"  width="100"  condition="eq"  dict="sf"/>
-    <#grid:column label="佣金"  name="shopid"   queryModel="input"  condition="like" />
-    <#grid:column label="返款方式"  name="shopid"  query="true"  queryModel="select"  condition="like" />
-    <#grid:column label="任务总数"  name="shopid"  query="true"  queryModel="input"  condition="like" />
-    <#grid:column label="领取进度"  name="shopid"  query="true"  queryModel="select"  condition="like" />
-    <#grid:column label="接手状态"  name="shopid"  query="true"  queryModel="select"  condition="like" />
 
+    <#grid:column label="商品"  name="taskid"  query="true"  queryModel="input" width="120"   condition="like" />
+    <#grid:column label="任务类型"  name="taskid"  query="true"  queryModel="select" width="100"    condition="eq"  dict="tasktype" />
+    <#grid:column label="买号"  name="buyerid"  width="100"  condition="eq"  />
+    <#grid:column label="垫付资金"  name="pays"  width="80"   queryModel="input"  condition="like" />
+    <#grid:column label="佣金"  name="commision"  width="80"  query="true"  queryModel="select"  condition="like" />
+    <#grid:column label="任务状态1"  name="taskstate"  width="80"  query="true"  queryModel="select"   condition="eq"  dict="sf" />
 
-    <#grid:toolbar function="add"/>
-    <#grid:toolbar   function="update" />
-    <#grid:toolbar   function="delete" />
 
     <#grid:toolbar  function="search"  />
     <#grid:toolbar  function="reset" />
