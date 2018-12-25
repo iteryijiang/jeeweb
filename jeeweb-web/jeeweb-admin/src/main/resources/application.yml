@@ -51,7 +51,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: 您的密码
+    password: root
     url: jdbc:mysql://localhost:3306/jeeweb_v2?useUnicode=true&characterEncoding=UTF-8
     type: com.alibaba.druid.pool.DruidDataSource   #这里是配置druid连接池，以下都是druid的配置信息
     filters: stat,wall,log4j
@@ -73,7 +73,7 @@ spring:
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml   #把xml文件放在com.XX.mapper.*中可能会出现找到的问题，这里把他放在resource下的mapper中
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: cn.jeeweb.web.modules.*.entity  #这里是实体类的位置
+  typeAliasesPackage: cn.jeeweb.web.modules.*.entity,cn.jeeweb.web.ebp.*.entity  #这里是实体类的位置
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
@@ -82,7 +82,7 @@ mybatis:
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   #实体扫描，多个package用逗号或者分号分隔
-  type-aliases-package:  cn.jeeweb.web.modules.*.entity
+  type-aliases-package:  cn.jeeweb.web.modules.*.entity,cn.jeeweb.web.ebp.*.entity
   #typeEnumsPackage: com.baomidou.springboot.entity.enums
   global-config:
     #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
@@ -135,7 +135,7 @@ beetl:
 #文件上传配置
 #使用的上传存储空间,local本地,aliyun:阿里云
 oss:
- client-type: aliyun
+ client-type: local
  #默认上传目录
  base_dir:
  #允许的文件扩展名
@@ -144,7 +144,7 @@ oss:
  max_size: 52428800
  local:
    domain: http://localhost:8080
-   upload-file-path: D:/hhaha
+   upload-file-path: D:/static
  aliyun:
    #阿里云api的内或外网域名
    endpoint: oss-cn-beijing.aliyuncs.com
