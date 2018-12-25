@@ -150,7 +150,7 @@
                                 <div class="form-group">
                                     <label for="inputLink" class="col-sm-2 control-label">商品链接:</label>
                                     <div class="col-sm-6">
-                                         <input class="form-control must-fill" id="inputLink" placeholder="">
+                                         <input class="form-control must-fill" id="inputLink" placeholder="" onBlur="showOpen(this)">
                                     </div>
                                     <label for="inputLink" class="col-sm-1 control-label red_font">必填</label>
                                 </div>
@@ -651,8 +651,17 @@
                     }
                 }
              })
-             console.log(good_basic_info)
-             $.ajax({
+             //商品具体信息
+              if($('#task_accordin input[type=radio]').prop('checked')==false){
+                $('#task_accordin').addClass('red')
+              }else{
+                $('#task_accordin').removeClass('red')
+              }
+            GetCheckboxInfo(good_detail_info.method);
+            //填充任务信息
+            // TaskAreaInfo()
+               console.log(good_basic_info)
+               $.ajax({
                    type: "POST",
                    url: "${adminPath}/shop/TtaskBase/add",
                    contentType:'application/json;charset=utf-8',
@@ -664,16 +673,6 @@
                    error: function(data){
                    }
                });
-             //商品具体信息
-                  if($('#task_accordin input[type=radio]').prop('checked')==false){
-                      $('#task_accordin').addClass('red')
-                  }else{
-                    $('#task_accordin').removeClass('red')
-                  }
-            GetCheckboxInfo(good_detail_info.method)
-            //
-            //填充任务信息
-            // TaskAreaInfo()
            }
        }
         //checkbox各项信息搜集
@@ -802,6 +801,19 @@
                 $('html,body').animate({scrollTop:0},1000).find('.task_area').css('border','2px solid red');
                 $('.warn_info').show()
             }
+        }
+        function showOpen(turl){
+            $.ajax({
+                type: "POST",
+                url: "${adminPath}/shop/TtaskBase/showOpen",
+                // contentType:'application/json;charset=utf-8',
+                data: {"turl":turl.value},
+                dataType: "json",
+                success: function(data){
+                    $("#inputTab").attr("value",data.ttitle);
+                    $("#inputPrice").attr("value",data.goodprice);
+                }
+            });
         }
 </script>
 </html>

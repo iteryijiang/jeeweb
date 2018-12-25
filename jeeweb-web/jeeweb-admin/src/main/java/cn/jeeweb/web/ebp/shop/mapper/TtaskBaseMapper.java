@@ -13,4 +13,7 @@ import java.util.List;
 public interface TtaskBaseMapper extends BaseMapper<TtaskBase> {
 	
 	List<TtaskBase> selectTtaskBaseList(Pagination page, @Param("ew") Wrapper<TtaskBase> wrapper);
+
+	List<TtaskBase> selectShopTask(@Param("shopid") String shopid,@Param("count") int count);
+
 }

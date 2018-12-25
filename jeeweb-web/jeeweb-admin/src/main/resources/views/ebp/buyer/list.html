@@ -1,0 +1,23 @@
+<% layout('/layouts/list.html', {title: '任务列表', libs: ''}){ %>
+<#grid:grid id="taskbase" url="${adminPath}/buyer/TmyTask/ajaxList">
+    <#grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
+    <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="40"/>
+    <#grid:button   groupname="opt" function="delete" />
+    <#grid:column label="商家"  name="shopid"  query="true"  queryModel="input" width="60"   condition="like" />
+    <#grid:column label="购买件数"  name="t_url"  query="true"  queryModel="input" width="100"  condition="like" />
+    <#grid:column label="买手需垫付资金"  name="t_title"  width="100"  condition="eq"  dict="sf"/>
+    <#grid:column label="佣金"  name="shopid"   queryModel="input"  condition="like" />
+    <#grid:column label="返款方式"  name="shopid"  query="true"  queryModel="select"  condition="like" />
+    <#grid:column label="任务总数"  name="shopid"  query="true"  queryModel="input"  condition="like" />
+    <#grid:column label="领取进度"  name="shopid"  query="true"  queryModel="select"  condition="like" />
+    <#grid:column label="接手状态"  name="shopid"  query="true"  queryModel="select"  condition="like" />
+
+
+    <#grid:toolbar function="add"/>
+    <#grid:toolbar   function="update" />
+    <#grid:toolbar   function="delete" />
+
+    <#grid:toolbar  function="search"  />
+    <#grid:toolbar  function="reset" />
+</#grid:grid>
+<% } %>

@@ -14,8 +14,10 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.ebp.shop.spider.JdSpider;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.*;
 
 
 @RestController
@@ -134,38 +137,82 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
      * @param response
      * @throws IOException
      */
-//    @RequestMapping(value = "ajaxList", method = { RequestMethod.GET, RequestMethod.POST })
-//    @PageableDefaults(sort = "id=desc")
-//    @Log(logType = LogType.SELECT)
-//    @RequiresMethodPermissions("list")
-//    public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
-//                         HttpServletResponse response) throws IOException {
-//        EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
-//        propertyPreFilterable.addQueryProperty("id");
-//        //获得商户表
-//        List<TshopInfo> listShop = new ArrayList();
+    @RequestMapping(value = "myTaskList", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.SELECT)
+    @RequiresMethodPermissions("myTaskList")
+    public void myTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                         HttpServletResponse response) throws IOException {
+        EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+        //获得商户表
+        List<TshopInfo> listShop = new ArrayList();
+        int count = 7;
+        int sum = 0;
+        Map<String,Integer> map = new HashMap();
+        for (TshopInfo si:listShop) {
+            Random rand = new Random();
+            int a = rand.nextInt(3) + 1;
+            sum +=a;
+            if(sum>7){
+               a = a-(sum-7);
+            }
+            map.put(si.getLoginname(),a);
+            if(sum>=7){
+                break;
+            }
+        }
+        //根据每个商户数量返回订单数
+        Iterator<Map.Entry<String,Integer>> entries = map.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<String,Integer> entry = entries.next();
+            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+            ttaskBaseService.selectShopTask(entry.getKey(),entry.getValue());
+        }
+        String content = JSON.toJSONString(null);
+        StringUtils.printJson(response,content);
+    }
+
+    @RequestMapping(value = "showOpen", method = { RequestMethod.GET, RequestMethod.POST })
+    public void showOpen(@PathVariable("turl") String turl, HttpServletRequest request,
+                         HttpServletResponse response) throws IOException {
+        Map map = new HashMap();
+        try {
+            String goodsrc = JdSpider.getGoodImgByurl(turl);//获取图片
+            String ttitle = JdSpider.getGoodTitleByurl(turl);//获取商品标题
+            String goodis = JdSpider.getGoodId_ByURL(turl);//获取商品ID
+            String result = JdSpider.getGoodInfos(goodis);//获取商品详细信息
+            String good_price  = JdSpider.getGoodPrice_ByResult(result);//获取商品价格
+            map.put("goodsrc",goodsrc);
+            map.put("ttitle",ttitle);
+            map.put("goodprice",good_price);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
+    }
+
+//    public static void main(String[] args){
 //        int count = 7;
 //        int sum = 0;
 //        Map<String,Integer> map = new HashMap();
-//        for (TshopInfo si:listShop) {
+//        for (int i=0;i<10;i++) {
 //            Random rand = new Random();
 //            int a = rand.nextInt(3) + 1;
 //            sum +=a;
 //            if(sum>7){
-//               a = a-(sum-7);
+//                a = a-(sum-7);
 //            }
-//            map.put(si.getLoginName(),a);
+//            map.put("A"+i,a);
 //            if(sum>=7){
 //                break;
 //            }
 //        }
-//        //根据每个商户数量返回订单数
-//
-//        // 预处理
-//        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
-//        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-//        PageResponse<TtaskBase> pagejson = new PageResponse<>(ttaskBaseService.list(queryable,entityWrapper));
-//        String content = JSON.toJSONString(pagejson, filter);
-//        StringUtils.printJson(response,content);
+//        Iterator<Map.Entry<String,Integer>> entries = map.entrySet().iterator();
+//        while (entries.hasNext()) {
+//            Map.Entry<String,Integer> entry = entries.next();
+//            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+//        }
 //    }
 }

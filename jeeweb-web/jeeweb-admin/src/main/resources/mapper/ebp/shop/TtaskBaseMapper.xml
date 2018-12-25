@@ -46,6 +46,7 @@
   </select>
 
   <select id="selectShopTask" resultMap="TtaskBase">
-    select * from T_task_Base t where
+    select t.* from T_task_Base t where t.shopid= #{shopid} and t.tasknum <![CDATA[>=]]> 0
+     limit ${count}
   </select>
 </mapper>

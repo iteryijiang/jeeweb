@@ -9,6 +9,7 @@
     <result property="phoneNum" column="phoneNum" jdbcType="NUMERIC" />
     <result property="totalMoney" column="totalMoney" jdbcType="NUMERIC" />
     <result property="withdrawalMoney" column="withdrawalMoney" jdbcType="VARCHAR" />
+      <result property="userid" column="userid" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >

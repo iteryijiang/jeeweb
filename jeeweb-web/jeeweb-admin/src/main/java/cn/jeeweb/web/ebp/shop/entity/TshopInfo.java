@@ -15,14 +15,15 @@ public class TshopInfo extends DataEntity<String> {
 	@TableId(value = "id", type = IdType.UUID)
 	private String id;
 
-	private String shopName;//	varchar	200	0	-1	0	0	0	0		0	商户名称	utf8	utf8_general_ci		0	0
-	private String loginName;//	varchar	50	0	-1	0	0	0	0		0	登录账号	utf8	utf8_general_ci		0	0
-	private String accountLevel;//	varchar	32	0	-1	0	0	0	0		0	账号等级	utf8	utf8_general_ci		0	0
-	private Double totalDeposit;//	double	10	2	-1	0	0	0	0		0	总押金				0	0
-	private Double taskDeposit;//	double	10	2	-1	0	0	0	0		0	任务冻结押金				0	0
-	private Double extractDeposit;//	double	10	2	-1	0	0	0	0		0	提现冻结押金				0	0
-	private Double AvailableDeposit;//	double	10	2	-1	0	0	0	0		0	可用押金				0	0
+	private String shopname;//	varchar	200	0	-1	0	0	0	0		0	商户名称	utf8	utf8_general_ci		0	0
+	private String loginname;//	varchar	50	0	-1	0	0	0	0		0	登录账号	utf8	utf8_general_ci		0	0
+	private String accountlevel;//	varchar	32	0	-1	0	0	0	0		0	账号等级	utf8	utf8_general_ci		0	0
+	private Double totaldeposit;//	double	10	2	-1	0	0	0	0		0	总押金				0	0
+	private Double taskdeposit;//	double	10	2	-1	0	0	0	0		0	任务冻结押金				0	0
+	private Double extractdeposit;//	double	10	2	-1	0	0	0	0		0	提现冻结押金				0	0
+	private Double availabledeposit;//	double	10	2	-1	0	0	0	0		0	可用押金				0	0
 	private String status;//	varchar	32	0	-1	0	0	0	0		0	状态	utf8	utf8_general_ci		0	0
+	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
 
 
 	@Override
@@ -35,60 +36,61 @@ public class TshopInfo extends DataEntity<String> {
 		this.id = id;
 	}
 
-	public String getShopName() {
-		return shopName;
+	public String getShopname() {
+		return shopname;
 	}
 
-	public void setShopName(String shopName) {
-		this.shopName = shopName;
+	public void setShopname(String shopname) {
+		this.shopname = shopname;
 	}
 
-	public String getLoginName() {
-		return loginName;
+	public String getLoginname() {
+		return loginname;
 	}
 
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
+	public void setLoginname(String loginname) {
+		this.loginname = loginname;
 	}
 
-	public String getAccountLevel() {
-		return accountLevel;
+	public String getAccountlevel() {
+		return accountlevel;
 	}
 
-	public void setAccountLevel(String accountLevel) {
-		this.accountLevel = accountLevel;
+	public void setAccountlevel(String accountlevel) {
+		this.accountlevel = accountlevel;
 	}
 
-	public Double getTotalDeposit() {
-		return totalDeposit;
+
+	public Double getTotaldeposit() {
+		return totaldeposit;
 	}
 
-	public void setTotalDeposit(Double totalDeposit) {
-		totalDeposit = totalDeposit;
+	public void setTotaldeposit(Double totaldeposit) {
+		this.totaldeposit = totaldeposit;
 	}
 
-	public Double getTaskDeposit() {
-		return taskDeposit;
+	public Double getTaskdeposit() {
+		return taskdeposit;
 	}
 
-	public void setTaskDeposit(Double taskDeposit) {
-		this.taskDeposit = taskDeposit;
+	public void setTaskdeposit(Double taskdeposit) {
+		this.taskdeposit = taskdeposit;
 	}
 
-	public Double getExtractDeposit() {
-		return extractDeposit;
+	public Double getExtractdeposit() {
+		return extractdeposit;
 	}
 
-	public void setExtractDeposit(Double extractDeposit) {
-		this.extractDeposit = extractDeposit;
+	public void setExtractdeposit(Double extractdeposit) {
+		this.extractdeposit = extractdeposit;
 	}
 
-	public Double getAvailableDeposit() {
-		return AvailableDeposit;
+	public Double getAvailabledeposit() {
+		return availabledeposit;
 	}
 
-	public void setAvailableDeposit(Double availableDeposit) {
-		AvailableDeposit = availableDeposit;
+	public void setAvailabledeposit(Double availabledeposit) {
+		this.availabledeposit = availabledeposit;
 	}
 
 	public String getStatus() {
@@ -99,6 +101,11 @@ public class TshopInfo extends DataEntity<String> {
 		this.status = status;
 	}
 
+	public String getUserid() {
+		return userid;
+	}
 
-
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
 }

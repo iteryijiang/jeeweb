@@ -13,12 +13,13 @@ public class TbuyerInfo extends DataEntity<String> {
 	@TableId(value = "id", type = IdType.UUID)
 	private String id;
 
-	private String buyerName;//	varchar	200	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	private String loginName;//	varchar	200	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	private String accountLevel;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	private Double phoneNum;//	double	10	4	-1	0	0	0	0		0					0	0
-	private Double totalMoney;//	double	10	4	-1	0	0	0	0		0					0	0
-	private String withdrawalMoney;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+	private String buyername;//	varchar	200	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+	private String loginname;//	varchar	200	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+	private String accountlevel;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+	private Double phonenum;//	double	10	4	-1	0	0	0	0		0					0	0
+	private Double totalmoney;//	double	10	4	-1	0	0	0	0		0					0	0
+	private String withdrawalmoney;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
 	@Override
 	public String getId() {
 		return id;
@@ -29,51 +30,59 @@ public class TbuyerInfo extends DataEntity<String> {
 		this.id = id;
 	}
 
-	public String getBuyerName() {
-		return buyerName;
+	public String getBuyername() {
+		return buyername;
 	}
 
-	public void setBuyerName(String buyerName) {
-		this.buyerName = buyerName;
+	public void setBuyername(String buyername) {
+		this.buyername = buyername;
 	}
 
-	public String getLoginName() {
-		return loginName;
+	public String getLoginname() {
+		return loginname;
 	}
 
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
+	public void setLoginname(String loginname) {
+		this.loginname = loginname;
 	}
 
-	public String getAccountLevel() {
-		return accountLevel;
+	public String getAccountlevel() {
+		return accountlevel;
 	}
 
-	public void setAccountLevel(String accountLevel) {
-		this.accountLevel = accountLevel;
+	public void setAccountlevel(String accountlevel) {
+		this.accountlevel = accountlevel;
 	}
 
-	public Double getPhoneNum() {
-		return phoneNum;
+	public Double getPhonenum() {
+		return phonenum;
 	}
 
-	public void setPhoneNum(Double phoneNum) {
-		this.phoneNum = phoneNum;
+	public void setPhonenum(Double phonenum) {
+		this.phonenum = phonenum;
 	}
 
-	public Double getTotalMoney() {
-		return totalMoney;
+	public Double getTotalmoney() {
+		return totalmoney;
 	}
 
-	public void setTotalMoney(Double totalMoney) {
-		this.totalMoney = totalMoney;
+	public void setTotalmoney(Double totalmoney) {
+		this.totalmoney = totalmoney;
 	}
 
-	public String getWithdrawalMoney() {
-		return withdrawalMoney;
+	public String getWithdrawalmoney() {
+		return withdrawalmoney;
 	}
 
-	public void setWithdrawalMoney(String withdrawalMoney) {
-		this.withdrawalMoney = withdrawalMoney;
+	public void setWithdrawalmoney(String withdrawalmoney) {
+		this.withdrawalmoney = withdrawalmoney;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 }

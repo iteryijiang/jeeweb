@@ -261,14 +261,15 @@ public class UserController extends BaseBeanController<User> {
 				userRoleList.add(userRole);
 				if("3a0e855344644a7a904ec74846d46cc3".equals(roleid)){//保存商铺用户
 					TshopInfo tshopInfo = new TshopInfo();
-					tshopInfo.setShopName(entity.getRealname());
-					tshopInfo.setLoginName(entity.getUsername());
-					tshopInfo.setAccountLevel("1");
-					tshopInfo.setTotalDeposit(0d);
-					tshopInfo.setTaskDeposit(0d);
-					tshopInfo.setExtractDeposit(0d);
-					tshopInfo.setAvailableDeposit(0d);
+					tshopInfo.setShopname(entity.getRealname());
+					tshopInfo.setLoginname(entity.getUsername());
+					tshopInfo.setAccountlevel("1");
+					tshopInfo.setTotaldeposit(0d);
+					tshopInfo.setTaskdeposit(0d);
+					tshopInfo.setExtractdeposit(0d);
+					tshopInfo.setAvailabledeposit(0d);
 					tshopInfo.setStatus("0");
+					tshopInfo.setUserid(entity.getId());
 					try {
 						tshopInfoService.insert(tshopInfo);
 					}catch (Exception e){
@@ -276,12 +277,13 @@ public class UserController extends BaseBeanController<User> {
 					}
 				}else if("402880e45b5d7636015b5d8baca60000".equals(roleid)){//保存买手用户
 					TbuyerInfo tbi = new TbuyerInfo();
-					tbi.setBuyerName(entity.getRealname());
-					tbi.setLoginName(entity.getUsername());
-					tbi.setAccountLevel("1");
-					tbi.setPhoneNum(0d);
-					tbi.setTotalMoney(0d);
-					tbi.setWithdrawalMoney("0");
+					tbi.setBuyername(entity.getRealname());
+					tbi.setLoginname(entity.getUsername());
+					tbi.setAccountlevel("1");
+					tbi.setPhonenum(0d);
+					tbi.setTotalmoney(0d);
+					tbi.setWithdrawalmoney("0");
+					tbi.setUserid(entity.getId());
 					tbuyerInfoService.insert(tbi);
 				}
 			}
