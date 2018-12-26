@@ -675,15 +675,19 @@
 .choose_task_number input[type=number],.task_keyword_settings input[type=number]{
     width:80px;
 }
+.task_keyword_settings span.error{
+    margin-top:10px;
+    display:none;
+}
 .task_free_total div.row{
     background-color:#ddd;
     padding:0 20px;
 }
 .task_free_total div.row .lf{
-    width:85%;
+    width:80%;
 }
 .task_free_total div.row .rt{
-    width:10%;
+    width:15%;
     overflow: hidden;
 }
 /* 选择增值服务 */
@@ -712,4 +716,78 @@
     color:#aaa;
     font-size:12px;
     margin-left:10px;
+}
+/* 卖家详情页面 */
+.task_detail_seller {
+    height:500px;
+}
+.task_detail_seller div.lf{
+    width:40%;
+    margin-right:1%;
+}
+.task_detail_seller div.lf >div{
+    border-top:1px solid #eee;
+    padding-top:10px;
+    margin-top:10px;
+}
+.task_detail_seller .keyword{
+    border-bottom:1px solid #eee;
+    overflow: auto;
+    margin-bottom:10px;
+}
+.task_detail_seller div.lf .item {
+    padding-left:20px;
+}
+.task_detail_seller>div{
+    background-color:#fff;
+    padding:10px;
+    height:100%;
+}
+.task_detail_seller> div.rt{
+    width:59%;
+    padding:30px;
+}
+.task_detail_seller>div p,.task_detail_seller>div div{
+    line-height: 30px;
+}
+.task_detail_seller div.rt .task_status{
+    padding-left:30px;
+    border-bottom:1px solid #eee;
+    padding-bottom:20px;
+}
+.task_table,.task_target,.task_free_seller{
+    margin-top:20px;
+    background-color:#fff;
+    padding:20px;
+    text-align:center;
+    padding-bottom:10px;
+    margin-bottom:20px;
+}
+.task_table table{
+    width:100%;
+}
+.task_table table thead{
+    background-color:#f9f9f9;
+}
+.task_table thead th,.task_target thead th,.task_free_seller thead th{
+    text-align: center;
+}
+.task_target  h3,.task_free_seller  h3{
+    text-align: left;
+}
+.task_target table tr td img{
+    width:50px;
+    height:50px;
+}
+.task_target tbody tr td:first-child{
+    text-align: left;
+}
+.task_free_seller tbody tr td:first-child{
+    color:red;
+}
+.task_table table,.task_target table,.task_free_seller table{
+    border-bottom:1px solid #eee;
+}
+.task_free_seller div{
+    text-align: right;
 }
