@@ -7,10 +7,10 @@
     <result property="shopid" column="shopid" jdbcType="VARCHAR" />
     <result property="tUrl" column="t_url" jdbcType="VARCHAR" />
     <result property="tTitle" column="t_title" jdbcType="VARCHAR" />
-    <result property="tPrice" column="t_price" jdbcType="NUMERIC" />
+    <result property="tPrice" column="t_price" jdbcType="DOUBLE" />
     <result property="tNum" column="t_num" jdbcType="NUMERIC" />
-    <result property="totalprice" column="totalprice" jdbcType="NUMERIC" />
-    <result property="searchprice" column="searchprice" jdbcType="NUMERIC" />
+    <result property="totalprice" column="totalprice" jdbcType="DOUBLE" />
+    <result property="searchprice" column="searchprice" jdbcType="DOUBLE" />
     <result property="ispcview" column="ispcview" jdbcType="VARCHAR" />
     <result property="keyword" column="keyword" jdbcType="VARCHAR" />
     <result property="spec1" column="spec1" jdbcType="VARCHAR" />
@@ -23,6 +23,12 @@
     <result property="expressway" column="expressway" jdbcType="VARCHAR" />
     <result property="tasknum" column="tasknum" jdbcType="NUMERIC" />
     <result property="status" column="status" jdbcType="VARCHAR" />
+    <result property="imgurl" column="imgurl" jdbcType="VARCHAR" />
+    <result property="tasksort" column="tasksort" jdbcType="VARCHAR" />
+    <result property="lowpoint" column="lowpoint" jdbcType="DOUBLE" />
+    <result property="highpoint" column="highpoint" jdbcType="DOUBLE" />
+    <result property="taskdisservice" column="taskdisservice" jdbcType="VARCHAR" />
+    <result property="tasklocation" column="tasklocation" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >

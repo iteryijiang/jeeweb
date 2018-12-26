@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.util.Date;
+import java.util.List;
 
 @TableName("t_task_base")
 @SuppressWarnings("serial")
@@ -34,6 +35,13 @@ public class TtaskBase extends DataEntity<String> {
 	private String expressway;//	varchar	32	0	-1	0	0	0	0		0	运费收取方式	utf8	utf8_general_ci		0	0
 	private Long tasknum;//	int	8	0	-1	0	0	0	0		0	任务单数				0	0
 	private String status;//	varchar	4	0	0	0	0	0	0		0	发布状态	utf8	utf8_general_ci		0	0
+
+	private String imgurl;//	varchar	255	0	-1	0	0	0	0		0	商品图片	utf8	utf8_general_ci		0	0
+	private String tasksort;//	varchar	32	0	-1	0	0	0	0		0	商品排序	utf8	utf8_general_ci		0	0
+	private Double lowpoint;//	double	10	2	-1	0	0	0	0		0	最低价格区间				0	0
+	private Double highpoint;//	double	10	2	-1	0	0	0	0		0	最高价格区间				0	0
+	private String taskdisservice;//	varchar	255	0	-1	0	0	0	0		0	折扣和服务	utf8	utf8_general_ci		0	0
+	private String tasklocation;//	varchar	255	0	-1	0	0	0	0		0	发货地	utf8	utf8_general_ci		0	0
 
 
 	@Override
@@ -204,5 +212,53 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getImgurl() {
+		return imgurl;
+	}
+
+	public void setImgurl(String imgurl) {
+		this.imgurl = imgurl;
+	}
+
+	public String getTasksort() {
+		return tasksort;
+	}
+
+	public void setTasksort(String tasksort) {
+		this.tasksort = tasksort;
+	}
+
+	public Double getLowpoint() {
+		return lowpoint;
+	}
+
+	public void setLowpoint(Double lowpoint) {
+		this.lowpoint = lowpoint;
+	}
+
+	public Double getHighpoint() {
+		return highpoint;
+	}
+
+	public void setHighpoint(Double highpoint) {
+		this.highpoint = highpoint;
+	}
+
+	public String getTaskdisservice() {
+		return taskdisservice;
+	}
+
+	public void setTaskdisservice(String taskdisservice) {
+		this.taskdisservice = taskdisservice;
+	}
+
+	public String getTasklocation() {
+		return tasklocation;
+	}
+
+	public void setTasklocation(String tasklocation) {
+		this.tasklocation = tasklocation;
 	}
 }

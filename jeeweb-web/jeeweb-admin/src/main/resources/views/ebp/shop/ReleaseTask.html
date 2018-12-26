@@ -12,7 +12,6 @@
 <script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
 <script src='${staticPath}/shop/js/bootstrap.min.js'></script>
 <script src='${staticPath}/shop/js/fileinput.min.js'></script>
-<script src='${staticPath}/shop/js/fileinput.min.js'></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
@@ -100,32 +99,32 @@
                 <div class="row">
                     <div class="col-md-2">发布任务</div>
                     <div class="col-md-10">
-                        <ul>
-                            <li class='active'>
-                                <em class='process'>1</em>
-                                <span>选任务类型</span>
-                            </li>
-                            <li>
-                                <em class='process'>2</em>
-                                <span>填写商品信息</span>
-                            </li>
-                            <li>
-                                <em>3</em>
-                                <span>选择任务数量</span>
-                            </li>
-                            <li>
-                                <em>4</em>
-                                <span>选增值服务</span>
-                            </li>
-                            <li>
-                                <em>5</em>
-                                <span>支付</span>
-                            </li>
-                            <li class='last'>
-                                <em>6</em>
-                                <span>发布成功</span>
-                            </li>
-                        </ul>
+                        <!--<ul>-->
+                            <!--<li class='active'>-->
+                                <!--<em class='process'>1</em>-->
+                                <!--<span>选任务类型</span>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<em class='process'>2</em>-->
+                                <!--<span>填写商品信息</span>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<em>3</em>-->
+                                <!--<span>选择任务数量</span>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<em>4</em>-->
+                                <!--<span>选增值服务</span>-->
+                            <!--</li>-->
+                            <!--<li>-->
+                                <!--<em>5</em>-->
+                                <!--<span>支付</span>-->
+                            <!--</li>-->
+                            <!--<li class='last'>-->
+                                <!--<em>6</em>-->
+                                <!--<span>发布成功</span>-->
+                            <!--</li>-->
+                        <!--</ul>-->
                     </div>
                 </div>
                 <div class='row'>
@@ -150,7 +149,7 @@
                                 <div class="form-group">
                                     <label for="inputLink" class="col-sm-2 control-label">商品链接:</label>
                                     <div class="col-sm-6">
-                                         <input class="form-control must-fill" id="inputLink" placeholder="" onBlur="showOpen(this)">
+                                         <input class="form-control must-fill" id="inputLink" placeholder="" onblur="showOpen(this)">
                                     </div>
                                     <label for="inputLink" class="col-sm-1 control-label red_font">必填</label>
                                 </div>
@@ -175,9 +174,14 @@
                                   <label for="inputPrice">元<b class='red_font margin_0'>必填</b></label>
                                 </div>
                                 <div class="form-group">
-                                  <label for="inputNum">每单拍:</label>
-                                  <input type="number" class="form-control must-fill" id="inputNum" placeholder="">
-                                  <label for="inputNum">件<span>（出于安全，建议每单不要超过2件）<b class='red_font margin_0'>必填</b></span></label>
+                                  <label for="tasknum">任务单数:</label>
+                                  <input type="number" class="form-control must-fill" id="tasknum" placeholder="">
+                                  <label for="inputNum">次数<span><b class='red_font margin_0'>必填</b></span></label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputNum">每单拍:</label>
+                                    <input type="number" class="form-control must-fill" id="inputNum" placeholder="">
+                                    <label for="inputNum">件<span>（出于安全，建议每单不要超过2件）<b class='red_font margin_0'>必填</b></span></label>
                                 </div>
                                 <span>下单总金额<b class='red_font'>558</b>元</span>
                             </form>
@@ -196,10 +200,10 @@
                       <div id='task_accordin' class='radio'>
                           <div class='item'>
                                 <div class="radio">
-                                    <label>
-                                        <input type="radio" name="optionsRadios" id="0" value="pc_taobao" >
-                                        使用<b class="red_font">"淘宝搜索框"</b>查找商品<b class="red_font">（选择使用“淘宝搜索框”查找商品后，此任务默认电脑端任务；）</b>
-                                    </label>
+                                    <!--<label>-->
+                                        <!--<input type="radio" name="optionsRadios" id="0" value="pc_taobao" >-->
+                                        <!--使用<b class="red_font">"淘宝搜索框"</b>查找商品<b class="red_font">（选择使用“淘宝搜索框”查找商品后，此任务默认电脑端任务；）</b>-->
+                                    <!--</label>-->
                                 </div>
                               <div  class='item_area'>
                                     <p>请上传<b class="red_font">“淘宝商品主图”</b>，以便于买手快速找到任务商品<span>（图片大小为：1200x1200以内，且不能大于2M，格式为jpg、png、gif）</span></p>
@@ -299,24 +303,24 @@
                                         <p>请上传第1张<b class="red_font">“商品主图”</b>，<b class='red_font'>必填</b><span>（图片大小为：1200x1200以内，且不能大于2M，格式为jpg、png、gif）</span></p>
                                         <div class='good_upload'>
                                             <div class='must-fill' id='good_pic1'>
-                                                <!-- <img src="img/goods_pic.png" alt=""> -->
+                                                 <img id="img0" src="img/goods_pic.png" alt="">
                                             </div>
-                                            <div class="col-xs-12 col-sm-4 col-md-4">
-                                                    <div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle;width:100%">
-                                                        <button class="btn btn-warning fileinput-button" type="button">上传图片</button>
-                                                        <input type="file" class="jobData" onchange="loadFile(this.files[0],1)" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">
-                                                    </div>
-                                            </div>
-                                            <p style='margin-top:50px;'>请上传第2张<b class="red_font">“商品主图”</b><span  class='color_0'>，非必填，若手机淘宝有2张主图请务必上传，以便买手找到商品</span></p>
-                                            <div id='good_pic2'>
-                                                <!-- <img src="img/goods_pic.png" alt=""> -->
-                                            </div>
-                                            <div class="col-xs-12 col-sm-4 col-md-4">
-                                                    <div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle;width:100%">
-                                                        <button class="btn btn-warning fileinput-button" type="button">上传图片</button>
-                                                        <input type="file" class="jobData" onchange="loadFile(this.files[0],2)" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">
-                                                    </div>
-                                            </div>
+                                            <!--<div class="col-xs-12 col-sm-4 col-md-4">-->
+                                                    <!--<div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle;width:100%">-->
+                                                        <!--<button class="btn btn-warning fileinput-button" type="button">上传图片</button>-->
+                                                        <!--<input type="file" class="jobData" onchange="loadFile(this.files[0],1)" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">-->
+                                                    <!--</div>-->
+                                            <!--</div>-->
+                                            <!--<p style='margin-top:50px;'>请上传第2张<b class="red_font">“商品主图”</b><span  class='color_0'>，非必填，若手机淘宝有2张主图请务必上传，以便买手找到商品</span></p>-->
+                                            <!--<div id='good_pic2'>-->
+                                                <!--&lt;!&ndash; <img src="img/goods_pic.png" alt=""> &ndash;&gt;-->
+                                            <!--</div>-->
+                                            <!--<div class="col-xs-12 col-sm-4 col-md-4">-->
+                                                    <!--<div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle;width:100%">-->
+                                                        <!--<button class="btn btn-warning fileinput-button" type="button">上传图片</button>-->
+                                                        <!--<input type="file" class="jobData" onchange="loadFile(this.files[0],2)" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">-->
+                                                    <!--</div>-->
+                                            <!--</div>-->
                                         </div>
                                         <div class='good_keyword' id='keyword1'>
                                             <div class='item' id=1>
@@ -419,13 +423,13 @@
                                             </div>
                                         </div>
                                         <div class='good_last'>
-                                            <div class="row line_0">
-                                                <div class="col-md-10">
-                                                        <a class="add" onclick='addKeyword(1)' href="javascript:;">+添加一个手机淘宝搜索关键字方案</a>
-                                                        <span>（最多可添加4个方案）</span>
-                                                </div>
-                                                <div class="col-md-2">可提高任务安全保障</div>
-                                            </div>
+                                            <!--<div class="row line_0">-->
+                                                <!--<div class="col-md-10">-->
+                                                        <!--<a class="add" onclick='addKeyword(1)' href="javascript:;">+添加一个手机淘宝搜索关键字方案</a>-->
+                                                        <!--<span>（最多可添加4个方案）</span>-->
+                                                <!--</div>-->
+                                                <!--<div class="col-md-2">可提高任务安全保障</div>-->
+                                            <!--</div>-->
                                         <p>缩小搜索范围：</p>
                                         <p>让买手用列表筛选中"<b>排序</b>"、"<b>商品规格</b>"缩小范围<span>选填</span></p>
                                         <div>
@@ -532,15 +536,15 @@
                 </div>
             </div>
             </div>
-            <div class='prev_next'>
-                <a href="#" class='prev'>上一步</a>
-                <a href="javascript:;" class='next' onclick="getNext()">下一步</a>
-            </div>
+            <!--<div class='prev_next'>-->
+                <!--<a href="#" class='prev'>上一步</a>-->
+                <!--<a href="javascript:;" class='next' onclick="getNext()">下一步</a>-->
+            <!--</div>-->
             <!-- 警告框 -->
     </div>
 </body>
 <script src='${staticPath}/shop/js/swiper-3.4.2.min.js'></script>
-<script src='${staticPath}/shop/js/layui.all.js'></script>
+<!--<script src='${staticPath}/shop/js/layui.all.js'></script>-->
 
 <script>
         var mySwiper = new Swiper('.swiper-container', {
@@ -551,7 +555,7 @@
             });
         function loadFile(file,i){
             console.log(file)
-            var item="<img src='+img/"+file.name+"'>"
+            var item="<img id='img"+i+"' src='+img/"+file.name+"'>"
             $('#good_pic'+i).append(item)
         }
         //  增加关键字
@@ -611,43 +615,51 @@
             var len=$('.good_keyword').eq(i).find('.item').length;
             $('.good_keyword').eq(i).find('.item').eq(len-1).remove()
         }
-        
+
+        //手机商品基本信息good_basic_info
+        var good_basic_info={};
         //点击提交按钮
        var good_detail_info={}
        var radio_index;
        var isNext=false;
        //商品具体信息
+        //默认现实手机端
+        $('#task_accordin .item_area').eq("1").show();
+        $('#task_accordin input[type=radio]').prop("checked",true);
+
        $('#task_accordin input[type=radio]').bind('click',function(){
            radio_index=$(this).prop('id')
             var index=$(this).prop('id')
+           alert(index);
             $('#task_accordin .item_area').hide()
             $('#task_accordin .item_area').eq(index).show()
             good_detail_info.method=$(this).val()
         })
        function TaskConfirm(index){
            if(index=='0'){//第一次提交确认信息
-             //手机商品基本信息good_basic_info
-             var good_basic_info={};
              $('.good_basic_info').find('input').each(function(index,ele){
                 if($(this).hasClass('must-fill') && $(this).val()==''){
                     $(this).addClass('red').focus()
                 }else{
                     $(this).removeClass('red')
                     switch(index){
+                        case 0:
+                            good_detail_info.tUrl=$(ele).val()
+                            break;
                         case 1:
-                        good_basic_info.goodLink=$(ele).val()
-                        break;
+                            good_detail_info.tTitle=$(ele).val()
+                            break;
                         case 2:
-                        good_basic_info.goodTitle=$(ele).val()
-                        break;
+                            good_detail_info.tPrice=$(ele).val()
+                            break;
                         case 3:
-                        good_basic_info.goodSalePrice=$(ele).val()
-                        break;
+                            good_detail_info.tasknum=$(ele).val()
+                            break;
                         case 4:
-                        good_basic_info.goodSaleNum=$(ele).val()
-                        break;
+                            good_detail_info.tNum=$(ele).val()
+                            break;
                         case 5:
-                        good_basic_info.goodDisplayPrice=$(ele).val()
+                            good_detail_info.searchprice=$(ele).val()
                     }
                 }
              })
@@ -660,12 +672,12 @@
             GetCheckboxInfo(good_detail_info.method);
             //填充任务信息
             // TaskAreaInfo()
-               console.log(good_basic_info)
+               console.log(good_detail_info);
                $.ajax({
                    type: "POST",
                    url: "${adminPath}/shop/TtaskBase/add",
                    contentType:'application/json;charset=utf-8',
-                   data: JSON.stringify(good_basic_info),
+                   data: JSON.stringify(good_detail_info),
                    dataType: "json",
                    success: function(data){
                        alert("保存成功");
@@ -696,9 +708,9 @@
                 good_detail_info.TaskPriceSection.low_point=$('.pc_low').val();
                 good_detail_info.TaskPriceSection.high_point=$('.pc_high').val();
             }else{
-                good_detail_info.MainTaskPic1=$('#good_pic1 img').prop('src')//手机端主照片1
-                good_detail_info.MainTaskPic2=$('#good_pic2 img').prop('src')//手机端主照片2
-                good_detail_info.TaskSort=$('.drop2').html()//手机端商品排序
+                good_detail_info.imgurl=$('#good_pic1 img').prop('src')//手机端主照片1
+                // good_detail_info.MainTaskPic2=$('#good_pic2 img').prop('src')//手机端主照片2
+                good_detail_info.tasksort=$('.drop2').html()//手机端商品排序
 
                 GetKeywords($('#keyword1'),method)
             }
@@ -706,7 +718,7 @@
         }
         //获取相应的所有关键词
         function GetKeywords(ele,method){
-            good_detail_info.KeywordsArray=[]//关键词数组
+            good_detail_info.ttaskFees=[]//关键词数组
             ele.find('.item').each(function(index,item){
                 var object={}
                 if(method=='pc_taobao'){
@@ -723,10 +735,10 @@
                     //所在地
                     object.TaskLocation=$(item).find('.drop0').html();
                 }else{
-                    good_detail_info.KeywordsArray=GetMobileKeywords()
+                    good_detail_info.ttaskFees=GetMobileKeywords()
                 }
                  if(method=='pc_taobao'){
-                    good_detail_info.KeywordsArray.push(object)
+                    good_detail_info.ttaskFees.push(object)
                  }
 
             })
@@ -772,22 +784,30 @@
                 var obj={}
                 //1.关键字
                 obj.search_keyword=$(item).find('.must-fill').val()
+                good_detail_info.keyword=$(item).find('.must-fill').val()
                 //2.规格
-                obj.search_keyword=$(item).find('.must-fill').val();//手机端关键字
+                // obj.search_keyword=$(item).find('.must-fill').val();//手机端关键字
                 obj.search_spec=[]//手机端规格两项
                 obj.search_spec[0]=$(item).find('.spec0').val();
                 obj.search_spec[1]=$(item).find('.spec1').val();
+                good_detail_info.spec1=$(item).find('.spec0').val();
+                good_detail_info.spec2=$(item).find('.spec1').val();
                 //3.价格区间
                 obj.TaskPriceSection={}
                 obj.TaskPriceSection.low_point=$(item).find('.mobile_low').val();
                 obj.TaskPriceSection.high_point=$(item).find('.mobile_high').val();
+                good_detail_info.lowpoint=$(item).find('.mobile_low').val();
+                good_detail_info.highpoint=$(item).find('.mobile_high').val();
                 //4.折扣和服务
                 obj.TaskDisService=GetDiscountAndService($('.discount_service'));//手机端商品折扣与服务
+                good_detail_info.taskdisservice=GetDiscountAndService($('.discount_service'));
                 //5.发货地
                 obj.TaskLocation=$(item).find('.drop1').html();//手机端发货地
+                good_detail_info.tasklocation=$(item).find('.drop1').html();//手机端发货地
                 console.log($(item).find('.drop1').html())
                 //6.商品分类
                 obj.TaskSpecify=$(item).find('.good_spec').val();//手机端商品分类
+                good_detail_info.taskspecify=$(item).find('.good_spec').val();//手机端商品分类
                 arr.push(obj)
             })
             return arr;
@@ -805,13 +825,15 @@
         function showOpen(turl){
             $.ajax({
                 type: "POST",
-                url: "${adminPath}/shop/TtaskBase/showOpen",
-                // contentType:'application/json;charset=utf-8',
-                data: {"turl":turl.value},
+                url: "${adminPath}/shop/TtaskBase/showTitle",
+                contentType:'application/json;charset=utf-8',
+                data: JSON.stringify({"turl":turl.value}),
                 dataType: "json",
                 success: function(data){
                     $("#inputTab").attr("value",data.ttitle);
                     $("#inputPrice").attr("value",data.goodprice);
+                    $("#img0").attr("src",data.goodsrc);
+                    alert(data.goodsrc);
                 }
             });
         }

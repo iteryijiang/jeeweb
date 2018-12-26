@@ -13,4 +13,5 @@ import java.util.List;
 public interface TshopInfoMapper extends BaseMapper<TshopInfo> {
 	
 	List<TshopInfo> selectUserList(Pagination page, @Param("ew") Wrapper<TshopInfo> wrapper);
+	List<TshopInfo>  findshopInfo();
 }

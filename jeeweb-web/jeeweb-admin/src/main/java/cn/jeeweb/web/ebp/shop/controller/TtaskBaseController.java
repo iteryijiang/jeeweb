@@ -1,5 +1,7 @@
 package cn.jeeweb.web.ebp.shop.controller;
 
+import cn.jeeweb.beetl.tags.dict.Dict;
+import cn.jeeweb.beetl.tags.dict.DictUtils;
 import cn.jeeweb.common.http.PageResponse;
 import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
@@ -16,9 +18,12 @@ import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
+import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +47,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 
     @Autowired
     private TtaskBaseService ttaskBaseService;
+    @Autowired
+    private TshopInfoService tshopInfoService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -64,6 +71,10 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 //        TtaskBase entity = new TtaskBase();
 //        System.out.println(request.getParameter("taskBase"));
 
+        ttaskBase.setShopid(UserUtils.getUser().getId());
+        if(ttaskBase.gettPrice()!=null&&ttaskBase.gettNum()!=null){
+            ttaskBase.setTotalprice(ttaskBase.gettPrice()*ttaskBase.gettNum());
+        }
         ttaskBase.setStatus("1");
         try {
             ttaskBaseService.insert(ttaskBase);
@@ -142,41 +153,47 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("myTaskList")
     public void myTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
-        EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
-        propertyPreFilterable.addQueryProperty("id");
-        //获得商户表
-        List<TshopInfo> listShop = new ArrayList();
-        int count = 7;
-        int sum = 0;
-        Map<String,Integer> map = new HashMap();
-        for (TshopInfo si:listShop) {
-            Random rand = new Random();
-            int a = rand.nextInt(3) + 1;
-            sum +=a;
-            if(sum>7){
-               a = a-(sum-7);
+        List listBase = new ArrayList();
+        try {
+            //获得商户表
+            List<TshopInfo> listShop = tshopInfoService.findshopInfo();
+            int count = 7;
+            int sum = 0;
+            Map<String, Integer> map = new HashMap();
+            for (TshopInfo si : listShop) {
+                Random rand = new Random();
+                int a = rand.nextInt(3) + 1;
+                sum += a;
+                if (sum > 7) {
+                    a = a - (sum - 7);
+                }
+                map.put(si.getUserid(), a);
+                if (sum >= 7) {
+                    break;
+                }
             }
-            map.put(si.getLoginname(),a);
-            if(sum>=7){
-                break;
+            //根据每个商户数量返回订单数
+            Iterator<Map.Entry<String, Integer>> entries = map.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry<String, Integer> entry = entries.next();
+                System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                List<TtaskBase> list = ttaskBaseService.selectShopTask(entry.getKey(), entry.getValue());
+                listBase.addAll(list);
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        //根据每个商户数量返回订单数
-        Iterator<Map.Entry<String,Integer>> entries = map.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry<String,Integer> entry = entries.next();
-            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-            ttaskBaseService.selectShopTask(entry.getKey(),entry.getValue());
-        }
-        String content = JSON.toJSONString(null);
+        String content = JSON.toJSONString(listBase);
         StringUtils.printJson(response,content);
     }
 
-    @RequestMapping(value = "showOpen", method = { RequestMethod.GET, RequestMethod.POST })
-    public void showOpen(@PathVariable("turl") String turl, HttpServletRequest request,
-                         HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "showTitle", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("showTitle")
+    public void showTitle(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                          HttpServletResponse response) throws IOException {
         Map map = new HashMap();
         try {
+            String turl = jsonObject.getString("turl");
             String goodsrc = JdSpider.getGoodImgByurl(turl);//获取图片
             String ttitle = JdSpider.getGoodTitleByurl(turl);//获取商品标题
             String goodis = JdSpider.getGoodId_ByURL(turl);//获取商品ID
@@ -191,6 +208,13 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         String content = JSON.toJSONString(map);
         StringUtils.printJson(response,content);
+    }
+
+    @GetMapping(value = "listPool")
+    @RequiresMethodPermissions("listPool")
+    public ModelAndView listPool(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("listPool");
+        return mav;
     }
 
 //    public static void main(String[] args){
@@ -215,4 +239,19 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 //            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
 //        }
 //    }
+
+
+    @GetMapping(value = "{diccode}/getDictList")
+    public void getDictList(@PathVariable("diccode") String diccode, HttpServletRequest request,
+                          HttpServletResponse response) throws IOException {
+        List<Dict> list = new ArrayList<Dict>();
+        try {
+            list = DictUtils.getDictList(diccode);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(list);
+        StringUtils.printJson(response,content);
+    }
+
 }

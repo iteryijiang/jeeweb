@@ -5,13 +5,13 @@
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result property="shopname" column="shopname" jdbcType="VARCHAR" />
     <result property="loginname" column="loginname" jdbcType="VARCHAR" />
-    <result property="accountLevel" column="accountlevel" jdbcType="VARCHAR" />
+    <result property="accountlevel" column="accountlevel" jdbcType="VARCHAR" />
     <result property="totaldeposit" column="totaldeposit" jdbcType="NUMERIC" />
     <result property="taskdeposit" column="taskdeposit" jdbcType="NUMERIC" />
-    <result property="extracteposit" column="extractDeposit" jdbcType="NUMERIC" />
-    <result property="Availabledeposit" column="Availabledeposit" jdbcType="NUMERIC" />
+    <result property="extractdeposit" column="extractdeposit" jdbcType="NUMERIC" />
+    <result property="availabledeposit" column="availabledeposit" jdbcType="NUMERIC" />
     <result property="status" column="status" jdbcType="VARCHAR" />
-      <result property="userid" column="userid" jdbcType="VARCHAR" />
+    <result property="userid" column="userid" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -30,4 +30,8 @@
 	   </if>
   </select>
 
+    <select id="findshopInfo"  resultMap="TshopInfo">
+        SELECT t.* FROM T_shop_Info t,T_task_Base b where t.userid = b.shopid and t.status='0'
+        and b.tasknum <![CDATA[>=]]> 0 limit 20
+    </select>
 </mapper>

@@ -7,8 +7,13 @@ import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 @Service("TshopInfoService1")
 public class TshopInfoServiceImpl extends CommonServiceImpl<TshopInfoMapper, TshopInfo> implements TshopInfoService {
 
+    public List<TshopInfo> findshopInfo(){
+        return baseMapper.findshopInfo();
+    }
 }
