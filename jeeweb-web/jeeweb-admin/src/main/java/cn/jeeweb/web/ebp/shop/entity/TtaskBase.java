@@ -246,19 +246,19 @@ public class TtaskBase extends DataEntity<String> {
 		this.highpoint = highpoint;
 	}
 
-	public String getTaskdisservice() {
-		return taskdisservice;
-	}
-
-	public void setTaskdisservice(String taskdisservice) {
-		this.taskdisservice = taskdisservice;
-	}
-
 	public String getTasklocation() {
 		return tasklocation;
 	}
 
 	public void setTasklocation(String tasklocation) {
 		this.tasklocation = tasklocation;
+	}
+
+	public String getTaskdisservice() {
+		return taskdisservice;
+	}
+
+	public void setTaskdisservice(String taskdisservice) {
+		this.taskdisservice = taskdisservice;
 	}
 }
