@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <title>选择增值服务</title>
-<link rel="stylesheet" href="${staticPath}/shop/css/bootstrap.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/swiper-3.4.2.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/fileinput.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/ProjectGlobal.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/global.css">
-<script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
-<script src='${staticPath}/shop/js/bootstrap.min.js'></script>
-<script src='${staticPath}/shop/js/fileinput.min.js'></script>
-<script src='${staticPath}/shop/js/fileinput.min.js'></script>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/swiper-3.4.2.min.css">
+<link rel="stylesheet" href="css/fileinput.min.css">
+<link rel="stylesheet" href="css/ProjectGlobal.css">
+<link rel="stylesheet" href="css/global.css">
+<script src='js/jquery-3.3.1.min.js'></script>
+<script src='js/bootstrap.min.js'></script>
+<script src='js/fileinput.min.js'></script>
+<script src='js/fileinput.min.js'></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
@@ -142,7 +142,7 @@
                     <p><b>快速返款给买手</b></p>
                     <div>
                         <label class="radio-inline">
-                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 押金直接返款
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked> 押金直接返款
                             <span class='tips'>选择此服务，买手完成后，平台将直接使用押金为您操作返款，商家无需耗费时间、人力处理退款、减少押款周期</span>
                           </label>
                           <p>每单收取商品金额的0.7%作为退款服务费，费用：10单x558元x0.7%=<span class='red_font'>39.06</span>符点</p>
@@ -191,7 +191,7 @@
                             <p><b>定时发布：</b><span>选择此服务后，获赢符将会按照您设置的时间来发布任务</span></p>
                             <label class="checkbox-inline">
                                 <input type="checkbox"  value="option3"> 发布任务时间
-                                <input type="text">
+                                <input type="text" onclick="WdatePicker({minDate:'%y-%M-#{%d} #{%H+2}',dateFmt:'yyyy-MM-dd HH:mm:00'})">
                                 <span>(5获赢符点)<b>发布时间与当前时间至少错开两个小时</b></span>
                                 <p class='tips'>温馨提示：客服审核时间为9:00-22:00，请在本时间段内发布任务，否则无法按照您设置的时间定时发布</p>
                             </label>
@@ -200,7 +200,7 @@
                             <p><b>定时结束：</b><span class='tips'>选择此服务后，获赢符将会按照您设置的时间来结束任务</span></p>
                             <label class="checkbox-inline">
                                 <input type="checkbox"  value="option3"> 任务结束时间
-                                <input type="text">
+                                <input type="text" onclick="WdatePicker({minDate:'%y-%M-#{%d} #{%H+2}',dateFmt:'yyyy-MM-dd HH:mm:00'})">
                                 <span>(5获赢符点)<b>结束时间与发布任务时间至少错开一个小时</b></span>
                                 <p class='tips'>温馨提示：客服审核时间为9:00-22:00，请在本时间段内发布任务，否则无法按照您设置的时间定时发布</p>
                             </label>
@@ -232,6 +232,9 @@
                                         <input type="radio" name="inlineRadioOptions"  value="option2"> 自定义聊天关键词（2符点）
                                         <span class='red_font'>（如果您选择此项服务，买手会根据您要求的关键词独自发挥进行假聊，避免错误问题和咨询相同问题）</span>
                                     </label>
+                                    <div>
+                                        自定义聊天的内容
+                                    </div>
                                  </div>
                             </div>
                         </div>
@@ -378,104 +381,9 @@
             </div>
     </div>
 </body>
-<script src='${staticPath}/shop/js/swiper-3.4.2.min.js'></script>
+<script src='./js/datePicker.js'></script>
 <script>
-        var mySwiper = new Swiper('.swiper-container', {
-            autoplay: 2000,//可选选项，自动滑动
-        })
-        $(document).on('ready', function() {
-            $("#jobData").fileinput({showCaption: true, dropZoneEnabled: true});
-            });
-        function loadFile(file,i){
-            console.log(file)
-            $('#good_pic'+i).attr('src','img/'+file.name)
-        }
-        function addKeyword(num){
-
-            var len=$('.good_keyword').eq(num).children('.item').length
-            console.log(len)
-            // if('')
-            if(len>3){
-                return
-            }
-            var item= `<div class='item'>
-                            <p>关键字来源${len+1}：</p>
-                            <label for="">让买手在<b class='red_font'>taobao.com</b>搜索关键字进入“搜索列表”</label>
-                            <input type="text must-fill">
-                            <span class='red_font'>必填</span>
-                            <div class='good_cond'>
-                                <p>
-                                    <label for="">规格：</label>
-                                    <input type="text" placeholder="如：颜色">
-                                    <input type="text" placeholder="如：尺寸">
-                                    <span class='color_0'>非必填</span>
-                                </p>
-                                <p>
-                                    <label for="">在当前列表中，告诉买手通过筛选分类找到商品</label>
-                                    <input type="text">
-                                    <input type="text">
-                                    <input type="text">
-                                    <input type="text">
-                                    <span class='color_0'>最多四个分类，非必填</span>
-                                </p>
-                             </div>
-                        </div>`
-            
-            $('.good_keyword').append(item)
-            console.log($('.good_keyword'))
-        }
-        //
-        $('.panel-title a').click(function(){
-            var status=Boolean($(this).attr('aria-expanded'))
-            console.log(status)
-            if(status==false){
-                status=true
-            }
-            else{
-               status=false
-            }
-            console.log($(this).children('[type=checkbox]').prop('checked'))
-            $(this).children('[type=checkbox]').prop('checked',status)
-        })
-        // 必填项失去焦点基本验证
-        $('.must-fill').bind('blur',function(){
-            if($(this).val()==''){
-            $(this).css('border','1px solid red').focus()
-            }else{
-            $(this).css('border','1px solid #ddd')
-            }
-        })
-        //点击提交按钮
-       var inputObject={}
-       function TaskConfirm(index){
-           if(index=='0'){
-              var inputArr=new Array()
-              var len=$('.must-fill').length
-                for(var i=0;i<len;i++){
-                    if($('.must-fill').eq(i).val()==''){
-                        $('.must-fill').eq(i).css('border','1px solid red').focus()
-                    }else{
-                        $('.must-fill').eq(i).val()
-                        inputArr.push($('.must-fill').eq(i).val())
-                        console.log(i)
-                        switch(i){
-                            case 0:
-                            inputObject.goodLink=$('.must-fill').eq(0).val()
-                            break;
-                            case 1:
-                            inputObject.goodTitle=$('.must-fill').eq(1).val()
-                            break;
-                            case 2:
-                            inputObject.goodSalePrice=$('.must-fill').eq(2).val()
-                            break;
-                            case 3:
-                            inputObject.goodSaleNum=$('.must-fill').eq(3).val()
-                            break
-                        }
-                    }
-                }
-                console.log(inputArr)
-           }
-       }
+    //上一步缓存的订单数
+        var order_num=window.localStorage.getItem("order_num")
 </script>
 </html>

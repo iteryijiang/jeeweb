@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>seller订单详情</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/swiper-3.4.2.min.css">
+<link rel="stylesheet" href="css/fileinput.min.css">
+<link rel="stylesheet" href="css/ProjectGlobal.css">
+<link rel="stylesheet" href="css/global.css">
+<link rel="stylesheet" href="icomoon/style.css">
+<script src='js/jquery-3.3.1.min.js'></script>
+<script src='js/bootstrap.min.js'></script>
+<script src='js/fileinput.min.js'></script>
+<script src='js/fileinput.min.js'></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+<body>
+    <!-- 用户信息栏 -->
+    <div class='user_info'>
+        <div class="row">
+            <div class="col-md-6">
+                <span class='border_r'>150000000000</span>
+                <a href="#">退出</a>
+            </div>
+            <div class="col-md-6 row">
+                <div class="col-md-7">
+                        <span class='border_r'><a href="#">充值押金</a></span>
+                        <span class='border_r'><a href="#">充值符点</a></span>
+                        <span><a href="#">延长技术服务时长</a></span>
+                </div>
+            <div class="col-md-5">
+                    <span>押金：<b class='red_font'>100</b>元</span>
+                    <span>获赢符：<b class='red_font'>10</b>点</span>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- 中间主体 -->
+    <div class='main_container task_detail'>
+        <div class="get-menu">
+            <a href="#">商家</a>
+            <span>></span>
+            <a class="A1" href="#">任务详情</a>
+        </div>
+        <!-- <img style='width:100%' src="img/banner_01_1.png" alt=""> -->
+        <!-- 任务信息 -->
+        <div class='task_detail_seller'>
+            <div class='lf'>
+                <h4>任务信息</h4>
+                <div>
+                    <div>
+                        <p>任务类型：<span>文字好评订单</span></p>
+                    </div>
+                    <div>
+                        <p>任务总单数：<span><b class='yel'>10</b>单</span></p>
+                        <div class='item'>手机Pad端:<span><b class='yel'>10</b>单</span></div>
+                        <div class='item'>进行中：<span><b class='yel'>10</b>单，未接手<b class='yel'>0</b>单，已完成：<b class='yel'>0</b>单</span></div>
+                    </div>
+                    <div class='keyword'>
+                        <p>商品搜索关键字词</p>
+                        <div class='item'>
+                            <div>
+                                <div class='lf'>淘宝app搜索关键词1：</div>
+                                <div class='rt'>
+                                    <span>长款棉衣女</span>
+                                    <span>长过膝</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class='lf'>淘宝app搜索关键词2：</div>
+                                <div class='rt'>
+                                    <span>长款棉衣女</span>
+                                    <span>长过膝</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class='lf'>淘宝app搜索关键词3：</div>
+                                <div class='rt'>
+                                    <span>长款棉衣女</span>
+                                    <span>长过膝</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class='lf'>淘宝app搜索关键词4：</div>
+                                <div class='rt'>
+                                    <span>长款棉衣女</span>
+                                    <span>长过膝</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p>任务编号：<span>209299219319238912j</span></p>
+                        <p>任务发布时间：<span>2018-12-2 16:00:00</span></p>
+                        <p>店铺：凡客旗舰店<span>209299219319238912j</span></p>
+                        <p>任务定时发布时间：<span>2018-12-2 16:00:00</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class='rt'>
+                <div class='task_status'>
+                    <div>
+                        <h3>任务状态：买手正在接手中</h3>
+                    </div>
+                    <div>
+                        <p><a href="#">买手已付款，代发货（0）</a></p>
+                        <p><a href="#">买手已收货，待返款（0）</a></p>
+                    </div>
+                    <div>
+                        您还可以：
+                        <button class='btn btn-warning'>撤销未接手任务</button>
+                    </div>
+                </div>
+                <div class='task_refunds'>
+                    <div>平台返款冻结押金：<span class='red_font'>0</span>元&nbsp平台已返还：<span class='red_font'>0</span>元/<span class='red_font'>0</span>笔&nbsp平台待返还：<span class='red_font'>0</span>元/<span class='red_font'>0</span>笔</div>
+                    <div>已发放佣金：<span class='red_font'>0</span>获赢符点&nbsp待发放佣金：<span class='red_font'>0</span>获赢符点/<span class='red_font'>0</span>笔</div>
+                </div>
+            </div>
+        </div>
+        <!-- 订单详情表格 -->
+        <div class=task_table>
+            <table class="table table-hover">
+                    <thead>
+                      <tr>
+                            <th>买号</th>
+                            <th>下单终端</th>
+                            <th>接单时间</th>
+                            <th>订单号</th>
+                            <th>
+                                <select>
+                                    <option value="status_all">所有状态</option>
+                                    <option value="status1">状态1</option>
+                                    <option value="status2">状态2</option>
+                                    <option value="status3">状态3</option>
+                                    <option value="status4">状态4</option>
+                                    <option value="status5">状态5</option>
+                                    <option value="status6">状态6</option>
+                                    <option value="status7">状态7</option>
+                                    <option value="status8">状态8</option>
+                                </select>
+                            </th>
+                            <th>
+                                韵达快递单号
+                            </th>
+                            <th>退款金额</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>霸气柴火人</td>
+                            <td>手机</td>
+                            <td>2018-12-25 16:00</td>
+                            <td>
+                                <p>20002020020202020</p>
+                                <p> <a href="#">查看详情</a></p>
+                            </td>
+                            <td>快递单已打印，待收货</td>
+                            <td>180928930291</td>
+                            <td>188.00元</td>
+                        </tr>
+                        <tr>
+                            <td>霸气柴火人</td>
+                            <td>手机</td>
+                            <td>2018-12-25 16:00</td>
+                            <td>
+                                <p>20002020020202020</p>
+                                <p> <a href="#">查看详情</a></p>
+                            </td>
+                            <td>快递单已打印，待收货</td>
+                            <td>180928930291</td>
+                            <td>188.00元</td>
+                        </tr>
+                        <tr>
+                            <td>霸气柴火人</td>
+                            <td>手机</td>
+                            <td>2018-12-25 16:00</td>
+                            <td>
+                                <p>20002020020202020</p>
+                                <p> <a href="#">查看详情</a></p>
+                            </td>
+                            <td>快递单已打印，待收货</td>
+                            <td>180928930291</td>
+                            <td>188.00元</td>
+                        </tr>
+                        <tr>
+                            <td>霸气柴火人</td>
+                            <td>手机</td>
+                            <td>2018-12-25 16:00</td>
+                            <td>
+                                <p>20002020020202020</p>
+                                <p> <a href="#">查看详情</a></p>
+                            </td>
+                            <td>快递单已打印，待收货</td>
+                            <td>180928930291</td>
+                            <td>188.00元</td>
+                        </tr>
+                    </tbody>
+                  </table>
+        </div>
+        <!-- 任务商品-->
+        <div class='task_target'>
+                <h3>任务商品</h3>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>商品</th>
+                      <th>单价</th>
+                      <th>每单拍*个</th>
+                      <th>小计</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                          <img src="img/test.jpeg" alt="">
+                          <span>冬季长款棉服女长过膝新款2018韩版羽绒棉衣修身显瘦棉袄加厚外套</span>
+                      </td>
+                      <td>Bangalore</td>
+                      <td>560001</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+        </div>
+        <!-- 费用合计 -->
+        <div class='task_free_seller'>
+                <h3>费用合计</h3>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>分类</th>
+                      <th>费用明细</th>
+                      <th>小计</th>
+                      <th>单数</th>
+                      <th>优惠折扣</th>
+                      <th>合计</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Tanmay</td>
+                      <td>
+                          <p>押金（含保障金）：197.40元/单</p>
+                      </td>
+                      <td>560001</td>
+                      <td class="rowspan" rowspan="3">560001</td>
+                      <td>560001</td>
+                      <td>
+                          100X10=<span class='red_font'>1000</span>元
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Sachin</td>
+                      <td>
+                            <p>押金（含保障金）：197.40元/单</p>
+                            <p>押金（含保障金）：197.40元/单</p>
+                      </td>
+                      <td>560001</td>
+                      <td>560001</td>
+                      <td>
+                            100X10=<span class='red_font'>1000</span>点
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Uma</td>
+                      <td>
+                            <p>押金（含保障金）：197.40元/单</p>
+                            <p>押金（含保障金）：197.40元/单</p>
+                            <p>押金（含保障金）：197.40元/单</p>
+                            <p>押金（含保障金）：197.40元/单</p>
+                            <p>押金（含保障金）：197.40元/单</p>
+                      </td>
+                      <td>560001</td>
+                      <td>22334</td>
+                      <td>
+                         <span class='red_font'>57</span>点
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div>
+                    费用合计 押金：<b class='red_font'>1974.00</b>元 获赢符：<b class='red_font'>266.10</b>点
+                </div>
+        </div>
+    </div>
+</body>
+<script>
+
+</script>
+</html>

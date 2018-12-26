@@ -1,5 +1,6 @@
 package cn.jeeweb.web.ebp.buyer.controller;
 
+import cn.jeeweb.beetl.tags.dict.DictUtils;
 import cn.jeeweb.common.http.PageResponse;
 import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
@@ -16,6 +17,7 @@ import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
+import cn.jeeweb.web.modules.sys.entity.OperationLog;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,17 +119,13 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         StringUtils.printJson(response,content);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+    @GetMapping("{id}/detail")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView detail(Model model,@PathVariable("id") String id) {
+        TmyTask tmyTask = tmyTaskService.selectById(id);
+        //tmyTask.setTasktype(DictUtils.getDictValue(""));
+        model.addAttribute("tmyTask", tmyTask);
+        return displayModelAndView("MyTaskDetail");
+    }
 
 }
