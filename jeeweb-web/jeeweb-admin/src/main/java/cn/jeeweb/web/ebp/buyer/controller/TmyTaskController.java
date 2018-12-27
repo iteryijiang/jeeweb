@@ -17,6 +17,8 @@ import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
+import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.modules.sys.entity.OperationLog;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
@@ -40,6 +42,9 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
 
     @Autowired
     private TmyTaskService tmyTaskService;
+    @Autowired
+    private TtaskBaseService ttaskBaseService;
+
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -125,6 +130,8 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         TmyTask tmyTask = tmyTaskService.selectById(id);
         //tmyTask.setTasktype(DictUtils.getDictValue(""));
         model.addAttribute("tmyTask", tmyTask);
+        TtaskBase taskbase = ttaskBaseService.selectById(tmyTask.getTaskid());
+        model.addAttribute("taskbase",taskbase);
         return displayModelAndView("MyTaskDetail");
     }
 
