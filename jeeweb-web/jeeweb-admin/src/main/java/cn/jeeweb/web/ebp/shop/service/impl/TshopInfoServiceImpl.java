@@ -16,4 +16,8 @@ public class TshopInfoServiceImpl extends CommonServiceImpl<TshopInfoMapper, Tsh
     public List<TshopInfo> findshopInfo(){
         return baseMapper.findshopInfo();
     }
+
+    public TshopInfo  selectOne(String userid){
+        return baseMapper.selectOne(userid);
+    }
 }

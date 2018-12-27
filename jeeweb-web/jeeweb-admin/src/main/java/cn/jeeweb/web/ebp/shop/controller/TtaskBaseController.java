@@ -221,7 +221,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public ModelAndView listPoolGet(@PathVariable("id") String id, Model model,HttpServletRequest request,
                             HttpServletResponse response) throws IOException {
         TtaskBase tb = ttaskBaseService.selectById(id);
+        TshopInfo tsi = tshopInfoService.selectOne(tb.getShopid());
         model.addAttribute("tb",tb);
+        model.addAttribute("tsi",tsi);
 
         ModelAndView mav = displayModelAndView("TaskDetailForSeller");
         return mav;

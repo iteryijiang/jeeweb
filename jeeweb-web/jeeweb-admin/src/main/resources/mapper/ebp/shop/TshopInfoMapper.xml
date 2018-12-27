@@ -34,4 +34,8 @@
         SELECT t.* FROM T_shop_Info t,T_task_Base b where t.userid = b.shopid and t.status='0'
         and b.tasknum <![CDATA[>=]]> 0 limit 20
     </select>
+
+    <select id="selectOne"  resultMap="TshopInfo">
+        SELECT t.* FROM T_shop_Info t where t.userid = #{userid} limit 1
+    </select>
 </mapper>

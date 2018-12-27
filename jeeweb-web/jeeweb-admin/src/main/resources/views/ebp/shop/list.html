@@ -6,7 +6,7 @@
 		<#grid:column label="每单几件"  name="tNum"  />
 		<#grid:column label="下单总金额"  name="totalprice" />
 		<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
-		<#grid:button title="详情"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/' />
+		<#grid:button title="详情"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
 		<!--<#grid:toolbar title="详情" icon="fa-database"  function="updateDialog" url="${adminPath}/shop/TtaskBase/ajaxList"  />-->
 	</#grid:grid>
 <% } %>

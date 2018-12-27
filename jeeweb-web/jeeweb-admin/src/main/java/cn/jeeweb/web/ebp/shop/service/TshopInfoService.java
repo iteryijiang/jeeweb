@@ -9,4 +9,6 @@ public interface TshopInfoService extends ICommonService<TshopInfo> {
 
     public List<TshopInfo> findshopInfo();
 
+    public TshopInfo  selectOne(String userid);
+
 }
