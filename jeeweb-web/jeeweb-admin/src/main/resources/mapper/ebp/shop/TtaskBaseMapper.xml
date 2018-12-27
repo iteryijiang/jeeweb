@@ -27,8 +27,10 @@
     <result property="tasksort" column="tasksort" jdbcType="VARCHAR" />
     <result property="lowpoint" column="lowpoint" jdbcType="DOUBLE" />
     <result property="highpoint" column="highpoint" jdbcType="DOUBLE" />
-    <result property="taskdisservice" column="taskdisservice" jdbcType="VARCHAR" />
+    <result property="taskdisser" column="taskdisser" jdbcType="VARCHAR" />
     <result property="tasklocation" column="tasklocation" jdbcType="VARCHAR" />
+    <result property="effectdate" column="effectdate" jdbcType="DATE" />
+    <result property="taskno" column="taskno" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >

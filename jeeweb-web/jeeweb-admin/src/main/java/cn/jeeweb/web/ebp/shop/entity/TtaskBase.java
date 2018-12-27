@@ -40,8 +40,11 @@ public class TtaskBase extends DataEntity<String> {
 	private String tasksort;//	varchar	32	0	-1	0	0	0	0		0	商品排序	utf8	utf8_general_ci		0	0
 	private Double lowpoint;//	double	10	2	-1	0	0	0	0		0	最低价格区间				0	0
 	private Double highpoint;//	double	10	2	-1	0	0	0	0		0	最高价格区间				0	0
-	private String taskdisservice;//	varchar	255	0	-1	0	0	0	0		0	折扣和服务	utf8	utf8_general_ci		0	0
+	private String taskdisser;//	varchar	255	0	-1	0	0	0	0		0	折扣和服务	utf8	utf8_general_ci		0	0
 	private String tasklocation;//	varchar	255	0	-1	0	0	0	0		0	发货地	utf8	utf8_general_ci		0	0
+	private Date effectdate;//	datetime	0	0	-1	0	0	0	0		0	生效时间				0	0
+	private String taskno;//	varchar	200	0	-1	0	0	0	0		0	任务编号	utf8	utf8_general_ci		0	0
+
 
 
 	@Override
@@ -254,11 +257,27 @@ public class TtaskBase extends DataEntity<String> {
 		this.tasklocation = tasklocation;
 	}
 
-	public String getTaskdisservice() {
-		return taskdisservice;
+	public String getTaskdisser() {
+		return taskdisser;
 	}
 
-	public void setTaskdisservice(String taskdisservice) {
-		this.taskdisservice = taskdisservice;
+	public void setTaskdisser(String taskdisser) {
+		this.taskdisser = taskdisser;
+	}
+
+	public Date getEffectdate() {
+		return effectdate;
+	}
+
+	public void setEffectdate(Date effectdate) {
+		this.effectdate = effectdate;
+	}
+
+	public String getTaskno() {
+		return taskno;
+	}
+
+	public void setTaskno(String taskno) {
+		this.taskno = taskno;
 	}
 }

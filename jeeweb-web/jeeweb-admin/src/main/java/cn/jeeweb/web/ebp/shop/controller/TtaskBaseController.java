@@ -70,8 +70,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public Response add(@RequestBody TtaskBase ttaskBase,HttpServletRequest request, HttpServletResponse response) {
 //        TtaskBase entity = new TtaskBase();
 //        System.out.println(request.getParameter("taskBase"));
-
         ttaskBase.setShopid(UserUtils.getUser().getId());
+        ttaskBase.setTaskno((new Date().getTime())+""+new Random().nextInt(1000));
         if(ttaskBase.gettPrice()!=null&&ttaskBase.gettNum()!=null){
             ttaskBase.setTotalprice(ttaskBase.gettPrice()*ttaskBase.gettNum());
         }
@@ -214,6 +214,16 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("listPool")
     public ModelAndView listPool(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("listPool");
+        return mav;
+    }
+
+    @GetMapping(value = "{id}/listPoolGet")
+    public ModelAndView listPoolGet(@PathVariable("id") String id, Model model,HttpServletRequest request,
+                            HttpServletResponse response) throws IOException {
+        TtaskBase tb = ttaskBaseService.selectById(id);
+        model.addAttribute("tb",tb);
+
+        ModelAndView mav = displayModelAndView("TaskDetailForSeller");
         return mav;
     }
 

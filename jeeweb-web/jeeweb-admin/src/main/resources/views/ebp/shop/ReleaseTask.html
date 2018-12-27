@@ -16,25 +16,25 @@
 </head>
 <body>
 <!-- 用户信息栏 -->
-    <div class='user_info'>
-        <div class="row">
-            <div class="col-md-6">
-                <span class='border_r'>150000000000</span>
-                <a href="#">退出</a>
-            </div>
-            <div class="col-md-6 row">
-                <div class="col-md-7">
-                        <span class='border_r'><a href="#">充值押金</a></span>
-                        <span class='border_r'><a href="#">充值符点</a></span>
-                        <span><a href="#">延长技术服务时长</a></span>
-                </div>
-               <div class="col-md-5">
-                    <span>押金：<b class='red_font'>100</b>元</span>
-                    <span>获赢符：<b class='red_font'>10</b>点</span>
-               </div>
-            </div>
-        </div>
-    </div>
+    <!--<div class='user_info'>-->
+        <!--<div class="row">-->
+            <!--<div class="col-md-6">-->
+                <!--<span class='border_r'>150000000000</span>-->
+                <!--<a href="#">退出</a>-->
+            <!--</div>-->
+            <!--<div class="col-md-6 row">-->
+                <!--<div class="col-md-7">-->
+                        <!--<span class='border_r'><a href="#">充值押金</a></span>-->
+                        <!--<span class='border_r'><a href="#">充值符点</a></span>-->
+                        <!--<span><a href="#">延长技术服务时长</a></span>-->
+                <!--</div>-->
+               <!--<div class="col-md-5">-->
+                    <!--<span>押金：<b class='red_font'>100</b>元</span>-->
+                    <!--<span>获赢符：<b class='red_font'>10</b>点</span>-->
+               <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
     <!-- 广告轮播 -->
     <!-- <div class="swiper-container">
         <div class="swiper-wrapper">
@@ -183,13 +183,17 @@
                                     <input type="number" class="form-control must-fill" id="inputNum" placeholder="">
                                     <label for="inputNum">件<span>（出于安全，建议每单不要超过2件）<b class='red_font margin_0'>必填</b></span></label>
                                 </div>
-                                <span>下单总金额<b class='red_font'>558</b>元</span>
+                                <!--<span>下单总金额<b class='red_font' id="numsum">0</b>元</span>-->
                             </form>
                             <form class="form-inline">
                                 <div class="form-group">
-                                  <label for="inputPrice">搜索页面展示价格:</label>
-                                  <input type="text" class="form-control" id="inputPrice" placeholder="">
-                                  <label for="inputPrice">元<span class='color_0'>非必填，如该商品有满减、促销、多规格等情况，请填写此金额</span></label>
+                                  <label for="searchprice">搜索页面展示价格:</label>
+                                  <input type="text" class="form-control" id="searchprice" placeholder="">
+                                  <label for="searchprice">元<span class='color_0'>非必填，如该商品有满减、促销、多规格等情况，请填写此金额</span></label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="effectdate">发布时间:</label>
+                                    <input type="date" id="effectdate" style="width: 160px" class="form-control must-fill">
                                 </div>
                              </form>
                              <p class='red_font'>如商家发布的是手机端任务，请务必填写手机端展示的商品主图、页面搜索价格和商品筛选分类、排序等。</p>
@@ -219,7 +223,7 @@
                                         </div>
                                     </div>
                                     <div class='good_keyword' id='keyword0'>
-                                        <div class='item' id=1>
+                                        <div class='item' id="1">
                                             <p>关键字来源1：</p>
                                             <label for="">让买手在<b class='red_font'>taobao.com</b>搜索关键字进入“搜索列表”</label>
                                             <input type="text" class='must-fill'>
@@ -660,6 +664,9 @@
                             break;
                         case 5:
                             good_detail_info.searchprice=$(ele).val()
+                            break;
+                        case 6:
+                            good_detail_info.effectdate=$(ele).val()
                     }
                 }
              })
@@ -777,6 +784,20 @@
             
             return arr;
         }
+        //折扣与服务
+        function GetDiscountAndServiceString(ele){
+            var arr="";
+            $(ele).each(function(i,element){
+                $(element).find('input[type=checkbox]').each(function(index,item){
+                    if($(item).prop('checked')==true){
+                        console.log($(item).val())
+                        arr = arr+$(item).val()+",";
+                    }
+                })
+            })
+
+            return arr;
+        }
         //获取手机端关键字项
         function GetMobileKeywords(){
             var arr=[]
@@ -800,7 +821,7 @@
                 good_detail_info.highpoint=$(item).find('.mobile_high').val();
                 //4.折扣和服务
                 obj.TaskDisService=GetDiscountAndService($('.discount_service'));//手机端商品折扣与服务
-                good_detail_info.taskdisservice=GetDiscountAndService($('.discount_service'));
+                good_detail_info.taskdisser=GetDiscountAndServiceString($('.discount_service'));
                 //5.发货地
                 obj.TaskLocation=$(item).find('.drop1').html();//手机端发货地
                 good_detail_info.tasklocation=$(item).find('.drop1').html();//手机端发货地
