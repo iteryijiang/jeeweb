@@ -1,12 +1,13 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单管理',''), libs: 'bootstrap-treeview'}){ %>
 	<#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList">
+        <#grid:column label="任务编号"  name="taskno" />
 		<#grid:column label="商品标题"  name="tTitle"  query="true"  condition="like" />
 		<#grid:column label="商品单价"  name="tPrice"  query="true" condition="like"   />
-        <#grid:column label="折扣和服务"  name="taskdisservice"  dict="taskdiscode"  query="true" queryMode="select" />
 		<#grid:column label="每单几件"  name="tNum"  />
-		<#grid:column label="下单总金额"  name="totalprice" />
-		<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
-		<#grid:button title="详情"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
-		<!--<#grid:toolbar title="详情" icon="fa-database"  function="updateDialog" url="${adminPath}/shop/TtaskBase/ajaxList"  />-->
+        <#grid:column label="任务单数	"  name="tasknum" />
+		<#grid:column label="未接单数	"  name="canreceivenum" />
+<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="50"/>
+<#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TtaskBase/\"+row.id+\"/listPoolGet' />
+<!--<#grid:toolbar title="详情" icon="fa-database"  function="updateDialog" url="${adminPath}/shop/TtaskBase/ajaxList"  />-->
 	</#grid:grid>
 <% } %>

@@ -1,5 +1,6 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('我的列表',''), libs: 'bootstrap-treeview'}){ %>
 
+
 <#grid:grid id="taskbase" url="${adminPath}/buyer/TmyTask/ajaxList">
     <#grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
 
@@ -7,12 +8,31 @@
     <#grid:column label="任务类型"  name="tasktype"  query="true"  queryMode="select" width="80"    condition="eq"   dict="tasktype" />
     <#grid:column label="买号"  name="buyerid"  width="80"  />
     <#grid:column label="垫付资金"  name="pays"  width="60"   />
-    <#grid:column label="日期"  name="create_date"  width="80"  query="true"  queryMode="date"  condition="between" />
+    <#grid:column label="日期"  name="createDate"  width="80"  query="true"  queryMode="date"  condition="between" />
     <#grid:column label="任务状态"  name="taskstate"  width="80"  query="true"  queryMode="select"   condition="eq"  dict="taskstate" />
     <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="50"/>
     <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTask/\"+row.id+\"/detail' />
-
+    <#grid:toolbar title="领取任务"   icon="fa-download"  onclick="gettask()"  />
     <#grid:toolbar  function="search"  />
     <#grid:toolbar  function="reset" />
 </#grid:grid>
 <% } %>
+<script src='js/jquery-3.3.1.min.js'></script>
+<script>
+    function gettask(){
+        $.ajax({
+            type: "POST",
+            url: "${adminPath}/shop/TtaskBase/myTaskCreate",
+            contentType:'application/json;charset=utf-8',
+            dataType: "json",
+            success: function(data){
+                alert("领取成功!");
+                search();
+            },
+            error: function(data){
+            }
+        });
+
+    }
+
+</script>

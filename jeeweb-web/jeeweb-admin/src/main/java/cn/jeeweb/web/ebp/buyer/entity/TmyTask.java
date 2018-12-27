@@ -20,8 +20,6 @@ public class TmyTask extends DataEntity<String> {
 	private String taskid;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String taskstate;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String tasktype;//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	private Date   create_date;
-	private String create_by;
 	private BigDecimal commision;//
 	private BigDecimal pays;
 
@@ -30,6 +28,8 @@ public class TmyTask extends DataEntity<String> {
 	private String buyerclient;//下单终端：手机，电脑
 	private String expressno; //快递单号
 	private String evaluate; //好评 评价
+	private String taskstatus;//	varchar	32	0	-1	0	0	0	0		0	下单状态（进行中,已完成）	utf8	utf8_general_ci		0	0
+
 
 	@Override
 	public String getId() {
@@ -79,22 +79,6 @@ public class TmyTask extends DataEntity<String> {
 
 	public void setPays(BigDecimal pays) {
 		this.pays = pays;
-	}
-
-	public Date getCreate_date() {
-		return create_date;
-	}
-
-	public void setCreate_date(Date create_date) {
-		this.create_date = create_date;
-	}
-
-	public String getCreate_by() {
-		return create_by;
-	}
-
-	public void setCreate_by(String create_by) {
-		this.create_by = create_by;
 	}
 
 	public String getTasktype() {
@@ -151,5 +135,13 @@ public class TmyTask extends DataEntity<String> {
 
 	public void setEvaluate(String evaluate) {
 		this.evaluate = evaluate;
+	}
+
+	public String getTaskstatus() {
+		return taskstatus;
+	}
+
+	public void setTaskstatus(String taskstatus) {
+		this.taskstatus = taskstatus;
 	}
 }

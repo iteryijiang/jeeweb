@@ -16,6 +16,8 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
+import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
@@ -35,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -49,6 +52,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     private TtaskBaseService ttaskBaseService;
     @Autowired
     private TshopInfoService tshopInfoService;
+    @Autowired
+    private TmyTaskService tmyTaskService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -68,10 +73,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @Log(logType = LogType.INSERT)
     @RequiresMethodPermissions("add")
     public Response add(@RequestBody TtaskBase ttaskBase,HttpServletRequest request, HttpServletResponse response) {
-//        TtaskBase entity = new TtaskBase();
-//        System.out.println(request.getParameter("taskBase"));
         ttaskBase.setShopid(UserUtils.getUser().getId());
-        ttaskBase.setTaskno((new Date().getTime())+""+new Random().nextInt(1000));
+        ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
+        ttaskBase.setCanreceivenum(ttaskBase.getTasknum());
         if(ttaskBase.gettPrice()!=null&&ttaskBase.gettNum()!=null){
             ttaskBase.setTotalprice(ttaskBase.gettPrice()*ttaskBase.gettNum());
         }
@@ -128,12 +132,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
         EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
-        propertyPreFilterable.addQueryProperty("id");
-        // 子查询
-//        String organizationid = request.getParameter("organizationid");
-//        if (!StringUtils.isEmpty(organizationid)) {
-//            entityWrapper.eq("uo.organization_id", organizationid);
-//        }
+//        propertyPreFilterable.addQueryProperty("id");
+        String userid = UserUtils.getPrincipal().getId();
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
+            entityWrapper.eq("create_by", userid);
+        }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
@@ -266,4 +269,74 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         StringUtils.printJson(response,content);
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "myTaskCreate", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.SELECT)
+    @RequiresMethodPermissions("myTaskCreate")
+    public void myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        List listBase = new ArrayList();
+        try {
+            int count = 3;
+            try{
+                String sum = DictUtils.getDictValue("接单数","tasknum",count+"");
+                count = Integer.parseInt(sum);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            List<TtaskBase> list = ttaskBaseService.selectShopTask("",count);
+
+            for (int i=0;i<list.size();i++) {
+                if(i>6){
+                    break;
+                }
+                TtaskBase tb = (TtaskBase)list.get(i);
+                TmyTask my = new TmyTask();
+                tb.setCanreceivenum(tb.getCanreceivenum()-1);
+                ttaskBaseService.insertOrUpdate(tb);
+                my.setGoodsname(tb.gettTitle());//
+                //my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                my.setTaskstate("1");//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                my.setTaskstatus("0");
+                my.setPays(BigDecimal.valueOf(tb.gettPrice()));
+                tmyTaskService.insert(my);
+            }
+            //获得商户表
+//            List<TshopInfo> listShop = tshopInfoService.findshopInfo();
+//            int count = 7;
+//            int sum = 0;
+//            Map<String, Integer> map = new HashMap();
+//            for (TshopInfo si : listShop) {
+//                Random rand = new Random();
+//                int a = rand.nextInt(3) + 1;
+//                sum += a;
+//                if (sum > 7) {
+//                    a = a - (sum - 7);
+//                }
+//                map.put(si.getUserid(), a);
+//                if (sum >= 7) {
+//                    break;
+//                }
+//            }
+            //根据每个商户数量返回订单数
+//            Iterator<Map.Entry<String, Integer>> entries = map.entrySet().iterator();
+//            while (entries.hasNext()) {
+//                Map.Entry<String, Integer> entry = entries.next();
+//                System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+//                List<TtaskBase> list = ttaskBaseService.selectShopTask(entry.getKey(), entry.getValue());
+//                listBase.addAll(list);
+//            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(listBase);
+        StringUtils.printJson(response,content);
+    }
 }

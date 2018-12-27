@@ -31,6 +31,7 @@
     <result property="tasklocation" column="tasklocation" jdbcType="VARCHAR" />
     <result property="effectdate" column="effectdate" jdbcType="DATE" />
     <result property="taskno" column="taskno" jdbcType="VARCHAR" />
+    <result property="canreceivenum" column="canreceivenum" jdbcType="NUMERIC" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -54,7 +55,34 @@
   </select>
 
   <select id="selectShopTask" resultMap="TtaskBase">
-    select t.* from T_task_Base t where t.shopid= #{shopid} and t.tasknum <![CDATA[>=]]> 0
-     limit ${count}
+    SELECT
+    a.*
+    FROM
+    (
+    SELECT
+    t1.*, (
+    SELECT
+    count(*) + 1
+    FROM
+    T_task_Base t
+    WHERE
+    t.shopid = t1.shopid
+    AND t.id <![CDATA[<]]> t1.id
+               AND t.STATUS = '1'
+               AND t.canreceivenum <![CDATA[>]]> 0
+    and t.effectdate <![CDATA[<]]> DATE_ADD(curdate(),interval 1 day)
+    ) AS group_id
+    FROM
+    T_task_Base t1
+    where
+    t1.STATUS = '1'
+    AND t1.canreceivenum <![CDATA[>]]> 0
+    and t1.effectdate <![CDATA[<]]> DATE_ADD(curdate(),interval 1 day)
+    ) a
+    WHERE
+    a.group_id <![CDATA[<=]]> ${count}
+    ORDER BY
+    shopid,
+    group_id
   </select>
 </mapper>

@@ -20,6 +20,7 @@ import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.modules.sys.entity.OperationLog;
+import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,11 +111,10 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
         EntityWrapper<TmyTask> entityWrapper = new EntityWrapper<>(entityClass);
-        propertyPreFilterable.addQueryProperty("id");
-        // 子查询
-        String organizationid = request.getParameter("organizationid");
-        if (!StringUtils.isEmpty(organizationid)) {
-            entityWrapper.eq("uo.organization_id", organizationid);
+//        propertyPreFilterable.addQueryProperty("id");
+        String userid = UserUtils.getPrincipal().getId();
+        if (!StringUtils.isEmpty(userid)) {
+            entityWrapper.eq("create_by", userid);
         }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
