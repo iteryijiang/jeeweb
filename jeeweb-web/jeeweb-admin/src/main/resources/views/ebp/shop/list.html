@@ -7,7 +7,7 @@
         <#grid:column label="任务单数	"  name="tasknum" />
 		<#grid:column label="未接单数	"  name="canreceivenum" />
 <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="50"/>
-<#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TtaskBase/\"+row.id+\"/listPoolGet' />
+<#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
 <!--<#grid:toolbar title="详情" icon="fa-database"  function="updateDialog" url="${adminPath}/shop/TtaskBase/ajaxList"  />-->
 	</#grid:grid>
 <% } %>
