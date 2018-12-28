@@ -4,6 +4,7 @@ import cn.jeeweb.web.common.entity.DataEntity;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -30,7 +31,8 @@ public class TmyTask extends DataEntity<String> {
 	private String evaluate; //好评 评价
 	private String taskstatus;//	varchar	32	0	-1	0	0	0	0		0	下单状态（进行中,已完成）	utf8	utf8_general_ci		0	0
 
-	//@Transient
+	@Transient
+    private String buyeridName;
 
 	@Override
 	public String getId() {
@@ -146,5 +148,11 @@ public class TmyTask extends DataEntity<String> {
 		this.taskstatus = taskstatus;
 	}
 
+    public String getBuyeridName() {
+        return buyeridName;
+    }
 
+    public void setBuyeridName(String buyeridName) {
+        this.buyeridName = buyeridName;
+    }
 }

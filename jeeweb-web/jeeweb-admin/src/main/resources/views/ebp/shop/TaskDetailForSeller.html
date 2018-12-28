@@ -92,9 +92,9 @@
                     </div>
                     <div>
                         <p>任务编号：<span>${tb.taskno}</span></p>
-                        <p>任务发布时间：<span>${tb.createDate}</span></p>
+                        <p>任务发布时间：<span id="fbsj"></span></p>
                         <p>店铺：${tsi.shopname}<span></span></p>
-                        <p>任务定时发布时间：<span>${tb.effectdate}</span></p>
+                        <p>任务定时发布时间：<span id="dsfbsj"></span></p>
                     </div>
                 </div>
             </div>
@@ -214,7 +214,7 @@
                     <tr>
                       <td>
                           <img src="${tb.imgurl}" alt="">
-                          <span>${tb.tTitle}</span>
+                          <span><a href="${tb.tUrl}" target="_blank">${tb.tTitle}</a></span>
                       </td>
                       <td>${tb.tPrice}</td>
                       <td>${tb.tNum}</td>
@@ -296,7 +296,7 @@
                 var tbody = "";
                 for (var i = 0; i < json.length; i++) {
                     var tr = "<tr>";
-                    tr += "<td>"+(json[i].buyerjdnick==undefined?"":json[i].buyerjdnick)+"</td>";
+                    tr += "<td>"+(json[i].buyerjdnick==undefined?json[i].buyeridName:json[i].buyerjdnick)+"</td>";
                     tr += "<td>"+(json[i].tasktype==undefined?"":json[i].tasktype)+"</td>";
                     tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd",new Date(json[i].createDate)))+"</td>";
                     tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p><p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a></td>";
@@ -309,6 +309,8 @@
                 $("#tbodyMy").html(tbody);
             }
         });
+        $("#fbsj").html(dateFtt("yyyy-MM-dd",new Date("${tb.createDate}")));
+        $("#dsfbsj").html(dateFtt("yyyy-MM-dd",new Date("${tb.createDate}")));
     })
     function revokeTask(){
         // $.ajax({

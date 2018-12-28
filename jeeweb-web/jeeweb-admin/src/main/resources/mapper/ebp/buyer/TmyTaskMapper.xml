@@ -35,7 +35,7 @@
   </select>
 
     <select id="selBaseIdMyTaskList" resultMap="TmyTask">
-        select * from T_my_Task t where t.taskId=#{taskId}
+        select t.*,s.realname buyeridName from T_my_Task t,sys_user s where t.buyerid=s.id and t.taskId=#{taskId}
     </select>
 
     <select id="groupBytaskstatus" resultType="java.util.Map">

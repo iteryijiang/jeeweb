@@ -131,6 +131,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("list")
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
+//        System.out.println("___________");
+//        System.out.println("${oss.local.upload-file-path}");
         EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
