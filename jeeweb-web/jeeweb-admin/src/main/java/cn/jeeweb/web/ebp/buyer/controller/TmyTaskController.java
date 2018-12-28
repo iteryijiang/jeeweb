@@ -153,4 +153,25 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     }
 
 
+    @GetMapping("{id}/updateTaskState")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView updateTaskState(Model model,@PathVariable("id") String id) {
+        TmyTask tmyTask = tmyTaskService.selectById(id);
+        String taskstate = tmyTask.getTaskstate();
+        model.addAttribute("tmyTask", tmyTask);
+        TtaskBase taskbase = ttaskBaseService.selectById(tmyTask.getTaskid());
+        model.addAttribute("taskbase",taskbase);
+        String targetPage = "";
+        if("1".equals(taskstate)){
+            //状态为已接单，未下单 ；跳转到 上传搜索关键词页面
+            targetPage = "avatar";
+        }else if("2".equals(taskstate)){
+            //状态为已接单，未下单 ；跳转到 上传搜索关键词页面
+        }
+        return displayModelAndView(targetPage);
+    }
+
+
+
+
 }

@@ -212,6 +212,7 @@
          </div>
     </div>
 </body>
+<script src='js/jquery-3.3.1.min.js'></script>
 <script>
 
 
@@ -219,7 +220,16 @@
 
     }
     function sub(){
-        alert('-----------------');
+        $.ajax({
+            url: "${adminPath}/buyer/TmyTask/${tmyTask.id}/updateTaskState",
+            contentType:'application/json;charset=utf-8',
+            dataType: "json",
+            success: function(data){
+            },
+            error: function(data){
+            }
+        });
+
     }
 
 </script>
