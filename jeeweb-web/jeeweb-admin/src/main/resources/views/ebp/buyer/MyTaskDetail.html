@@ -21,7 +21,7 @@
 
     <!-- 中间主体 -->
     <div class='main_container task_detail'>
-        <!-- <img style='width:100%' src="img/banner_01_1.png" alt=""> -->
+
          <!-- 任务详情头部 -->
          <div class='task_area_tab'>
                 <h2>任务详情</h2>
@@ -30,7 +30,7 @@
                         <li class='active' id="li_1">
                             <em id="em_1" class='process'>1</em>
                             <span>接手任务</span>
-                            <span class='time'>${tmyTask.create_date}</span>
+                            <span class='time'></span>
                         </li>
                         <li id="li_2">
                             <em id="em_2">2</em>
@@ -94,7 +94,7 @@
                         </p>
                         <p>
                             <span>任务接手时间：</span>
-                            <span>${tmyTask.create_date}</span>
+                            <span></span>
                         </p>
                         <p>
                             <span>商家账号：</span>
@@ -212,6 +212,7 @@
          </div>
     </div>
 </body>
+<script src='js/jquery-3.3.1.min.js'></script>
 <script>
 
 
@@ -219,7 +220,16 @@
 
     }
     function sub(){
-        alert('-----------------');
+        $.ajax({
+            url: "${adminPath}/buyer/TmyTask/${tmyTask.id}/updateTaskState",
+            contentType:'application/json;charset=utf-8',
+            dataType: "json",
+            success: function(data){
+            },
+            error: function(data){
+            }
+        });
+
     }
 
 </script>
