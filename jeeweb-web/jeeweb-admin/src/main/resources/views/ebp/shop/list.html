@@ -1,12 +1,14 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单管理',''), libs: 'bootstrap-treeview'}){ %>
 	<#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList">
-        <#grid:column label="任务编号"  name="taskno" />
-		<#grid:column label="商品标题"  name="tTitle"  query="true"  condition="like" />
-		<#grid:column label="商品单价"  name="tPrice"  query="true" condition="like"   />
-		<#grid:column label="每单几件"  name="tNum"  />
-        <#grid:column label="任务单数	"  name="tasknum" />
-		<#grid:column label="未接单数	"  name="canreceivenum" />
+        <#grid:column label="任务编号"  name="taskno" width="60" />
+		<#grid:column label="商品标题"  name="tTitle"  width="250" query="true"  condition="like" />
+		<#grid:column label="商品单价"  name="tPrice" width="50" query="true" condition="like"   />
+		<#grid:column label="每单几件"  name="tNum" width="50" />
+        <#grid:column label="任务单数"  name="tasknum" width="50"/>
+		<#grid:column label="未接单数"  name="canreceivenum" width="50" />
 		<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="50"/>
 		<#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
+		<#grid:toolbar  function="search"  />
+		<#grid:toolbar  function="reset" />
 	</#grid:grid>
 <% } %>
