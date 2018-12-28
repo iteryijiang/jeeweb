@@ -297,9 +297,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         List listBase = new ArrayList();
         try {
             int count = 3;
+            int countSum = 6;
             try{
                 String sum = DictUtils.getDictValue("接单数","tasknum",count+"");
                 count = Integer.parseInt(sum);
+                countSum = Integer.parseInt(DictUtils.getDictValue("总单数","tasknum",countSum+""));
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -307,7 +309,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             List<TtaskBase> list = ttaskBaseService.selectShopTask("",count);
 
             for (int i=0;i<list.size();i++) {
-                if(i>6){
+                if((i+1)>countSum){
                     break;
                 }
                 TtaskBase tb = (TtaskBase)list.get(i);

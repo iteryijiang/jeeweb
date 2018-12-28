@@ -1,10 +1,10 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -31,7 +31,7 @@ public class TmyTask extends DataEntity<String> {
 	private String evaluate; //好评 评价
 	private String taskstatus;//	varchar	32	0	-1	0	0	0	0		0	下单状态（进行中,已完成）	utf8	utf8_general_ci		0	0
 
-	@Transient
+	@TableField(exist = false)
     private String buyeridName;
 
 	@Override

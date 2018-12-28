@@ -147,8 +147,12 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
 
         String taskId = jsonObject.getString("taskId");
         List<TmyTask> list = tmyTaskService.selBaseIdMyTaskList(taskId);
-
-        String content = JSON.toJSONString(list);
+        List<TmyTask> newlist = new ArrayList<TmyTask>();
+        for (TmyTask t :list){
+            t.setTasktype(DictUtils.getDictLabel(t.getTasktype(),"tasktype",t.getTasktype()));
+            newlist.add(t);
+        }
+        String content = JSON.toJSONString(newlist);
         StringUtils.printJson(response,content);
     }
 
