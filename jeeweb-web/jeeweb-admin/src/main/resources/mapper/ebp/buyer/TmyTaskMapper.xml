@@ -3,9 +3,18 @@
 <mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TmyTaskMapper" >
   <resultMap id="TmyTask" type="cn.jeeweb.web.ebp.buyer.entity.TmyTask" >
     <id column="id" property="id" jdbcType="VARCHAR" />
-    <result property="buyerId" column="buyerId" jdbcType="VARCHAR" />
-    <result property="taskId" column="taskId" jdbcType="VARCHAR" />
-    <result property="taskState" column="taskState" jdbcType="VARCHAR" />
+    <result property="buyerid" column="buyerid" jdbcType="VARCHAR" />
+    <result property="taskid" column="taskid" jdbcType="VARCHAR" />
+    <result property="taskstate" column="taskstate" jdbcType="VARCHAR" />
+      <result property="goodsname" column="goodsname" jdbcType="VARCHAR" />
+      <result property="tasktype" column="tasktype" jdbcType="VARCHAR" />
+      <result property="commision" column="commision" jdbcType="DOUBLE" />
+      <result property="pays" column="pays" jdbcType="DOUBLE" />
+      <result property="buyerjdnick" column="buyerjdnick" jdbcType="VARCHAR" />
+      <result property="jdorderno" column="jdorderno" jdbcType="VARCHAR" />
+      <result property="buyerclient" column="buyerclient" jdbcType="VARCHAR" />
+      <result property="expressno" column="expressno" jdbcType="VARCHAR" />
+      <result property="evaluate" column="evaluate" jdbcType="VARCHAR" />
       <result property="taskstatus" column="taskstatus" jdbcType="VARCHAR" />
   </resultMap>
   
@@ -17,7 +26,7 @@
   <select id="selectUserList" resultMap="TmyTask">
 	  select
    	    <include refid="Base_Column_List" />
-      from T_shop_Info t
+      from T_my_Task t
        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
 		  <where>
 		    ${ew.sqlSegment}
@@ -25,4 +34,11 @@
 	   </if>
   </select>
 
+    <select id="selBaseIdMyTaskList" resultMap="TmyTask">
+        select * from T_my_Task t where t.taskId=#{taskId}
+    </select>
+
+    <select id="groupBytaskstatus" resultType="java.util.Map">
+        select taskstatus,count(1) counts from T_my_Task t where t.taskId=#{taskId} group by taskstatus
+    </select>
 </mapper>

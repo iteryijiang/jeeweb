@@ -227,7 +227,20 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         TshopInfo tsi = tshopInfoService.selectOne(tb.getShopid());
         model.addAttribute("tb",tb);
         model.addAttribute("tsi",tsi);
+        //进行中，完成数
+        int taskstatus0=0,taskstatus1=0;
 
+        List<Map> list = tmyTaskService.groupBytaskstatus(tb.getId());
+        for (int i=0;i<list.size();i++){
+            Map map = list.get(i);
+            if("0".equals(map.get("taskstatus").toString())){
+                taskstatus0 = Integer.parseInt(map.get("counts").toString());
+            }else if("1".equals(map.get("taskstatus").toString())){
+                taskstatus1 = Integer.parseInt(map.get("counts").toString());
+            }
+        }
+        model.addAttribute("taskstatus0",taskstatus0);
+        model.addAttribute("taskstatus1",taskstatus1);
         ModelAndView mav = displayModelAndView("TaskDetailForSeller");
         return mav;
     }
@@ -300,7 +313,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 tb.setCanreceivenum(tb.getCanreceivenum()-1);
                 ttaskBaseService.insertOrUpdate(tb);
                 my.setGoodsname(tb.gettTitle());//
-                //my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
                 my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
                 my.setTaskstate("1");//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
                 my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
@@ -336,7 +349,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }catch (Exception e){
             e.printStackTrace();
         }
-        String content = JSON.toJSONString(listBase);
-        StringUtils.printJson(response,content);
+//        String content = JSON.toJSONString(listBase);
+//        StringUtils.printJson(response,content);
     }
 }

@@ -30,6 +30,7 @@ public class TmyTask extends DataEntity<String> {
 	private String evaluate; //好评 评价
 	private String taskstatus;//	varchar	32	0	-1	0	0	0	0		0	下单状态（进行中,已完成）	utf8	utf8_general_ci		0	0
 
+	//@Transient
 
 	@Override
 	public String getId() {
@@ -144,4 +145,6 @@ public class TmyTask extends DataEntity<String> {
 	public void setTaskstatus(String taskstatus) {
 		this.taskstatus = taskstatus;
 	}
+
+
 }

@@ -22,6 +22,7 @@ import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.modules.sys.entity.OperationLog;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -32,6 +33,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -111,7 +114,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
         EntityWrapper<TmyTask> entityWrapper = new EntityWrapper<>(entityClass);
-//        propertyPreFilterable.addQueryProperty("id");
+        propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)) {
             entityWrapper.eq("create_by", userid);
@@ -134,5 +137,20 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         model.addAttribute("taskbase",taskbase);
         return displayModelAndView("MyTaskDetail");
     }
+
+    @RequestMapping(value = "selBaseIdMyTaskList", method = { RequestMethod.GET, RequestMethod.POST })
+    @PageableDefaults(sort = "id=desc")
+    @Log(logType = LogType.SELECT)
+    @RequiresMethodPermissions("selBaseIdMyTaskList")
+    public void selBaseIdMyTaskList(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                                    HttpServletResponse response) throws IOException {
+
+        String taskId = jsonObject.getString("taskId");
+        List<TmyTask> list = tmyTaskService.selBaseIdMyTaskList(taskId);
+
+        String content = JSON.toJSONString(list);
+        StringUtils.printJson(response,content);
+    }
+
 
 }

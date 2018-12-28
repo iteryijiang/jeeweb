@@ -8,9 +8,13 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TmyTaskMapper extends BaseMapper<TmyTask> {
 	
 	List<TmyTask> selectUserList(Pagination page, @Param("ew") Wrapper<TmyTask> wrapper);
+
+	List<TmyTask> selBaseIdMyTaskList(@Param("taskId") String taskId);
+	List<Map> groupBytaskstatus(@Param("taskId") String taskId);
 }

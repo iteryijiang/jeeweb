@@ -55,7 +55,7 @@
                     <div>
                         <p>任务总单数：<span><b class='yel'>${tb.tasknum}</b>单</span></p>
                         <div class='item'>手机Pad端:<span><b class='yel'>10</b>单</span></div>
-                        <div class='item'>进行中：<span><b class='yel'>10</b>单，未接手<b class='yel'>0</b>单，已完成：<b class='yel'>0</b>单</span></div>
+                        <div class='item'>进行中：<span><b class='yel'>${(taskstatus0==null?0:taskstatus0)}</b>单，未接手<b class='yel'>${tb.tasknum-(taskstatus0==null?0:taskstatus0)-(taskstatus1==null?0:taskstatus1)}</b>单，已完成：<b class='yel'>${(taskstatus1==null?0:taskstatus1)}</b>单</span></div>
                     </div>
                     <div class='keyword'>
                         <p>商品搜索关键字词</p>
@@ -109,7 +109,7 @@
                     </div>
                     <div>
                         您还可以：
-                        <button class='btn btn-warning'>撤销未接手任务</button>
+                        <button class='btn btn-warning' onclick="revokeTask()">撤销未接手任务</button>
                     </div>
                 </div>
                 <!--<div class='task_refunds'>-->
@@ -146,55 +146,55 @@
                             <th>退款金额</th>
                       </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>霸气柴火人</td>
-                            <td>手机</td>
-                            <td>2018-12-25 16:00</td>
-                            <td>
-                                <p>20002020020202020</p>
-                                <p> <a href="#">查看详情</a></p>
-                            </td>
-                            <td>快递单已打印，待收货</td>
-                            <td>180928930291</td>
-                            <td>188.00元</td>
-                        </tr>
-                        <tr>
-                            <td>霸气柴火人</td>
-                            <td>手机</td>
-                            <td>2018-12-25 16:00</td>
-                            <td>
-                                <p>20002020020202020</p>
-                                <p> <a href="#">查看详情</a></p>
-                            </td>
-                            <td>快递单已打印，待收货</td>
-                            <td>180928930291</td>
-                            <td>188.00元</td>
-                        </tr>
-                        <tr>
-                            <td>霸气柴火人</td>
-                            <td>手机</td>
-                            <td>2018-12-25 16:00</td>
-                            <td>
-                                <p>20002020020202020</p>
-                                <p> <a href="#">查看详情</a></p>
-                            </td>
-                            <td>快递单已打印，待收货</td>
-                            <td>180928930291</td>
-                            <td>188.00元</td>
-                        </tr>
-                        <tr>
-                            <td>霸气柴火人</td>
-                            <td>手机</td>
-                            <td>2018-12-25 16:00</td>
-                            <td>
-                                <p>20002020020202020</p>
-                                <p> <a href="#">查看详情</a></p>
-                            </td>
-                            <td>快递单已打印，待收货</td>
-                            <td>180928930291</td>
-                            <td>188.00元</td>
-                        </tr>
+                    <tbody id="tbodyMy">
+                        <!--<tr>-->
+                            <!--<td>霸气柴火人</td>-->
+                            <!--<td>手机</td>-->
+                            <!--<td>2018-12-25 16:00</td>-->
+                            <!--<td>-->
+                                <!--<p>20002020020202020</p>-->
+                                <!--<p> <a href="#">查看详情</a></p>-->
+                            <!--</td>-->
+                            <!--<td>快递单已打印，待收货</td>-->
+                            <!--<td>180928930291</td>-->
+                            <!--<td>188.00元</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>霸气柴火人</td>-->
+                            <!--<td>手机</td>-->
+                            <!--<td>2018-12-25 16:00</td>-->
+                            <!--<td>-->
+                                <!--<p>20002020020202020</p>-->
+                                <!--<p> <a href="#">查看详情</a></p>-->
+                            <!--</td>-->
+                            <!--<td>快递单已打印，待收货</td>-->
+                            <!--<td>180928930291</td>-->
+                            <!--<td>188.00元</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>霸气柴火人</td>-->
+                            <!--<td>手机</td>-->
+                            <!--<td>2018-12-25 16:00</td>-->
+                            <!--<td>-->
+                                <!--<p>20002020020202020</p>-->
+                                <!--<p> <a href="#">查看详情</a></p>-->
+                            <!--</td>-->
+                            <!--<td>快递单已打印，待收货</td>-->
+                            <!--<td>180928930291</td>-->
+                            <!--<td>188.00元</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td>霸气柴火人</td>-->
+                            <!--<td>手机</td>-->
+                            <!--<td>2018-12-25 16:00</td>-->
+                            <!--<td>-->
+                                <!--<p>20002020020202020</p>-->
+                                <!--<p> <a href="#">查看详情</a></p>-->
+                            <!--</td>-->
+                            <!--<td>快递单已打印，待收货</td>-->
+                            <!--<td>180928930291</td>-->
+                            <!--<td>188.00元</td>-->
+                        <!--</tr>-->
                     </tbody>
                   </table>
         </div>
@@ -213,79 +213,132 @@
                   <tbody>
                     <tr>
                       <td>
-                          <img src="img/test.jpeg" alt="">
-                          <span>冬季长款棉服女长过膝新款2018韩版羽绒棉衣修身显瘦棉袄加厚外套</span>
+                          <img src="${tb.imgurl}" alt="">
+                          <span>${tb.tTitle}</span>
                       </td>
-                      <td>Bangalore</td>
-                      <td>560001</td>
-                      <td></td>
+                      <td>${tb.tPrice}</td>
+                      <td>${tb.tNum}</td>
+                      <td>${tb.totalprice}</td>
                     </tr>
                   </tbody>
                 </table>
         </div>
         <!-- 费用合计 -->
-        <div class='task_free_seller'>
-                <h3>费用合计</h3>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>分类</th>
-                      <th>费用明细</th>
-                      <th>小计</th>
-                      <th>单数</th>
-                      <th>优惠折扣</th>
-                      <th>合计</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Tanmay</td>
-                      <td>
-                          <p>押金（含保障金）：197.40元/单</p>
-                      </td>
-                      <td>560001</td>
-                      <td class="rowspan" rowspan="3">560001</td>
-                      <td>560001</td>
-                      <td>
-                          100X10=<span class='red_font'>1000</span>元
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Sachin</td>
-                      <td>
-                            <p>押金（含保障金）：197.40元/单</p>
-                            <p>押金（含保障金）：197.40元/单</p>
-                      </td>
-                      <td>560001</td>
-                      <td>560001</td>
-                      <td>
-                            100X10=<span class='red_font'>1000</span>点
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Uma</td>
-                      <td>
-                            <p>押金（含保障金）：197.40元/单</p>
-                            <p>押金（含保障金）：197.40元/单</p>
-                            <p>押金（含保障金）：197.40元/单</p>
-                            <p>押金（含保障金）：197.40元/单</p>
-                            <p>押金（含保障金）：197.40元/单</p>
-                      </td>
-                      <td>560001</td>
-                      <td>22334</td>
-                      <td>
-                         <span class='red_font'>57</span>点
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div>
-                    费用合计 押金：<b class='red_font'>1974.00</b>元 获赢符：<b class='red_font'>266.10</b>点
-                </div>
-        </div>
+        <!--<div class='task_free_seller'>-->
+                <!--<h3>费用合计</h3>-->
+                <!--<table class="table">-->
+                  <!--<thead>-->
+                    <!--<tr>-->
+                      <!--<th>分类</th>-->
+                      <!--<th>费用明细</th>-->
+                      <!--<th>小计</th>-->
+                      <!--<th>单数</th>-->
+                      <!--<th>优惠折扣</th>-->
+                      <!--<th>合计</th>-->
+                    <!--</tr>-->
+                  <!--</thead>-->
+                  <!--<tbody>-->
+                    <!--<tr>-->
+                      <!--<td>Tanmay</td>-->
+                      <!--<td>-->
+                          <!--<p>押金（含保障金）：197.40元/单</p>-->
+                      <!--</td>-->
+                      <!--<td>560001</td>-->
+                      <!--<td class="rowspan" rowspan="3">560001</td>-->
+                      <!--<td>560001</td>-->
+                      <!--<td>-->
+                          <!--100X10=<span class='red_font'>1000</span>元-->
+                      <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                      <!--<td>Sachin</td>-->
+                      <!--<td>-->
+                            <!--<p>押金（含保障金）：197.40元/单</p>-->
+                            <!--<p>押金（含保障金）：197.40元/单</p>-->
+                      <!--</td>-->
+                      <!--<td>560001</td>-->
+                      <!--<td>560001</td>-->
+                      <!--<td>-->
+                            <!--100X10=<span class='red_font'>1000</span>点-->
+                      <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                      <!--<td>Uma</td>-->
+                      <!--<td>-->
+                            <!--<p>押金（含保障金）：197.40元/单</p>-->
+                            <!--<p>押金（含保障金）：197.40元/单</p>-->
+                            <!--<p>押金（含保障金）：197.40元/单</p>-->
+                            <!--<p>押金（含保障金）：197.40元/单</p>-->
+                            <!--<p>押金（含保障金）：197.40元/单</p>-->
+                      <!--</td>-->
+                      <!--<td>560001</td>-->
+                      <!--<td>22334</td>-->
+                      <!--<td>-->
+                         <!--<span class='red_font'>57</span>点-->
+                      <!--</td>-->
+                    <!--</tr>-->
+                  <!--</tbody>-->
+                <!--</table>-->
+                <!--<div>-->
+                    <!--费用合计 押金：<b class='red_font'>1974.00</b>元 获赢符：<b class='red_font'>266.10</b>点-->
+                <!--</div>-->
+        <!--</div>-->
     </div>
 </body>
 <script>
-
+    $(function(){
+        $.ajax({
+            type:'POST',
+            url: "${adminPath}/buyer/TmyTask/selBaseIdMyTaskList",
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify({"taskId":"${tb.id}"}),
+            success:function (json) {
+                var tbody = "";
+                for (var i = 0; i < json.length; i++) {
+                    var tr = "<tr>";
+                    tr += "<td>"+(json[i].buyerjdnick==undefined?"":json[i].buyerjdnick)+"</td>";
+                    tr += "<td>"+(json[i].tasktype==undefined?"":json[i].tasktype)+"</td>";
+                    tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd",new Date(json[i].createDate)))+"</td>";
+                    tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p><p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a></td>";
+                    tr += "<td>"+(json[i].taskstate==undefined?"":json[i].taskstate)+"</td>";
+                    tr += "<td>"+(json[i].expressno==undefined?"":json[i].expressno)+"</td>";
+                    tr += "<td>"+(json[i].pays==undefined?"":json[i].pays)+"</td>";
+                    tr +="</tr>";
+                    tbody+=tr;
+                }
+                $("#tbodyMy").html(tbody);
+            }
+        });
+    })
+    function revokeTask(){
+        // $.ajax({
+        //     type: "POST",
+        //     url: "${adminPath}/shop/TtaskBase/showTitle",
+        //     contentType:'application/json;charset=utf-8',
+        //     data: JSON.stringify({"turl":turl.value}),
+        //     dataType: "json",
+        //     success: function(data){
+        //        alert("操作成功");
+        //     }
+        // });
+    }
+    function dateFtt(fmt,date)
+    { //author: meizz
+        var o = {
+            "M+" : date.getMonth()+1,                 //月份
+            "d+" : date.getDate(),                    //日
+            "h+" : date.getHours(),                   //小时
+            "m+" : date.getMinutes(),                 //分
+            "s+" : date.getSeconds(),                 //秒
+            "q+" : Math.floor((date.getMonth()+3)/3), //季度
+            "S"  : date.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt))
+            fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+        return fmt;
+    }
 </script>
 </html>
