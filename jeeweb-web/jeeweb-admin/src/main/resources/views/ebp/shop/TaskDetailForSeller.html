@@ -12,7 +12,6 @@
 <script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
 <script src='${staticPath}/shop/js/bootstrap.min.js'></script>
 <script src='${staticPath}/shop/js/fileinput.min.js'></script>
-<script src='${staticPath}/shop/js/fileinput.min.js'></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
@@ -127,23 +126,24 @@
                             <th>下单终端</th>
                             <th>接单时间</th>
                             <th>订单号</th>
-                            <th>
-                                <select>
-                                    <option value="status_all">所有状态</option>
-                                    <option value="status1">状态1</option>
-                                    <option value="status2">状态2</option>
-                                    <option value="status3">状态3</option>
-                                    <option value="status4">状态4</option>
-                                    <option value="status5">状态5</option>
-                                    <option value="status6">状态6</option>
-                                    <option value="status7">状态7</option>
-                                    <option value="status8">状态8</option>
-                                </select>
+                            <th>订单状态
+                                <!--<select>-->
+                                    <!--<option value="status_all">所有状态</option>-->
+                                    <!--<option value="status1">状态1</option>-->
+                                    <!--<option value="status2">状态2</option>-->
+                                    <!--<option value="status3">状态3</option>-->
+                                    <!--<option value="status4">状态4</option>-->
+                                    <!--<option value="status5">状态5</option>-->
+                                    <!--<option value="status6">状态6</option>-->
+                                    <!--<option value="status7">状态7</option>-->
+                                    <!--<option value="status8">状态8</option>-->
+                                <!--</select>-->
                             </th>
                             <th>
-                                韵达快递单号
+                                快递单号
                             </th>
                             <th>退款金额</th>
+                            <th>确定发货</th>
                       </tr>
                     </thead>
                     <tbody id="tbodyMy">
@@ -300,9 +300,14 @@
                     tr += "<td>"+(json[i].tasktype==undefined?"":json[i].tasktype)+"</td>";
                     tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd",new Date(json[i].createDate)))+"</td>";
                     tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p><p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a></td>";
-                    tr += "<td>"+(json[i].taskstate==undefined?"":json[i].taskstate)+"</td>";
+                    tr += "<td>"+(json[i].taskstateName==undefined?"":json[i].taskstateName)+"</td>";
                     tr += "<td>"+(json[i].expressno==undefined?"":json[i].expressno)+"</td>";
                     tr += "<td>"+(json[i].pays==undefined?"":json[i].pays)+"</td>";
+                    if(json[i].taskstate=="2"){
+                        tr += "<td><td><input  type=\"button\"  value=\"提交\" onclick=\"upTask('"+json[i].id+"','3')\"></td>";
+                    }else {
+                        tr += "<td></td>";
+                    }
                     tr +="</tr>";
                     tbody+=tr;
                 }
@@ -341,6 +346,15 @@
             if(new RegExp("("+ k +")").test(fmt))
                 fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
         return fmt;
+    }
+    function upTask(id,state){
+        // var tmytask = {id:id,taskState:state};
+        $.ajax({
+            url: "${adminPath}/buyer/TmyTask/"+id+"/"+state+"/upTaskState",
+            success: function(data){
+                alert("操作成功！");
+            }
+        });
     }
 </script>
 </html>

@@ -638,6 +638,7 @@
             //填充任务信息
             // TaskAreaInfo()
                console.log(good_detail_info);
+               good_detail_info.tType="jd";//先暂时默认jd，后续改为字典获取。
                $.ajax({
                    type: "POST",
                    url: "${adminPath}/shop/TtaskBase/add",

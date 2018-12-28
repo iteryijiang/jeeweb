@@ -1,8 +1,11 @@
 package cn.jeeweb.web.ebp.shop.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.util.Date;
@@ -45,6 +48,11 @@ public class TtaskBase extends DataEntity<String> {
 	private Date effectdate;//	datetime	0	0	-1	0	0	0	0		0	生效时间				0	0
 	private String taskno;//	varchar	200	0	-1	0	0	0	0		0	任务编号	utf8	utf8_general_ci		0	0
 	private Long canreceivenum;//	int	8	0	-1	0	0	0	0		0	可接单数				0	0
+
+	/** 创建时间 */
+	@TableField(value = "create_date", fill = FieldFill.INSERT)
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	private Date createDate;
 
 
 
@@ -291,5 +299,13 @@ public class TtaskBase extends DataEntity<String> {
 		this.canreceivenum = canreceivenum;
 	}
 
+	@Override
+	public Date getCreateDate() {
+		return createDate;
+	}
 
+	@Override
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 }

@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -150,6 +151,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         List<TmyTask> newlist = new ArrayList<TmyTask>();
         for (TmyTask t :list){
             t.setTasktype(DictUtils.getDictLabel(t.getTasktype(),"tasktype",t.getTasktype()));
+            t.setTaskstateName(DictUtils.getDictLabel(t.getTaskstate(),"taskstate",t.getTaskstate()));
             newlist.add(t);
         }
         String content = JSON.toJSONString(newlist);
@@ -175,7 +177,22 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         return displayModelAndView(targetPage);
     }
 
-
+    @GetMapping("{id}/{taskState}/upTaskState")
+    @Log(logType = LogType.UPDATE)
+    @RequiresMethodPermissions("upTaskState")
+    public void upTaskState(@PathVariable("id") String id,@PathVariable("taskState") String taskState, HttpServletRequest request,
+                            HttpServletResponse response) {
+        TmyTask tmyTask = tmyTaskService.selectById(id);
+        tmyTask.setTaskstate(taskState);
+        if("2".equals(taskState)){
+            tmyTask.setOrderdate(new Date());
+        }else if("3".equals(taskState)) {
+            tmyTask.setDeliverydate(new Date());
+        }else if("4".equals(taskState)) {
+            tmyTask.setConfirmdate(new Date());
+        }
+        tmyTaskService.insertOrUpdate(tmyTask);
+    }
 
 
 }

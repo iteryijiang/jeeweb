@@ -1,9 +1,11 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.math.BigDecimal;
@@ -31,8 +33,21 @@ public class TmyTask extends DataEntity<String> {
 	private String evaluate; //好评 评价
 	private String taskstatus;//	varchar	32	0	-1	0	0	0	0		0	下单状态（进行中,已完成）	utf8	utf8_general_ci		0	0
 
+	private java.util.Date receivingdate;//接受任务时间
+	private java.util.Date orderdate;//买手下单时间
+	private java.util.Date deliverydate;//商家发货时间
+	private java.util.Date confirmdate;//确认收货时间
+
+	/** 创建时间 */
+	@TableField(value = "create_date", fill = FieldFill.INSERT)
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	private java.util.Date createDate;
+
 	@TableField(exist = false)
     private String buyeridName;
+
+	@TableField(exist = false)
+	private String taskstateName;
 
 	@Override
 	public String getId() {
@@ -155,4 +170,54 @@ public class TmyTask extends DataEntity<String> {
     public void setBuyeridName(String buyeridName) {
         this.buyeridName = buyeridName;
     }
+
+	@Override
+	public java.util.Date getCreateDate() {
+		return createDate;
+	}
+
+	@Override
+	public void setCreateDate(java.util.Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public java.util.Date getReceivingdate() {
+		return receivingdate;
+	}
+
+	public void setReceivingdate(java.util.Date receivingdate) {
+		this.receivingdate = receivingdate;
+	}
+
+	public java.util.Date getOrderdate() {
+		return orderdate;
+	}
+
+	public void setOrderdate(java.util.Date orderdate) {
+		this.orderdate = orderdate;
+	}
+
+	public java.util.Date getDeliverydate() {
+		return deliverydate;
+	}
+
+	public void setDeliverydate(java.util.Date deliverydate) {
+		this.deliverydate = deliverydate;
+	}
+
+	public java.util.Date getConfirmdate() {
+		return confirmdate;
+	}
+
+	public void setConfirmdate(java.util.Date confirmdate) {
+		this.confirmdate = confirmdate;
+	}
+
+	public String getTaskstateName() {
+		return taskstateName;
+	}
+
+	public void setTaskstateName(String taskstateName) {
+		this.taskstateName = taskstateName;
+	}
 }

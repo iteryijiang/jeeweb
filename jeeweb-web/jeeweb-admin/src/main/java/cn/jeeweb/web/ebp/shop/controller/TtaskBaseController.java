@@ -297,7 +297,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         List listBase = new ArrayList();
         try {
             int count = 3;
-            int countSum = 6;
+            int countSum = 7;
             try{
                 String sum = DictUtils.getDictValue("接单数","tasknum",count+"");
                 count = Integer.parseInt(sum);
@@ -323,6 +323,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
                 my.setTaskstatus("0");
                 my.setPays(BigDecimal.valueOf(tb.gettPrice()));
+                my.setReceivingdate(new Date());
                 tmyTaskService.insert(my);
             }
             //获得商户表
