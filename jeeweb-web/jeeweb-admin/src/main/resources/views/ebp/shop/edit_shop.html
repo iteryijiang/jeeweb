@@ -1,32 +1,42 @@
-<% layout('/layouts/form.html', {title: '通知公告', formId: 'shopBaseForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput,simditor'}){ %>
-<#form:form id="shopBaseForm" modelAttribute="data"   method="post" class="form-horizontal">
+<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('shop.shopbase.addshop',''), formId: 'shopBaseForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+<#form:form id="shopBaseForm" modelAttribute="data" method="post" class="form-horizontal">
 	<#form:hidden path="id"/>
 	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
 		<tbody>
 		<tr>
-			<td  class="width-15 active text-right">
-				<label><font color="red">*</font>店铺名称:</label>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>店铺名称:</label></td>
+			<td  class="width-35" >
+				<#form:input path="shopname" class="form-control"   validErrorMsg="店铺名重复"  htmlEscape="false"  datatype="*"  nullmsg="请输入店铺名称！"/>
+				<label class="Validform_checktip"></label>
 			</td>
-			<td class="width-35">
-				<#form:input path="shopname" htmlEscape="false" class="form-control"  datatype="*"    />
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>京东商户ID:</label>
+			</td>
+			<td class="width-35" >
+				<#form:input path="jdshopid" class="form-control " datatype="*" nullmsg="京东商户ID！" htmlEscape="false" />
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>首页URL:</label></td>
+			<td  class="width-35" >
+				<#form:input path="mainurl" class="form-control"   htmlEscape="false"  datatype="*"  nullmsg="首页URL！"/>
 				<label class="Validform_checktip"></label>
 			</td>
 		</tr>
 		<tr>
 			<td  class="width-15 active text-right">
-				<label><font color="red">*</font>店铺主页:</label>
+				<label><font color="red">*</font>发件地址:</label>
 			</td>
-			<td class="width-35">
-				<#form:textarea path="mainurl" rows="4" htmlEscape="false" class="form-control"  datatype="*"    />
+			<td class="width-35" >
+				<#form:input path="address" class="form-control"   datatype="*" nullmsg="发件地址！"  htmlEscape="false" />
 				<label class="Validform_checktip"></label>
 			</td>
-		</tr>
-		<tr>
 			<td  class="width-15 active text-right">
-				<label><font color="red">*</font>是否发布:</label>
+				<label><font color="red">*</font>联系电话:</label>
 			</td>
-			<td class="width-35">
-				<#form:radiobuttons path="status" htmlEscape="false" class="form-control"  dict="sf"  datatype="*"  cssClass="i-checks required"   />
+			<td  class="width-35" >
+				<#form:input path="mobile" class="form-control"   htmlEscape="false"  datatype="m"  nullmsg="联系电话！"/>
 				<label class="Validform_checktip"></label>
 			</td>
 		</tr>

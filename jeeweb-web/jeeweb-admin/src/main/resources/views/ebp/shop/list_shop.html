@@ -1,15 +1,14 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单管理',''), libs: 'bootstrap-treeview'}){ %>
 	<#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TshopBase/ajaxList">
-        <#grid:column label="店铺名称"  name="shopname" width="200" />
-		<#grid:column label="所属平台"  name="platform"   queryMode="select" width="80"    condition="eq"   dict="tasktype"/>
-		<#grid:column label="商户ID"  name="jdshopid" width="50" query="true" condition="like"   />
+        <#grid:column label="店铺名称"  name="shopname" width="200" query="true"   condition="like" />
+		<#grid:column label="所属平台"  name="platform" query="true"   queryMode="select" width="80"    condition="eq"   dict="tasktype"/>
+		<#grid:column label="商户ID"  name="jdshopid" width="50" condition="like"   />
 		<#grid:column label="店铺链接"  name="mainurl" width="250" />
-		<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="50"/>
-		<#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
-		<#grid:toolbar function="add"/>
+		<#grid:toolbar title="绑定店铺" function="add" url='${adminPath}/shop/TshopBase/add'/>
 		<#grid:toolbar   function="update" />
 		<#grid:toolbar   function="delete" />
 		<#grid:toolbar  function="search"  />
 		<#grid:toolbar  function="reset" />
 	</#grid:grid>
+
 <% } %>
