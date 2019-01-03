@@ -314,7 +314,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             if(list!=null&&!list.isEmpty()){
                 TmyTask tmyTask = new TmyTask();
                 tmyTask.setMytaskno((new Date().getTime()+""));
+                tmyTask.setState("0");
                 tmyTaskService.insert(tmyTask);
+                Double tprice=0.0;
                 for (int i=0;i<list.size();i++) {
                     if((i+1)>countSum){
                         break;
@@ -333,8 +335,10 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                     my.setReceivingdate(new Date());
                     my.setMytaskid(tmyTask.getId());
                     tmyTaskDetailService.insert(my);
+                    tprice += tb.gettPrice();
                 }
-
+                tmyTask.setTotalprice(tprice);
+                tmyTaskService.insertOrUpdate(tmyTask);
             }
             //获得商户表
 //            List<TshopInfo> listShop = tshopInfoService.findshopInfo();
@@ -366,5 +370,30 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
 //        String content = JSON.toJSONString(listBase);
 //        StringUtils.printJson(response,content);
+    }
+
+    @GetMapping(value = "{id}/uploadQrcode")
+    public ModelAndView uploadQrcode(@PathVariable("id") String id, Model model,HttpServletRequest request,
+                                     HttpServletResponse response) throws IOException {
+        TtaskBase tb = ttaskBaseService.selectById(id);
+        model.addAttribute("data",tb);
+        return displayModelAndView("avatar");
+    }
+    @PostMapping(value = "{id}/uploadQrcode")
+    @Log(logType = LogType.OTHER,title = "上传二维码")
+    public Response uploadQrcode(TtaskBase ttaskBase, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            //ttaskBase.getId() 获取两个同样的id
+            String id = ttaskBase.getId().split(",")[0];
+            TtaskBase oldtaskbase = ttaskBaseService.selectById(id);
+            oldtaskbase.setQrcodeurl(ttaskBase.getQrcodeurl());
+            ttaskBaseService.insertOrUpdate(oldtaskbase);
+            String currentUserId = UserUtils.getUser().getId();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Response.error("二维码修改失败");
+        }
+        return Response.ok("二维码修改成功");
     }
 }

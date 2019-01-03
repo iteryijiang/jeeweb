@@ -1,17 +1,15 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('我的列表',''), libs: 'bootstrap-treeview'}){ %>
 
 
-<#grid:grid id="taskbase" url="${adminPath}/buyer/TmyTaskDetail/ajaxList">
+<#grid:grid id="taskbase" url="${adminPath}/buyer/TmyTask/ajaxList">
     <#grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
-    <#grid:column label="商品"  name="goodsname" formatter="link"   width="200"/>
-    <#grid:column label="任务类型"  name="tasktype" query="true"  queryMode="select" width="50"    condition="eq"   dict="tasktype" />
-    <#grid:column label="买手号"  name="buyerjdnick"  width="80" editable="true" edittype="text"/>
-    <#grid:column label="订单号"  name="jdorderno"  width="80" editable="true" edittype="text"/>
+    <#grid:column label="任务单号"  name="mytaskno" width="100"/>
+    <!--<#grid:column label="任务类型"  name="tasktype" query="true"  queryMode="select" width="50"    condition="eq"   dict="tasktype" />-->
+    <!--<#grid:column label="买手号"  name="buyerjdnick"  width="80" editable="true" edittype="text"/>-->
+    <#grid:column label="任务总价"  name="totalprice"  width="80"/>
     <#grid:column label="日期"  name="createDate"  width="60"  query="true"  queryMode="date"  condition="between" />
-    <#grid:column label="任务状态"  name="taskstate"  width="60"  query="true"  queryMode="select"   condition="eq"  dict="taskstate" />
+    <!--<#grid:column label="任务状态"  name="taskstate"  width="60"  query="true"  queryMode="select"   condition="eq"  dict="taskstate" />-->
     <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
-    <!--<#grid:button title="确定下单"  groupname="opt"  function="toolbarSelectConfirm" />-->
-    <!--<#grid:button title="确定收货"  groupname="opt"  function="toolbarSelectConfirm" />-->
     <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTask/\"+row.id+\"/detail' />
     <#grid:toolbar title="领取任务"   icon="fa-download"  onclick="gettask()"  />
     <#grid:toolbar  function="search"  />
@@ -34,27 +32,5 @@
             }
         });
 
-    }
-    function gettask(){
-        $.ajax({
-            type: "POST",
-            url: "${adminPath}/shop/TtaskBase/myTaskCreate",
-            contentType:'application/json;charset=utf-8',
-            dataType: "json",
-            success: function(data){
-                alert("领取成功!");
-                search('taskbase');
-            },
-            error: function(data){
-            }
-        });
-
-    }
-
-    function editoptions(rowId){
-
-        alert(rowId);
-        var rowData = $("#taskbase").jqGrid('getRowData',rowId);
-        alert(rowData.buyerjdnick);
     }
 </script>

@@ -116,7 +116,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
      * @throws IOException
      */
     @RequestMapping(value = "ajaxList", method = { RequestMethod.GET, RequestMethod.POST })
-    @PageableDefaults(sort = "id=desc")
+    @PageableDefaults(sort = "create_date=desc")
     @Log(logType = LogType.SELECT)
     @RequiresMethodPermissions("view")
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
@@ -138,12 +138,12 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     @GetMapping("{id}/detail")
     @Log(logType = LogType.SELECT)
     public ModelAndView detail(Model model,@PathVariable("id") String id) {
-        TmyTaskDetail tmyTask = tmyTaskDetailService.selectById(id);
+        TmyTask tmyTask = tmyTaskService.selectById(id);
         //tmyTask.setTasktype(DictUtils.getDictValue(""));
         model.addAttribute("tmyTask", tmyTask);
-        TtaskBase taskbase = ttaskBaseService.selectById(tmyTask.getTaskid());
-        model.addAttribute("taskbase",taskbase);
-        return displayModelAndView("MyTaskDetail");
+//        TtaskBase taskbase = ttaskBaseService.selectById(tmyTask.getTaskid());
+//        model.addAttribute("taskbase",taskbase);
+        return displayModelAndView("MyTask");
     }
 
     @RequestMapping(value = "selBaseIdMyTaskList", method = { RequestMethod.GET, RequestMethod.POST })

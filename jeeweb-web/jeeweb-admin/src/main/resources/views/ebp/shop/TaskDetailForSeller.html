@@ -53,14 +53,14 @@
                     </div>
                     <div>
                         <p>任务总单数：<span><b class='yel'>${tb.tasknum}</b>单</span></p>
-                        <div class='item'>手机Pad端:<span><b class='yel'>10</b>单</span></div>
+                        <div class='item'>手机Pad端:<span><b class='yel'>${tb.tasknum}</b>单</span></div>
                         <div class='item'>进行中：<span><b class='yel'>${(taskstatus0==null?0:taskstatus0)}</b>单，未接手<b class='yel'>${tb.tasknum-(taskstatus0==null?0:taskstatus0)-(taskstatus1==null?0:taskstatus1)}</b>单，已完成：<b class='yel'>${(taskstatus1==null?0:taskstatus1)}</b>单</span></div>
                     </div>
                     <div class='keyword'>
                         <p>商品搜索关键字词</p>
                         <div class='item'>
                             <div>
-                                <div class='lf'>淘宝app搜索关键词1：</div>
+                                <div class='lf'>淘宝app搜索关键词：</div>
                                 <div class='rt'>
                                     <span>${tb.spec1}</span>
                                     <span>${tb.spec2}</span>

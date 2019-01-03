@@ -50,6 +50,7 @@ public class TtaskBase extends DataEntity<String> {
 	private Long canreceivenum;//	int	8	0	-1	0	0	0	0		0	可接单数				0	0
 	private String storename;//	varchar	32	0	-1	0	0	0	0		0	店铺	utf8	utf8_general_ci		0	0
 	private Double actualprice;//	decimal	10	0	-1	0	0	0	0		0	实付金额				0	0
+	private String qrcodeurl;
 
 
 	/** 创建时间 */
@@ -316,6 +317,14 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setActualprice(Double actualprice) {
 		this.actualprice = actualprice;
+	}
+
+	public String getQrcodeurl() {
+		return qrcodeurl;
+	}
+
+	public void setQrcodeurl(String qrcodeurl) {
+		this.qrcodeurl = qrcodeurl;
 	}
 
 	@Override
