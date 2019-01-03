@@ -25,27 +25,27 @@
          <!-- 任务详情头部 -->
          <div class='task_area_tab'>
                 <h2>任务详情</h2>
-                <div>
+                <div class="col-md-10">
                     <ul>
                         <li class='active' id="li_1">
                             <em id="em_1" class='process'>1</em>
                             <span>接手任务</span>
-                            <span class='time'>${tmyTask.createDate}</span>
+                            <span class='time' id="receivingdate"></span>
                         </li>
-                        <li id="li_2">
-                            <em id="em_2">2</em>
+                        <li id="li_2" ${tmyTask.taskstate=="2"||tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='active'":""}>
+                            <em id="em_2" ${tmyTask.taskstate=="2"||tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='process'":""}>2</em>
                             <span>买手下单</span>
-                            <span class='time'>${tmyTask.createDate}</span>
+                            <span class='time' id="orderdate"></span>
                         </li>
-                        <li id="li_3">
-                            <em id="em_3">3</em>
-                            <span>商家发货</span>
-                            <span class='time'>${tmyTask.createDate}</span>
+                        <li id="li_3" ${tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='active'":""}>
+                            <em id="em_3" ${tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='process'":""}>3</em>
+                            <span >商家发货</span>
+                            <span class='time' id="deliverydate"></span>
                         </li>
-                        <li id="li_4">
-                            <em id="em_4">4</em>
-                            <span>确认收货/任务完成</span>
-                            <span class='time'>${tmyTask.createDate}</span>
+                        <li id="li_4" ${tmyTask.taskstate=="4"?"class='active'":""}>
+                            <em id="em_4" ${tmyTask.taskstate=="4"?"class='process'":""}>4</em>
+                            <span>确认收货</span>
+                            <span class='time' id="confirmdate"></span>
                         </li>
                         <!--<li id="li_5">-->
                             <!--<em id="em_5">5</em>-->
@@ -136,18 +136,18 @@
                     <tr>
                       <td>搜索关键字截图</td>
                       <td>2018-12-09 17:00:23</td>
-                      <td></td><td><input type="button" value="上传" onclick="sub()"></td>
+                      <td></td><td><!--<input type="button" value="上传" onclick="sub()">--></td>
                     </tr>
                     <tr>
                       <td>搜索关键字</td>
                       <td>2018-12-09 17:00:23</td>
-                        <td></td><td><input type="button"  value="录入" onclick="upTask('1')"></td>
+                        <td></td><td><!--<input type="button"  value="录入" onclick="upTask('1')">--></td>
                     </tr>
                     <tr>
                       <td>下单和支付</td>
                       <td>2018-12-09 17:00:23</td>
                       <td><img src="${staticPath}/shop/img/icon-g.png" alt="">买手已完成，订单号：${tmyTask.jdorderno}</td>
-                      <td><input type="button"  value="提交" onclick="upTask('2')"></td>
+                      <td><button class='btn btn-warning' onclick="upTask('2')">下单提交</button></td>
                     </tr>
                     <tr>
                       <td>商家发货</td>
@@ -157,7 +157,7 @@
                     <tr>
                         <td>收货并好评</td>
                         <td>2018-12-09 17:00:23</td>
-                        <td>已退货</td><td><input  type="button"  value="提交" onclick="upTask('4')"> </td>
+                        <td>已退货</td><td><button class='btn btn-warning' onclick="upTask('4')">好评提交</button></td>
                     </tr>
                     <tr class='receive_good'>
                         <td>
@@ -217,7 +217,10 @@
 
 
     function init(){
-
+        $("#receivingdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.receivingdate}")));
+        $("#orderdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.orderdate}")));
+        $("#deliverydate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.deliverydate}")));
+        $("#confirmdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.confirmdate}")));
     }
     function sub(){
         $.ajax({
@@ -240,6 +243,26 @@
             }
         });
     }
+    function dateFtt(fmt,date)
+    { //author: meizz
+        var o = {
+            "M+" : date.getMonth()+1,                 //月份
+            "d+" : date.getDate(),                    //日
+            "h+" : date.getHours(),                   //小时
+            "m+" : date.getMinutes(),                 //分
+            "s+" : date.getSeconds(),                 //秒
+            "q+" : Math.floor((date.getMonth()+3)/3), //季度
+            "S"  : date.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt))
+            fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+        return fmt;
+    }
+
+
 </script>
 </html>
 <% } %>

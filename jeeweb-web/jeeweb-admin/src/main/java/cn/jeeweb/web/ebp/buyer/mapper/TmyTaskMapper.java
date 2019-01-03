@@ -14,7 +14,4 @@ import java.util.Map;
 public interface TmyTaskMapper extends BaseMapper<TmyTask> {
 	
 	List<TmyTask> selectUserList(Pagination page, @Param("ew") Wrapper<TmyTask> wrapper);
-
-	List<TmyTask> selBaseIdMyTaskList(@Param("taskId") String taskId);
-	List<Map> groupBytaskstatus(@Param("taskId") String taskId);
 }

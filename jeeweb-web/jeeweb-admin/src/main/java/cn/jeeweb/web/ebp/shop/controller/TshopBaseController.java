@@ -21,6 +21,7 @@ import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -162,6 +163,23 @@ public class TshopBaseController extends BaseBeanController<TshopBase> {
         return validResponse;
     }
 
+    @RequestMapping(value = "selMyShowBaseList", method = { RequestMethod.GET, RequestMethod.POST })
+    @PageableDefaults(sort = "id=desc")
+    public void selMyShowBaseList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                                    HttpServletResponse response) throws IOException {
+        EntityWrapper<TshopBase> entityWrapper = new EntityWrapper<>(entityClass);
+        entityWrapper.eq("userid", UserUtils.getPrincipal().getId());
+
+        List<TshopBase> list = tshopBaseService.listWithNoPage(queryable,entityWrapper);
+//        List<TmyTaskDetail> newlist = new ArrayList<TmyTaskDetail>();
+//        for (TmyTaskDetail t :list){
+//            t.setTasktype(DictUtils.getDictLabel(t.getTasktype(),"tasktype",t.getTasktype()));
+//            t.setTaskstateName(DictUtils.getDictLabel(t.getTaskstate(),"taskstate",t.getTaskstate()));
+//            newlist.add(t);
+//        }
+        String content = JSON.toJSONString(list);
+        StringUtils.printJson(response,content);
+    }
 
 
 }

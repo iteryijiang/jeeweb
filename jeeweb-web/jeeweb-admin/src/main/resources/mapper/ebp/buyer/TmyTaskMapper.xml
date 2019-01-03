@@ -2,20 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TmyTaskMapper" >
   <resultMap id="TmyTask" type="cn.jeeweb.web.ebp.buyer.entity.TmyTask" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result property="buyerid" column="buyerid" jdbcType="VARCHAR" />
-    <result property="taskid" column="taskid" jdbcType="VARCHAR" />
-    <result property="taskstate" column="taskstate" jdbcType="VARCHAR" />
-      <result property="goodsname" column="goodsname" jdbcType="VARCHAR" />
-      <result property="tasktype" column="tasktype" jdbcType="VARCHAR" />
-      <result property="commision" column="commision" jdbcType="DOUBLE" />
-      <result property="pays" column="pays" jdbcType="DOUBLE" />
-      <result property="buyerjdnick" column="buyerjdnick" jdbcType="VARCHAR" />
-      <result property="jdorderno" column="jdorderno" jdbcType="VARCHAR" />
-      <result property="buyerclient" column="buyerclient" jdbcType="VARCHAR" />
-      <result property="expressno" column="expressno" jdbcType="VARCHAR" />
-      <result property="evaluate" column="evaluate" jdbcType="VARCHAR" />
-      <result property="taskstatus" column="taskstatus" jdbcType="VARCHAR" />
+      <id column="id" property="id" jdbcType="VARCHAR" />
+      <result property="mytaskno" column="mytaskno" jdbcType="VARCHAR" />
+      <result property="totalprice" column="totalprice" jdbcType="DOUBLE" />
+      <result property="state" column="state" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -34,11 +24,5 @@
 	   </if>
   </select>
 
-    <select id="selBaseIdMyTaskList" resultMap="TmyTask">
-        select t.*,s.realname buyeridName from T_my_Task t,sys_user s where t.buyerid=s.id and t.taskId=#{taskId}
-    </select>
 
-    <select id="groupBytaskstatus" resultType="java.util.Map">
-        select taskstatus,count(1) counts from T_my_Task t where t.taskId=#{taskId} group by taskstatus
-    </select>
 </mapper>

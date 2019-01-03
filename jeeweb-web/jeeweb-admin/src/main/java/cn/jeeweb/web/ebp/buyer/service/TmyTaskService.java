@@ -8,6 +8,4 @@ import java.util.Map;
 
 public interface TmyTaskService extends ICommonService<TmyTask> {
 
-    public List<TmyTask> selBaseIdMyTaskList(String taskId);
-    public List<Map> groupBytaskstatus(String taskId);
 }

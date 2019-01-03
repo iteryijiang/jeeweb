@@ -7,8 +7,17 @@ import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 @Transactional
 @Service("TmyTaskDetailService")
 public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMapper, TmyTaskDetail> implements TmyTaskDetailService {
 
+    public List<TmyTaskDetail> selBaseIdMyTaskDetailList(String taskId){
+        return baseMapper.selBaseIdMyTaskDetailList(taskId);
+    }
+    public List<Map> groupBytaskstatus(String taskId){
+        return baseMapper.groupBytaskstatus(taskId);
+    }
 }

@@ -32,6 +32,8 @@
     <result property="effectdate" column="effectdate" jdbcType="DATE" />
     <result property="taskno" column="taskno" jdbcType="VARCHAR" />
     <result property="canreceivenum" column="canreceivenum" jdbcType="NUMERIC" />
+    <result property="storename" column="storename" jdbcType="VARCHAR" />
+    <result property="actualprice" column="actualprice" jdbcType="DOUBLE" />
   </resultMap>
   
   <sql id="Base_Column_List" >

@@ -127,19 +127,34 @@
                         <div>
                             <form class="form-inline">
                                 <div class="form-group">
-                                  <label for="inputPrice">单品售价:</label>
-                                  <input type="number" class="form-control must-fill" id="inputPrice" placeholder="">
-                                  <label for="inputPrice">元<b class='red_font margin_0'>必填</b></label>
+                                    <label for="storename">店铺:</label>
+                                    <!--<input type="number" class="form-control must-fill" id="storename" placeholder="">-->
+                                    <select id="storename">
+                                        <option value="">===请选择===</option>
+                                    </select>
+                                    <label for="storename"><b class='red_font margin_0'>必填</b></label>
                                 </div>
                                 <div class="form-group">
-                                  <label for="tasknum">任务单数:</label>
-                                  <input type="number" class="form-control must-fill" id="tasknum" placeholder="">
-                                  <label for="inputNum">次数<span><b class='red_font margin_0'>必填</b></span></label>
+                                    <label for="inputPrice">单品售价:</label>
+                                    <input type="number" class="form-control must-fill" id="inputPrice" placeholder="">
+                                    <label for="inputPrice">元<b class='red_font margin_0'>必填</b></label>
+                                </div>
+                            </form>
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <label for="tasknum">任务单数:</label>
+                                    <input type="number" class="form-control must-fill" id="tasknum" placeholder="">
+                                    <label for="inputNum">次数<span><b class='red_font margin_0'>必填</b></span></label>
+                                </div>
+                                <div class="form-group">
+                                  <label for="actualprice">实付金额:</label>
+                                  <input type="number" class="form-control must-fill" id="actualprice" placeholder="">
+                                  <label for="actualprice">元<span><b class='red_font margin_0'>必填</b></span></label>
                                 </div>
                                 <div class="form-group">
                                     <label for="inputNum">每单拍:</label>
-                                    <input type="number" class="form-control must-fill" id="inputNum" placeholder="">
-                                    <label for="inputNum">件<span>（出于安全，建议每单不要超过2件）<b class='red_font margin_0'>必填</b></span></label>
+                                    <input type="number" class="form-control must-fill" id="inputNum" placeholder="" value="1" readonly>
+                                    <label for="inputNum">件<span><!--（出于安全，建议每单不要超过2件）--><b class='red_font margin_0'>必填</b></span></label>
                                 </div>
                                 <!--<span>下单总金额<b class='red_font' id="numsum">0</b>元</span>-->
                             </form>
@@ -150,7 +165,7 @@
                                   <label for="searchprice">元<span class='color_0'>非必填，如该商品有满减、促销、多规格等情况，请填写此金额</span></label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="effectdate">发布时间:</label>
+                                    <label for="effectdate">生效时间:</label>
                                     <input type="date" id="effectdate" style="width: 160px" class="form-control must-fill">
                                 </div>
                              </form>
@@ -514,7 +529,7 @@
         })
         $(document).on('ready', function() {
             $("#jobData").fileinput({showCaption: true, dropZoneEnabled: true});
-            });
+        });
         function loadFile(file,i){
             console.log(file)
             var item="<img id='img"+i+"' src='+img/"+file.name+"'>"
@@ -618,12 +633,15 @@
                             good_detail_info.tasknum=$(ele).val()
                             break;
                         case 4:
-                            good_detail_info.tNum=$(ele).val()
+                            good_detail_info.actualprice=$(ele).val()
                             break;
                         case 5:
-                            good_detail_info.searchprice=$(ele).val()
+                            good_detail_info.tNum=$(ele).val()
                             break;
                         case 6:
+                            good_detail_info.searchprice=$(ele).val()
+                            break;
+                        case 7:
                             good_detail_info.effectdate=$(ele).val()
                     }
                 }
@@ -634,7 +652,8 @@
               }else{
                 $('#task_accordin').removeClass('red')
               }
-            GetCheckboxInfo(good_detail_info.method);
+              good_detail_info.storename = $("#storename").val();
+              GetCheckboxInfo(good_detail_info.method);
             //填充任务信息
             // TaskAreaInfo()
                console.log(good_detail_info);
@@ -813,6 +832,19 @@
                     $("#inputTab").attr("value",data.ttitle);
                     $("#inputPrice").attr("value",data.goodprice);
                     $("#img0").attr("src",data.goodsrc);
+                }
+            });
+        }
+        selectopen();
+        function selectopen(){
+            $.ajax({
+                type: "POST",
+                url: "${adminPath}/shop/TshopBase/selMyShowBaseList",
+                dataType: "json",
+                success: function(json){
+                    for (var i = 0; i < json.length; i++) {
+                        $("#storename").append("<option value='"+json[i].id+"'>"+json[i].shopname+"</option>");
+                    }
                 }
             });
         }

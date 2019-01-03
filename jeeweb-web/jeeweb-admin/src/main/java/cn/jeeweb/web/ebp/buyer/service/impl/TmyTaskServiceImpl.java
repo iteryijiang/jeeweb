@@ -14,10 +14,5 @@ import java.util.Map;
 @Service("TshopInfoService")
 public class TmyTaskServiceImpl extends CommonServiceImpl<TmyTaskMapper, TmyTask> implements TmyTaskService {
 
-    public List<TmyTask> selBaseIdMyTaskList(String taskId){
-        return baseMapper.selBaseIdMyTaskList(taskId);
-    }
-    public List<Map> groupBytaskstatus(String taskId){
-        return baseMapper.groupBytaskstatus(taskId);
-    }
+
 }

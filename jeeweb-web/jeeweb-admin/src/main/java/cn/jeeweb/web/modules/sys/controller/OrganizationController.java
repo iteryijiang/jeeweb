@@ -201,6 +201,7 @@ public class OrganizationController extends BaseBeanController<Organization> {
             treeNodeList = organizationService.selectTreeList(queryable, entityWrapper);
             TreeSortUtil.create().sync(treeNodeList);
         }
+
         propertyPreFilterable.addQueryProperty("id", "expanded", "hasChildren", "leaf", "loaded", "level", "parentId");
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         PageResponse<Organization> pagejson = new PageResponse<Organization>(treeNodeList);

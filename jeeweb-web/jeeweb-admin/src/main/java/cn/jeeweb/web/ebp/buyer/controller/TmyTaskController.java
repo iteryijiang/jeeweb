@@ -5,6 +5,7 @@ import cn.jeeweb.common.http.PageResponse;
 import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
+import cn.jeeweb.common.mvc.entity.tree.TreeSortUtil;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
 import cn.jeeweb.common.query.annotation.PageableDefaults;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
@@ -12,13 +13,17 @@ import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.common.utils.ObjectUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
+import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.modules.sys.entity.Menu;
 import cn.jeeweb.web.modules.sys.entity.OperationLog;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
@@ -49,6 +54,8 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     private TmyTaskService tmyTaskService;
     @Autowired
     private TtaskBaseService ttaskBaseService;
+    @Autowired
+    private TmyTaskDetailService tmyTaskDetailService;
 
 
     @GetMapping
@@ -131,7 +138,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     @GetMapping("{id}/detail")
     @Log(logType = LogType.SELECT)
     public ModelAndView detail(Model model,@PathVariable("id") String id) {
-        TmyTask tmyTask = tmyTaskService.selectById(id);
+        TmyTaskDetail tmyTask = tmyTaskDetailService.selectById(id);
         //tmyTask.setTasktype(DictUtils.getDictValue(""));
         model.addAttribute("tmyTask", tmyTask);
         TtaskBase taskbase = ttaskBaseService.selectById(tmyTask.getTaskid());
@@ -147,9 +154,9 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
                                     HttpServletResponse response) throws IOException {
 
         String taskId = jsonObject.getString("taskId");
-        List<TmyTask> list = tmyTaskService.selBaseIdMyTaskList(taskId);
-        List<TmyTask> newlist = new ArrayList<TmyTask>();
-        for (TmyTask t :list){
+        List<TmyTaskDetail> list = tmyTaskDetailService.selBaseIdMyTaskDetailList(taskId);
+        List<TmyTaskDetail> newlist = new ArrayList<TmyTaskDetail>();
+        for (TmyTaskDetail t :list){
             t.setTasktype(DictUtils.getDictLabel(t.getTasktype(),"tasktype",t.getTasktype()));
             t.setTaskstateName(DictUtils.getDictLabel(t.getTaskstate(),"taskstate",t.getTaskstate()));
             newlist.add(t);
@@ -162,7 +169,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     @GetMapping("{id}/updateTaskState")
     @Log(logType = LogType.SELECT)
     public ModelAndView updateTaskState(Model model,@PathVariable("id") String id) {
-        TmyTask tmyTask = tmyTaskService.selectById(id);
+        TmyTaskDetail tmyTask = tmyTaskDetailService.selectById(id);
         String taskstate = tmyTask.getTaskstate();
         model.addAttribute("tmyTask", tmyTask);
         TtaskBase taskbase = ttaskBaseService.selectById(tmyTask.getTaskid());
@@ -182,17 +189,49 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     @RequiresMethodPermissions("upTaskState")
     public void upTaskState(@PathVariable("id") String id,@PathVariable("taskState") String taskState, HttpServletRequest request,
                             HttpServletResponse response) {
-        TmyTask tmyTask = tmyTaskService.selectById(id);
-        tmyTask.setTaskstate(taskState);
+        TmyTaskDetail td = tmyTaskDetailService.selectById(id);
+        td.setTaskstate(taskState);
         if("2".equals(taskState)){
-            tmyTask.setOrderdate(new Date());
+            td.setOrderdate(new Date());
         }else if("3".equals(taskState)) {
-            tmyTask.setDeliverydate(new Date());
+            td.setDeliverydate(new Date());
         }else if("4".equals(taskState)) {
-            tmyTask.setConfirmdate(new Date());
+            td.setConfirmdate(new Date());
+            td.setTaskstatus("1");//修改订单为已完成状态
         }
-        tmyTaskService.insertOrUpdate(tmyTask);
+        tmyTaskDetailService.insertOrUpdate(td);
     }
+    @RequestMapping(value = "ajaxTreeList")
+    @Log(logType = LogType.SELECT)
+    @RequiresMethodPermissions("list")
+    public void ajaxTreeList(Queryable queryable,
+                             @RequestParam(value = "nodeid", required = false, defaultValue = "") String nodeid,
+                             HttpServletRequest request, HttpServletResponse response, PropertyPreFilterable propertyPreFilterable)
+            throws IOException {
+        EntityWrapper<TmyTask> entityWrapper = new EntityWrapper<TmyTask>();
+        entityWrapper.setTableAlias("t");
+        List<TmyTask> treeNodeList = null;
 
+
+//        if (!async) { // 非异步 查自己和子子孙孙
+//            treeNodeList = menuService.selectTreeList(queryable, entityWrapper);
+//            TreeSortUtil.create().sort(treeNodeList).async(treeNodeList);
+//        } else { // 异步模式只查自己
+//            // queryable.addCondition("parentId", nodeid);
+//            if (ObjectUtils.isNullOrEmpty(nodeid)) {
+//                // 判断的应该是多个OR条件
+//                entityWrapper.isNull("parentId");
+//            } else {
+//                entityWrapper.eq("parentId", nodeid);
+//            }
+//            treeNodeList = menuService.selectTreeList(queryable, entityWrapper);
+//            TreeSortUtil.create().sync(treeNodeList);
+//        }
+//        propertyPreFilterable.addQueryProperty("id", "expanded", "hasChildren", "leaf", "loaded", "level", "parentId");
+//        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
+        PageResponse<TmyTask> pagejson = new PageResponse<TmyTask>(treeNodeList);
+        String content = JSON.toJSONString(pagejson);
+        StringUtils.printJson(response, content);
+    }
 
 }

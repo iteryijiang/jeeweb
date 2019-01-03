@@ -17,6 +17,8 @@ import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
+import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
@@ -54,6 +56,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     private TshopInfoService tshopInfoService;
     @Autowired
     private TmyTaskService tmyTaskService;
+    @Autowired
+    private TmyTaskDetailService tmyTaskDetailService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -232,7 +236,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         //进行中，完成数
         int taskstatus0=0,taskstatus1=0;
 
-        List<Map> list = tmyTaskService.groupBytaskstatus(tb.getId());
+        List<Map> list = tmyTaskDetailService.groupBytaskstatus(tb.getId());
         for (int i=0;i<list.size();i++){
             Map map = list.get(i);
             if("0".equals(map.get("taskstatus").toString())){
@@ -307,24 +311,30 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             }
 
             List<TtaskBase> list = ttaskBaseService.selectShopTask("",count);
-
-            for (int i=0;i<list.size();i++) {
-                if((i+1)>countSum){
-                    break;
+            if(list!=null&&!list.isEmpty()){
+                TmyTask tmyTask = new TmyTask();
+                tmyTask.setMytaskno((new Date().getTime()+""));
+                tmyTaskService.insert(tmyTask);
+                for (int i=0;i<list.size();i++) {
+                    if((i+1)>countSum){
+                        break;
+                    }
+                    TtaskBase tb = (TtaskBase)list.get(i);
+                    TmyTaskDetail my = new TmyTaskDetail();
+                    tb.setCanreceivenum(tb.getCanreceivenum()-1);
+                    ttaskBaseService.insertOrUpdate(tb);
+                    my.setGoodsname(tb.gettTitle());//
+                    my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                    my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                    my.setTaskstate("1");//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                    my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                    my.setTaskstatus("0");
+                    my.setPays(BigDecimal.valueOf(tb.gettPrice()));
+                    my.setReceivingdate(new Date());
+                    my.setMytaskid(tmyTask.getId());
+                    tmyTaskDetailService.insert(my);
                 }
-                TtaskBase tb = (TtaskBase)list.get(i);
-                TmyTask my = new TmyTask();
-                tb.setCanreceivenum(tb.getCanreceivenum()-1);
-                ttaskBaseService.insertOrUpdate(tb);
-                my.setGoodsname(tb.gettTitle());//
-                my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                my.setTaskstate("1");//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                my.setTaskstatus("0");
-                my.setPays(BigDecimal.valueOf(tb.gettPrice()));
-                my.setReceivingdate(new Date());
-                tmyTaskService.insert(my);
+
             }
             //获得商户表
 //            List<TshopInfo> listShop = tshopInfoService.findshopInfo();

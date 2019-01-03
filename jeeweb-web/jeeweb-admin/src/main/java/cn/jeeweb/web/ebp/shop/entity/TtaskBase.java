@@ -48,6 +48,9 @@ public class TtaskBase extends DataEntity<String> {
 	private Date effectdate;//	datetime	0	0	-1	0	0	0	0		0	生效时间				0	0
 	private String taskno;//	varchar	200	0	-1	0	0	0	0		0	任务编号	utf8	utf8_general_ci		0	0
 	private Long canreceivenum;//	int	8	0	-1	0	0	0	0		0	可接单数				0	0
+	private String storename;//	varchar	32	0	-1	0	0	0	0		0	店铺	utf8	utf8_general_ci		0	0
+	private Double actualprice;//	decimal	10	0	-1	0	0	0	0		0	实付金额				0	0
+
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
@@ -297,6 +300,22 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setCanreceivenum(Long canreceivenum) {
 		this.canreceivenum = canreceivenum;
+	}
+
+	public String getStorename() {
+		return storename;
+	}
+
+	public void setStorename(String storename) {
+		this.storename = storename;
+	}
+
+	public Double getActualprice() {
+		return actualprice;
+	}
+
+	public void setActualprice(Double actualprice) {
+		this.actualprice = actualprice;
 	}
 
 	@Override
