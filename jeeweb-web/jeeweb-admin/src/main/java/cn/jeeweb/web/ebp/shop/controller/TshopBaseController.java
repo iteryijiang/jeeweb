@@ -72,7 +72,7 @@ public class TshopBaseController extends BaseBeanController<TshopBase> {
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)) {
-            //entityWrapper.eq("create_by", userid);
+            entityWrapper.eq("userid", userid);
         }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
