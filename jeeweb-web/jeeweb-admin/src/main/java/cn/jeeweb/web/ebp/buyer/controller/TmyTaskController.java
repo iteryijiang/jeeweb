@@ -38,9 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @RestController
@@ -143,6 +141,22 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         model.addAttribute("tmyTask", tmyTask);
 //        TtaskBase taskbase = ttaskBaseService.selectById(tmyTask.getTaskid());
 //        model.addAttribute("taskbase",taskbase);
+        List<TmyTaskDetail> list = tmyTaskDetailService.selectMytaskList(tmyTask.getId());
+        List namelist = new ArrayList();
+        List<TmyTaskDetail> newlist = new ArrayList<TmyTaskDetail>();
+        StringBuffer sb = new StringBuffer();
+        for (TmyTaskDetail t :list){
+            if(sb.indexOf(","+t.getShopname()+",")==-1){
+                namelist.add(t.getShopname());
+                sb.append(","+t.getShopname()+",");
+            }
+            t.setTasktype(DictUtils.getDictLabel(t.getTasktype(),"tasktype",t.getTasktype()));
+            t.setTaskstateName(DictUtils.getDictLabel(t.getTaskstate(),"taskstate",t.getTaskstate()));
+            newlist.add(t);
+        }
+
+        model.addAttribute("list",JSON.toJSONString(newlist));
+        model.addAttribute("namelist",JSON.toJSONString(namelist));
         return displayModelAndView("MyTask");
     }
 
@@ -198,6 +212,16 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         }else if("4".equals(taskState)) {
             td.setConfirmdate(new Date());
             td.setTaskstatus("1");//修改订单为已完成状态
+
+            //计算我的任务单是否完成
+            TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
+            tt.setState("1");
+            tmyTaskService.insertOrUpdate(tt);
+
+            //计算商家任务单是否完成
+            TtaskBase tb = ttaskBaseService.selectById(td.getTaskid());
+            tb.setStatus("1");
+            ttaskBaseService.insertOrUpdate(tb);
         }
         tmyTaskDetailService.insertOrUpdate(td);
     }

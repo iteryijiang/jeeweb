@@ -22,9 +22,9 @@
             <span>></span>
             <a class="A1" href="#">任务单</a>
         </div>
-        <!-- <img style='width:100%' src="img/banner_01_1.png" alt=""> -->
+         <!--<img style='width:100%' src="img/banner_01_1.png" alt="">-->
         <!-- 任务信息 -->
-        <div class='task_detail_seller'>
+        <div class='task_detail_seller2'>
             <h4>任务信息</h4>
             <div>
                 <div>
@@ -36,96 +36,76 @@
             </div>
         </div>
         <!-- 订单详情表格 -->
-        <div class=task_table>
+        <!--<div class=task_table>-->
 
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>买号</th>
-                        <th>下单终端</th>
-                        <th>接单时间</th>
-                        <th>订单号</th>
-                        <th>订单状态</th>
-                        <th>快递单号</th>
-                        <th>退款金额</th>
-                        <th>确定发货</th>
-                    </tr>
-                </thead>
-                <tbody id="tbodyMy">
-                </tbody>
-            </table>
-        </div>
+            <!--<table class="table table-hover">-->
+                <!--<thead>-->
+                    <!--<tr>-->
+                        <!--<th>买号</th>-->
+                        <!--<th>下单终端</th>-->
+                        <!--<th>接单时间</th>-->
+                        <!--<th>订单号</th>-->
+                        <!--<th>订单状态</th>-->
+                        <!--<th>快递单号</th>-->
+                        <!--<th>退款金额</th>-->
+                        <!--<th>确定发货</th>-->
+                    <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody id="tbodyMy">-->
+                <!--</tbody>-->
+            <!--</table>-->
+        <!--</div>-->
         <!-- 任务商品-->
-        <div class='task_target'>
-                <h3>任务商品</h3>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>商品</th>
-                      <th>单价</th>
-                      <th>每单拍*个</th>
-                      <th>小计</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                          <img src="${tb.imgurl}" alt="">
-                          <span><a href="${tb.tUrl}" target="_blank">${tb.tTitle}</a></span>
-                      </td>
-                      <td>${tb.tPrice}</td>
-                      <td>${tb.tNum}</td>
-                      <td>${tb.totalprice}</td>
-                    </tr>
-                  </tbody>
-                </table>
+        <div id="divid">
         </div>
+
     </div>
 </body>
 <script>
     $(function(){
-        $.ajax({
-            type:'POST',
-            url: "${adminPath}/buyer/TmyTask/selBaseIdMyTaskList",
-            contentType:'application/json;charset=utf-8',
-            data: JSON.stringify({"taskId":"${tb.id}"}),
-            success:function (json) {
-                var tbody = "";
-                for (var i = 0; i < json.length; i++) {
-                    var tr = "<tr>";
-                    tr += "<td>"+(json[i].buyerjdnick==undefined?json[i].buyeridName:json[i].buyerjdnick)+"</td>";
-                    tr += "<td>"+(json[i].tasktype==undefined?"":json[i].tasktype)+"</td>";
-                    tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd",new Date(json[i].createDate)))+"</td>";
-                    tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p><p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a></td>";
-                    tr += "<td>"+(json[i].taskstateName==undefined?"":json[i].taskstateName)+"</td>";
-                    tr += "<td>"+(json[i].expressno==undefined?"":json[i].expressno)+"</td>";
-                    tr += "<td>"+(json[i].pays==undefined?"":json[i].pays)+"</td>";
-                    if(json[i].taskstate=="2"){
-                        tr += "<td><td><button class='btn btn-warning' onclick=\"upTask('\"+json[i].id+\"','3')\">发货提交</button></td>";
-                    }else {
-                        tr += "<td></td>";
-                    }
-                    tr +="</tr>";
-                    tbody+=tr;
-                }//<input  type=\"button\"  value=\"提交\" onclick=\"upTask('"+json[i].id+"','3')\">
-                $("#tbodyMy").html(tbody);
+        var namelist = ${namelist};
+        var list = ${list};
+        var divid = "";
+        for (var i = 0; i < namelist.length; i++) {
+            divid += "<div class='task_target'>\n" +
+                "                <h3>"+namelist[i]+"</h3>\n" +
+                "                <table class=\"table\">\n" +
+                "                  <thead>\n" +
+                "                    <tr>\n" +
+                "                      <th width='28%'>商品</th>\n" +
+                "                      <th width='6%'>单价</th>\n" +
+                "                      <th width='8%'>实付金额</th>\n" +
+                "                      <th width='10%'>搜索关键字</th>\n" +
+                "                      <th width='8%'>任务类型</th>\n" +
+                "                      <th width='10%'>京东账号</th>\n" +
+                "                      <th width='10%'>订单号</th>\n" +
+                "                      <th width='10%'>订单状态</th>\n" +
+                "                      <th width='10%'>操作</th>\n" +
+                "                    </tr>\n" +
+                "                    </thead>\n" +
+                "                  <tbody>\n" ;
+            for (var j = 0; j < list.length; j++) {
+                if(namelist[i]==list[j].shopname){
+                    divid += "<tr>";
+                    divid += "<td><img src=\""+list[j].imgurl+"\" height=\"160px\" width=\"160px\">&nbsp;&nbsp;&nbsp;<span>"+(list[j].goodsname==undefined?"":list[j].goodsname)+"</span></td>";
+                    divid += "<td>"+(list[j].pays==undefined?"":list[j].pays)+"</td>";
+                    divid += "<td>"+(list[j].actualprice==undefined?"":list[j].actualprice)+"</td>";
+                    divid += "<td>"+(list[j].keyword==undefined?"":list[j].keyword)+"</td>";
+                    divid += "<td>"+(list[j].tasktype==undefined?"":list[j].tasktype)+"</td>";
+                    divid += "<td><input type='text' style=\"width:80px;\" value='"+(list[j].buyerjdnick==undefined?"":list[j].buyerjdnick)+"' onblur=\"upbuyerjdnick(this.value,'"+list[i].id+"')\"></td>";
+                    divid += "<td><input type='text' style=\"width:80px;\" value='"+(list[j].jdorderno==undefined?"":list[j].jdorderno)+"' onblur=\"upjdorderno(this.value,'"+list[i].id+"')\"></td>";
+                    divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
+                    divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','2')\">确定下单</button></p>";
+                    divid += "<p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','4')\">确定收货</button></p></td>";
+                    divid +="</tr>";
+                }
             }
-        });
-        $("#fbsj").html(dateFtt("yyyy-MM-dd",new Date("${tb.createDate}")));
-        $("#dsfbsj").html(dateFtt("yyyy-MM-dd",new Date("${tb.createDate}")));
+            divid +="</tbody></table>\n" +
+                "</div>";
+        }
+
+        $("#divid").html(divid);
     })
-    function revokeTask(){
-        // $.ajax({
-        //     type: "POST",
-        //     url: "${adminPath}/shop/TtaskBase/showTitle",
-        //     contentType:'application/json;charset=utf-8',
-        //     data: JSON.stringify({"turl":turl.value}),
-        //     dataType: "json",
-        //     success: function(data){
-        //        alert("操作成功");
-        //     }
-        // });
-    }
     function dateFtt(fmt,date)
     { //author: meizz
         var o = {
@@ -145,11 +125,24 @@
         return fmt;
     }
     function upTask(id,state){
-        // var tmytask = {id:id,taskState:state};
         $.ajax({
             url: "${adminPath}/buyer/TmyTask/"+id+"/"+state+"/upTaskState",
             success: function(data){
                 alert("操作成功！");
+            }
+        });
+    }
+    function upbuyerjdnick(value,id) {
+        $.ajax({
+            url: "${adminPath}/buyer/TmyTaskDetail/"+id+"/"+value+"/upbuyerjdnick",
+            success: function(data){
+            }
+        });
+    }
+    function upjdorderno(value,id) {
+        $.ajax({
+            url: "${adminPath}/buyer/TmyTaskDetail/"+id+"/"+value+"/upjdorderno",
+            success: function(data){
             }
         });
     }

@@ -11,6 +11,7 @@
 <#grid:column label="sys.common.opt"  name="qrcode" formatter="button" width="50"/>
 <#grid:button title="二维码"  groupname="qrcode" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/uploadQrcode' />
 
+<#grid:toolbar title="再次发布" icon="fa-database"  function="updateDialog" url="${adminPath}/shop/TtaskBase/{id}/myAgainList"  />
 
 <#grid:toolbar  function="search"  />
 <#grid:toolbar  function="reset" />

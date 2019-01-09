@@ -36,10 +36,15 @@
   </select>
 
     <select id="selBaseIdMyTaskList" resultMap="TmyTaskDetail">
-        select t.*,s.realname buyeridName from T_my_Task t,sys_user s where t.buyerid=s.id and t.taskId=#{taskId}
+        select t.*,s.realname buyeridName from T_my_Task_Detail t,sys_user s where t.buyerid=s.id and t.taskId=#{taskId}
     </select>
 
     <select id="groupBytaskstatus" resultType="java.util.Map">
-        select taskstatus,count(1) counts from T_my_Task t where t.taskId=#{taskId} group by taskstatus
+        select taskstatus,count(1) counts from T_my_Task_Detail t where t.taskId=#{taskId} group by taskstatus
+    </select>
+
+    <select id="selectMytaskList" resultMap="TmyTaskDetail">
+        select t.*,sb.shopname,tb.imgurl,tb.actualprice,tb.keyword,tb.qrcodeurl from T_my_Task_Detail t,t_task_base tb,t_shop_base sb,sys_user s where
+        t.taskid=tb.id and tb.storename=sb.id and t.buyerid=s.id and t.mytaskid=#{mytaskid}
     </select>
 </mapper>

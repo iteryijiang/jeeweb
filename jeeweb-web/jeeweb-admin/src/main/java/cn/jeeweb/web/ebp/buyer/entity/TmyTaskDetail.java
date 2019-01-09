@@ -50,6 +50,22 @@ public class TmyTaskDetail extends DataEntity<String> {
 	@TableField(exist = false)
 	private String taskstateName;
 
+	@TableField(exist = false)
+	private String shopname;
+
+	@TableField(exist = false)
+	private String imgurl;
+
+	@TableField(exist = false)
+	private Double actualprice;
+
+	@TableField(exist = false)
+	private String keyword;
+
+	@TableField(exist = false)
+	private String qrcodeurl;
+
+
 	@Override
 	public String getId() {
 		return id;
@@ -228,5 +244,45 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	public void setMytaskid(String mytaskid) {
 		this.mytaskid = mytaskid;
+	}
+
+	public String getShopname() {
+		return shopname;
+	}
+
+	public void setShopname(String shopname) {
+		this.shopname = shopname;
+	}
+
+	public String getImgurl() {
+		return imgurl;
+	}
+
+	public void setImgurl(String imgurl) {
+		this.imgurl = imgurl;
+	}
+
+	public Double getActualprice() {
+		return actualprice;
+	}
+
+	public void setActualprice(Double actualprice) {
+		this.actualprice = actualprice;
+	}
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+
+	public String getQrcodeurl() {
+		return qrcodeurl;
+	}
+
+	public void setQrcodeurl(String qrcodeurl) {
+		this.qrcodeurl = qrcodeurl;
 	}
 }

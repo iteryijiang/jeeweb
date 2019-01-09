@@ -107,7 +107,7 @@
                                 <div class="form-group">
                                     <label for="inputLink" class="col-sm-2 control-label">商品链接:</label>
                                     <div class="col-sm-6">
-                                         <input class="form-control must-fill" id="inputLink" placeholder="" onblur="showOpen(this)">
+                                         <input class="form-control must-fill" id="inputLink" placeholder="" onblur="showOpen(this)" value="${tb.tUrl}">
                                     </div>
                                     <label for="inputLink" class="col-sm-1 control-label red_font">必填</label>
                                 </div>
@@ -118,7 +118,7 @@
                                 <div class="form-group">
                                     <label for="inputTab" class="col-sm-2 control-label">商品标题:</label>
                                     <div class="col-sm-5">
-                                         <input class="form-control must-fill" id="inputTab" placeholder="">
+                                         <input class="form-control must-fill" id="inputTab" placeholder="" value="${tb.tTitle}">
                                     </div>
                                     <label for="inputTab" class="col-sm-1 control-label red_font">必填</label>
                                 </div>
@@ -129,26 +129,27 @@
                                 <div class="form-group">
                                     <label for="storename">店铺:</label>
                                     <!--<input type="number" class="form-control must-fill" id="storename" placeholder="">-->
-                                    <select id="storename">
+                                    <select id="storename" >
                                         <option value="">===请选择===</option>
                                     </select>
+
                                     <label for="storename"><b class='red_font margin_0'>必填</b></label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputPrice">单品售价:</label>
-                                    <input type="number" class="form-control must-fill" id="inputPrice" placeholder="">
-                                    <label for="inputPrice">元<b class='red_font margin_0'>必填</b></label>
+                                    <label for="tasknum">任务单数:</label>
+                                    <input type="number" class="form-control must-fill" id="tasknum" placeholder="" value="${tb.tNum}">
+                                    <label for="inputNum">次数<span><b class='red_font margin_0'>必填</b></span></label>
                                 </div>
                             </form>
                             <form class="form-inline">
                                 <div class="form-group">
-                                    <label for="tasknum">任务单数:</label>
-                                    <input type="number" class="form-control must-fill" id="tasknum" placeholder="">
-                                    <label for="inputNum">次数<span><b class='red_font margin_0'>必填</b></span></label>
+                                    <label for="inputPrice">单品售价:</label>
+                                    <input type="number" class="form-control must-fill" id="inputPrice" placeholder="" value="${tb.tPrice}">
+                                    <label for="inputPrice">元<b class='red_font margin_0'>必填</b></label>
                                 </div>
                                 <div class="form-group">
                                   <label for="actualprice">实付金额:</label>
-                                  <input type="number" class="form-control must-fill" id="actualprice" placeholder="">
+                                  <input type="number" class="form-control must-fill" id="actualprice" placeholder="" value="${tb.actualprice}">
                                   <label for="actualprice">元<span><b class='red_font margin_0'>必填</b></span></label>
                                 </div>
                                 <div class="form-group">
@@ -161,7 +162,7 @@
                             <form class="form-inline">
                                 <div class="form-group">
                                   <label for="searchprice">搜索页面展示价格:</label>
-                                  <input type="text" class="form-control" id="searchprice" placeholder="">
+                                  <input type="text" class="form-control" id="searchprice" placeholder="" value="${tb.searchprice}">
                                   <label for="searchprice">元<span class='color_0'>非必填，如该商品有满减、促销、多规格等情况，请填写此金额</span></label>
                                 </div>
                                 <div class="form-group">
@@ -247,6 +248,7 @@
                                                 <div class="dropdown">
                                                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                         <span class='drop0'>北京</span>
+                                                        <input type="hidden" id="tasklocation1">
                                                         <span class="caret"></span>
                                                     </button>
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider">
@@ -280,7 +282,7 @@
                                         <p>请上传第1张<b class="red_font">“商品主图”</b>，<b class='red_font'>必填</b><span>（图片大小为：1200x1200以内，且不能大于2M，格式为jpg、png、gif）</span></p>
                                         <div class='good_upload'>
                                             <div class='must-fill' id='good_pic1'>
-                                                 <img id="img0" src="img/goods_pic.png" alt="">
+                                                 <img id="img0" src="${tb.imgurl!=null?tb.imgurl:"img/goods_pic.png"}" alt="">
                                             </div>
                                             <!--<div class="col-xs-12 col-sm-4 col-md-4">-->
                                                     <!--<div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle;width:100%">-->
@@ -303,13 +305,13 @@
                                             <div class='item' id=1>
                                                 <p>关键字来源1：</p>
                                                 <label for="">让买手打开<b class='red-font'>手机淘宝APP</b>搜索关键字进入“搜索列表”</label>
-                                                <input type="text" class='must-fill'>
+                                                <input type="text" class='must-fill' value="${tb.keyword}">
                                                 <span class='red_font'>必填</span>
                                                 <div class='good_cond'>
                                                     <p>
                                                         <label for="">规格：</label>
-                                                        <input type="text" placeholder="如：颜色" class='spec0'>
-                                                        <input type="text" placeholder="如：尺寸" class='spec1'>
+                                                        <input type="text" placeholder="如：颜色" class='spec0' value="${tb.spec1}">
+                                                        <input type="text" placeholder="如：尺寸" class='spec1' value="${tb.spec2}">
                                                         <span class='color_0'>非必填</span>
                                                     </p>
                                                 </div>
@@ -318,11 +320,11 @@
                                                         <form class="form-inline">
                                                             <div class="form-group">
                                                                 <label for="exampleInputName2">价格区间：</label>
-                                                                <input type="number" class="form-control mobile_low"  placeholder="">
+                                                                <input type="number" class="form-control mobile_low"  placeholder="" value="${tb.lowpoint}">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="exampleInputEmail2">元-</label>
-                                                                <input type="number" class="form-control mobile_high"  placeholder="">
+                                                                <input type="number" class="form-control mobile_high"  placeholder="" value="${tb.highpoint}">
                                                                 <label for="">元</label>
                                                             </div>
                                                         </form>
@@ -372,27 +374,28 @@
                                                         <div class="dropdown">
                                                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                                 <span class='drop1'>北京</span>
+                                                                <input type="hidden" id="tasklocation">
                                                                 <span class="caret"></span>
                                                             </button>
                                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider">
                                                                     <ul class='hot-city'>
-                                                                        <li>上海</li>
-                                                                        <li>北京</li>
-                                                                        <li>成都</li>
-                                                                        <li>广州</li>
+                                                                        <li data-value="上海">上海</li>
+                                                                        <li data-value="北京">北京</li>
+                                                                        <li data-value="成都">成都</li>
+                                                                        <li data-value="广州">广州</li>
                                                                     </ul>
                                                                     <li role="separator" class="divider"></li>
                                                                     <ul class='province'>
-                                                                        <li>广东</li>
-                                                                        <li>浙江</li>
-                                                                        <li>江苏</li>
+                                                                        <li data-value="广东">广东</li>
+                                                                        <li data-value="浙江">浙江</li>
+                                                                        <li data-value="江苏">江苏</li>
                                                                     </ul>
                                                             </ul>
                                                         </div>
                                                         <form class="form-inline">
                                                             <div class="form-group">
                                                                 <label for="exampleInputName2">商品分类：</label>
-                                                                <input type="text" class="form-control good_spec"  placeholder="">
+                                                                <input type="text" class="form-control good_spec"  placeholder="" value="${tb.classify1}">
                                                             </div>
                                                         </form>
 
@@ -413,15 +416,16 @@
                                             <label for="">商品排序：</label>
                                             <div class="dropdown">
                                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    <span class='drop2'>综合排序</span>
+                                                    <span class='drop2'>${tb.tasksort!=null?tb.tasksort:"综合排序"}</span>
+                                                    <input type="hidden" id="tbtasksort">
                                                     <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu sort" aria-labelledby="dropdownMenu1">
-                                                    <li>综合排序</li>
-                                                    <li>销量有限</li>
-                                                    <li>价格从低到高</li>
-                                                    <li>价格从高到低</li>
-                                                    <li>信用排序</li>
+                                                    <li data-value="综合排序">综合排序</li>
+                                                    <li data-value="销量有限">销量有限</li>
+                                                    <li data-value="价格从低到高">价格从低到高</li>
+                                                    <li data-value="价格从高到低">价格从高到低</li>
+                                                    <li data-value="信用排序">信用排序</li>
                                                 </ul>
                                         </div>
                                     </div>
@@ -607,7 +611,6 @@
        $('#task_accordin input[type=radio]').bind('click',function(){
            radio_index=$(this).prop('id')
             var index=$(this).prop('id')
-           alert(index);
             $('#task_accordin .item_area').hide()
             $('#task_accordin .item_area').eq(index).show()
             good_detail_info.method=$(this).val()
@@ -627,10 +630,10 @@
                             good_detail_info.tTitle=$(ele).val()
                             break;
                         case 2:
-                            good_detail_info.tPrice=$(ele).val()
+                            good_detail_info.tasknum=$(ele).val()
                             break;
                         case 3:
-                            good_detail_info.tasknum=$(ele).val()
+                            good_detail_info.tPrice=$(ele).val()
                             break;
                         case 4:
                             good_detail_info.actualprice=$(ele).val()
@@ -731,18 +734,20 @@
         }
         //下拉框的点击
             $(document).on('click','.dropdown-menu li',function(){
-            var text=$(this).html()
+            var text=$(this).html();
+            var text_val=$(this).prop('data-value')
             var target;
             if(good_detail_info.method=='pc_taobao'){
                 target=$(this).parent().parent().siblings().children('.drop0')
-                target.html(text)
+                target.html(text).next().val(text_val)
             }else{
                 if($(this).parent().hasClass('sort')==true){
                     target=$(this).parent().siblings().children('.drop2')
-                    target.html(text)
+                    target.html(text).next().val(text_val)
                 }else{
                     target=$(this).parent().parent().siblings().children('.drop1')
-                    target.html(text)
+                    target.html(text).next().val(text_val)
+
                 }
             }
         })
@@ -806,7 +811,7 @@
                 console.log($(item).find('.drop1').html())
                 //6.商品分类
                 obj.TaskSpecify=$(item).find('.good_spec').val();//手机端商品分类
-                good_detail_info.taskspecify=$(item).find('.good_spec').val();//手机端商品分类
+                good_detail_info.classify1=$(item).find('.good_spec').val();//手机端商品分类
                 arr.push(obj)
             })
             return arr;
@@ -847,6 +852,25 @@
                     }
                 }
             });
+        }
+        $("#effectdate").val(dateFtt("yyyy-MM-dd",new Date("${tb.effectdate}")));
+        function dateFtt(fmt,date)
+        { //author: meizz
+            var o = {
+                "M+" : date.getMonth()+1,                 //月份
+                "d+" : date.getDate(),                    //日
+                "h+" : date.getHours(),                   //小时
+                "m+" : date.getMinutes(),                 //分
+                "s+" : date.getSeconds(),                 //秒
+                "q+" : Math.floor((date.getMonth()+3)/3), //季度
+                "S"  : date.getMilliseconds()             //毫秒
+            };
+            if(/(y+)/.test(fmt))
+                fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+            for(var k in o)
+                if(new RegExp("("+ k +")").test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            return fmt;
         }
 </script>
 </html>

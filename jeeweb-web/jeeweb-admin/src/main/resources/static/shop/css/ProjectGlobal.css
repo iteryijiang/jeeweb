@@ -791,3 +791,15 @@
 .task_free_seller div{
     text-align: right;
 }
+/*新增下拉框*/
+#storename,#storename option{
+    border-radius:5px;
+    padding:6px 12px;
+}
+
+/**/
+.task_detail_seller2{
+    padding:20px 100px;
+    background-color:#fff;
+    margin-bottom:30px;
+}

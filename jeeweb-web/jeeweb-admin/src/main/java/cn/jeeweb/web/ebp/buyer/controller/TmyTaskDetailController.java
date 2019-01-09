@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 
 @RestController
@@ -109,5 +110,23 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         PageResponse<TmyTaskDetail> pagejson = new PageResponse<TmyTaskDetail>(tmyTaskDetailService.list(queryable,entityWrapper));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
+    }
+
+
+    @GetMapping("{id}/{buyerjdnick}/upbuyerjdnick")
+    @Log(logType = LogType.UPDATE)
+    public void upbuyerjdnick(@PathVariable("id") String id,@PathVariable("buyerjdnick") String buyerjdnick, HttpServletRequest request,
+                            HttpServletResponse response) {
+        TmyTaskDetail td = tmyTaskDetailService.selectById(id);
+        td.setBuyerjdnick(buyerjdnick);
+        tmyTaskDetailService.insertOrUpdate(td);
+    }
+    @GetMapping("{id}/{jdorderno}/upjdorderno")
+    @Log(logType = LogType.UPDATE)
+    public void upjdorderno(@PathVariable("id") String id,@PathVariable("jdorderno") String jdorderno, HttpServletRequest request,
+                              HttpServletResponse response) {
+        TmyTaskDetail td = tmyTaskDetailService.selectById(id);
+        td.setJdorderno(jdorderno);
+        tmyTaskDetailService.insertOrUpdate(td);
     }
 }

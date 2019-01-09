@@ -62,6 +62,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @GetMapping
     @RequiresMethodPermissions("view")
     public ModelAndView list(Model model, HttpServletRequest request, HttpServletResponse response) {
+        TtaskBase tb = new TtaskBase();
+        model.addAttribute("tb",tb);
         ModelAndView mav = displayModelAndView("ReleaseTask");
         return mav;
     }
@@ -83,7 +85,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         if(ttaskBase.gettPrice()!=null&&ttaskBase.gettNum()!=null){
             ttaskBase.setTotalprice(ttaskBase.gettPrice()*ttaskBase.gettNum());
         }
-        ttaskBase.setStatus("1");
+        ttaskBase.setStatus("0");
         try {
             ttaskBaseService.insert(ttaskBase);
         }catch (Exception e){
@@ -135,8 +137,6 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("list")
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
-//        System.out.println("___________");
-//        System.out.println("${oss.local.upload-file-path}");
         EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
@@ -395,5 +395,14 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             Response.error("二维码修改失败");
         }
         return Response.ok("二维码修改成功");
+    }
+
+    @GetMapping(value = "{id}/myAgainList")
+    public ModelAndView myAgainList(@PathVariable("id") String id, Model model,HttpServletRequest request,
+                                    HttpServletResponse response) throws IOException {
+        TtaskBase tb = ttaskBaseService.selectById(id);
+        model.addAttribute("tb",tb);
+        ModelAndView mav = displayModelAndView("ReleaseTask");
+        return mav;
     }
 }
