@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @TableName("T_shop_Info")
@@ -18,10 +19,10 @@ public class TshopInfo extends DataEntity<String> {
 	private String shopname;//	varchar	200	0	-1	0	0	0	0		0	商户名称	utf8	utf8_general_ci		0	0
 	private String loginname;//	varchar	50	0	-1	0	0	0	0		0	登录账号	utf8	utf8_general_ci		0	0
 	private String accountlevel;//	varchar	32	0	-1	0	0	0	0		0	账号等级	utf8	utf8_general_ci		0	0
-	private Double totaldeposit;//	double	10	2	-1	0	0	0	0		0	总押金				0	0
-	private Double taskdeposit;//	double	10	2	-1	0	0	0	0		0	任务冻结押金				0	0
-	private Double extractdeposit;//	double	10	2	-1	0	0	0	0		0	提现冻结押金				0	0
-	private Double availabledeposit;//	double	10	2	-1	0	0	0	0		0	可用押金				0	0
+	private BigDecimal totaldeposit;//	double	10	2	-1	0	0	0	0		0	总押金				0	0
+	private BigDecimal taskdeposit;//	double	10	2	-1	0	0	0	0		0	任务冻结押金				0	0
+	private BigDecimal extractdeposit;//	double	10	2	-1	0	0	0	0		0	提现冻结押金				0	0
+	private BigDecimal availabledeposit;//	double	10	2	-1	0	0	0	0		0	可用押金				0	0
 	private String status;//	varchar	32	0	-1	0	0	0	0		0	状态	utf8	utf8_general_ci		0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
 
@@ -60,36 +61,35 @@ public class TshopInfo extends DataEntity<String> {
 		this.accountlevel = accountlevel;
 	}
 
-
-	public Double getTotaldeposit() {
+	public BigDecimal getTotaldeposit() {
 		return totaldeposit;
 	}
 
-	public void setTotaldeposit(Double totaldeposit) {
+	public void setTotaldeposit(BigDecimal totaldeposit) {
 		this.totaldeposit = totaldeposit;
 	}
 
-	public Double getTaskdeposit() {
+	public BigDecimal getTaskdeposit() {
 		return taskdeposit;
 	}
 
-	public void setTaskdeposit(Double taskdeposit) {
+	public void setTaskdeposit(BigDecimal taskdeposit) {
 		this.taskdeposit = taskdeposit;
 	}
 
-	public Double getExtractdeposit() {
+	public BigDecimal getExtractdeposit() {
 		return extractdeposit;
 	}
 
-	public void setExtractdeposit(Double extractdeposit) {
+	public void setExtractdeposit(BigDecimal extractdeposit) {
 		this.extractdeposit = extractdeposit;
 	}
 
-	public Double getAvailabledeposit() {
+	public BigDecimal getAvailabledeposit() {
 		return availabledeposit;
 	}
 
-	public void setAvailabledeposit(Double availabledeposit) {
+	public void setAvailabledeposit(BigDecimal availabledeposit) {
 		this.availabledeposit = availabledeposit;
 	}
 

@@ -24,7 +24,7 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String taskstate;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String tasktype;//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private BigDecimal commision;//
-	private BigDecimal pays;
+	private BigDecimal pays;//实付金额
 
 	private String buyerjdnick;//京东账号	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String jdorderno; //京东订单号
@@ -65,6 +65,11 @@ public class TmyTaskDetail extends DataEntity<String> {
 	@TableField(exist = false)
 	private String qrcodeurl;
 
+	@TableField(exist = false)
+	private String spec1;
+
+	@TableField(exist = false)
+	private String spec2;
 
 	@Override
 	public String getId() {
@@ -284,5 +289,21 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	public void setQrcodeurl(String qrcodeurl) {
 		this.qrcodeurl = qrcodeurl;
+	}
+
+	public String getSpec1() {
+		return spec1;
+	}
+
+	public void setSpec1(String spec1) {
+		this.spec1 = spec1;
+	}
+
+	public String getSpec2() {
+		return spec2;
+	}
+
+	public void setSpec2(String spec2) {
+		this.spec2 = spec2;
 	}
 }

@@ -25,6 +25,7 @@ import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
+import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -79,14 +80,16 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @Log(logType = LogType.INSERT)
     @RequiresMethodPermissions("add")
     public Response add(@RequestBody TtaskBase ttaskBase,HttpServletRequest request, HttpServletResponse response) {
-        ttaskBase.setShopid(UserUtils.getUser().getId());
-        ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
-        ttaskBase.setCanreceivenum(ttaskBase.getTasknum());
-        if(ttaskBase.gettPrice()!=null&&ttaskBase.gettNum()!=null){
-            ttaskBase.setTotalprice(ttaskBase.gettPrice()*ttaskBase.gettNum());
-        }
-        ttaskBase.setStatus("0");
+
         try {
+            ttaskBase.setShopid(UserUtils.getUser().getId());
+    //      ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
+            ttaskBase.setTaskno(TsequenceSpider.getShopNo());
+            ttaskBase.setCanreceivenum(ttaskBase.getTasknum());
+            if(ttaskBase.gettPrice()!=null&&ttaskBase.gettNum()!=null){
+                ttaskBase.setTotalprice(ttaskBase.gettPrice().multiply(new BigDecimal(ttaskBase.gettNum())));
+            }
+            ttaskBase.setStatus("0");
             ttaskBaseService.insert(ttaskBase);
         }catch (Exception e){
             e.printStackTrace();
@@ -147,6 +150,23 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         PageResponse<TtaskBase> pagejson = new PageResponse<>(ttaskBaseService.list(queryable,entityWrapper));
+        List<TtaskBase> ll = pagejson.getResults();
+        List<TtaskBase> newll = new ArrayList<TtaskBase>();
+        for (TtaskBase tb:ll) {
+            tb.setReceivingnum(tb.getTasknum()-tb.getCanreceivenum());
+            List<Map> list = tmyTaskDetailService.groupBytaskstatus(tb.getId());
+
+            for (int i=0;i<list.size();i++){
+                Map map = list.get(i);
+                if("2".equals(map.get("taskstate").toString())){
+                    tb.setOrdernum(Long.parseLong(map.get("counts").toString()));
+                }else if("3".equals(map.get("taskstate").toString())){
+                    tb.setDeliverynum(Long.parseLong(map.get("counts").toString()));
+                }
+            }
+            newll.add(tb);
+        }
+        pagejson.setResults(newll);
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }
@@ -208,9 +228,13 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             String goodis = JdSpider.getGoodId_ByURL(turl);//获取商品ID
             String result = JdSpider.getGoodInfos(goodis);//获取商品详细信息
             String good_price  = JdSpider.getGoodPrice_ByResult(result);//获取商品价格
+            String spec1 = JdSpider.getGoodSpec1ByTitle(ttitle);//商品颜色
+            String spec2 = JdSpider.getGoodSpec2ByTitle(ttitle);//商品规格
             map.put("goodsrc",goodsrc);
             map.put("ttitle",ttitle);
             map.put("goodprice",good_price);
+            map.put("spec1",spec1);
+            map.put("spec2",spec2);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -313,10 +337,10 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             List<TtaskBase> list = ttaskBaseService.selectShopTask("",count);
             if(list!=null&&!list.isEmpty()){
                 TmyTask tmyTask = new TmyTask();
-                tmyTask.setMytaskno((new Date().getTime()+""));
+                tmyTask.setMytaskno(TsequenceSpider.getTaskNo());
                 tmyTask.setState("0");
                 tmyTaskService.insert(tmyTask);
-                Double tprice=0.0;
+                BigDecimal tprice = new BigDecimal(0.0);
                 for (int i=0;i<list.size();i++) {
                     if((i+1)>countSum){
                         break;
@@ -331,11 +355,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                     my.setTaskstate("1");//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
                     my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
                     my.setTaskstatus("0");
-                    my.setPays(BigDecimal.valueOf(tb.gettPrice()));
+                    my.setPays(tb.getActualprice());
                     my.setReceivingdate(new Date());
                     my.setMytaskid(tmyTask.getId());
                     tmyTaskDetailService.insert(my);
-                    tprice += tb.gettPrice();
+                    tprice.add(tb.gettPrice());
                 }
                 tmyTask.setTotalprice(tprice);
                 tmyTaskService.insertOrUpdate(tmyTask);

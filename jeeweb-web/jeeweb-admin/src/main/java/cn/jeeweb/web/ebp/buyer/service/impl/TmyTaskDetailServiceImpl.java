@@ -21,6 +21,10 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
         return baseMapper.groupBytaskstatus(taskId);
     }
 
+    public List<Map> groupBytaskstate(String taskId){
+        return baseMapper.groupBytaskstate(taskId);
+    }
+
     public List<TmyTaskDetail> selectMytaskList(String mytaskid){
         return baseMapper.selectMytaskList(mytaskid);
 

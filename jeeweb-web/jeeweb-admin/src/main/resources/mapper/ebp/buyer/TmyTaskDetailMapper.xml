@@ -44,7 +44,11 @@
     </select>
 
     <select id="selectMytaskList" resultMap="TmyTaskDetail">
-        select t.*,sb.shopname,tb.imgurl,tb.actualprice,tb.keyword,tb.qrcodeurl from T_my_Task_Detail t,t_task_base tb,t_shop_base sb,sys_user s where
+        select t.*,sb.shopname,tb.imgurl,tb.actualprice,tb.keyword,tb.qrcodeurl,tb.spec1,tb.spec2 from T_my_Task_Detail t,t_task_base tb,t_shop_base sb,sys_user s where
         t.taskid=tb.id and tb.storename=sb.id and t.buyerid=s.id and t.mytaskid=#{mytaskid}
+    </select>
+
+    <select id="groupBytaskstate" resultType="java.util.Map">
+        select taskstate,count(1) counts from T_my_Task_Detail t where t.taskId=#{taskId} group by taskstate
     </select>
 </mapper>

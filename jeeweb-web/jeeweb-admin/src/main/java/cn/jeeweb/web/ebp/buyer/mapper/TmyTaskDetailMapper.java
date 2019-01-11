@@ -17,5 +17,6 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 
 	List<TmyTaskDetail> selBaseIdMyTaskDetailList(@Param("taskId") String taskId);
 	List<Map> groupBytaskstatus(@Param("taskId") String taskId);
+	List<Map> groupBytaskstate(@Param("taskId") String taskId);
 	List<TmyTaskDetail> selectMytaskList(@Param("mytaskid") String mytaskid);
 }

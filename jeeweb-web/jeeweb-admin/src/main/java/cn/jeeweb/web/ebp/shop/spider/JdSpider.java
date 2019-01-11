@@ -32,8 +32,8 @@ public class JdSpider {
         String url = "https://item.jd.com/34807716016.html";
         try {
             //String goodis = getGoodId_ByURL(url);
-            String goodsrc = getGoodImgByurl(url);
-            System.out.println("商品src: " + goodsrc);
+//            String goodsrc = getGoodImgByurl(url);
+//            System.out.println("商品src: " + goodsrc);
 //            System.out.println("商品信息: " + goodis);
 //            if(!StringUtils.isEmpty(goodis)){
 //                String result = getGoodInfos(goodis);
@@ -41,7 +41,8 @@ public class JdSpider {
 //                String good_price  = getGoodPrice_ByResult(result);
 //                System.out.println("商品价格: " + good_price);
 //            }
-
+            System.out.println("商品型号："+getGoodSpec1ByTitle(""));
+            System.out.println("商品规格："+getGoodSpec2ByTitle(""));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -147,6 +148,42 @@ public class JdSpider {
         return title;
     }
 
+    /**
+     *
+     * @Title: getGoodTitle_one
+     * @Description: 获取 单 商品颜色规格
+     * @param @param url
+     * @return void 返回类型
+     * @author  iter
+     * @date 2018-12-22 下午2:11:23
+     * @throws
+     */
+    public  static String getGoodSpec1ByTitle(String title) throws Exception{
+        String spec1 = "";
+        if(StringUtils.isNotEmpty(title)){
+            spec1 = title.substring(0,title.lastIndexOf(" "));
+            spec1 = spec1.substring(spec1.lastIndexOf(" ")+1);
+        }
+        return spec1;
+    }
+
+    /**
+     *
+     * @Title: getGoodTitle_one
+     * @Description: 获取 单 商品型号规格
+     * @param @param url
+     * @return void 返回类型
+     * @author  iter
+     * @date 2018-12-22 下午2:11:23
+     * @throws
+     */
+    public  static String getGoodSpec2ByTitle(String title) throws Exception{
+        String spec2 = "";
+        if(StringUtils.isNotEmpty(title)){
+            spec2 = title.substring(title.lastIndexOf(" ")+1);
+        }
+        return spec2;
+    }
 
     /**
      *

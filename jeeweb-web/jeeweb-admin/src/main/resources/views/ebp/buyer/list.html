@@ -5,7 +5,10 @@
     <#grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
     <#grid:column label="任务单号"  name="mytaskno" width="100"/>
     <#grid:column label="任务总价"  name="totalprice"  width="80"/>
+    <#grid:column label="确认下单金额"  name="orderprice"  width="80"/>
+    <#grid:column label="确认发货金额"  name="deliveryprice"  width="80"/>
     <#grid:column label="领取日期"  name="createDate"  width="60"  query="true"  queryMode="date"  condition="between" />
+    <#grid:column label="任务状态"  name="state"  width="60"  query="true" condition="between" />
     <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
     <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTask/\"+row.id+\"/detail' />
     <#grid:toolbar title="领取任务"   icon="fa-download"  onclick="gettask()"  />

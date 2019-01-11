@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TsequenceMapper" >
+  <resultMap id="Tsequence" type="cn.jeeweb.web.ebp.shop.entity.Tsequence" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="nkey" column="nkey" jdbcType="VARCHAR" />
+    <result property="nnum" column="nnum" jdbcType="NUMERIC" />
+  </resultMap>
+
+
+  <select id="getNkeyOne" resultType="Tsequence">
+        select * from T_sequence where nkey = #{nkey}
+  </select>
+
+
+</mapper>

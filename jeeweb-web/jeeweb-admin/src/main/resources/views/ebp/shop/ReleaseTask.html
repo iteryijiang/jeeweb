@@ -310,8 +310,8 @@
                                                 <div class='good_cond'>
                                                     <p>
                                                         <label for="">规格：</label>
-                                                        <input type="text" placeholder="如：颜色" class='spec0' value="${tb.spec1}">
-                                                        <input type="text" placeholder="如：尺寸" class='spec1' value="${tb.spec2}">
+                                                        <input type="text" placeholder="如：颜色" id="spec1" class='spec0' value="${tb.spec1}">
+                                                        <input type="text" placeholder="如：尺寸" id="spec2" class='spec1' value="${tb.spec2}">
                                                         <span class='color_0'>非必填</span>
                                                     </p>
                                                 </div>
@@ -837,6 +837,8 @@
                     $("#inputTab").attr("value",data.ttitle);
                     $("#inputPrice").attr("value",data.goodprice);
                     $("#img0").attr("src",data.goodsrc);
+                    $("#spec1").attr("src",data.spec1);
+                    $("#spec2").attr("src",data.spec2);
                 }
             });
         }

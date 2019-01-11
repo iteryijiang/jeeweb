@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -22,10 +23,10 @@ public class TtaskBase extends DataEntity<String> {
 	private String shopid;//	varchar	32	0	-1	0	0	0	0		0	商家id	utf8	utf8_general_ci		0	0
 	private String tUrl;//	varchar	300	0	-1	0	0	0	0		0	商品链接	utf8	utf8_general_ci		0	0
 	private String tTitle;//	varchar	300	0	-1	0	0	0	0		0	商品标题	utf8	utf8_general_ci		0	0
-	private Double tPrice;//	double	10	2	-1	0	0	0	0		0	单品价格				0	0
+	private BigDecimal tPrice;//	double	10	2	-1	0	0	0	0		0	单品价格				0	0
 	private Long tNum;//	int	8	0	-1	0	0	0	0		0	每单几件				0	0
-	private Double totalprice;//	double	10	2	-1	0	0	0	0		0	下单总金额				0	0
-	private Double searchprice;//	double	10	2	-1	0	0	0	0		0	搜索页面展示价格				0	0
+	private BigDecimal totalprice;//	double	10	2	-1	0	0	0	0		0	下单总金额				0	0
+	private BigDecimal searchprice;//	double	10	2	-1	0	0	0	0		0	搜索页面展示价格				0	0
 	private String ispcview;//	varchar	32	0	-1	0	0	0	0		0	是否 淘宝搜索框	utf8	utf8_general_ci		0	0
 	private String keyword;//	varchar	200	0	-1	0	0	0	0		0	搜索关键字	utf8	utf8_general_ci		0	0
 	private String spec1;//	varchar	50	0	-1	0	0	0	0		0	规格1	utf8	utf8_general_ci		0	0
@@ -41,25 +42,32 @@ public class TtaskBase extends DataEntity<String> {
 
 	private String imgurl;//	varchar	255	0	-1	0	0	0	0		0	商品图片	utf8	utf8_general_ci		0	0
 	private String tasksort;//	varchar	32	0	-1	0	0	0	0		0	商品排序	utf8	utf8_general_ci		0	0
-	private Double lowpoint;//	double	10	2	-1	0	0	0	0		0	最低价格区间				0	0
-	private Double highpoint;//	double	10	2	-1	0	0	0	0		0	最高价格区间				0	0
+	private BigDecimal lowpoint;//	double	10	2	-1	0	0	0	0		0	最低价格区间				0	0
+	private BigDecimal highpoint;//	double	10	2	-1	0	0	0	0		0	最高价格区间				0	0
 	private String taskdisser;//	varchar	255	0	-1	0	0	0	0		0	折扣和服务	utf8	utf8_general_ci		0	0
 	private String tasklocation;//	varchar	255	0	-1	0	0	0	0		0	发货地	utf8	utf8_general_ci		0	0
 	private Date effectdate;//	datetime	0	0	-1	0	0	0	0		0	生效时间				0	0
 	private String taskno;//	varchar	200	0	-1	0	0	0	0		0	任务编号	utf8	utf8_general_ci		0	0
 	private Long canreceivenum;//	int	8	0	-1	0	0	0	0		0	可接单数				0	0
 	private String storename;//	varchar	32	0	-1	0	0	0	0		0	店铺	utf8	utf8_general_ci		0	0
-	private Double actualprice;//	decimal	10	0	-1	0	0	0	0		0	实付金额				0	0
+	private BigDecimal actualprice;//	decimal	10	0	-1	0	0	0	0		0	实付金额				0	0
 	private String qrcodeurl;
 
+
+
+	@TableField(exist = false)
+	private Long receivingnum;//已接单数
+
+	@TableField(exist = false)
+	private Long ordernum;//已下单单数
+
+	@TableField(exist = false)
+	private Long deliverynum;//已发货单数
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	private Date createDate;
-
-
-
 
 	@Override
 	public String getId() {
@@ -103,11 +111,11 @@ public class TtaskBase extends DataEntity<String> {
 		this.tTitle = tTitle;
 	}
 
-	public Double gettPrice() {
+	public BigDecimal gettPrice() {
 		return tPrice;
 	}
 
-	public void settPrice(Double tPrice) {
+	public void settPrice(BigDecimal tPrice) {
 		this.tPrice = tPrice;
 	}
 
@@ -119,19 +127,19 @@ public class TtaskBase extends DataEntity<String> {
 		this.tNum = tNum;
 	}
 
-	public Double getTotalprice() {
+	public BigDecimal getTotalprice() {
 		return totalprice;
 	}
 
-	public void setTotalprice(Double totalprice) {
+	public void setTotalprice(BigDecimal totalprice) {
 		this.totalprice = totalprice;
 	}
 
-	public Double getSearchprice() {
+	public BigDecimal getSearchprice() {
 		return searchprice;
 	}
 
-	public void setSearchprice(Double searchprice) {
+	public void setSearchprice(BigDecimal searchprice) {
 		this.searchprice = searchprice;
 	}
 
@@ -247,28 +255,20 @@ public class TtaskBase extends DataEntity<String> {
 		this.tasksort = tasksort;
 	}
 
-	public Double getLowpoint() {
+	public BigDecimal getLowpoint() {
 		return lowpoint;
 	}
 
-	public void setLowpoint(Double lowpoint) {
+	public void setLowpoint(BigDecimal lowpoint) {
 		this.lowpoint = lowpoint;
 	}
 
-	public Double getHighpoint() {
+	public BigDecimal getHighpoint() {
 		return highpoint;
 	}
 
-	public void setHighpoint(Double highpoint) {
+	public void setHighpoint(BigDecimal highpoint) {
 		this.highpoint = highpoint;
-	}
-
-	public String getTasklocation() {
-		return tasklocation;
-	}
-
-	public void setTasklocation(String tasklocation) {
-		this.tasklocation = tasklocation;
 	}
 
 	public String getTaskdisser() {
@@ -277,6 +277,14 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setTaskdisser(String taskdisser) {
 		this.taskdisser = taskdisser;
+	}
+
+	public String getTasklocation() {
+		return tasklocation;
+	}
+
+	public void setTasklocation(String tasklocation) {
+		this.tasklocation = tasklocation;
 	}
 
 	public Date getEffectdate() {
@@ -311,11 +319,11 @@ public class TtaskBase extends DataEntity<String> {
 		this.storename = storename;
 	}
 
-	public Double getActualprice() {
+	public BigDecimal getActualprice() {
 		return actualprice;
 	}
 
-	public void setActualprice(Double actualprice) {
+	public void setActualprice(BigDecimal actualprice) {
 		this.actualprice = actualprice;
 	}
 
@@ -335,5 +343,29 @@ public class TtaskBase extends DataEntity<String> {
 	@Override
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public Long getReceivingnum() {
+		return receivingnum;
+	}
+
+	public void setReceivingnum(Long receivingnum) {
+		this.receivingnum = receivingnum;
+	}
+
+	public Long getOrdernum() {
+		return ordernum;
+	}
+
+	public void setOrdernum(Long ordernum) {
+		this.ordernum = ordernum;
+	}
+
+	public Long getDeliverynum() {
+		return deliverynum;
+	}
+
+	public void setDeliverynum(Long deliverynum) {
+		this.deliverynum = deliverynum;
 	}
 }

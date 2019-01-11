@@ -20,8 +20,10 @@ public class TmyTask extends DataEntity<String> {
 	private String id;
 //	private String taskid;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String mytaskno;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	private Double totalprice;//	double	10	2	-1	0	0	0	0		0					0	0
+	private BigDecimal totalprice;//	double	10	2	-1	0	0	0	0		0					0	0
 	private String state;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+	private BigDecimal orderprice;//	double	10	2	-1	0	0	0	0		0					0	0
+	private BigDecimal deliveryprice;//	double	10	2	-1	0	0	0	0		0					0	0
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
@@ -62,13 +64,6 @@ public class TmyTask extends DataEntity<String> {
 //		this.taskid = taskid;
 //	}
 
-	public Double getTotalprice() {
-		return totalprice;
-	}
-
-	public void setTotalprice(Double totalprice) {
-		this.totalprice = totalprice;
-	}
 
 	@Override
 	public java.util.Date getCreateDate() {
@@ -78,5 +73,29 @@ public class TmyTask extends DataEntity<String> {
 	@Override
 	public void setCreateDate(java.util.Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public BigDecimal getTotalprice() {
+		return totalprice;
+	}
+
+	public void setTotalprice(BigDecimal totalprice) {
+		this.totalprice = totalprice;
+	}
+
+	public BigDecimal getOrderprice() {
+		return orderprice;
+	}
+
+	public void setOrderprice(BigDecimal orderprice) {
+		this.orderprice = orderprice;
+	}
+
+	public BigDecimal getDeliveryprice() {
+		return deliveryprice;
+	}
+
+	public void setDeliveryprice(BigDecimal deliveryprice) {
+		this.deliveryprice = deliveryprice;
 	}
 }

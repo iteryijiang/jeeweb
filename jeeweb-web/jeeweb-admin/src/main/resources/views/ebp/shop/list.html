@@ -3,14 +3,17 @@
 <#grid:column label="任务编号"  name="taskno" width="60" />
 <#grid:column label="商品标题"  name="tTitle"  width="250" query="true"  condition="like" />
 <#grid:column label="商品单价"  name="tPrice" width="50" query="true" condition="like"   />
-<#grid:column label="每单几件"  name="tNum" width="50" />
+<#grid:column label="实付金额"  name="actualprice" width="50" />
 <#grid:column label="任务单数"  name="tasknum" width="50"/>
-<#grid:column label="未接单数"  name="canreceivenum" width="50" />
+<#grid:column label="已接单数"  name="receivingnum" width="50" />
+<#grid:column label="已下单单数"  name="ordernum" width="50" />
+<#grid:column label="已发货单数"  name="deliverynum" width="50" />
 <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="50"/>
 <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
 <#grid:column label="sys.common.opt"  name="qrcode" formatter="button" width="50"/>
 <#grid:button title="二维码"  groupname="qrcode" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/uploadQrcode' />
 
+<#grid:toolbar title="任务发布" icon="fa-database"  function="rowDialogDetailRefresh" url="${adminPath}/shop/TtaskBase"  />
 <#grid:toolbar title="再次发布" icon="fa-database"  function="updateDialog" url="${adminPath}/shop/TtaskBase/{id}/myAgainList"  />
 
 <#grid:toolbar  function="search"  />

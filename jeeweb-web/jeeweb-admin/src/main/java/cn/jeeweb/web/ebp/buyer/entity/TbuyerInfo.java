@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import java.math.BigDecimal;
+
 @TableName("t_buyer_info")
 @SuppressWarnings("serial")
 public class TbuyerInfo extends DataEntity<String> {
@@ -16,8 +18,8 @@ public class TbuyerInfo extends DataEntity<String> {
 	private String buyername;//	varchar	200	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String loginname;//	varchar	200	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String accountlevel;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	private Double phonenum;//	double	10	4	-1	0	0	0	0		0					0	0
-	private Double totalmoney;//	double	10	4	-1	0	0	0	0		0					0	0
+	private BigDecimal phonenum;//	double	10	4	-1	0	0	0	0		0					0	0
+	private BigDecimal totalmoney;//	double	10	4	-1	0	0	0	0		0					0	0
 	private String withdrawalmoney;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
 	@Override
@@ -54,19 +56,19 @@ public class TbuyerInfo extends DataEntity<String> {
 		this.accountlevel = accountlevel;
 	}
 
-	public Double getPhonenum() {
+	public BigDecimal getPhonenum() {
 		return phonenum;
 	}
 
-	public void setPhonenum(Double phonenum) {
+	public void setPhonenum(BigDecimal phonenum) {
 		this.phonenum = phonenum;
 	}
 
-	public Double getTotalmoney() {
+	public BigDecimal getTotalmoney() {
 		return totalmoney;
 	}
 
-	public void setTotalmoney(Double totalmoney) {
+	public void setTotalmoney(BigDecimal totalmoney) {
 		this.totalmoney = totalmoney;
 	}
 

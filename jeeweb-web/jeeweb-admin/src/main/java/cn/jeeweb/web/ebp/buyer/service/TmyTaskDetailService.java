@@ -10,5 +10,6 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
 
     public List<TmyTaskDetail> selBaseIdMyTaskDetailList(String taskId);
     public List<Map> groupBytaskstatus(String taskId);
+    public List<Map> groupBytaskstate(String taskId);
     public List<TmyTaskDetail> selectMytaskList(String mytaskid);
 }

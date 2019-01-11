@@ -73,10 +73,10 @@
                 "                  <thead>\n" +
                 "                    <tr>\n" +
                 "                      <th width='28%'>商品</th>\n" +
-                "                      <th width='6%'>单价</th>\n" +
+                "                      <th width='10%'>二维码</th>\n" +
                 "                      <th width='8%'>实付金额</th>\n" +
-                "                      <th width='10%'>搜索关键字</th>\n" +
-                "                      <th width='8%'>任务类型</th>\n" +
+                "                      <th width='6%'>颜色</th>\n" +
+                "                      <th width='6%'>规格</th>\n" +
                 "                      <th width='10%'>京东账号</th>\n" +
                 "                      <th width='10%'>订单号</th>\n" +
                 "                      <th width='10%'>订单状态</th>\n" +
@@ -87,16 +87,19 @@
             for (var j = 0; j < list.length; j++) {
                 if(namelist[i]==list[j].shopname){
                     divid += "<tr>";
-                    divid += "<td><img src=\""+list[j].imgurl+"\" height=\"160px\" width=\"160px\">&nbsp;&nbsp;&nbsp;<span>"+(list[j].goodsname==undefined?"":list[j].goodsname)+"</span></td>";
+                    divid += "<td><span>"+(list[j].goodsname==undefined?"":list[j].goodsname)+"</span>&nbsp;&nbsp;&nbsp;<img src=\""+list[j].imgurl+"\" height=\"160px\" width=\"160px\"></td>";
+                    divid += "<td><img src=\""+list[j].qrcodeurl+"\" height=\"160px\" width=\"160px\"></td>";
                     divid += "<td>"+(list[j].pays==undefined?"":list[j].pays)+"</td>";
-                    divid += "<td>"+(list[j].actualprice==undefined?"":list[j].actualprice)+"</td>";
-                    divid += "<td>"+(list[j].keyword==undefined?"":list[j].keyword)+"</td>";
-                    divid += "<td>"+(list[j].tasktype==undefined?"":list[j].tasktype)+"</td>";
+                    divid += "<td>"+(list[j].spec1==undefined?"":list[j].spec1)+"</td>";
+                    divid += "<td>"+(list[j].spec2==undefined?"":list[j].spec2)+"</td>";
                     divid += "<td><input type='text' style=\"width:80px;\" value='"+(list[j].buyerjdnick==undefined?"":list[j].buyerjdnick)+"' onblur=\"upbuyerjdnick(this.value,'"+list[i].id+"')\"></td>";
                     divid += "<td><input type='text' style=\"width:80px;\" value='"+(list[j].jdorderno==undefined?"":list[j].jdorderno)+"' onblur=\"upjdorderno(this.value,'"+list[i].id+"')\"></td>";
                     divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
-                    divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','2')\">确定下单</button></p>";
-                    divid += "<p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','4')\">确定收货</button></p></td>";
+                    if(list[j].taskstate=="1"){
+                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','2')\">确定下单</button></p>";
+                    }else if(list[j].taskstate=="3"){
+                        divid += "<p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','4')\">确定收货</button></p></td>";
+                    }
                     divid +="</tr>";
                 }
             }
