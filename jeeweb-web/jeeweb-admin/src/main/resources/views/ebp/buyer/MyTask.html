@@ -98,9 +98,9 @@
                     divid += "<td><input type='text' style=\"width:80px;\" value='"+(list[j].jdorderno==undefined?"":list[j].jdorderno)+"' onblur=\"upjdorderno(this.value,'"+list[i].id+"')\"></td>";
                     divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
                     if(list[j].taskstate=="1"){
-                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','2')\">确定下单</button></p>";
+                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','2')\">确定下单</button></p></td>";
                     }else if(list[j].taskstate=="3"){
-                        divid += "<p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','4')\">确定收货</button></p></td>";
+                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','4')\">确定收货</button></p></td>";
                     }
                     divid +="</tr>";
                 }
@@ -134,6 +134,7 @@
             url: "${adminPath}/buyer/TmyTask/"+id+"/"+state+"/upTaskState",
             success: function(data){
                 alert("操作成功！");
+                location.reload();
             }
         });
     }

@@ -664,6 +664,10 @@
                 $('#task_accordin').removeClass('red')
               }
               good_detail_info.storename = $("#storename").val();
+             if(good_detail_info.storename==""){
+                 alert("请选择店铺");
+                 return;
+             }
               GetCheckboxInfo(good_detail_info.method);
             //填充任务信息
             // TaskAreaInfo()

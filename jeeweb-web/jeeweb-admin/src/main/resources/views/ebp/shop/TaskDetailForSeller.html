@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="${staticPath}/shop/css/fileinput.min.css">
 <link rel="stylesheet" href="${staticPath}/shop/css/ProjectGlobal.css">
 <link rel="stylesheet" href="${staticPath}/shop/css/global.css">
-<link rel="stylesheet" href="icomoon/style.css">
+<link rel="stylesheet" href="${staticPath}/icomoon/style.css">
 <script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
 <script src='${staticPath}/shop/js/bootstrap.min.js'></script>
 <script src='${staticPath}/shop/js/fileinput.min.js'></script>
@@ -91,9 +91,9 @@
                     </div>
                     <div>
                         <p>任务编号：<span>${tb.taskno}</span></p>
-                        <p>任务发布时间：${tb.createDateFormat}</p>
+                        <p>任务发布时间：${createDateFormat}</p>
                         <p>店铺：${tsi.shopname}<span></span></p>
-                        <p>任务定时发布时间：${tb.effectdateFormat}</p>
+                        <p>任务定时发布时间：${effectdateFormat}</p>
                     </div>
                 </div>
             </div>
@@ -309,13 +309,13 @@
                     tr += "<td>"+(json[i].buyeridName==undefined?"":json[i].buyeridName)+"</td>";
                     tr += "<td>"+(json[i].buyerjdnick==undefined?"":json[i].buyerjdnick)+"</td>";
                     // tr += "<td>"+(json[i].tasktype==undefined?"":json[i].tasktype)+"</td>";
-                    tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd HH:mm",new Date(json[i].createDate)))+"</td>";
-                    tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p><p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a></td>";
+                    tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].createDate)))+"</td>";
+                    tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p></td>";//<p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a>
                     tr += "<td>"+(json[i].taskstateName==undefined?"":json[i].taskstateName)+"</td>";
                     // tr += "<td>"+(json[i].expressno==undefined?"":json[i].expressno)+"</td>";
                     tr += "<td>"+(json[i].pays==undefined?"":json[i].pays)+"</td>";
                     if(json[i].taskstate=="2"){
-                        tr += "<td><button class='btn btn-warning' onclick=\"upTask('\"+json[i].id+\"','3')\">发货提交</button></td>";
+                        tr += "<td><button class='btn btn-warning' onclick=\"upTask('"+json[i].id+"','3')\">发货提交</button></td>";
                     }else {
                         tr += "<td></td>";
                     }
@@ -362,6 +362,7 @@
             url: "${adminPath}/buyer/TmyTask/"+id+"/"+state+"/upTaskState",
             success: function(data){
                 alert("操作成功！");
+                location.reload();
             }
         });
     }

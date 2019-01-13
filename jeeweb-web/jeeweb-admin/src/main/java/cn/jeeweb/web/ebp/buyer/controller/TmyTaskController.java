@@ -221,7 +221,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     public void upTaskState(@PathVariable("id") String id,@PathVariable("taskState") String taskState, HttpServletRequest request,
                             HttpServletResponse response) {
         TmyTaskDetail td = tmyTaskDetailService.selectById(id);
-        if(UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())){
+        if(UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())||"3".equals(taskState)){
             TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
             td.setTaskstate(taskState);
             if("2".equals(taskState)){
@@ -239,7 +239,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
                 if(tt.getOrderprice()==null){
                     tt.setDeliveryprice(td.getPays());
                 }else {
-                    tt.setDeliveryprice(tt.getOrderprice().add(td.getPays()));
+                    tt.setDeliveryprice(tt.getDeliveryprice().add(td.getPays()));
                 }
                 tmyTaskService.insertOrUpdate(tt);
             }else if("4".equals(taskState)) {

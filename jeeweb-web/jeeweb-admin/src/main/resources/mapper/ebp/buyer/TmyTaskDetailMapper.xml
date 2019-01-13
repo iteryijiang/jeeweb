@@ -54,10 +54,8 @@
 
     <select id="sumNumAndPrice" resultType="java.util.Map">
         select sum(pays) sumPrice,count(1) sumNum,
-        sum(case when taskstate=4 then 1 else 0 end) as sumFinishNum,
-        sum(case when taskstate=3 then 1 else 0 end) as sumDeliveryNum,
-        sum(case when taskstate=2 then 1 else 0 end) as sumOrderNum,
-        sum(case when taskstate=1 then 1 else 0 end) as sumReceivingNum
+        sum(case when taskstate=3 then pays else 0 end) as sumDeliveryPrice,
+        sum(case when taskstate=2 then pays else 0 end) as sumOrderPrice
          from t_my_task_detail where create_by=#{createby} and (create_date BETWEEN #{createDate1} and #{createDate2})
     </select>
 </mapper>
