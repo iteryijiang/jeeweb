@@ -213,51 +213,60 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     public void upTaskState(@PathVariable("id") String id,@PathVariable("taskState") String taskState, HttpServletRequest request,
                             HttpServletResponse response) {
         TmyTaskDetail td = tmyTaskDetailService.selectById(id);
-        TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
-
-        td.setTaskstate(taskState);
-        if("2".equals(taskState)){
-            td.setOrderdate(new Date());
-            //确定下单，任务单下单金额增加
-            tt.setOrderprice(tt.getOrderprice().add(td.getPays()));
-            tmyTaskService.insertOrUpdate(tt);
-        }else if("3".equals(taskState)) {
-            td.setDeliverydate(new Date());
-            //确定下单，任务单发货金额增加
-            tt.setDeliveryprice(tt.getOrderprice().add(td.getPays()));
-            tmyTaskService.insertOrUpdate(tt);
-        }else if("4".equals(taskState)) {
-            td.setConfirmdate(new Date());
-            td.setTaskstatus("1");//修改订单为已完成状态
-
-            //计算我的任务单是否完成
-            List<TmyTaskDetail> ttList = tmyTaskDetailService.selectMytaskList(td.getMytaskid());
-            boolean ttbool = true;
-            for (TmyTaskDetail ttd:ttList) {
-                if(!td.getId().equals(ttd.getId())&&!"1".equals(ttd.getTaskstatus())){
-                    ttbool = false;
+        if(UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())){
+            TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
+            td.setTaskstate(taskState);
+            if("2".equals(taskState)){
+                td.setOrderdate(new Date());
+                //确定下单，任务单下单金额增加
+                if(tt.getOrderprice()==null){
+                    tt.setOrderprice(td.getPays());
+                }else {
+                    tt.setOrderprice(tt.getOrderprice().add(td.getPays()));
                 }
-            }
-            if(ttbool){
-                tt.setState("1");
                 tmyTaskService.insertOrUpdate(tt);
-            }
+            }else if("3".equals(taskState)) {
+                td.setDeliverydate(new Date());
+                //确定下单，任务单发货金额增加
+                if(tt.getOrderprice()==null){
+                    tt.setDeliveryprice(td.getPays());
+                }else {
+                    tt.setDeliveryprice(tt.getOrderprice().add(td.getPays()));
+                }
+                tmyTaskService.insertOrUpdate(tt);
+            }else if("4".equals(taskState)) {
+                td.setConfirmdate(new Date());
+                td.setTaskstatus("1");//修改订单为已完成状态
 
-            //计算商家任务单是否完成
-            List<TmyTaskDetail> tsList = tmyTaskDetailService.selBaseIdMyTaskDetailList(td.getTaskid());
-            boolean tsbool = true;
-            for (TmyTaskDetail ttd:tsList) {
-                if(!td.getId().equals(ttd.getId())&&!"1".equals(ttd.getTaskstatus())){
-                    tsbool = false;
+                //计算我的任务单是否完成
+                List<TmyTaskDetail> ttList = tmyTaskDetailService.selectMytaskList(td.getMytaskid());
+                boolean ttbool = true;
+                for (TmyTaskDetail ttd:ttList) {
+                    if(!td.getId().equals(ttd.getId())&&!"1".equals(ttd.getTaskstatus())){
+                        ttbool = false;
+                    }
+                }
+                if(ttbool){
+                    tt.setState("1");
+                    tmyTaskService.insertOrUpdate(tt);
+                }
+
+                //计算商家任务单是否完成
+                List<TmyTaskDetail> tsList = tmyTaskDetailService.selBaseIdMyTaskDetailList(td.getTaskid());
+                boolean tsbool = true;
+                for (TmyTaskDetail ttd:tsList) {
+                    if(!td.getId().equals(ttd.getId())&&!"1".equals(ttd.getTaskstatus())){
+                        tsbool = false;
+                    }
+                }
+                if(tsbool){
+                    TtaskBase tb = ttaskBaseService.selectById(td.getTaskid());
+                    tb.setStatus("1");
+                    ttaskBaseService.insertOrUpdate(tb);
                 }
             }
-            if(tsbool){
-                TtaskBase tb = ttaskBaseService.selectById(td.getTaskid());
-                tb.setStatus("1");
-                ttaskBaseService.insertOrUpdate(tb);
-            }
+            tmyTaskDetailService.insertOrUpdate(td);
         }
-        tmyTaskDetailService.insertOrUpdate(td);
     }
     @RequestMapping(value = "ajaxTreeList")
     @Log(logType = LogType.SELECT)
