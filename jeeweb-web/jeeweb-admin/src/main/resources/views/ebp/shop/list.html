@@ -13,7 +13,7 @@
 <#grid:column label="sys.common.opt"  name="qrcode" formatter="button" width="50"/>
 <#grid:button title="二维码"  groupname="qrcode" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/uploadQrcode' />
 
-<#grid:toolbar title="任务发布" icon="fa-plus"  function="rowDialogDetailRefresh" url="${adminPath}/shop/TtaskBase" winwidth="100%" winheight="100%" />
+<#grid:toolbar title="任务发布" icon="fa-plus"  function="rowDialogDetail" url="${adminPath}/shop/TtaskBase" winwidth="100%" winheight="100%" />
 <#grid:toolbar title="再次发布" icon="fa-database"  function="updateDialog" url="${adminPath}/shop/TtaskBase/{id}/myAgainList" winwidth="100%" winheight="100%"/>
 
 <#grid:toolbar  function="search"  />

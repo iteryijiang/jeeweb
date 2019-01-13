@@ -13,6 +13,7 @@ import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.ObjectUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
@@ -59,6 +60,13 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     @GetMapping
     @RequiresMethodPermissions("view")
     public ModelAndView TaskList(Model model, HttpServletRequest request, HttpServletResponse response) {
+        String userid = UserUtils.getPrincipal().getId();
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(calendar.DATE,1);
+        Date date2 = calendar.getTime();
+        Map map = tmyTaskDetailService.sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
+        model.addAttribute("map",map);
         ModelAndView mav = displayModelAndView("list");
         return mav;
     }

@@ -1,5 +1,17 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('我的列表',''), libs: 'bootstrap-treeview'}){ %>
-
+<div>
+    <table cellpadding="10" style="font-size:18px;padding: 10px">
+        <tr>
+            <td><p>当日任务总价：<span style="color:green;font-weight: bold">${map.sumPrice}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>当日任务单数：<span style="color:green;font-weight: bold">${map.sumNum}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>当日任务完成单数：<span style="color:green;font-weight: bold">${map.sumFinishNum}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>当日商家发货单数：<span style="color:green;font-weight: bold">${map.sumDeliveryNum}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>当日已下单数：<span style="color:yellow;font-weight: bold">${map.sumOrderNum}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>当日未下单数：<span style="color:red;font-weight: bold">${map.sumReceivingNum}</span></p></td>
+        </tr>
+    </table>
+    <br>
+</div>
 
 <#grid:grid id="taskbase" url="${adminPath}/buyer/TmyTask/ajaxList">
     <#grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
@@ -8,7 +20,7 @@
     <#grid:column label="确认下单金额"  name="orderprice"  width="80"/>
     <#grid:column label="确认发货金额"  name="deliveryprice"  width="80"/>
     <#grid:column label="领取日期"  name="createDate"  width="60"  query="true"  queryMode="date"  condition="between" />
-    <#grid:column label="任务状态"  name="state"  width="60"  query="true" condition="between" />
+    <#grid:column label="任务状态"  name="state"  width="60" dict="basestate" queryMode="select" width="80" condition="eq" query="true" condition="between" />
     <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
     <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTask/\"+row.id+\"/detail' />
     <#grid:toolbar title="领取任务"   icon="fa-download"  onclick="gettask()"  />

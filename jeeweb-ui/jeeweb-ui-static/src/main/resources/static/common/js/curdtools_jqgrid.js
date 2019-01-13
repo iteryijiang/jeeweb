@@ -430,7 +430,7 @@ function openDialogDetailRefresh(title,url,gridId,width,height){
 }
 
 //打开对话框(查看)
-function openDialogDetail(title,url,width,height){
+function openDialogDetail(title,url,gridId,width,height){
 	if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
 		width='auto';
 		height='auto';
@@ -445,7 +445,8 @@ function openDialogDetail(title,url,width,height){
 	    content: url ,
 	    btn: ['关闭'],
 	    cancel: function(index){
-
+            //刷新表单
+            refreshTable(gridId);
 	    }
 	});
 }
@@ -472,9 +473,9 @@ function rowDialogDetailRefresh(title,url,gridId,id,width,height){
 }
 
 //打开对话框(查看)
-function rowDialogDetail(title,url,width,height){
-	var url=preprocessUrl(url,id);
-	openDialogDetail(title,url,width,height);
+function rowDialogDetail(title,url,gridId,width,height){
+	// var url=preprocessUrl(url,id);
+	openDialogDetail(title,url,gridId,width,height);
 }
 
 function refreshTable(gridId)
