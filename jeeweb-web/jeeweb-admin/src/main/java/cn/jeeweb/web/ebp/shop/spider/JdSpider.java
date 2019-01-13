@@ -19,6 +19,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -41,8 +42,15 @@ public class JdSpider {
 //                String good_price  = getGoodPrice_ByResult(result);
 //                System.out.println("商品价格: " + good_price);
 //            }
-            System.out.println("商品型号："+getGoodSpec1ByTitle(""));
-            System.out.println("商品规格："+getGoodSpec2ByTitle(""));
+//            System.out.println("商品型号："+getGoodSpec1ByTitle(""));
+//            System.out.println("商品规格："+getGoodSpec2ByTitle(""));
+
+
+            BigDecimal tprice = new BigDecimal(0.0);
+            BigDecimal a = new BigDecimal(10.1);
+            tprice = tprice.add(a);
+            System.out.println(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
+            System.out.println(a);
         }catch (Exception e){
             e.printStackTrace();
         }

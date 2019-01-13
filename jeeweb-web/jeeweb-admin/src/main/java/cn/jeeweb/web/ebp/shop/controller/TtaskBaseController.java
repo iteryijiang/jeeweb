@@ -157,7 +157,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         List<TtaskBase> newll = new ArrayList<TtaskBase>();
         for (TtaskBase tb:ll) {
             tb.setReceivingnum(tb.getTasknum()-tb.getCanreceivenum());
-            List<Map> list = tmyTaskDetailService.groupBytaskstatus(tb.getId());
+            List<Map> list = tmyTaskDetailService.groupBytaskstate(tb.getId());
 
             for (int i=0;i<list.size();i++){
                 Map map = list.get(i);
@@ -362,9 +362,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                     my.setReceivingdate(new Date());
                     my.setMytaskid(tmyTask.getId());
                     tmyTaskDetailService.insert(my);
-                    tprice.add(tb.gettPrice());
+                    tprice = tprice.add(tb.getActualprice());
                 }
-                tmyTask.setTotalprice(tprice);
+                tmyTask.setTotalprice(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
                 tmyTaskService.insertOrUpdate(tmyTask);
             }
             //获得商户表

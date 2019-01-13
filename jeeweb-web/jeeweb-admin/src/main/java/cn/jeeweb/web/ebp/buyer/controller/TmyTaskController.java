@@ -137,10 +137,13 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     @Log(logType = LogType.SELECT)
     public ModelAndView detail(Model model,@PathVariable("id") String id) {
         TmyTask tmyTask = tmyTaskService.selectById(id);
-        //tmyTask.setTasktype(DictUtils.getDictValue(""));
+        if(tmyTask == null){
+            TmyTaskDetail tmyTaskDetail = tmyTaskDetailService.selectById(id);
+            if(tmyTaskDetail!=null){
+                tmyTask = tmyTaskService.selectById(tmyTaskDetail.getMytaskid());
+            }
+        }
         model.addAttribute("tmyTask", tmyTask);
-//        TtaskBase taskbase = ttaskBaseService.selectById(tmyTask.getTaskid());
-//        model.addAttribute("taskbase",taskbase);
         List<TmyTaskDetail> list = tmyTaskDetailService.selectMytaskList(tmyTask.getId());
         List namelist = new ArrayList();
         List<TmyTaskDetail> newlist = new ArrayList<TmyTaskDetail>();

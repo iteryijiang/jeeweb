@@ -35,7 +35,7 @@
 	   </if>
   </select>
 
-    <select id="selBaseIdMyTaskList" resultMap="TmyTaskDetail">
+    <select id="selBaseIdMyTaskDetailList" resultMap="TmyTaskDetail">
         select t.*,s.realname buyeridName from T_my_Task_Detail t,sys_user s where t.buyerid=s.id and t.taskId=#{taskId}
     </select>
 

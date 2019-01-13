@@ -72,7 +72,8 @@
                 "                <table class=\"table\">\n" +
                 "                  <thead>\n" +
                 "                    <tr>\n" +
-                "                      <th width='28%'>商品</th>\n" +
+                "                      <th width='18%'>商品名称</th>\n" +
+                "                      <th width='10%'>图片</th>\n" +
                 "                      <th width='10%'>二维码</th>\n" +
                 "                      <th width='8%'>实付金额</th>\n" +
                 "                      <th width='6%'>颜色</th>\n" +
@@ -87,8 +88,9 @@
             for (var j = 0; j < list.length; j++) {
                 if(namelist[i]==list[j].shopname){
                     divid += "<tr>";
-                    divid += "<td><span>"+(list[j].goodsname==undefined?"":list[j].goodsname)+"</span>&nbsp;&nbsp;&nbsp;<img src=\""+list[j].imgurl+"\" height=\"160px\" width=\"160px\"></td>";
-                    divid += "<td><img src=\""+list[j].qrcodeurl+"\" height=\"160px\" width=\"160px\"></td>";
+                    divid += "<td><span>"+(list[j].goodsname==undefined?"":list[j].goodsname)+"</span></td>";
+                    divid += "<td><span><img src=\""+list[j].imgurl+"\"></td>";
+                    divid += "<td><img src=\""+list[j].qrcodeurl+"\"></td>";
                     divid += "<td>"+(list[j].pays==undefined?"":list[j].pays)+"</td>";
                     divid += "<td>"+(list[j].spec1==undefined?"":list[j].spec1)+"</td>";
                     divid += "<td>"+(list[j].spec2==undefined?"":list[j].spec2)+"</td>";
