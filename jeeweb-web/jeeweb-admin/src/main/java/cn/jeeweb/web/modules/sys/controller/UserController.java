@@ -41,6 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -264,10 +265,10 @@ public class UserController extends BaseBeanController<User> {
 					tshopInfo.setShopname(entity.getRealname());
 					tshopInfo.setLoginname(entity.getUsername());
 					tshopInfo.setAccountlevel("1");
-					tshopInfo.setTotaldeposit(0d);
-					tshopInfo.setTaskdeposit(0d);
-					tshopInfo.setExtractdeposit(0d);
-					tshopInfo.setAvailabledeposit(0d);
+					tshopInfo.setTotaldeposit(new BigDecimal(0.0));
+					tshopInfo.setTaskdeposit(new BigDecimal(0.0));
+					tshopInfo.setExtractdeposit(new BigDecimal(0.0));
+					tshopInfo.setAvailabledeposit(new BigDecimal(0.0));
 					tshopInfo.setStatus("0");
 					tshopInfo.setUserid(entity.getId());
 					try {
@@ -280,8 +281,8 @@ public class UserController extends BaseBeanController<User> {
 					tbi.setBuyername(entity.getRealname());
 					tbi.setLoginname(entity.getUsername());
 					tbi.setAccountlevel("1");
-					tbi.setPhonenum(0d);
-					tbi.setTotalmoney(0d);
+					tbi.setPhonenum(new BigDecimal(0.0));
+					tbi.setTotalmoney(new BigDecimal(0.0));
 					tbi.setWithdrawalmoney("0");
 					tbi.setUserid(entity.getId());
 					tbuyerInfoService.insert(tbi);
