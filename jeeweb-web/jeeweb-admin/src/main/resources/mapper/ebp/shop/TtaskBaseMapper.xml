@@ -68,23 +68,23 @@
     FROM
     T_task_Base t
     WHERE
-    t.shopid = t1.shopid
+    t.storename = t1.storename
     AND t.id <![CDATA[<]]> t1.id
-               AND t.STATUS = '1'
+               AND t.STATUS = '0'
                AND t.canreceivenum <![CDATA[>]]> 0
     and t.effectdate <![CDATA[<]]> DATE_ADD(curdate(),interval 1 day)
     ) AS group_id
     FROM
     T_task_Base t1
     where
-    t1.STATUS = '1'
+    t1.STATUS = '0'
     AND t1.canreceivenum <![CDATA[>]]> 0
     and t1.effectdate <![CDATA[<]]> DATE_ADD(curdate(),interval 1 day)
     ) a
     WHERE
     a.group_id <![CDATA[<=]]> ${count}
     ORDER BY
-    shopid,
+    storename,
     group_id
   </select>
 </mapper>

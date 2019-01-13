@@ -198,6 +198,12 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         return displayModelAndView(targetPage);
     }
 
+    /**
+     * 任务单完成，修改发布任务和我的任务状态
+     * 发布任务状态：TtaskBase中status:0进行中，1完成
+     * 我的任务状态：TmyTask中state:0进行中，1完成
+     * 任务单状态：TmyTaskDetail中taskstatust:0进行中，1完成
+     * */
     @GetMapping("{id}/{taskState}/upTaskState")
     @Log(logType = LogType.UPDATE)
     @RequiresMethodPermissions("upTaskState")

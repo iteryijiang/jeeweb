@@ -76,6 +76,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         return mav;
     }
 
+    /**
+     * 任务发布，任务状态status：0进行中，1已完成。2结束。
+     * */
     @PostMapping("add")
     @Log(logType = LogType.INSERT)
     @RequiresMethodPermissions("add")
@@ -135,7 +138,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
      * @throws IOException
      */
     @RequestMapping(value = "ajaxList", method = { RequestMethod.GET, RequestMethod.POST })
-    @PageableDefaults(sort = "id=desc")
+    @PageableDefaults(sort = "taskno=desc")
     @Log(logType = LogType.SELECT)
     @RequiresMethodPermissions("list")
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
@@ -313,7 +316,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     }
 
     /**
-     *
+     *领取任务，我的任务state：状态0：进行中，1已完成
      * @param request
      * @param response
      * @throws IOException
