@@ -437,6 +437,7 @@
                     </div>
                     <div class='make-sure'>
                         <button class='btn btn-warning' onclick="TaskConfirm(0)">确认提交信息</button>
+                        <!--<button id='aaa11' onclick="aa()">刷新测试</button>-->
                     </div>
                 </div>
                             <!-- 提交信息后显示 -->
@@ -615,6 +616,13 @@
             $('#task_accordin .item_area').eq(index).show()
             good_detail_info.method=$(this).val()
         })
+        function aa(){
+            window.parent.location.reload()//刷新父页面
+
+            var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
+
+            parent.layer.close(index)
+        }
        function TaskConfirm(index){
            if(index=='0'){//第一次提交确认信息
              $('.good_basic_info').find('input').each(function(index,ele){
@@ -670,8 +678,11 @@
                    success: function(data){
                        alert("保存成功");
                        //刷新表单
-                       refreshTable("ttaskBaseGrid");
+                       window.parent.location.reload()//刷新父页面
 
+                       var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
+
+                       parent.layer.close(index)
                    },
                    error: function(data){
                    }

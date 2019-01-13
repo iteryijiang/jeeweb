@@ -13,6 +13,7 @@ import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
@@ -274,6 +275,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         model.addAttribute("taskstatus0",taskstatus0);
         model.addAttribute("taskstatus1",taskstatus1);
+        model.addAttribute("createDateFormat",DateUtils.formatDate(tb.getCreateDate(),"yyyy-MM-dd"));
+        model.addAttribute("effectdateFormat",DateUtils.formatDate(tb.getEffectdate(),"yyyy-MM-dd"));
         ModelAndView mav = displayModelAndView("TaskDetailForSeller");
         return mav;
     }
