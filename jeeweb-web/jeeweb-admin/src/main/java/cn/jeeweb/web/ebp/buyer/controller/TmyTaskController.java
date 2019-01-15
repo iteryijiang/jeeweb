@@ -236,7 +236,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
             }else if("3".equals(taskState)) {
                 td.setDeliverydate(new Date());
                 //确定下单，任务单发货金额增加
-                if(tt.getOrderprice()==null){
+                if(tt.getDeliveryprice()==null){
                     tt.setDeliveryprice(td.getPays());
                 }else {
                     tt.setDeliveryprice(tt.getDeliveryprice().add(td.getPays()));

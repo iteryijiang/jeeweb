@@ -46,6 +46,9 @@ public class TtaskBase extends DataEntity<String> {
 	private BigDecimal highpoint;//	double	10	2	-1	0	0	0	0		0	最高价格区间				0	0
 	private String taskdisser;//	varchar	255	0	-1	0	0	0	0		0	折扣和服务	utf8	utf8_general_ci		0	0
 	private String tasklocation;//	varchar	255	0	-1	0	0	0	0		0	发货地	utf8	utf8_general_ci		0	0
+
+
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	private Date effectdate;//	datetime	0	0	-1	0	0	0	0		0	生效时间				0	0
 	private String taskno;//	varchar	200	0	-1	0	0	0	0		0	任务编号	utf8	utf8_general_ci		0	0
 	private Long canreceivenum;//	int	8	0	-1	0	0	0	0		0	可接单数				0	0
@@ -63,6 +66,9 @@ public class TtaskBase extends DataEntity<String> {
 
 	@TableField(exist = false)
 	private Long deliverynum;//已发货单数
+
+	@TableField(exist = false)
+	private String shopname;//店铺名
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
@@ -367,5 +373,13 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setDeliverynum(Long deliverynum) {
 		this.deliverynum = deliverynum;
+	}
+
+	public String getShopname() {
+		return shopname;
+	}
+
+	public void setShopname(String shopname) {
+		this.shopname = shopname;
 	}
 }

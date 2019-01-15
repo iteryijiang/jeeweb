@@ -92,25 +92,25 @@
                     <div>
                         <p>任务编号：<span>${tb.taskno}</span></p>
                         <p>任务发布时间：${createDateFormat}</p>
-                        <p>店铺：${tsi.shopname}<span></span></p>
+                        <p>店铺：${tsb.shopname}<span></span></p>
                         <p>任务定时发布时间：${effectdateFormat}</p>
                     </div>
                 </div>
             </div>
             <div class='rt'>
-                <!--<div class='task_status'>-->
-                    <!--<div>-->
-                        <!--<h3>任务状态：买手正在接手中</h3>-->
-                    <!--</div>-->
-                    <!--<div>-->
-                        <!--<p><a href="#">买手已付款，代发货（0）</a></p>-->
-                        <!--<p><a href="#">买手已收货，待返款（0）</a></p>-->
-                    <!--</div>-->
-                    <!--<div>-->
-                        <!--您还可以：-->
-                        <!--<button class='btn btn-warning' onclick="revokeTask()">撤销未接手任务</button>-->
-                    <!--</div>-->
-                <!--</div>-->
+                <div class='task_status'>
+                    <div>
+                        <h3>任务状态：买手正在接手中</h3>
+                    </div>
+                    <div>
+                        <p><a href="#">买手已付款，代发货（0）</a></p>
+                        <p><a href="#">买手已收货，待返款（0）</a></p>
+                    </div>
+                    <div>
+                        您还可以：
+                        <button class='btn btn-warning' onclick="revokeTask()">撤销未接手任务</button>
+                    </div>
+                </div>
                 <!--<div class='task_refunds'>-->
                     <!--<div>平台返款冻结押金：<span class='red_font'>0</span>元&nbsp平台已返还：<span class='red_font'>0</span>元/<span class='red_font'>0</span>笔&nbsp平台待返还：<span class='red_font'>0</span>元/<span class='red_font'>0</span>笔</div>-->
                     <!--<div>已发放佣金：<span class='red_font'>0</span>获赢符点&nbsp待发放佣金：<span class='red_font'>0</span>获赢符点/<span class='red_font'>0</span>笔</div>-->

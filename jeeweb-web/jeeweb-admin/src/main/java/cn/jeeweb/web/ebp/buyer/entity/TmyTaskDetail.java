@@ -38,6 +38,7 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private java.util.Date deliverydate;//商家发货时间
 	private java.util.Date confirmdate;//确认收货时间
 	private String mytaskid;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+	private String taskshopurl;
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
@@ -57,7 +58,7 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String imgurl;
 
 	@TableField(exist = false)
-	private Double actualprice;
+	private Double tPrice;
 
 	@TableField(exist = false)
 	private String keyword;
@@ -70,6 +71,9 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	@TableField(exist = false)
 	private String spec2;
+
+	@TableField(exist = false)
+	private String tUrl;
 
 	@Override
 	public String getId() {
@@ -267,12 +271,12 @@ public class TmyTaskDetail extends DataEntity<String> {
 		this.imgurl = imgurl;
 	}
 
-	public Double getActualprice() {
-		return actualprice;
+	public Double gettPrice() {
+		return tPrice;
 	}
 
-	public void setActualprice(Double actualprice) {
-		this.actualprice = actualprice;
+	public void settPrice(Double tPrice) {
+		this.tPrice = tPrice;
 	}
 
 	public String getKeyword() {
@@ -305,5 +309,21 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	public void setSpec2(String spec2) {
 		this.spec2 = spec2;
+	}
+
+	public String gettUrl() {
+		return tUrl;
+	}
+
+	public void settUrl(String tUrl) {
+		this.tUrl = tUrl;
+	}
+
+	public String getTaskshopurl() {
+		return taskshopurl;
+	}
+
+	public void setTaskshopurl(String taskshopurl) {
+		this.taskshopurl = taskshopurl;
 	}
 }

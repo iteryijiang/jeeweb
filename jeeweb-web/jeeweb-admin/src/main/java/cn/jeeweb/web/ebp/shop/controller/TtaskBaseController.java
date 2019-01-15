@@ -21,8 +21,10 @@ import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
+import cn.jeeweb.web.ebp.shop.entity.TshopBase;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
@@ -60,6 +62,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     private TmyTaskService tmyTaskService;
     @Autowired
     private TmyTaskDetailService tmyTaskDetailService;
+    @Autowired
+    private TshopBaseService tshopBaseService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -128,6 +132,21 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @GetMapping(value = "taskList")
     @RequiresMethodPermissions("taskList")
     public ModelAndView myList(Model model, HttpServletRequest request, HttpServletResponse response) {
+        String userid = UserUtils.getPrincipal().getId();
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(calendar.DATE,1);
+        Date date2 = calendar.getTime();
+        Map map = ttaskBaseService.sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
+        if(map==null){
+            map = new HashMap();
+            map.put("sumActualprice",0);
+            map.put("sumOrderPrice",0);
+            map.put("sumDeliveryPrice",0);
+            map.put("sumCount",0);
+        }
+        model.addAttribute("map",map);
+
         ModelAndView mav = displayModelAndView("list");
         return mav;
     }
@@ -148,29 +167,29 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
-            entityWrapper.eq("create_by", userid);
+            entityWrapper.eq("t.create_by", userid);
         }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         PageResponse<TtaskBase> pagejson = new PageResponse<>(ttaskBaseService.list(queryable,entityWrapper));
-        List<TtaskBase> ll = pagejson.getResults();
-        List<TtaskBase> newll = new ArrayList<TtaskBase>();
-        for (TtaskBase tb:ll) {
-            tb.setReceivingnum(tb.getTasknum()-tb.getCanreceivenum());
-            List<Map> list = tmyTaskDetailService.groupBytaskstate(tb.getId());
-
-            for (int i=0;i<list.size();i++){
-                Map map = list.get(i);
-                if("2".equals(map.get("taskstate").toString())){
-                    tb.setOrdernum(Long.parseLong(map.get("counts").toString()));
-                }else if("3".equals(map.get("taskstate").toString())){
-                    tb.setDeliverynum(Long.parseLong(map.get("counts").toString()));
-                }
-            }
-            newll.add(tb);
-        }
-        pagejson.setResults(newll);
+//        List<TtaskBase> ll = pagejson.getResults();
+//        List<TtaskBase> newll = new ArrayList<TtaskBase>();
+//        for (TtaskBase tb:ll) {
+//            tb.setReceivingnum(tb.getTasknum()-tb.getCanreceivenum());
+//            List<Map> list = tmyTaskDetailService.groupBytaskstate(tb.getId());
+//
+//            for (int i=0;i<list.size();i++){
+//                Map map = list.get(i);
+//                if("2".equals(map.get("taskstate").toString())){
+//                    tb.setOrdernum(Long.parseLong(map.get("counts").toString()));
+//                }else if("3".equals(map.get("taskstate").toString())){
+//                    tb.setDeliverynum(Long.parseLong(map.get("counts").toString()));
+//                }
+//            }
+//            newll.add(tb);
+//        }
+//        pagejson.setResults(newll);
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }
@@ -187,6 +206,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public void myTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
         List listBase = new ArrayList();
+        String user = UserUtils.getPrincipal().getId();
         try {
             //获得商户表
             List<TshopInfo> listShop = tshopInfoService.findshopInfo();
@@ -210,7 +230,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             while (entries.hasNext()) {
                 Map.Entry<String, Integer> entry = entries.next();
                 System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-                List<TtaskBase> list = ttaskBaseService.selectShopTask(entry.getKey(), entry.getValue());
+                List<TtaskBase> list = ttaskBaseService.selectShopTask(entry.getKey(), entry.getValue(),user);
                 listBase.addAll(list);
             }
         }catch (Exception e){
@@ -259,8 +279,10 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                             HttpServletResponse response) throws IOException {
         TtaskBase tb = ttaskBaseService.selectById(id);
         TshopInfo tsi = tshopInfoService.selectOne(tb.getShopid());
+        TshopBase tsb = tshopBaseService.selectById(tb.getStorename());
         model.addAttribute("tb",tb);
         model.addAttribute("tsi",tsi);
+        model.addAttribute("tsb",tsb);
         //进行中，完成数
         int taskstatus0=0,taskstatus1=0;
 
@@ -329,18 +351,20 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("myTaskCreate")
     public void myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws IOException {
         List listBase = new ArrayList();
+
         try {
+            String user = UserUtils.getPrincipal().getId();
             int count = 3;
             int countSum = 7;
             try{
-                String sum = DictUtils.getDictValue("接单数","tasknum",count+"");
+                String sum = DictUtils.getDictValue("一个任务单店接单数","tasknum",count+"");
                 count = Integer.parseInt(sum);
-                countSum = Integer.parseInt(DictUtils.getDictValue("总单数","tasknum",countSum+""));
+                countSum = Integer.parseInt(DictUtils.getDictValue("一个任务总连接数","tasknum",countSum+""));
             }catch (Exception e){
                 e.printStackTrace();
             }
 
-            List<TtaskBase> list = ttaskBaseService.selectShopTask("",count);
+            List<TtaskBase> list = ttaskBaseService.selectShopTask("",count,user);
             if(list!=null&&!list.isEmpty()){
                 TmyTask tmyTask = new TmyTask();
                 tmyTask.setMytaskno(TsequenceSpider.getTaskNo());
@@ -364,6 +388,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                     my.setPays(tb.getActualprice());
                     my.setReceivingdate(new Date());
                     my.setMytaskid(tmyTask.getId());
+                    my.setTaskshopurl(tb.gettUrl()+"_"+tb.getStorename());
                     tmyTaskDetailService.insert(my);
                     tprice = tprice.add(tb.getActualprice());
                 }

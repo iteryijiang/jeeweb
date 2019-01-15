@@ -17,6 +17,7 @@
       <result property="evaluate" column="evaluate" jdbcType="VARCHAR" />
       <result property="taskstatus" column="taskstatus" jdbcType="VARCHAR" />
       <result property="mytaskid" column="mytaskid" jdbcType="VARCHAR" />
+      <result property="taskshopurl" column="taskshopurl" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -44,7 +45,7 @@
     </select>
 
     <select id="selectMytaskList" resultMap="TmyTaskDetail">
-        select t.*,sb.shopname,tb.imgurl,tb.actualprice,tb.keyword,tb.qrcodeurl,tb.spec1,tb.spec2 from T_my_Task_Detail t,t_task_base tb,t_shop_base sb,sys_user s where
+        select t.*,sb.shopname,tb.imgurl,tb.t_Price tPrice,tb.keyword,tb.qrcodeurl,tb.spec1,tb.spec2,tb.t_Url tUrl from T_my_Task_Detail t,t_task_base tb,t_shop_base sb,sys_user s where
         t.taskid=tb.id and tb.storename=sb.id and t.buyerid=s.id and t.mytaskid=#{mytaskid}
     </select>
 

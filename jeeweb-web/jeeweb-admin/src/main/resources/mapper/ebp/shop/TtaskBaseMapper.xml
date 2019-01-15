@@ -44,7 +44,21 @@
     t.classify1,t.classify2,
     t.classify3,t.classify4,t.isMobileview,t.expressway,t.tasknum,t.status
   </sql>
-  
+
+  <select id="selectShopList" resultMap="TtaskBase">
+    select t.*,s.shopname,(t.tasknum-t.canreceivenum) receivingnum,b.deliverynum,b.ordernum from T_task_Base t left join t_shop_base s on t.storename = s.id
+    left join (select taskid,sum(confirm) confirmnum,sum(delivery) deliverynum,sum(order1) ordernum from
+    (select taskid,case when taskstate=4 then 1 else 0 end confirm,
+    case when taskstate=3 then 1 else 0 end delivery,
+    case when taskstate=2 then 1 else 0 end order1 from t_my_task_detail) a group by taskid) b on t.id=b.taskid
+    <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+      <where>
+        ${ew.sqlSegment}
+      </where>
+    </if>
+  </select>
+
+
   <select id="selectTtaskBaseList" resultMap="TtaskBase">
 	  select 
    	    <include refid="Base_Column_List" />
@@ -72,14 +86,15 @@
     AND t.id <![CDATA[<]]> t1.id
                AND t.STATUS = '0'
                AND t.canreceivenum <![CDATA[>]]> 0
-    and t.effectdate <![CDATA[<]]> DATE_ADD(curdate(),interval 1 day)
+    and DATE_FORMAT(t.effectdate,'%Y-%m-%d') = DATE_FORMAT(curdate(),'%Y-%m-%d')
     ) AS group_id
     FROM
     T_task_Base t1
     where
     t1.STATUS = '0'
     AND t1.canreceivenum <![CDATA[>]]> 0
-    and t1.effectdate <![CDATA[<]]> DATE_ADD(curdate(),interval 1 day)
+    and DATE_FORMAT(t1.effectdate,'%Y-%m-%d') = DATE_FORMAT(curdate(),'%Y-%m-%d')
+    group by t1.t_url,t1.storename
     ) a
     WHERE
     a.group_id <![CDATA[<=]]> ${count}
@@ -87,4 +102,14 @@
     storename,
     group_id
   </select>
+
+  <select id="sumNumAndPrice" resultType="java.util.Map">
+    select sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(count) sumCount
+    from t_task_base t LEFT JOIN (select taskid,sum(deliveryPrice) deliveryPrice,sum(orderPrice) orderPrice,count(1) count from (select taskid,case when taskstate=3 then pays else 0 end deliveryPrice,
+        case when taskstate=2 then pays else 0 end orderPrice
+     from t_my_task_detail where (create_date BETWEEN #{createDate1} and #{createDate2})) a group by taskid ) b
+    on t.id=b.taskid
+    where shopid=#{createby} and (create_date BETWEEN #{createDate1} and #{createDate2})
+  </select>
+
 </mapper>

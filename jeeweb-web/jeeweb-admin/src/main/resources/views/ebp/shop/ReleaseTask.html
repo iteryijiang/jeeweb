@@ -665,8 +665,20 @@
               }
               good_detail_info.storename = $("#storename").val();
              if(good_detail_info.storename==""){
-                 alert("请选择店铺");
-                 return;
+                alert("请选择店铺");
+                return;
+             }
+             if(good_detail_info.tasknum==""||good_detail_info.tasknum==undefined){
+                alert("请填写任务单数");
+                return;
+             }
+             if(good_detail_info.actualprice==""||good_detail_info.actualprice==undefined){
+                alert("请填写实付金额");
+                return;
+               }
+             if(good_detail_info.effectdate==""||good_detail_info.effectdate==undefined){
+                alert("请填写生效时间");
+                return;
              }
               GetCheckboxInfo(good_detail_info.method);
             //填充任务信息

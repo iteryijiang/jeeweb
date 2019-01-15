@@ -22,7 +22,7 @@ body{
     background-color:#ddd;
 }
 .user_info,.main_container,.main_tab div.row{
-    width:1000px;
+    width:90%;
     margin:0 auto;
 }
 .user_info{

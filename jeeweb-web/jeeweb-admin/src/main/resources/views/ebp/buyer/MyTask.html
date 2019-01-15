@@ -72,35 +72,39 @@
                 "                <table class=\"table\">\n" +
                 "                  <thead>\n" +
                 "                    <tr>\n" +
-                "                      <th width='18%'>商品名称</th>\n" +
+                "                      <th width='16%'>商品名称</th>\n" +
+                "                      <th width='8%'>搜索关键词</th>\n" +
                 "                      <th width='10%'>图片</th>\n" +
                 "                      <th width='10%'>二维码</th>\n" +
-                "                      <th width='8%'>实付金额</th>\n" +
+                "                      <th width='7%'>订单金额</th>\n" +
+                "                      <th width='7%'>实付金额</th>\n" +
                 "                      <th width='6%'>颜色</th>\n" +
-                "                      <th width='6%'>规格</th>\n" +
-                "                      <th width='10%'>京东账号</th>\n" +
-                "                      <th width='10%'>订单号</th>\n" +
-                "                      <th width='10%'>订单状态</th>\n" +
-                "                      <th width='10%'>操作</th>\n" +
+                "                      <th width='5%'>规格</th>\n" +
+                "                      <th width='12%'>京东账号</th>\n" +
+                "                      <th width='12%'>订单号</th>\n" +
+                "                      <th width='12%'>订单状态</th>\n" +
+                "                      <th width='8%'>操作</th>\n" +
                 "                    </tr>\n" +
                 "                    </thead>\n" +
                 "                  <tbody>\n" ;
             for (var j = 0; j < list.length; j++) {
                 if(namelist[i]==list[j].shopname){
                     divid += "<tr>";
-                    divid += "<td><span>"+(list[j].goodsname==undefined?"":list[j].goodsname)+"</span></td>";
+                    divid += "<td><a href=\""+(list[j].tUrl==undefined?"":list[j].tUrl)+"\" target=\"_blank\"><span>"+(list[j].goodsname==undefined?"":list[j].goodsname)+"</span></a></td>";
+                    divid += "<td><span>"+(list[j].keyword==undefined?"":list[j].keyword)+"</span></td>";
                     divid += "<td><span><img src=\""+list[j].imgurl+"\"></td>";
                     divid += "<td><img src=\""+list[j].qrcodeurl+"\"></td>";
+                    divid += "<td>"+(list[j].tPrice==undefined?"":list[j].tPrice)+"</td>";
                     divid += "<td>"+(list[j].pays==undefined?"":list[j].pays)+"</td>";
                     divid += "<td>"+(list[j].spec1==undefined?"":list[j].spec1)+"</td>";
                     divid += "<td>"+(list[j].spec2==undefined?"":list[j].spec2)+"</td>";
-                    divid += "<td><input type='text' style=\"width:80px;\" value='"+(list[j].buyerjdnick==undefined?"":list[j].buyerjdnick)+"' onblur=\"upbuyerjdnick(this.value,'"+list[i].id+"')\"></td>";
-                    divid += "<td><input type='text' style=\"width:80px;\" value='"+(list[j].jdorderno==undefined?"":list[j].jdorderno)+"' onblur=\"upjdorderno(this.value,'"+list[i].id+"')\"></td>";
+                    divid += "<td><input type='text' style=\"width:110px;\" value='"+(list[j].buyerjdnick==undefined?"":list[j].buyerjdnick)+"' onblur=\"upbuyerjdnick(this.value,'"+list[j].id+"')\"></td>";
+                    divid += "<td><input type='text' style=\"width:110px;\" value='"+(list[j].jdorderno==undefined?"":list[j].jdorderno)+"' onblur=\"upjdorderno(this.value,'"+list[j].id+"')\"></td>";
                     divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
                     if(list[j].taskstate=="1"){
-                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','2')\">确定下单</button></p></td>";
+                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','2')\">确定下单</button></p></td>";
                     }else if(list[j].taskstate=="3"){
-                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[i].id+"','4')\">确定收货</button></p></td>";
+                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','4')\">确定收货</button></p></td>";
                     }
                     divid +="</tr>";
                 }

@@ -8,12 +8,17 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TtaskBaseMapper extends BaseMapper<TtaskBase> {
 	
 	List<TtaskBase> selectTtaskBaseList(Pagination page, @Param("ew") Wrapper<TtaskBase> wrapper);
 
-	List<TtaskBase> selectShopTask(@Param("shopid") String shopid,@Param("count") int count);
+	List<TtaskBase> selectShopTask(@Param("shopid") String shopid,@Param("count") int count,@Param("createBy") String user);
+
+	Map sumNumAndPrice(@Param("createby") String createby, @Param("createDate1") String createDate1, @Param("createDate2") String createDate2);
+
+	List<TtaskBase> selectShopList(Pagination page, @Param("ew") Wrapper<TtaskBase> wrapper);
 
 }

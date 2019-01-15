@@ -1,9 +1,25 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单管理',''), libs: 'bootstrap-treeview'}){ %>
+<div>
+    <table cellpadding="10" style="font-size:18px;padding: 10px">
+        <tr>
+            <td><p>实付总价：<span style="color:green;font-weight: bold">${map.sumActualprice}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>买手确认下单实付金额：<span style="color:green;font-weight: bold">${map.sumOrderPrice}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>商家确认发货实付金额：<span style="color:red;font-weight: bold">${map.sumDeliveryPrice}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>当日链接数：<span style="color:blue;font-weight: bold">${map.sumCount}&nbsp;&nbsp;&nbsp;</span></p></td>
+        </tr>
+    </table>
+    <br>
+</div>
+
 <#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList" sortname="taskno" sortorder="desc">
 <#grid:column label="任务编号"  name="taskno" width="60" />
+<#grid:column label="店铺名"  name="shopname" />
 <#grid:column label="商品标题"  name="tTitle"  width="250" query="true"  condition="like" />
 <#grid:column label="商品单价"  name="tPrice" width="50" query="true" condition="like"   />
 <#grid:column label="实付金额"  name="actualprice" width="50" />
+<#grid:column label="搜索关键字"  name="keyword" width="50" />
+<#grid:column label="发布时间"  name="createDate" width="50" />
+<#grid:column label="生效时间"  name="effectdate" width="50"/>
 <#grid:column label="任务单数"  name="tasknum" width="50"/>
 <#grid:column label="已接单数"  name="receivingnum" width="50" sortable="true"/>
 <#grid:column label="已下单单数"  name="ordernum" width="50" sortable="true"/>
