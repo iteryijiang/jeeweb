@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher {
 
 	private Cache<String, AtomicInteger> passwordRetryCache;
-	private int maxRetryCount = 10;
+	private int maxRetryCount = 100;
 	private int showCaptchaRetryCount = 2;
 
 	public void setMaxRetryCount(int maxRetryCount) {
@@ -53,8 +53,8 @@ public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher
 			retryCount = new AtomicInteger(0);
 			passwordRetryCache.put(username, retryCount);
 		}
-		//增加一次
-		retryCount.incrementAndGet();
+		//增加一次暂时不验证登陆重复次数
+//		retryCount.incrementAndGet();
 		if (retryCount.get() > maxRetryCount) {
 			throw new ExcessiveAttemptsException();
 		}

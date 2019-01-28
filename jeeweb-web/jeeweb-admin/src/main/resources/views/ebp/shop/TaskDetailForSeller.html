@@ -100,11 +100,11 @@
             <div class='rt'>
                 <div class='task_status'>
                     <div>
-                        <h3>任务状态：买手正在接手中</h3>
+                        <h3>任务状态：${tb.status=="0"?"买手正在接手中":tb.status=="1"?"买手完成接单":"商家撤销"}</h3>
                     </div>
                     <div>
-                        <p><a href="#">买手已付款，代发货（0）</a></p>
-                        <p><a href="#">买手已收货，待返款（0）</a></p>
+                        <p><a href="#">买手已付款，代发货（${(taskstate2==null?0:taskstate2)}）</a></p>
+                        <p><a href="#">买手已收货，完成（${(taskstate4==null?0:taskstate4)}）</a></p>
                     </div>
                     <div>
                         您还可以：
@@ -204,7 +204,12 @@
                   <thead>
                     <tr>
                       <th>商品</th>
+                      <th>搜索关键字</th>
+                      <th>二维码</th>
+                      <th>颜色</th>
+                      <th>规格</th>
                       <th>单价</th>
+                      <th>实付价格</th>
                       <th>每单拍*个</th>
                       <th>小计</th>
                     </tr>
@@ -215,7 +220,12 @@
                           <img src="${tb.imgurl}" alt="">
                           <span><a href="${tb.tUrl}" target="_blank">${tb.tTitle}</a></span>
                       </td>
+                      <td>${tb.keyword}</td>
+                      <td><img src="${tb.qrcodeurl}" alt=""></td>
+                      <td>${tb.spec1}</td>
+                      <td>${tb.spec2}</td>
                       <td>${tb.tPrice}</td>
+                      <td>${tb.actualprice}</td>
                       <td>${tb.tNum}</td>
                       <td>${tb.totalprice}</td>
                     </tr>
@@ -327,16 +337,13 @@
         });
     })
     function revokeTask(){
-        // $.ajax({
-        //     type: "POST",
-        //     url: "${adminPath}/shop/TtaskBase/showTitle",
-        //     contentType:'application/json;charset=utf-8',
-        //     data: JSON.stringify({"turl":turl.value}),
-        //     dataType: "json",
-        //     success: function(data){
-        //        alert("操作成功");
-        //     }
-        // });
+        $.ajax({
+            url: "${adminPath}/shop/TtaskBase/${tb.id}/2/upStatus",
+            success: function(data){
+                alert("操作成功！");
+                location.reload();
+            }
+        });
     }
     function dateFtt(fmt,date)
     { //author: meizz

@@ -1,0 +1,20 @@
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手佣金结算表',''), libs: ''}){ %>
+
+<div>
+    <table cellpadding="10" style="font-size:18px;padding: 10px" align="center">
+        <tr>
+            <td><br>买手佣金结算表</td>
+        </tr>
+    </table>
+    <br>
+</div>
+<#grid:grid id="ttaskBaseGrid1" url="${adminPath}/shop/TtaskBase/withdrawalMoneyList" pageable="false" sortable="false">
+<#grid:column label="日期"  name="countCreateDate" query="true"  queryMode="date" condition="between" />
+<#grid:column label="买手"  name="buyerName" />
+<#grid:column label="当日链接数"  name="sumCount" />
+<#grid:column label="完成链接数"  name="sumConfirm"  />
+<#grid:column label="佣金收入（元）"  name="sumWithdrawalmoney"/>
+<#grid:toolbar  function="search"  />
+<#grid:toolbar  function="reset" />
+</#grid:grid>
+<% } %>

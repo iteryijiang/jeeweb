@@ -1,32 +1,41 @@
-<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单管理',''), libs: 'bootstrap-treeview'}){ %>
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单管理',''), libs: ''}){ %>
 <div>
     <table cellpadding="10" style="font-size:18px;padding: 10px">
         <tr>
-            <td><p>实付总价：<span style="color:green;font-weight: bold">${map.sumActualprice}&nbsp;&nbsp;&nbsp;</span></p></td>
-            <td><p>买手确认下单实付金额：<span style="color:green;font-weight: bold">${map.sumOrderPrice}&nbsp;&nbsp;&nbsp;</span></p></td>
-            <td><p>商家确认发货实付金额：<span style="color:red;font-weight: bold">${map.sumDeliveryPrice}&nbsp;&nbsp;&nbsp;</span></p></td>
-            <td><p>当日链接数：<span style="color:blue;font-weight: bold">${map.sumCount}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>实付总价：<span style="color:green;font-weight: bold" id="sumActualprice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>买手确认下单实付金额：<span style="color:green;font-weight: bold" id="sumOrderPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>商家确认发货实付金额：<span style="color:red;font-weight: bold" id="sumDeliveryPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>完成实付金额：<span style="color:red;font-weight: bold" id="sumFinishPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>当日链接数：<span style="color:blue;font-weight: bold" id="sumCount"></span>&nbsp;&nbsp;&nbsp;</p></td>
+        </tr>
+        <tr>
+            <td><p>任务单数：<span style="color:green;font-weight: bold" id="sumtasknum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>已接单数：<span style="color:green;font-weight: bold" id="sumreceivingnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>已下单单数：<span style="color:red;font-weight: bold" id="sumordernum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>已发货单数：<span style="color:blue;font-weight: bold" id="sumdeliverynum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>已完成单数：<span style="color:blue;font-weight: bold" id="sumfinishnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
         </tr>
     </table>
     <br>
 </div>
 
-<#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList" sortname="taskno" sortorder="desc">
-<#grid:column label="任务编号"  name="taskno" width="60" />
-<#grid:column label="店铺名"  name="shopname" />
-<#grid:column label="商品标题"  name="tTitle"  width="250" query="true"  condition="like" />
-<#grid:column label="商品单价"  name="tPrice" width="50" query="true" condition="like"   />
-<#grid:column label="实付金额"  name="actualprice" width="50" />
-<#grid:column label="搜索关键字"  name="keyword" width="50" />
-<#grid:column label="发布时间"  name="createDate" width="50" />
-<#grid:column label="生效时间"  name="effectdate" width="50"/>
-<#grid:column label="任务单数"  name="tasknum" width="50"/>
-<#grid:column label="已接单数"  name="receivingnum" width="50" sortable="true"/>
-<#grid:column label="已下单单数"  name="ordernum" width="50" sortable="true"/>
-<#grid:column label="已发货单数"  name="deliverynum" width="50" sortable="false"/>
-<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="50"/>
+<#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList" sortname="taskno" sortorder="desc" sortable="false">
+<#grid:column label="任务编号"  name="taskno"/>
+<#grid:column label="店铺名" name="shopname" query="true" condition="like"/>
+<#grid:column label="商品标题"  name="tTitle" query="true"  condition="like" />
+<#grid:column label="搜索关键字"  name="keyword"  />
+<#grid:column label="商品单价"  name="tPrice"/>
+<#grid:column label="实付金额"  name="actualprice"  />
+<#grid:column label="发布时间"  name="createDate"  />
+<#grid:column label="生效时间"  name="effectdate"  query="true"  queryMode="date"  condition="between"  />
+<#grid:column label="任务单数"  name="tasknum" />
+<#grid:column label="已接单数"  name="receivingnum"  sortable="true"/>
+<#grid:column label="已下单单数"  name="ordernum"  sortable="true"/>
+<#grid:column label="已发货单数"  name="deliverynum"  sortable="false"/>
+<#grid:column label="任务状态"  name="status" width="60" dict="basestate" queryMode="select" width="80" condition="eq" query="true" condition="between" />
+<#grid:column label="sys.common.opt"  name="opt" formatter="button" />
 <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
-<#grid:column label="sys.common.opt"  name="qrcode" formatter="button" width="50"/>
+<#grid:column label="sys.common.opt"  name="qrcode" formatter="button" />
 <#grid:button title="二维码"  groupname="qrcode" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/uploadQrcode' />
 
 <#grid:toolbar title="任务发布" icon="fa-plus"  function="rowDialogDetail" url="${adminPath}/shop/TtaskBase" winwidth="100%" winheight="100%" />
@@ -36,3 +45,41 @@
 <#grid:toolbar  function="reset" />
 </#grid:grid>
 <% } %>
+
+<script src='js/jquery-3.3.1.min.js'></script>
+<script>
+    function search(gridId){
+        var page = $("#"+gridId).getGridParam('page'); // 获取当前页码
+        searchByPage(gridId,page);
+        getload();
+    }
+    getload();
+    function getload(){
+        var data={};
+        data.create1 = $("#ttaskBaseGrid_effectdate_start").val();
+        data.create2 = $("#ttaskBaseGrid_effectdate_start").val();
+        data.shopname = $("input[name='shopname']").val();
+        data.tTitle = $("input[name='tTitle']").val();
+        data.status = $("input[name='status']").val();
+        $.ajax({
+            type: "POST",
+            url: "${adminPath}/shop/TtaskBase/showTaskBaseLoad",
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function(data){
+                $("#sumActualprice").html(data.sumActualprice);
+                $("#sumOrderPrice").html(data.sumOrderPrice);
+                $("#sumDeliveryPrice").html(data.sumDeliveryPrice);
+                $("#sumFinishPrice").html(data.sumFinishPrice);
+                $("#sumCount").html(data.sumCount);
+
+                $("#sumtasknum").html(data.sumtasknum);
+                $("#sumreceivingnum").html(data.sumreceivingnum);
+                $("#sumordernum").html(data.sumordernum);
+                $("#sumdeliverynum").html(data.sumdeliverynum);
+                $("#sumfinishnum").html(data.sumfinishnum);
+            }
+        });
+    }
+</script>

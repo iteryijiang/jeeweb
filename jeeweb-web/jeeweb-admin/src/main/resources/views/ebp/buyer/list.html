@@ -2,16 +2,17 @@
 <div>
     <table cellpadding="10" style="font-size:18px;padding: 10px">
         <tr>
-            <td><p>当日任务总价：<span style="color:green;font-weight: bold">${map.sumPrice}&nbsp;&nbsp;&nbsp;</span></p></td>
-            <td><p>当日确认下单金额：<span style="color:green;font-weight: bold">${map.sumOrderPrice}&nbsp;&nbsp;&nbsp;</span></p></td>
-            <td><p>当日确认发货金额：<span style="color:red;font-weight: bold">${map.sumDeliveryPrice}&nbsp;&nbsp;&nbsp;</span></p></td>
-            <td><p>当日链接数：<span style="color:blue;font-weight: bold">${map.sumNum}&nbsp;&nbsp;&nbsp;</span></p></td>
+            <td><p>任务总价：<span style="color:green;font-weight: bold" id="sumPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>确认下单金额：<span style="color:green;font-weight: bold" id="sumOrderPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>确认发货金额：<span style="color:red;font-weight: bold" id="sumDeliveryPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>完成金额：<span style="color:red;font-weight: bold" id="sumFinishPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>链接数：<span style="color:blue;font-weight: bold" id="sumNum"></span>&nbsp;&nbsp;&nbsp;</p></td>
         </tr>
     </table>
     <br>
 </div>
 
-<#grid:grid id="taskbase" url="${adminPath}/buyer/TmyTask/ajaxList">
+<#grid:grid id="taskbase" url="${adminPath}/buyer/TmyTask/ajaxList" sortname="mytaskno" sortorder="desc" sortable="false">
     <#grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
     <#grid:column label="任务单号"  name="mytaskno" width="100"/>
     <#grid:column label="任务总价"  name="totalprice"  width="80"/>
@@ -42,5 +43,27 @@
             }
         });
 
+    }
+    function search(gridId){
+        var page = $("#"+gridId).getGridParam('page'); // 获取当前页码
+        searchByPage(gridId,page);
+        getload();
+    }
+    getload();
+    function getload(){
+        $.ajax({
+            type: "POST",
+            url: "${adminPath}/buyer/TmyTask/showMyTaskLoad",
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify({"create1":$("#taskbase_createDate_start").val(),"create2":$("#taskbase_createDate_start").val()}),
+            dataType: "json",
+            success: function(data){
+                $("#sumPrice").html(data.sumPrice==undefined?"0":data.sumPrice);
+                $("#sumOrderPrice").html(data.sumOrderPrice==undefined?"0":data.sumOrderPrice);
+                $("#sumDeliveryPrice").html(data.sumDeliveryPrice==undefined?"0":data.sumDeliveryPrice);
+                $("#sumNum").html(data.sumNum==undefined?"0":data.sumNum);
+                $("#sumFinishPrice").html(data.sumFinishPrice==undefined?"0":data.sumFinishPrice);
+            }
+        });
     }
 </script>

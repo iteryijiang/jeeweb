@@ -1,0 +1,19 @@
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('财务对账表',''), libs: ''}){ %>
+<div>
+    <table cellpadding="10" style="font-size:18px;padding: 10px" align="center">
+        <tr>
+            <td>财务对账表</td>
+        </tr>
+    </table>
+    <br>
+</div>
+<#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/financeList" pageable="false" sortable="false">
+<#grid:column label="日期"  name="createDate" query="true"  queryMode="date"  condition="between" />
+<#grid:column label="买手"  name="buyerName" />
+<#grid:column label="当日需要付总额"  name="sumPays" />
+<#grid:column label="已确认下单总额"  name="sumOrderPrice"  />
+<#grid:column label="商户确认总额"  name="sumDeliveryPrice"/>
+<#grid:toolbar  function="search"  />
+<#grid:toolbar  function="reset" />
+</#grid:grid>
+<% } %>

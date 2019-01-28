@@ -8,6 +8,7 @@ import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
 import cn.jeeweb.common.query.annotation.PageableDefaults;
+import cn.jeeweb.common.query.data.Condition;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
@@ -81,6 +82,19 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         return mav;
     }
 
+    @GetMapping(value = "listFinance")
+    @RequiresMethodPermissions("listFinance")
+    public ModelAndView listFinance(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("list_finance");
+        return mav;
+    }
+
+    @GetMapping(value = "listFinanceCommissions")
+    @RequiresMethodPermissions("listFinanceCommissions")
+    public ModelAndView listFinanceCommissions(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("list_finance_commissions");
+        return mav;
+    }
     /**
      * 任务发布，任务状态status：0进行中，1已完成。2结束。
      * */
@@ -132,23 +146,52 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @GetMapping(value = "taskList")
     @RequiresMethodPermissions("taskList")
     public ModelAndView myList(Model model, HttpServletRequest request, HttpServletResponse response) {
-        String userid = UserUtils.getPrincipal().getId();
+//        String userid = UserUtils.getPrincipal().getId();
+//        Date date = new Date();
+//        Calendar calendar = new GregorianCalendar();
+//        calendar.add(calendar.DATE,1);
+//        Date date2 = calendar.getTime();
+//        Map map = sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
+//        model.addAttribute("map",map);
+
+        ModelAndView mav = displayModelAndView("list");
+        return mav;
+    }
+
+    public Map sumNumAndPrice(String userid,String create1,String create2,String shopname,String tTitle, String status){
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();
         calendar.add(calendar.DATE,1);
         Date date2 = calendar.getTime();
-        Map map = ttaskBaseService.sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
+        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
+            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
+            calendar = new GregorianCalendar();
+            calendar.setTime(DateUtils.parseDate(create2));
+            calendar.add(calendar.DATE,-1);
+            create1 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
+            calendar = new GregorianCalendar();
+            calendar.setTime(DateUtils.parseDate(create1));
+            calendar.add(calendar.DATE,1);
+            create2 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+        }
+        Map map = ttaskBaseService.sumNumAndPrice(userid,create1,create2,shopname,tTitle,status);
         if(map==null){
             map = new HashMap();
             map.put("sumActualprice",0);
+            map.put("sumFinishPrice",0);
             map.put("sumOrderPrice",0);
             map.put("sumDeliveryPrice",0);
             map.put("sumCount",0);
+            map.put("sumtasknum",0);
+            map.put("sumreceivingnum",0);
+            map.put("sumordernum",0);
+            map.put("sumdeliverynum",0);
+            map.put("sumfinishnum",0);
         }
-        model.addAttribute("map",map);
-
-        ModelAndView mav = displayModelAndView("list");
-        return mav;
+        return map;
     }
     /**
      * 根据页码和每页记录数，以及查询条件动态加载数据
@@ -191,6 +234,137 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 //        }
 //        pagejson.setResults(newll);
         String content = JSON.toJSONString(pagejson, filter);
+        StringUtils.printJson(response,content);
+    }
+
+    @RequestMapping(value = "financeList", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.SELECT)
+    public void financeList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                         HttpServletResponse response) throws IOException {
+        EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(calendar.DATE,1);
+        Date date2 = calendar.getTime();
+        String create1 = "";
+        String create2 = "";
+
+        if(queryable.getCondition()!=null){
+            Condition.Filter Filter = queryable.getCondition().getFilterFor("createDate");
+            if(Filter!=null){
+                Object o = Filter.getValue();
+                if(o instanceof String[]){
+                    String[] ss = (String[])o;
+                    if(ss!=null&&ss.length>=2){
+                        create1 = ss[0];
+                        create2 = ss[1];
+                    }else if(ss!=null&&ss.length>=1){
+                        create1 = ss[0];
+                    }
+                }
+            }
+        }
+        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
+            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
+            calendar = new GregorianCalendar();
+            calendar.setTime(DateUtils.parseDate(create2));
+            calendar.add(calendar.DATE,-1);
+            create1 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
+            calendar = new GregorianCalendar();
+            calendar.setTime(DateUtils.parseDate(create1));
+            calendar.add(calendar.DATE,1);
+            create2 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+        }
+        List<Map> list = ttaskBaseService.selectFinanceList(create1,create2);
+        BigDecimal sumPays = new BigDecimal(0.0);
+        BigDecimal sumOrderPrice = new BigDecimal(0.0);
+        BigDecimal sumDeliveryPrice = new BigDecimal(0.0);
+        for (Map map:list) {
+            sumPays = sumPays.add(new BigDecimal(map.get("sumPays").toString()));
+            sumOrderPrice = sumOrderPrice.add(new BigDecimal(map.get("sumOrderPrice").toString()));
+            sumDeliveryPrice = sumDeliveryPrice.add(new BigDecimal(map.get("sumDeliveryPrice").toString()));
+        }
+        Map map = new HashMap();
+        map.put("createDate","");
+        map.put("buyerName","合计");
+        map.put("sumPays",sumPays);
+        map.put("sumOrderPrice",sumOrderPrice);
+        map.put("sumDeliveryPrice",sumDeliveryPrice);
+        list.add(map);
+        String content = JSON.toJSONString(list);
+        StringUtils.printJson(response,content);
+    }
+
+    @RequestMapping(value = "withdrawalMoneyList", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.SELECT)
+    public void withdrawalMoneyList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                         HttpServletResponse response) throws IOException {
+        EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(calendar.DATE,1);
+        Date date2 = calendar.getTime();
+        String create1 = "";
+        String create2 = "";
+        int multiple = 2;
+        try{
+            multiple = Integer.parseInt(DictUtils.getDictValue("一个任务单佣金","tasknum",multiple+""));
+        }catch (Exception e){
+
+        }
+        if(queryable.getCondition()!=null){
+            Condition.Filter Filter = queryable.getCondition().getFilterFor("countCreateDate");
+            if(Filter!=null){
+                Object o = Filter.getValue();
+                if(o instanceof String[]){
+                    String[] ss = (String[])o;
+                    if(ss!=null&&ss.length>=2){
+                        create1 = ss[0];
+                        create2 = ss[1];
+                    }else if(ss!=null&&ss.length>=1){
+                        create1 = ss[0];
+                    }
+                }
+            }
+        }
+        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
+            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
+            calendar = new GregorianCalendar();
+            calendar.setTime(DateUtils.parseDate(create2));
+            calendar.add(calendar.DATE,-1);
+            create1 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
+            calendar = new GregorianCalendar();
+            calendar.setTime(DateUtils.parseDate(create1));
+            calendar.add(calendar.DATE,1);
+            create2 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+        }
+        List<Map> list = ttaskBaseService.selectWithdrawalMoneyList(create1,create2,multiple);
+        Long sumCount = 0l;
+        Long sumConfirm = 0l;
+        BigDecimal sumWithdrawalmoney = new BigDecimal(0.0);
+        for (Map map:list) {
+            sumCount += Long.parseLong(map.get("sumCount").toString());
+            sumConfirm += Long.parseLong(map.get("sumConfirm").toString());
+            sumWithdrawalmoney = sumWithdrawalmoney.add(new BigDecimal(map.get("sumWithdrawalmoney").toString()));
+        }
+        Map map = new HashMap();
+        map.put("countCreateDate","");
+        map.put("buyerName","合计");
+        map.put("sumCount",sumCount);
+        map.put("sumConfirm",sumConfirm);
+        map.put("sumWithdrawalmoney",sumWithdrawalmoney);
+        list.add(map);
+        String content = JSON.toJSONString(list);
         StringUtils.printJson(response,content);
     }
     /**
@@ -285,6 +459,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         model.addAttribute("tsb",tsb);
         //进行中，完成数
         int taskstatus0=0,taskstatus1=0;
+        int taskstate2=0,taskstate4=0;
 
         List<Map> list = tmyTaskDetailService.groupBytaskstatus(tb.getId());
         for (int i=0;i<list.size();i++){
@@ -295,8 +470,19 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 taskstatus1 = Integer.parseInt(map.get("counts").toString());
             }
         }
+        List<Map> listState = tmyTaskDetailService.groupBytaskstate(tb.getId());
+        for (int i=0;i<listState.size();i++){
+            Map map = listState.get(i);
+            if("2".equals(map.get("taskstate").toString())){
+                taskstate2 = Integer.parseInt(map.get("counts").toString());
+            }else if("4".equals(map.get("taskstate").toString())){
+                taskstate4 = Integer.parseInt(map.get("counts").toString());
+            }
+        }
         model.addAttribute("taskstatus0",taskstatus0);
         model.addAttribute("taskstatus1",taskstatus1);
+        model.addAttribute("taskstate2",taskstate2);
+        model.addAttribute("taskstate4",taskstate4);
         model.addAttribute("createDateFormat",DateUtils.formatDate(tb.getCreateDate(),"yyyy-MM-dd"));
         model.addAttribute("effectdateFormat",DateUtils.formatDate(tb.getEffectdate(),"yyyy-MM-dd"));
         ModelAndView mav = displayModelAndView("TaskDetailForSeller");
@@ -363,68 +549,114 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             }catch (Exception e){
                 e.printStackTrace();
             }
-
-            List<TtaskBase> list = ttaskBaseService.selectShopTask("",count,user);
+            //活动当日全订单
+            List<TtaskBase> list = ttaskBaseService.selectShopTask("",count+2,user);
+            //获得可领取总店铺数
+            int sumshop = countSum/count+1;
             if(list!=null&&!list.isEmpty()){
+                //保存任务单
                 TmyTask tmyTask = new TmyTask();
                 tmyTask.setMytaskno(TsequenceSpider.getTaskNo());
                 tmyTask.setState("0");
                 tmyTaskService.insert(tmyTask);
                 BigDecimal tprice = new BigDecimal(0.0);
+
+                //根据订单得到全店铺
+                Map<String,Integer> shopMap = new HashMap<String,Integer>();
                 for (int i=0;i<list.size();i++) {
-                    if((i+1)>countSum){
+                    TtaskBase tb = (TtaskBase)list.get(i);
+                    if(!shopMap.containsKey(tb.getStorename())){
+                        shopMap.put(tb.getStorename(),1);
+                    }else {
+                        int aa = 1+shopMap.get(tb.getStorename());
+                        shopMap.put(tb.getStorename(),aa);
+                    }
+                }
+                //根据全店铺和店铺数得到店铺
+                Map<String,Integer> newShopMap = new HashMap<String,Integer>();
+                while(true){
+                    Random rand = new Random();
+                    int randInt = rand.nextInt(shopMap.size()) + 1;
+                    int a = 1;
+                    Iterator<Map.Entry<String, Integer>> entries = shopMap.entrySet().iterator();
+                    while (entries.hasNext()) {
+                        Map.Entry<String, Integer> entry = entries.next();
+                        if(randInt==a){
+                            if(!newShopMap.containsKey(entry.getKey())) {
+                                newShopMap.put(entry.getKey(), entry.getValue());
+                            }
+                            break;
+                        }
+                        a++;
+                    }
+                    if(newShopMap.size()==shopMap.size()||newShopMap.size()==sumshop){
                         break;
                     }
-                    TtaskBase tb = (TtaskBase)list.get(i);
-                    TmyTaskDetail my = new TmyTaskDetail();
-                    tb.setCanreceivenum(tb.getCanreceivenum()-1);
-                    ttaskBaseService.insertOrUpdate(tb);
-                    my.setGoodsname(tb.gettTitle());//
-                    my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                    my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                    my.setTaskstate("1");//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                    my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                    my.setTaskstatus("0");
-                    my.setPays(tb.getActualprice());
-                    my.setReceivingdate(new Date());
-                    my.setMytaskid(tmyTask.getId());
-                    my.setTaskshopurl(tb.gettUrl()+"_"+tb.getStorename());
-                    tmyTaskDetailService.insert(my);
-                    tprice = tprice.add(tb.getActualprice());
+                }
+//                List new_list =new ArrayList<>();//需要保存的订单
+                //循环店铺，接取任务
+                Iterator<Map.Entry<String, Integer>> newentries = newShopMap.entrySet().iterator();
+                int zsum = 1;
+                while (newentries.hasNext()) {
+                    Map.Entry<String, Integer> entry = newentries.next();
+                    int dsum = 1;
+                    String countR = "";
+                    int countRI = 1;
+                    if(entry.getValue()==1){
+                        countR = ",1,";
+                    }
+                    //根据每个店铺接取数和店铺发布订单数获得每个店铺随机得到第几个订单。
+                    while(true&&entry.getValue()>1){
+                        Random rand = new Random();
+                        int randInt = rand.nextInt(entry.getValue()) + 1;
+                        if(countR.indexOf(","+randInt+",")==-1){
+                            countR = countR+","+randInt+",";
+                            countRI++;
+                        }
+                        if(countRI>count){
+                            break;
+                        }
+                    }
+
+                    int storeInt = 1;
+                    for (int i=0;i<list.size();i++) {
+                        TtaskBase tb = (TtaskBase)list.get(i);
+                        if(entry.getKey().equals(tb.getStorename())&&countR.indexOf(","+storeInt+",")>=0){
+                            TmyTaskDetail my = new TmyTaskDetail();
+                            tb.setCanreceivenum(tb.getCanreceivenum()-1);
+                            ttaskBaseService.insertOrUpdate(tb);
+                            my.setGoodsname(tb.gettTitle());//
+                            my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                            my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                            my.setTaskstate("1");//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                            my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+                            my.setTaskstatus("0");
+                            my.setPays(tb.getActualprice());
+                            my.setReceivingdate(new Date());
+                            my.setMytaskid(tmyTask.getId());
+                            my.setTaskshopurl(tb.gettUrl()+"_"+tb.getStorename());
+                            tmyTaskDetailService.insert(my);
+                            tprice = tprice.add(tb.getActualprice());
+                            dsum++;
+                            zsum++;
+                        }
+                        if(entry.getKey().equals(tb.getStorename())){
+                            storeInt++;
+                        }
+                        if(dsum>count||zsum>countSum){
+                            break;
+                        }
+                    }
+                    if(zsum>countSum){
+                        break;
+                    }
                 }
                 tmyTask.setTotalprice(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
                 tmyTaskService.insertOrUpdate(tmyTask);
             }
-            //获得商户表
-//            List<TshopInfo> listShop = tshopInfoService.findshopInfo();
-//            int count = 7;
-//            int sum = 0;
-//            Map<String, Integer> map = new HashMap();
-//            for (TshopInfo si : listShop) {
-//                Random rand = new Random();
-//                int a = rand.nextInt(3) + 1;
-//                sum += a;
-//                if (sum > 7) {
-//                    a = a - (sum - 7);
-//                }
-//                map.put(si.getUserid(), a);
-//                if (sum >= 7) {
-//                    break;
-//                }
-//            }
-            //根据每个商户数量返回订单数
-//            Iterator<Map.Entry<String, Integer>> entries = map.entrySet().iterator();
-//            while (entries.hasNext()) {
-//                Map.Entry<String, Integer> entry = entries.next();
-//                System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-//                List<TtaskBase> list = ttaskBaseService.selectShopTask(entry.getKey(), entry.getValue());
-//                listBase.addAll(list);
-//            }
         }catch (Exception e){
             e.printStackTrace();
         }
-//        String content = JSON.toJSONString(listBase);
-//        StringUtils.printJson(response,content);
     }
 
     @GetMapping(value = "{id}/uploadQrcode")
@@ -452,6 +684,16 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         return Response.ok("二维码修改成功");
     }
 
+    @GetMapping("{id}/{status}/upStatus")
+    @Log(logType = LogType.UPDATE)
+    @RequiresMethodPermissions("upStatus")
+    public void upTaskState(@PathVariable("id") String id,@PathVariable("status") String status, HttpServletRequest request,
+                            HttpServletResponse response) {
+        TtaskBase tb = ttaskBaseService.selectById(id);
+        tb.setStatus(status);
+        ttaskBaseService.insertOrUpdate(tb);
+    }
+
     @GetMapping(value = "{id}/myAgainList")
     public ModelAndView myAgainList(@PathVariable("id") String id, Model model,HttpServletRequest request,
                                     HttpServletResponse response) throws IOException {
@@ -459,5 +701,27 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         model.addAttribute("tb",tb);
         ModelAndView mav = displayModelAndView("ReleaseTask");
         return mav;
+    }
+
+    @RequestMapping(value = "showTaskBaseLoad", method = { RequestMethod.GET, RequestMethod.POST })
+    public void showTaskBaseLoad(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                          HttpServletResponse response) throws IOException {
+        Map map = new HashMap();
+        try {
+            String userid = "";
+            if (!"admin".equals(UserUtils.getUser().getUsername())) {
+                userid = UserUtils.getPrincipal().getId();
+            }
+            String create1 = jsonObject.getString("create1");
+            String create2 = jsonObject.getString("create2");
+            String shopname = jsonObject.getString("shopname");
+            String tTitle = jsonObject.getString("tTitle");
+            String status = jsonObject.getString("status");
+            map = sumNumAndPrice(userid,create1,create2,(StringUtils.isNotEmpty(shopname)?"%"+shopname+"%":null),(StringUtils.isNotEmpty(tTitle)?"%"+tTitle+"%":null),status);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
     }
 }

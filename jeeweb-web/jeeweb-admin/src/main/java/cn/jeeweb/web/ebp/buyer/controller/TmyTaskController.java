@@ -65,12 +65,35 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         Calendar calendar = new GregorianCalendar();
         calendar.add(calendar.DATE,1);
         Date date2 = calendar.getTime();
-        Map map = tmyTaskDetailService.sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
+        Map map = sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
         model.addAttribute("map",map);
         ModelAndView mav = displayModelAndView("list");
         return mav;
     }
 
+    public Map sumNumAndPrice(String userid,String create1,String create2){
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(calendar.DATE,1);
+        Date date2 = calendar.getTime();
+        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
+            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
+            calendar = new GregorianCalendar();
+            calendar.setTime(DateUtils.parseDate(create2));
+            calendar.add(calendar.DATE,-1);
+            create1 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
+            calendar = new GregorianCalendar();
+            calendar.setTime(DateUtils.parseDate(create1));
+            calendar.add(calendar.DATE,1);
+            create2 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+        }
+
+        Map map = tmyTaskDetailService.sumNumAndPrice(userid,create1,create2);
+        return map;
+    }
 
     @PostMapping("add")
     @Log(logType = LogType.INSERT)
@@ -267,8 +290,8 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
                         tsbool = false;
                     }
                 }
-                if(tsbool){
-                    TtaskBase tb = ttaskBaseService.selectById(td.getTaskid());
+                TtaskBase tb = ttaskBaseService.selectById(td.getTaskid());
+                if(tsbool&&!"2".equals(tb.getStatus())){
                     tb.setStatus("1");
                     ttaskBaseService.insertOrUpdate(tb);
                 }
@@ -308,5 +331,19 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         String content = JSON.toJSONString(pagejson);
         StringUtils.printJson(response, content);
     }
-
+    @RequestMapping(value = "showMyTaskLoad", method = { RequestMethod.GET, RequestMethod.POST })
+    public void showMyTaskLoad(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                                 HttpServletResponse response) throws IOException {
+        Map map = new HashMap();
+        try {
+            String userid = UserUtils.getPrincipal().getId();
+            String create1 = jsonObject.getString("create1");
+            String create2 = jsonObject.getString("create2");
+            map = sumNumAndPrice(userid,create1,create2);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
+    }
 }

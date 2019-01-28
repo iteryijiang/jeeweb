@@ -19,7 +19,7 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "jeeweb.shiro")
 public class ShiroConfigProperties {
     //系统管理员密码重试次数
-    private Integer  userPasswordShowCaptchaRetryCount=3;
+    private Integer  userPasswordShowCaptchaRetryCount=50;
     //凭证匹配器-算法
     private  String credentialsHashAlgorithmName="md5";
     //生成Hash值的迭代次数

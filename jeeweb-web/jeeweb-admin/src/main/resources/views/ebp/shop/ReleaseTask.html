@@ -12,7 +12,10 @@
 <script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
 <script src='${staticPath}/shop/js/bootstrap.min.js'></script>
 <script src='${staticPath}/shop/js/fileinput.min.js'></script>
+<script src="${staticPath}/shop/laydate/laydate.js" charset="UTF-8"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <#html:css name="bootstrap-fileinput,iCheck,Validform" />
+    <#html:js name="bootstrap-fileinput,iCheck,Validform" />
 </head>
 <body>
 <!-- 用户信息栏 -->
@@ -167,9 +170,17 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="effectdate">生效时间:</label>
-                                    <input type="date" id="effectdate" style="width: 160px" class="form-control must-fill">
+                                    <input id="effectdate" style="width: 180px" class="form-control"  type="text" readonly="readonly" onclick="laydate()" >
                                 </div>
                              </form>
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <div class="wrapper wrapper-content animated fadeInRight">
+                                        <label>上传二维码:</label>
+                                        <#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px"  fileInputHeight="100px"   nested="false" path="qrcodeurl"/>
+                                    </div>
+                                </div>
+                            </form>
                              <p class='red_font'>如商家发布的是手机端任务，请务必填写手机端展示的商品主图、页面搜索价格和商品筛选分类、排序等。</p>
                         </div>
                     </div>
@@ -305,7 +316,7 @@
                                             <div class='item' id=1>
                                                 <p>关键字来源1：</p>
                                                 <label for="">让买手打开<b class='red-font'>手机淘宝APP</b>搜索关键字进入“搜索列表”</label>
-                                                <input type="text" class='must-fill' value="${tb.keyword}">
+                                                <input type="text" class='must-fill' value="${tb.keyword}" style="width: 220px">
                                                 <span class='red_font'>必填</span>
                                                 <div class='good_cond'>
                                                     <p>
@@ -617,11 +628,6 @@
             good_detail_info.method=$(this).val()
         })
         function aa(){
-            window.parent.location.reload()//刷新父页面
-
-            var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
-
-            parent.layer.close(index)
         }
        function TaskConfirm(index){
            if(index=='0'){//第一次提交确认信息
@@ -664,6 +670,7 @@
                 $('#task_accordin').removeClass('red')
               }
               good_detail_info.storename = $("#storename").val();
+              good_detail_info.qrcodeurl = $("#qrcodeurl").val();
              if(good_detail_info.storename==""){
                 alert("请选择店铺");
                 return;
@@ -679,8 +686,18 @@
              if(good_detail_info.effectdate==""||good_detail_info.effectdate==undefined){
                 alert("请填写生效时间");
                 return;
+             }else {
+                 good_detail_info.effectdate = new Date(good_detail_info.effectdate);
+             }
+             if(good_detail_info.qrcodeurl==""||good_detail_info.qrcodeurl==undefined){
+                  alert("请上传二维码图片");
+                  return;
              }
               GetCheckboxInfo(good_detail_info.method);
+             if(good_detail_info.keyword==""||good_detail_info.keyword==undefined){
+                alert("请填写关键字");
+                return;
+             }
             //填充任务信息
             // TaskAreaInfo()
                console.log(good_detail_info);
@@ -885,7 +902,9 @@
                 }
             });
         }
-        $("#effectdate").val(dateFtt("yyyy-MM-dd",new Date("${tb.effectdate}")));
+        if("${tb.effectdate}"!=null&&"${tb.effectdate}"!=""){
+            $("#effectdate").val(dateFtt("yyyy-MM-dd",new Date("${tb.effectdate}")));
+        }
         function dateFtt(fmt,date)
         { //author: meizz
             var o = {
@@ -904,5 +923,12 @@
                     fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
             return fmt;
         }
+</script>
+<script>
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#effectdate' //指定元素
+        ,type: 'datetime'
+    });
 </script>
 </html>
