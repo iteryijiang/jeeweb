@@ -66,41 +66,65 @@
         var namelist = ${namelist};
         var list = ${list};
         var divid = "";
+        var win = 80;
         for (var i = 0; i < namelist.length; i++) {
-            divid += "<div class='task_target'>\n" +
-                "                <h3>"+namelist[i]+"</h3>\n" +
-                "                <table class=\"table\">\n" +
-                "                  <thead>\n" +
-                "                    <tr>\n" +
-                "                      <th width='16%'>商品名称</th>\n" +
-                "                      <th width='8%'>搜索关键词</th>\n" +
-                "                      <th width='10%'>图片</th>\n" +
-                "                      <th width='10%'>二维码</th>\n" +
-                "                      <th width='7%'>订单金额</th>\n" +
-                "                      <th width='7%'>实付金额</th>\n" +
-                "                      <th width='6%'>颜色</th>\n" +
-                "                      <th width='5%'>规格</th>\n" +
-                "                      <th width='12%'>京东账号</th>\n" +
-                "                      <th width='12%'>订单号</th>\n" +
-                "                      <th width='12%'>订单状态</th>\n" +
-                "                      <th width='8%'>操作</th>\n" +
-                "                    </tr>\n" +
-                "                    </thead>\n" +
-                "                  <tbody>\n" ;
+            divid += "<div class='task_target'>\n";
+            divid += "                <h3>"+namelist[i]+"</h3>\n";
+            divid += "                <table class=\"table\" "+(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)?"style=\"table-layout: fixed;\"":"")+">\n" ;
+            if(!navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){
+                win = 110;
+                divid += "                    <tr>\n" ;
+                divid += "                      <th width='16%'>商品名称</th>\n" ;
+                divid += "                      <th width='8%'>搜索关键词</th>\n" ;
+                divid += "                      <th width='8%'>品牌</th>\n";
+                divid += "                      <th width='10%'>图片</th>\n" ;
+                divid += "                      <th width='10%'>二维码</th>\n" ;
+                divid += "                      <th width='7%'>订单金额</th>\n" ;
+                divid += "                      <th width='7%'>实付金额</th>\n" ;
+                divid += "                      <th width='6%'>颜色</th>\n" ;
+                divid += "                      <th width='5%'>规格</th>\n" ;
+                divid += "                      <th width='12%'>京东账号</th>\n" ;
+                divid += "                      <th width='12%'>订单号</th>\n" ;
+                divid += "                      <th width='12%'>订单状态</th>\n" ;
+                divid += "                      <th width='8%'>操作</th>\n" ;
+                divid += "                    </tr>\n" ;
+            }
             for (var j = 0; j < list.length; j++) {
                 if(namelist[i]==list[j].shopname){
+                    if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
+                        divid += "                    <tr>\n";
+                        divid += "                      <th width='20%'>商品名称</th>\n";
+                        divid += "                      <th width='16%'>搜索关键词</th>\n";
+                        divid += "                      <th width='16%'>品牌</th>\n";
+                        divid += "                      <th width='20%'>图片</th>\n";
+                        divid += "                      </tr><tr>\n";
+                        divid += "                      <th>二维码</th>\n";
+                        divid += "                      <th>京东账号</th>\n";
+                        divid += "                      <th>订单号</th>\n";
+                        divid += "                      <th>操作</th>\n";
+                        divid += "                    </tr>\n";
+                    }
                     divid += "<tr>";
                     divid += "<td><a href=\""+(list[j].tUrl==undefined?"":list[j].tUrl)+"\" target=\"_blank\"><span>"+(list[j].goodsname==undefined?"":list[j].goodsname)+"</span></a></td>";
                     divid += "<td><span>"+(list[j].keyword==undefined?"":list[j].keyword)+"</span></td>";
+                    divid += "<td><span>"+(list[j].brand==undefined?"":list[j].brand)+"</span></td>";
                     divid += "<td><span><img src=\""+list[j].imgurl+"\"></td>";
-                    divid += "<td><img src=\""+list[j].qrcodeurl+"\"></td>";
-                    divid += "<td>"+(list[j].tPrice==undefined?"":list[j].tPrice)+"</td>";
-                    divid += "<td>"+(list[j].pays==undefined?"":list[j].pays)+"</td>";
-                    divid += "<td>"+(list[j].spec1==undefined?"":list[j].spec1)+"</td>";
-                    divid += "<td>"+(list[j].spec2==undefined?"":list[j].spec2)+"</td>";
-                    divid += "<td><input type='text' style=\"width:110px;\" value='"+(list[j].buyerjdnick==undefined?"":list[j].buyerjdnick)+"' onblur=\"upbuyerjdnick(this.value,'"+list[j].id+"')\"></td>";
-                    divid += "<td><input type='text' style=\"width:110px;\" value='"+(list[j].jdorderno==undefined?"":list[j].jdorderno)+"' onblur=\"upjdorderno(this.value,'"+list[j].id+"')\"></td>";
-                    divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
+
+                    if(!navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
+                        divid += "<td><img src=\""+list[j].qrcodeurl+"\"></td>";
+                        divid += "<td>" + (list[j].tPrice == undefined ? "" : list[j].tPrice) + "</td>";
+                        divid += "<td>" + (list[j].pays == undefined ? "" : list[j].pays) + "</td>";
+                        divid += "<td>" + (list[j].spec1 == undefined ? "" : list[j].spec1) + "</td>";
+                        divid += "<td>" + (list[j].spec2 == undefined ? "" : list[j].spec2) + "</td>";
+                    }else {
+                        divid += "                      </tr><tr>\n";
+                        divid += "<td><img src=\""+list[j].qrcodeurl+"\"></td>";
+                    }
+                    divid += "<td><input type='text' style=\"width:"+win+"px;\" value='"+(list[j].buyerjdnick==undefined?"":list[j].buyerjdnick)+"' onblur=\"upbuyerjdnick(this.value,'"+list[j].id+"')\"></td>";
+                    divid += "<td><input type='text' style=\"width:"+win+"px;\" value='" + (list[j].jdorderno == undefined ? "" : list[j].jdorderno) + "' onblur=\"upjdorderno(this.value,'" + list[j].id + "')\"></td>";
+                    if(!navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
+                        divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
+                    }
                     if(list[j].taskstate=="1"){
                         divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','2')\">确定下单</button></p></td>";
                     }else if(list[j].taskstate=="3"){

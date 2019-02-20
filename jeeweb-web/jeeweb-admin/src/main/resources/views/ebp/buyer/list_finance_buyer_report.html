@@ -1,0 +1,23 @@
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手财务报表',''), libs: ''}){ %>
+
+<div>
+    <table cellpadding="10" style="font-size:18px;padding: 10px" align="center">
+        <tr>
+            <td><br>买手财务报表</td>
+        </tr>
+    </table>
+    <br>
+</div>
+<#grid:grid id="ttaskBaseGrid1" url="${adminPath}/buyer/TmyTask/listFinanceBuyerReport" pageable="true" sortable="false" rowNum="100">
+<#grid:column label="日期"  name="countCreateDate" query="true"  queryMode="date" condition="between" />
+<#grid:column label="买手" width="140"  name="buyerName" query="true" condition="like"/>
+<#grid:column label="任务总价" width="140"  name="sumPrice"/>
+<#grid:column label="确认下单金额" width="100"  name="sumOrderPrice"  />
+<#grid:column label="确认发货金额" width="120"  name="sumDeliveryPrice"/>
+<#grid:column label="完成金额" width="120"  name="sumFinishPrice"/>
+<#grid:column label="链接数" width="100"  name="sumNum"/>
+<#grid:column label="完成链接数" width="100"  name="sumFinishNum"/>
+<#grid:toolbar  function="search"  />
+<#grid:toolbar  function="reset" />
+</#grid:grid>
+<% } %>

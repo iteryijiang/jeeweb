@@ -20,8 +20,8 @@ import java.util.Map;
 @Service("ttaskBaseService1")
 public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, TtaskBase> implements TtaskBaseService {
 
-    public List<TtaskBase> selectShopTask(String shopid,int count,String user){
-        return baseMapper.selectShopTask(shopid,count,user);
+    public List<TtaskBase> selectShopTask(String shopid,int count,String user,int minute){
+        return baseMapper.selectShopTask(shopid,count,user,minute);
     }
 
     public Map sumNumAndPrice(String createby, String createDate1, String createDate2,String shopname,String tTitle, String status){
@@ -41,5 +41,8 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
     }
     public List<Map> selectWithdrawalMoneyList( String createDate1, String createDate2,int multiple) {
         return baseMapper.selectWithdrawalMoneyList(createDate1,createDate2,multiple);
+    }
+    public List<Map> listFinanceShopReport(Map map) {
+        return baseMapper.listFinanceShopReport(map);
     }
 }

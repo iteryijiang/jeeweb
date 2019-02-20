@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.shop.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -25,6 +26,12 @@ public class TshopBase extends DataEntity<String> {
 	private String status;//	varchar	32	0	-1	0	0	0	0		0	状态	utf8	utf8_general_ci		0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
 
+
+	@TableField(exist = false)
+	private String realname;
+
+	@TableField(exist = false)
+	private String username;
 
 	@Override
 	public String getId() {
@@ -122,5 +129,21 @@ public class TshopBase extends DataEntity<String> {
 
 	public void setUserid(String userid) {
 		this.userid = userid;
+	}
+
+	public String getRealname() {
+		return realname;
+	}
+
+	public void setRealname(String realname) {
+		this.realname = realname;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

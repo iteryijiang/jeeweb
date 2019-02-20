@@ -13,4 +13,6 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
     public List<Map> groupBytaskstate(String taskId);
     public List<TmyTaskDetail> selectMytaskList(String mytaskid);
     public Map sumNumAndPrice(String createby,String createDate1, String createDate2);
+
+    public List<Map> listFinanceBuyerReport(Map map);
 }

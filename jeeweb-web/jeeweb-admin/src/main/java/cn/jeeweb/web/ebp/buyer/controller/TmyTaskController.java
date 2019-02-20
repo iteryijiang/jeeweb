@@ -8,6 +8,7 @@ import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mvc.entity.tree.TreeSortUtil;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
 import cn.jeeweb.common.query.annotation.PageableDefaults;
+import cn.jeeweb.common.query.data.Condition;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
@@ -68,6 +69,12 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         Map map = sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
         model.addAttribute("map",map);
         ModelAndView mav = displayModelAndView("list");
+        return mav;
+    }
+    @GetMapping(value = "listFinanceBuyerReportHTML")
+    @RequiresMethodPermissions("listFinanceBuyerReportHTML")
+    public ModelAndView listFinanceShopReportHTML(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("list_finance_buyer_report");
         return mav;
     }
 
@@ -344,6 +351,80 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
             e.printStackTrace();
         }
         String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
+    }
+
+    @RequestMapping(value = "listFinanceBuyerReport", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.SELECT)
+    public void listFinanceBuyerReport(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                                      HttpServletResponse response) throws IOException {
+        EntityWrapper<TmyTask> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(calendar.DATE,1);
+        Date date2 = date;
+        String create1 = "";
+        String create2 = "";
+        String buyerName = "";
+        if(queryable.getCondition()!=null){
+            Condition.Filter Filter = queryable.getCondition().getFilterFor("countCreateDate");
+            if(Filter!=null){
+                Object o = Filter.getValue();
+                if(o instanceof String[]){
+                    String[] ss = (String[])o;
+                    if(ss!=null&&ss.length>=2){
+                        create1 = ss[0];
+                        create2 = ss[1];
+                    }else if(ss!=null&&ss.length>=1){
+                        create1 = ss[0];
+                    }
+                }
+            }
+            Condition.Filter buyerNameFilter = queryable.getCondition().getFilterFor("buyerName");
+            if(buyerNameFilter!=null){
+                buyerName = "%"+(String)buyerNameFilter.getValue()+"%";
+            }
+        }
+        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
+            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
+            create1 = create2;
+        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
+            create2 = create1;
+        }
+        Map par_map = new HashMap();
+        par_map.put("createDate1",create1);
+        par_map.put("createDate2",create2);
+        par_map.put("buyerName",buyerName);
+        List<Map> list = tmyTaskDetailService.listFinanceBuyerReport(par_map);
+        Double sumPrice = 0.0;
+        Double sumOrderPrice = 0.0;
+        Double sumDeliveryPrice = 0.0;
+        Double sumFinishPrice = 0.0;
+        Long sumNum = 0l;
+        Long sumFinishNum = 0l;
+        for (Map map:list) {
+            sumPrice += Double.parseDouble((map.get("sumPrice")==null?"0":map.get("sumPrice")).toString());
+            sumOrderPrice += Double.parseDouble((map.get("sumOrderPrice")==null?"0":map.get("sumOrderPrice")).toString());
+            sumDeliveryPrice += Double.parseDouble((map.get("sumDeliveryPrice")==null?"0":map.get("sumDeliveryPrice")).toString());
+            sumFinishPrice += Double.parseDouble((map.get("sumFinishPrice")==null?"0":map.get("sumFinishPrice")).toString());
+            sumNum += Long.parseLong((map.get("sumNum")==null?"0":map.get("sumNum")).toString());
+            sumFinishNum += Long.parseLong((map.get("sumFinishNum")==null?"0":map.get("sumFinishNum")).toString());
+        }
+        Map map = new HashMap();
+        map.put("countCreateDate","");
+        map.put("buyerName","合计");
+        map.put("sumPrice",sumPrice);
+        map.put("sumOrderPrice",sumOrderPrice);
+        map.put("sumDeliveryPrice",sumDeliveryPrice);
+        map.put("sumFinishPrice",sumFinishPrice);
+        map.put("sumNum",sumNum);
+        map.put("sumFinishNum",sumFinishNum);
+        list.add(map);
+        String content = JSON.toJSONString(list);
         StringUtils.printJson(response,content);
     }
 }

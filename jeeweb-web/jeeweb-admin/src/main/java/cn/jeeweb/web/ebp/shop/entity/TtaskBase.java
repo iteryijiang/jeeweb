@@ -55,6 +55,7 @@ public class TtaskBase extends DataEntity<String> {
 	private String storename;//	varchar	32	0	-1	0	0	0	0		0	店铺	utf8	utf8_general_ci		0	0
 	private BigDecimal actualprice;//	decimal	10	0	-1	0	0	0	0		0	实付金额				0	0
 	private String qrcodeurl;
+	private String brand;
 
 
 
@@ -381,5 +382,13 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setShopname(String shopname) {
 		this.shopname = shopname;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 }

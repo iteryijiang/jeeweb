@@ -20,4 +20,7 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 	List<Map> groupBytaskstate(@Param("taskId") String taskId);
 	Map sumNumAndPrice(@Param("createby") String createby,@Param("createDate1") String createDate1,@Param("createDate2") String createDate2);
 	List<TmyTaskDetail> selectMytaskList(@Param("mytaskid") String mytaskid);
+
+
+	List<Map> listFinanceBuyerReport(@Param("map") Map map);
 }

@@ -132,11 +132,15 @@
                                 <div class="form-group">
                                     <label for="storename">店铺:</label>
                                     <!--<input type="number" class="form-control must-fill" id="storename" placeholder="">-->
-                                    <select id="storename" >
+                                    <select id="storename" disabled="disabled">
                                         <option value="">===请选择===</option>
                                     </select>
 
                                     <label for="storename"><b class='red_font margin_0'>必填</b></label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="brand">品牌:</label>
+                                    <input type="text" class="form-control" id="brand" placeholder="" value="${tb.brand}">
                                 </div>
                                 <div class="form-group">
                                     <label for="tasknum">任务单数:</label>
@@ -177,7 +181,11 @@
                                 <div class="form-group">
                                     <div class="wrapper wrapper-content animated fadeInRight">
                                         <label>上传二维码:</label>
-                                        <#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px"  fileInputHeight="100px"   nested="false" path="qrcodeurl"/>
+
+                                        <#form:form id="tbForm" modelAttribute="tb"  method="post" class="form-horizontal">
+                                            <#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px" fileInputHeight="100px"   nested="false" path="qrcodeurl"/>
+                                        </#form:form>
+
                                     </div>
                                 </div>
                             </form>
@@ -615,6 +623,7 @@
        var good_detail_info={}
        var radio_index;
        var isNext=false;
+       var datastorename="";
        //商品具体信息
         //默认现实手机端
         $('#task_accordin .item_area').eq("1").show();
@@ -644,21 +653,24 @@
                             good_detail_info.tTitle=$(ele).val()
                             break;
                         case 2:
-                            good_detail_info.tasknum=$(ele).val()
+                            good_detail_info.brand = $(ele).val()
                             break;
                         case 3:
-                            good_detail_info.tPrice=$(ele).val()
+                            good_detail_info.tasknum=$(ele).val()
                             break;
                         case 4:
-                            good_detail_info.actualprice=$(ele).val()
+                            good_detail_info.tPrice=$(ele).val()
                             break;
                         case 5:
-                            good_detail_info.tNum=$(ele).val()
+                            good_detail_info.actualprice=$(ele).val()
                             break;
                         case 6:
-                            good_detail_info.searchprice=$(ele).val()
+                            good_detail_info.tNum=$(ele).val()
                             break;
                         case 7:
+                            good_detail_info.searchprice=$(ele).val()
+                            break;
+                        case 8:
                             good_detail_info.effectdate=$(ele).val()
                     }
                 }
@@ -671,8 +683,9 @@
               }
               good_detail_info.storename = $("#storename").val();
               good_detail_info.qrcodeurl = $("#qrcodeurl").val();
+              // good_detail_info.brand = $("#brand").val();
              if(good_detail_info.storename==""){
-                alert("请选择店铺");
+                alert("该商品链接所属“"+datastorename+"”店铺，您暂无权限发布！");
                 return;
              }
              if(good_detail_info.tasknum==""||good_detail_info.tasknum==undefined){
@@ -886,6 +899,21 @@
                     $("#img0").attr("src",data.goodsrc);
                     $("#spec1").attr("value",data.spec1);
                     $("#spec2").attr("value",data.spec2);
+                    $("#brand").attr("value",data.brand);
+                    var sel=document.getElementById('storename');
+                    var bool = true;
+                    datastorename = data.storename;
+                    for(var i=0;i <sel.options.length;i++){
+                        if(sel.options[i].text==data.storename){
+                            sel.options[i].selected=true;
+                            bool = false;
+                            break;
+                        }
+                    }
+                    if(bool){
+                        alert("该商品链接所属“"+data.storename+"”店铺，您暂无权限发布！");
+
+                    }
                 }
             });
         }
@@ -899,12 +927,13 @@
                     for (var i = 0; i < json.length; i++) {
                         $("#storename").append("<option value='"+json[i].id+"'>"+json[i].shopname+"</option>");
                     }
+                    $("#storename").val("${tb.storename}");
                 }
             });
         }
-        if("${tb.effectdate}"!=null&&"${tb.effectdate}"!=""){
-            $("#effectdate").val(dateFtt("yyyy-MM-dd",new Date("${tb.effectdate}")));
-        }
+        // if("${tb.effectdate}"!=null&&"${tb.effectdate}"!=""){
+        //     $("#effectdate").val(dateFtt("yyyy-MM-dd",new Date("${tb.effectdate}")));
+        // }
         function dateFtt(fmt,date)
         { //author: meizz
             var o = {

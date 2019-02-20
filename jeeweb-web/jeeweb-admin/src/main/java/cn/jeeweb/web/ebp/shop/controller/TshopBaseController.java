@@ -71,7 +71,7 @@ public class TshopBaseController extends BaseBeanController<TshopBase> {
         EntityWrapper<TshopBase> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
-        if (!StringUtils.isEmpty(userid)) {
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
             entityWrapper.eq("userid", userid);
         }
         // 预处理

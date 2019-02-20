@@ -34,6 +34,7 @@
     <result property="canreceivenum" column="canreceivenum" jdbcType="NUMERIC" />
     <result property="storename" column="storename" jdbcType="VARCHAR" />
     <result property="actualprice" column="actualprice" jdbcType="DOUBLE" />
+    <result property="brand" column="brand" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
@@ -83,19 +84,21 @@
     T_task_Base t
     WHERE
     t.storename = t1.storename
+    and t.id not in (select d.taskid from t_my_task_detail d where d.create_date between date_add(now(), interval - ${minute} minute) and date_add(now(), interval + 1 minute))
     AND t.id <![CDATA[<]]> t1.id
                AND t.STATUS = '0'
                AND t.canreceivenum <![CDATA[>]]> 0
     and DATE_FORMAT(t.effectdate,'%Y-%m-%d') = DATE_FORMAT(curdate(),'%Y-%m-%d')
-    and DATE_FORMAT(t.effectdate,'%H:%i:%S') <![CDATA[<=]]> DATE_FORMAT(curdate(),'%H:%i:%S')
+    and DATE_FORMAT(t.effectdate,'%H:%i:%S') <![CDATA[<=]]> DATE_FORMAT(now(),'%H:%i:%S')
     ) AS group_id
     FROM
     T_task_Base t1
     where
     t1.STATUS = '0'
+    and t1.id not in (select d.taskid from t_my_task_detail d where d.create_date between date_add(now(), interval - ${minute} minute) and date_add(now(), interval + 1 minute))
     AND t1.canreceivenum <![CDATA[>]]> 0
     and DATE_FORMAT(t1.effectdate,'%Y-%m-%d') = DATE_FORMAT(curdate(),'%Y-%m-%d')
-    and DATE_FORMAT(t1.effectdate,'%H:%i:%S') <![CDATA[<=]]> DATE_FORMAT(curdate(),'%H:%i:%S')
+    and DATE_FORMAT(t1.effectdate,'%H:%i:%S') <![CDATA[<=]]> DATE_FORMAT(now(),'%H:%i:%S')
     group by t1.t_url,t1.storename
     ) a
     WHERE
@@ -115,7 +118,7 @@
     case when taskstate=4 then 1 else 0 end finishnum,
     case when taskstate=3 then 1 else 0 end deliverynum,
     case when taskstate=2 then 1 else 0 end ordernum
-     from t_my_task_detail where (create_date BETWEEN #{createDate1} and #{createDate2})) a group by taskid ) b
+     from t_my_task_detail where (DATE_FORMAT(create_date,'%Y-%m-%d') BETWEEN #{createDate1} and #{createDate2})) a group by taskid ) b
     on t.id=b.taskid
     where
     1=1
@@ -131,17 +134,19 @@
     </if>
 
     <if test="status != '' and status != null">
-      and sb.status = #{shopname}
+      and t.status = #{status}
     </if>
-     and (effectdate BETWEEN #{createDate1} and #{createDate2})
+     and (DATE_FORMAT(effectdate,'%Y-%m-%d') BETWEEN #{createDate1} and #{createDate2})
   </select>
 
   <select id="selectFinanceList" resultType="java.util.Map">
     select DATE_FORMAT(t.create_date,'%Y-%m-%d') createDate,b.buyerName,sum(pays) sumPays,sum( case when taskstate=3 then pays else 0 end) sumDeliveryPrice
     ,sum( case when taskstate=2 then pays else 0 end) sumOrderPrice
     from t_my_task_detail t left join t_buyer_info b on t.buyerid=b.userid
+    left join t_task_base tb on t.taskid = tb.id
       where 1=1
-        and (t.create_date BETWEEN #{createDate1} and #{createDate2})
+      and tb.status <![CDATA[<>]]> '2'
+        and (DATE_FORMAT(t.create_date,'%Y-%m-%d') BETWEEN #{createDate1} and #{createDate2})
         group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),t.buyerid
         order by DATE_FORMAT(t.create_date,'%Y-%m-%d')
   </select>
@@ -150,9 +155,46 @@
      select DATE_FORMAT(t.create_date,'%Y-%m-%d') countCreateDate,b.buyerName,sum(1) sumCount,sum( case when taskstate=4 then 1 else 0 end) sumConfirm
     ,sum( case when taskstate=4 then 1 else 0 end)*${multiple} sumWithdrawalmoney
     from t_my_task_detail t left join t_buyer_info b on t.buyerid=b.userid
+    left join t_task_base tb on t.taskid = tb.id
       where 1=1
-         and (t.create_date BETWEEN #{createDate1} and #{createDate2})
+      and tb.status <![CDATA[<>]]> '2'
+         and (DATE_FORMAT(t.create_date,'%Y-%m-%d') BETWEEN #{createDate1} and #{createDate2})
         group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),t.buyerid
         order by DATE_FORMAT(t.create_date,'%Y-%m-%d')
+  </select>
+
+  <select id="listFinanceShopReport" resultType="java.util.Map">
+    select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(finishPrice) sumFinishPrice,sum(count) sumCount,
+    sum(tasknum) sumtasknum,sum(tasknum)-sum(canreceivenum) sumreceivingnum,sum(finishnum) sumfinishnum,sum(deliverynum) sumdeliverynum,sum(ordernum) sumordernum
+    from t_task_base t left join t_shop_info s on t.shopid=s.userid left join t_shop_base sb on t.storename=sb.id LEFT JOIN (
+    select taskid,sum(deliveryPrice) deliveryPrice,sum(orderPrice) orderPrice,sum(finishPrice) finishPrice,count(1) count,
+    sum(finishnum) finishnum,sum(deliverynum) deliverynum,sum(ordernum) ordernum
+    from (select taskid,
+    case when taskstate=4 then pays else 0 end finishPrice,
+    case when taskstate=3 then pays else 0 end deliveryPrice,
+    case when taskstate=2 then pays else 0 end orderPrice,
+    case when taskstate=4 then 1 else 0 end finishnum,
+    case when taskstate=3 then 1 else 0 end deliverynum,
+    case when taskstate=2 then 1 else 0 end ordernum
+    from t_my_task_detail where (DATE_FORMAT(create_date,'%Y-%m-%d') BETWEEN #{map.createDate1} and #{map.createDate2})) a group by taskid ) b
+    on t.id=b.taskid
+    where
+    1=1
+    and t.status <![CDATA[<>]]> '2'
+    <if test="map.shopname != '' and map.shopname != null">
+      and s.shopname like #{map.shopname}
+    </if>
+    <if test="map.loginname != '' and map.loginname != null">
+      and s.loginname like #{map.loginname}
+    </if>
+    <if test="map.basename != '' and map.basename != null">
+      and sb.shopname like #{map.basename}
+    </if>
+    <if test="map.shopid != '' and map.shopid != null">
+      and t.shopid=#{map.shopid}
+    </if>
+    and (DATE_FORMAT(t.effectdate,'%Y-%m-%d') BETWEEN #{map.createDate1} and #{map.createDate2})
+    group by DATE_FORMAT(t.effectdate,'%Y-%m-%d'),sb.shopname,s.shopname
+    order by DATE_FORMAT(t.effectdate,'%Y-%m-%d')
   </select>
 </mapper>

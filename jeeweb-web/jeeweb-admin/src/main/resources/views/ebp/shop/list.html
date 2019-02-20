@@ -24,6 +24,7 @@
 <#grid:column label="店铺名" name="shopname" query="true" condition="like"/>
 <#grid:column label="商品标题"  name="tTitle" query="true"  condition="like" />
 <#grid:column label="搜索关键字"  name="keyword"  />
+<#grid:column label="品牌"  name="brand"  />
 <#grid:column label="商品单价"  name="tPrice"/>
 <#grid:column label="实付金额"  name="actualprice"  />
 <#grid:column label="发布时间"  name="createDate"  />
@@ -32,21 +33,18 @@
 <#grid:column label="已接单数"  name="receivingnum"  sortable="true"/>
 <#grid:column label="已下单单数"  name="ordernum"  sortable="true"/>
 <#grid:column label="已发货单数"  name="deliverynum"  sortable="false"/>
-<#grid:column label="任务状态"  name="status" width="60" dict="basestate" queryMode="select" width="80" condition="eq" query="true" condition="between" />
+<#grid:column label="任务状态"  name="status" width="60" dict="basestate" queryMode="select"  condition="eq" query="true" />
 <#grid:column label="sys.common.opt"  name="opt" formatter="button" />
 <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
-<#grid:column label="sys.common.opt"  name="qrcode" formatter="button" />
-<#grid:button title="二维码"  groupname="qrcode" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/uploadQrcode' />
+<#grid:button title="二维码"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/uploadQrcode' />
 
 <#grid:toolbar title="任务发布" icon="fa-plus"  function="rowDialogDetail" url="${adminPath}/shop/TtaskBase" winwidth="100%" winheight="100%" />
 <#grid:toolbar title="再次发布" icon="fa-database"  function="updateDialog" url="${adminPath}/shop/TtaskBase/{id}/myAgainList" winwidth="100%" winheight="100%"/>
 
-<#grid:toolbar  function="search"  />
+<#grid:toolbar  function="search" />
 <#grid:toolbar  function="reset" />
 </#grid:grid>
 <% } %>
-
-<script src='js/jquery-3.3.1.min.js'></script>
 <script>
     function search(gridId){
         var page = $("#"+gridId).getGridParam('page'); // 获取当前页码
@@ -60,7 +58,7 @@
         data.create2 = $("#ttaskBaseGrid_effectdate_start").val();
         data.shopname = $("input[name='shopname']").val();
         data.tTitle = $("input[name='tTitle']").val();
-        data.status = $("input[name='status']").val();
+        data.status = $("select[name='status']").val();
         $.ajax({
             type: "POST",
             url: "${adminPath}/shop/TtaskBase/showTaskBaseLoad",

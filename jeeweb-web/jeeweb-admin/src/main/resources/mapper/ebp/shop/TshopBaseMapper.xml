@@ -14,6 +14,13 @@
     <result property="classical2" column="classical2" jdbcType="VARCHAR" />
   </resultMap>
 
-
+  <select id="selectShopList" resultMap="TshopBase">
+    select t.*,u.realname,u.username from t_shop_base t left join sys_user u on t.userid=u.id
+    <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+      <where>
+        ${ew.sqlSegment}
+      </where>
+    </if>
+  </select>
 
 </mapper>

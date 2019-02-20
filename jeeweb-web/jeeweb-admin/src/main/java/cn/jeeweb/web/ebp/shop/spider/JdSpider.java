@@ -1,7 +1,7 @@
 package cn.jeeweb.web.ebp.shop.spider;
 
 /**
- * Created by YIJIANG on 2018/12/22.
+ * Created by YIJIANG on 2018/12/22.getGoodInfos
  * QQ号：1132017151
  * 京东 爬虫
  */
@@ -30,27 +30,31 @@ import java.util.Map;
 public class JdSpider {
 
     public static void main(String[] args)  {
-        String url = "https://item.jd.com/34807716016.html";
+        String url = "https://item.jd.com/6837346.html";
         try {
-            //String goodis = getGoodId_ByURL(url);
+            String goodis = getGoodId_ByURL(url);
 //            String goodsrc = getGoodImgByurl(url);
 //            System.out.println("商品src: " + goodsrc);
 //            System.out.println("商品信息: " + goodis);
-//            if(!StringUtils.isEmpty(goodis)){
+            if(!StringUtils.isEmpty(goodis)){
+                System.out.println("获取商品店铺："+getGoodStorenameByurl(getDocumentUrl(url)));
+//                getGoodList(url);
+//                System.out.println("获取商品标题："+getGoodTitleByurl(url));//获取商品标题);
+//                System.out.println("获取商品品牌："+getGoodBrandByurl(url));//获取商品标题);
 //                String result = getGoodInfos(goodis);
 //                System.out.println("商品信息: " + result);
 //                String good_price  = getGoodPrice_ByResult(result);
 //                System.out.println("商品价格: " + good_price);
-//            }
+            }
 //            System.out.println("商品型号："+getGoodSpec1ByTitle(""));
 //            System.out.println("商品规格："+getGoodSpec2ByTitle(""));
 
 
-            BigDecimal tprice = new BigDecimal(0.0);
-            BigDecimal a = new BigDecimal(10.1);
-            tprice = tprice.add(a);
-            System.out.println(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
-            System.out.println(a);
+//            BigDecimal tprice = new BigDecimal(0.0);
+//            BigDecimal a = new BigDecimal(10.1);
+//            tprice = tprice.add(a);
+//            System.out.println(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
+//            System.out.println(a);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -145,13 +149,52 @@ public class JdSpider {
      * @date 2018-12-22 下午2:11:23
      * @throws
      */
-    public  static String getGoodTitleByurl(String url) throws Exception{
+    public  static String getGoodTitleByurl(Document document) throws Exception{
         //根据url  获取html内容
-        Document document = Jsoup.connect(url).maxBodySize(0).get();
+//        Document document = Jsoup.connect(url).maxBodySize(0).get();
         //select 获取标签
         String title = document.select("div[class='sku-name']").get(0).text();
         if(title!=null && title.length()>0){
             title = title.replaceAll("【图片 价格 品牌 报价】-京东","");
+        }
+        return title;
+    }
+
+    /**
+     *
+     * @Title: getGoodTitle_one
+     * @Description: 获取 单 商品品牌
+     * @param @param url
+     * @return String 返回类型
+     * @author  iter
+     * @throws
+     */
+    public  static String getGoodBrandByurl(Document document) throws Exception{
+        //根据url  获取html内容
+//        Document document = Jsoup.connect(url).maxBodySize(0).get();
+        //select 获取标签
+        String title = document.select("#parameter-brand").get(0).text();
+        if(title!=null && title.length()>0){
+            title = title.replaceAll("品牌： ","");
+        }
+        return title;
+    }
+    /**
+     *
+     * @Title: getGoodTitle_one
+     * @Description: 获取 单 商品品牌
+     * @param @param url
+     * @return String 返回类型
+     * @author  iter
+     * @throws
+     */
+    public  static String getGoodStorenameByurl(Document document) throws Exception{
+        //根据url  获取html内容
+//        Document document = Jsoup.connect(url).maxBodySize(0).get();
+        //select 获取标签
+        String title = document.select("div[class='name']").get(0).text();
+        if(title!=null && title.length()>0){
+            title = title.replaceAll("品牌： ","");
         }
         return title;
     }
@@ -192,7 +235,20 @@ public class JdSpider {
         }
         return spec2;
     }
-
+    /**
+     *
+     * @Title: getDocumentUrl
+     * @Description: 获取html内容对象
+     * @param @param url
+     * @return Document 返回类型
+     * @author  iter
+     * @throws
+     */
+    public  static Document getDocumentUrl(String url) throws Exception{
+        //根据url  获取html内容
+        Document document = Jsoup.connect(url).maxBodySize(0).get();
+        return document;
+    }
     /**
      *
      * @Title: getGoodTitle_one
@@ -203,9 +259,9 @@ public class JdSpider {
      * @date 2018-12-22 下午2:11:23
      * @throws
      */
-    public  static String getGoodImgByurl(String url) throws Exception{
+    public  static String getGoodImgByurl(Document document) throws Exception{
         //根据url  获取html内容
-        Document document = Jsoup.connect(url).maxBodySize(0).get();
+//        Document document = Jsoup.connect(url).maxBodySize(0).get();
         //select 获取标签
         String src = document.select("img[id='spec-img']").get(0).attr("data-origin");
         if(src!=null && src.length()>0){

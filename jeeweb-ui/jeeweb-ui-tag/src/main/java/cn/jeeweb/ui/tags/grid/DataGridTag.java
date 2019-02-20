@@ -57,7 +57,7 @@ public class DataGridTag extends AbstractGridHtmlTag {
 	private String onSelectRow = "";
 	private int page = 1;// 页码开始
 	private int rowNum = 10; // 这个参数是要被传递到后台，树结构时候，rowNum无效
-	private String rowList = "[ 10, 20, 30 ]";
+	private String rowList = "[ 10, 20, 100 ]";
 	private Boolean treeGrid = Boolean.FALSE;// 是否数机构
 	private String expandColumn = "";// 指定那列来展开treegrid，默认为第一列，只有在treeGrid为true时起作用
 	private Boolean async = Boolean.FALSE; // 树情况是否异步

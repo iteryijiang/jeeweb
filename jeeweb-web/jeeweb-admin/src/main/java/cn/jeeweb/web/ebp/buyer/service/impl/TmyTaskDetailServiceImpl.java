@@ -30,6 +30,8 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
 
     public List<TmyTaskDetail> selectMytaskList(String mytaskid){
         return baseMapper.selectMytaskList(mytaskid);
-
+    }
+    public List<Map> listFinanceBuyerReport(Map map){
+        return baseMapper.listFinanceBuyerReport(map);
     }
 }

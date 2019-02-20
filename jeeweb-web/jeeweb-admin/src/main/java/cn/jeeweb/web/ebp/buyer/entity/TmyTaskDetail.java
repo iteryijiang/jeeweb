@@ -75,6 +75,9 @@ public class TmyTaskDetail extends DataEntity<String> {
 	@TableField(exist = false)
 	private String tUrl;
 
+	@TableField(exist = false)
+	private String brand;
+
 	@Override
 	public String getId() {
 		return id;
@@ -325,5 +328,13 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	public void setTaskshopurl(String taskshopurl) {
 		this.taskshopurl = taskshopurl;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 }

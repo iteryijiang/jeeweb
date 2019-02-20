@@ -34,6 +34,7 @@ import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -93,6 +94,12 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("listFinanceCommissions")
     public ModelAndView listFinanceCommissions(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("list_finance_commissions");
+        return mav;
+    }
+    @GetMapping(value = "listFinanceShopReportHTML")
+    @RequiresMethodPermissions("listFinanceShopReportHTML")
+    public ModelAndView listFinanceShopReportHTML(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("list_finance_shop_report");
         return mav;
     }
     /**
@@ -162,20 +169,14 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();
         calendar.add(calendar.DATE,1);
-        Date date2 = calendar.getTime();
+        Date date2 = date;
         if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
             create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
             create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
         }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
-            calendar = new GregorianCalendar();
-            calendar.setTime(DateUtils.parseDate(create2));
-            calendar.add(calendar.DATE,-1);
-            create1 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+            create1 = create2;
         }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
-            calendar = new GregorianCalendar();
-            calendar.setTime(DateUtils.parseDate(create1));
-            calendar.add(calendar.DATE,1);
-            create2 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+            create2 = create1;
         }
         Map map = ttaskBaseService.sumNumAndPrice(userid,create1,create2,shopname,tTitle,status);
         if(map==null){
@@ -212,6 +213,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
             entityWrapper.eq("t.create_by", userid);
         }
+        entityWrapper.setTableAlias("t");
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
@@ -247,7 +249,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();
         calendar.add(calendar.DATE,1);
-        Date date2 = calendar.getTime();
+        Date date2 = date;
         String create1 = "";
         String create2 = "";
 
@@ -270,15 +272,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
             create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
         }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
-            calendar = new GregorianCalendar();
-            calendar.setTime(DateUtils.parseDate(create2));
-            calendar.add(calendar.DATE,-1);
-            create1 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+            create1 = create2;
         }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
-            calendar = new GregorianCalendar();
-            calendar.setTime(DateUtils.parseDate(create1));
-            calendar.add(calendar.DATE,1);
-            create2 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+            create2 = create1;
         }
         List<Map> list = ttaskBaseService.selectFinanceList(create1,create2);
         BigDecimal sumPays = new BigDecimal(0.0);
@@ -310,7 +306,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();
         calendar.add(calendar.DATE,1);
-        Date date2 = calendar.getTime();
+        Date date2 = date;
         String create1 = "";
         String create2 = "";
         int multiple = 2;
@@ -338,15 +334,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
             create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
         }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
-            calendar = new GregorianCalendar();
-            calendar.setTime(DateUtils.parseDate(create2));
-            calendar.add(calendar.DATE,-1);
-            create1 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+            create1 = create2;
         }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
-            calendar = new GregorianCalendar();
-            calendar.setTime(DateUtils.parseDate(create1));
-            calendar.add(calendar.DATE,1);
-            create2 = DateUtils.formatDate(calendar.getTime(),"yyyy-MM-dd");
+            create2 = create1;
         }
         List<Map> list = ttaskBaseService.selectWithdrawalMoneyList(create1,create2,multiple);
         Long sumCount = 0l;
@@ -363,6 +353,105 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         map.put("sumCount",sumCount);
         map.put("sumConfirm",sumConfirm);
         map.put("sumWithdrawalmoney",sumWithdrawalmoney);
+        list.add(map);
+        String content = JSON.toJSONString(list);
+        StringUtils.printJson(response,content);
+    }
+
+    @RequestMapping(value = "listFinanceShopReport", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.SELECT)
+    public void listFinanceShopReport(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                                    HttpServletResponse response) throws IOException {
+        EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(calendar.DATE,1);
+        Date date2 = new Date();
+        String create1 = "";
+        String create2 = "";
+        String shopname = "";
+        String basename = "";
+        String loginname = "";
+        if(queryable.getCondition()!=null){
+            Condition.Filter Filter = queryable.getCondition().getFilterFor("counteffectdate");
+            if(Filter!=null){
+                Object o = Filter.getValue();
+                if(o instanceof String[]){
+                    String[] ss = (String[])o;
+                    if(ss!=null&&ss.length>=2){
+                        create1 = ss[0];
+                        create2 = ss[1];
+                    }else if(ss!=null&&ss.length>=1){
+                        create1 = ss[0];
+                    }
+                }
+            }
+            Condition.Filter shopnameFilter = queryable.getCondition().getFilterFor("shopname");
+            if(shopnameFilter!=null){
+                shopname = "%"+(String)shopnameFilter.getValue()+"%";
+            }
+            Condition.Filter basenameFilter = queryable.getCondition().getFilterFor("basename");
+            if(basenameFilter!=null){
+                basename = "%"+(String)basenameFilter.getValue()+"%";
+            }
+            Condition.Filter loginnameFilter = queryable.getCondition().getFilterFor("loginname");
+            if(loginnameFilter!=null){
+                loginname = "%"+(String)loginnameFilter.getValue()+"%";
+            }
+        }
+        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
+            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
+            create1 = create2;
+        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
+            create2 = create1;
+        }
+        Map par_map = new HashMap();
+        par_map.put("createDate1",create1);
+        par_map.put("createDate2",create2);
+        par_map.put("shopname",shopname);
+        par_map.put("basename",basename);
+        par_map.put("loginname",loginname);
+        String userid = UserUtils.getPrincipal().getId();
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
+            par_map.put("shopid",userid);
+        }
+        List<Map> list = ttaskBaseService.listFinanceShopReport(par_map);
+        Double sumActualprice = 0.0;
+        Double sumOrderPrice = 0.0;
+        Double sumDeliveryPrice = 0.0;
+        Double sumFinishPrice = 0.0;
+        Long sumCount = 0l;
+        Long sumreceivingnum = 0l;
+        Long sumordernum = 0l;
+        Long sumdeliverynum = 0l;
+        Long sumfinishnum = 0l;
+        for (Map map:list) {
+            sumActualprice += Double.parseDouble((map.get("sumActualprice")==null?"0":map.get("sumActualprice")).toString());
+            sumOrderPrice += Double.parseDouble((map.get("sumOrderPrice")==null?"0":map.get("sumOrderPrice")).toString());
+            sumDeliveryPrice += Double.parseDouble((map.get("sumDeliveryPrice")==null?"0":map.get("sumDeliveryPrice")).toString());
+            sumFinishPrice += Double.parseDouble((map.get("sumFinishPrice")==null?"0":map.get("sumFinishPrice")).toString());
+            sumCount += Long.parseLong((map.get("sumCount")==null?"0":map.get("sumCount")).toString());
+            sumreceivingnum += Long.parseLong((map.get("sumreceivingnum")==null?"0":map.get("sumreceivingnum")).toString());
+            sumordernum += Long.parseLong((map.get("sumordernum")==null?"0":map.get("sumordernum")).toString());
+            sumdeliverynum += Long.parseLong((map.get("sumdeliverynum")==null?"0":map.get("sumdeliverynum")).toString());
+            sumfinishnum += Long.parseLong((map.get("sumfinishnum")==null?"0":map.get("sumfinishnum")).toString());
+        }
+        Map map = new HashMap();
+        map.put("countCreateDate","");
+        map.put("shopname","合计");
+        map.put("sumActualprice",sumActualprice);
+        map.put("sumOrderPrice",sumOrderPrice);
+        map.put("sumDeliveryPrice",sumDeliveryPrice);
+        map.put("sumFinishPrice",sumFinishPrice);
+        map.put("sumCount",sumCount);
+        map.put("sumreceivingnum",sumreceivingnum);
+        map.put("sumordernum",sumordernum);
+        map.put("sumdeliverynum",sumdeliverynum);
+        map.put("sumfinishnum",sumfinishnum);
         list.add(map);
         String content = JSON.toJSONString(list);
         StringUtils.printJson(response,content);
@@ -404,7 +493,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             while (entries.hasNext()) {
                 Map.Entry<String, Integer> entry = entries.next();
                 System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-                List<TtaskBase> list = ttaskBaseService.selectShopTask(entry.getKey(), entry.getValue(),user);
+                List<TtaskBase> list = ttaskBaseService.selectShopTask(entry.getKey(), entry.getValue(),user,10);
                 listBase.addAll(list);
             }
         }catch (Exception e){
@@ -421,18 +510,26 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         Map map = new HashMap();
         try {
             String turl = jsonObject.getString("turl");
-            String goodsrc = JdSpider.getGoodImgByurl(turl);//获取图片
-            String ttitle = JdSpider.getGoodTitleByurl(turl);//获取商品标题
-            String goodis = JdSpider.getGoodId_ByURL(turl);//获取商品ID
-            String result = JdSpider.getGoodInfos(goodis);//获取商品详细信息
-            String good_price  = JdSpider.getGoodPrice_ByResult(result);//获取商品价格
-            String spec1 = JdSpider.getGoodSpec1ByTitle(ttitle);//商品颜色
-            String spec2 = JdSpider.getGoodSpec2ByTitle(ttitle);//商品规格
-            map.put("goodsrc",goodsrc);
-            map.put("ttitle",ttitle);
-            map.put("goodprice",good_price);
-            map.put("spec1",spec1);
-            map.put("spec2",spec2);
+            Document document = JdSpider.getDocumentUrl(turl);
+            if(document!=null){
+                String goodsrc = JdSpider.getGoodImgByurl(document);//获取图片
+                String ttitle = JdSpider.getGoodTitleByurl(document);//获取商品标题
+                String brand = JdSpider.getGoodBrandByurl(document);//商品品牌
+                String storename = JdSpider.getGoodStorenameByurl(document);//商品店铺
+
+                String goodis = JdSpider.getGoodId_ByURL(turl);//获取商品ID
+                String result = JdSpider.getGoodInfos(goodis);//获取商品详细信息
+                String good_price  = JdSpider.getGoodPrice_ByResult(result);//获取商品价格
+                String spec1 = JdSpider.getGoodSpec1ByTitle(ttitle);//商品颜色
+                String spec2 = JdSpider.getGoodSpec2ByTitle(ttitle);//商品规格
+                map.put("goodsrc",goodsrc);
+                map.put("ttitle",ttitle);
+                map.put("goodprice",good_price);
+                map.put("spec1",spec1);
+                map.put("spec2",spec2);
+                map.put("brand",brand);
+                map.put("storename",storename);
+            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -542,15 +639,17 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             String user = UserUtils.getPrincipal().getId();
             int count = 3;
             int countSum = 7;
+            int minute = 10;
             try{
                 String sum = DictUtils.getDictValue("一个任务单店接单数","tasknum",count+"");
                 count = Integer.parseInt(sum);
                 countSum = Integer.parseInt(DictUtils.getDictValue("一个任务总连接数","tasknum",countSum+""));
+                minute = Integer.parseInt(DictUtils.getDictValue("一个任务领取间隔时长","tasknum",minute+""));
             }catch (Exception e){
                 e.printStackTrace();
             }
             //活动当日全订单
-            List<TtaskBase> list = ttaskBaseService.selectShopTask("",count+2,user);
+            List<TtaskBase> list = ttaskBaseService.selectShopTask("",count+2,user,minute);
             //获得可领取总店铺数
             int sumshop = countSum/count+1;
             if(list!=null&&!list.isEmpty()){

@@ -66,4 +66,13 @@
             }
         });
     }
+    //打开对话框(查看)
+    function rowDialogDetailRefresh(title,url,gridId,id,width,height){
+        var url=preprocessUrl(url,id);
+        if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){
+            window.open(url);
+        }else {
+            openDialogDetailRefresh(title,url,gridId,width,height);
+        }
+    }
 </script>
