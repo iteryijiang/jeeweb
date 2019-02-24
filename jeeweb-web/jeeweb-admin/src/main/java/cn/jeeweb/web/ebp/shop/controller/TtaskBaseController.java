@@ -72,8 +72,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public ModelAndView list(Model model, HttpServletRequest request, HttpServletResponse response) {
         TtaskBase tb = new TtaskBase();
         model.addAttribute("tb",tb);
-        ModelAndView mav = displayModelAndView("ReleaseTask");
-        return mav;
+        model.addAttribute("data",tb);
+        return displayModelAndView("ReleaseTask");
     }
 
     @GetMapping(value = "TaskDetail")
@@ -214,6 +214,38 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             entityWrapper.eq("t.create_by", userid);
         }
         entityWrapper.setTableAlias("t");
+        if(queryable.getCondition()!=null){
+            String create1 = "";
+            String create2 = "";
+            Condition.Filter Filter = queryable.getCondition().getFilterFor("effectdate");
+            if(Filter!=null){
+                Object o = Filter.getValue();
+                if(o instanceof String[]){
+                    String[] ss = (String[])o;
+                    if(ss!=null&&ss.length>=2){
+                        create1 = ss[0];
+                        create2 = ss[1]+" 23:59:59";
+                        ss[0] = create1;
+                        ss[1] = create2;
+                    }else if(ss!=null&&ss.length>=1){
+                        create1 = ss[0];
+                        create2 = ss[0]+" 23:59:59";
+                        ss = new String[2];
+                        ss[0] = create1;
+                        ss[1] = create2;
+                    }
+                    queryable.getCondition().and(Condition.Operator.between,"effectdate",ss);
+                }
+            }
+
+            Condition.Filter Filter_name = queryable.getCondition().getFilterFor("shopname");
+            if(Filter_name!=null){
+                queryable.getCondition().remove(Filter_name);
+                entityWrapper.like("s.shopname",Filter_name.getValue().toString());
+//                queryable.getCondition().and(Condition.Operator.custom,"s.shopname",Filter_name.getValue());
+            }
+
+        }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
@@ -516,6 +548,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 String ttitle = JdSpider.getGoodTitleByurl(document);//获取商品标题
                 String brand = JdSpider.getGoodBrandByurl(document);//商品品牌
                 String storename = JdSpider.getGoodStorenameByurl(document);//商品店铺
+                String article = JdSpider.getGoodarticleByurl(document);//商品货号
 
                 String goodis = JdSpider.getGoodId_ByURL(turl);//获取商品ID
                 String result = JdSpider.getGoodInfos(goodis);//获取商品详细信息
@@ -529,6 +562,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 map.put("spec2",spec2);
                 map.put("brand",brand);
                 map.put("storename",storename);
+                map.put("article",article);
             }
 
         }catch (Exception e){
@@ -671,7 +705,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                         shopMap.put(tb.getStorename(),aa);
                     }
                 }
-                //根据全店铺和店铺数得到店铺
+                //根据全店铺和所需店铺数得到可用店铺
                 Map<String,Integer> newShopMap = new HashMap<String,Integer>();
                 while(true){
                     Random rand = new Random();
@@ -723,6 +757,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                         if(entry.getKey().equals(tb.getStorename())&&countR.indexOf(","+storeInt+",")>=0){
                             TmyTaskDetail my = new TmyTaskDetail();
                             tb.setCanreceivenum(tb.getCanreceivenum()-1);
+                            tb.setLasttakingdate(new Date());
                             ttaskBaseService.insertOrUpdate(tb);
                             my.setGoodsname(tb.gettTitle());//
                             my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
@@ -798,6 +833,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                                     HttpServletResponse response) throws IOException {
         TtaskBase tb = ttaskBaseService.selectById(id);
         model.addAttribute("tb",tb);
+        model.addAttribute("data",tb);
         ModelAndView mav = displayModelAndView("ReleaseTask");
         return mav;
     }

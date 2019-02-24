@@ -56,6 +56,10 @@ public class TtaskBase extends DataEntity<String> {
 	private BigDecimal actualprice;//	decimal	10	0	-1	0	0	0	0		0	实付金额				0	0
 	private String qrcodeurl;
 	private String brand;
+	private String article;//	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	private Date lasttakingdate;//	datetime	0	0	-1	0	0	0	0		0					0	0
+
 
 
 
@@ -390,5 +394,21 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setBrand(String brand) {
 		this.brand = brand;
+	}
+
+	public String getArticle() {
+		return article;
+	}
+
+	public void setArticle(String article) {
+		this.article = article;
+	}
+
+	public Date getLasttakingdate() {
+		return lasttakingdate;
+	}
+
+	public void setLasttakingdate(Date lasttakingdate) {
+		this.lasttakingdate = lasttakingdate;
 	}
 }

@@ -173,6 +173,10 @@
                                   <label for="searchprice">元<span class='color_0'>非必填，如该商品有满减、促销、多规格等情况，请填写此金额</span></label>
                                 </div>
                                 <div class="form-group">
+                                    <label for="article">货号:</label>
+                                    <input type="text" class="form-control" id="article" placeholder="" value="${tb.article}">
+                                </div>
+                                <div class="form-group">
                                     <label for="effectdate">生效时间:</label>
                                     <input id="effectdate" style="width: 180px" class="form-control"  type="text" readonly="readonly" onclick="laydate()" >
                                 </div>
@@ -181,11 +185,21 @@
                                 <div class="form-group">
                                     <div class="wrapper wrapper-content animated fadeInRight">
                                         <label>上传二维码:</label>
-
-                                        <#form:form id="tbForm" modelAttribute="tb"  method="post" class="form-horizontal">
-                                            <#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px" fileInputHeight="100px"   nested="false" path="qrcodeurl"/>
-                                        </#form:form>
-
+                                        <div class="portlet-body">
+                                            <#form:form id="avatarForm" modelAttribute="data"  method="post" class="form-horizontal">
+                                                <#form:hidden path="id" />
+                                                <div class="form-group">
+                                                    <div class="col-sm-3" >
+                                                        <#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px"  fileInputHeight="100px"  path="qrcodeurl"/>
+                                                    </div>
+                                                </div>
+                                                <!--<div class="form-group">-->
+                                                    <!--<div class="col-sm-4 col-sm-offset-3" >-->
+                                                        <!--<button class="btn btn-primary" type="submit">提交</button>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                            </#form:form>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -195,7 +209,7 @@
                     <div>
                         <p class='border_0'>如何找到您的商品：</p>
                       <div id='task_accordin' class='radio'>
-                          <div class='item'>
+                          <div class='item'>a
                                 <div class="radio">
                                     <!--<label>-->
                                         <!--<input type="radio" name="optionsRadios" id="0" value="pc_taobao" >-->
@@ -240,7 +254,7 @@
                                         </div>
                                     </div>
                                     <div class='good_detail'>
-                                        
+
                                         <p class='red_font'>注意：请确保可根据您任务中提供的关键字及商品筛选分类可以在淘宝前10页找到任务商品；否则会导致买手找不到商品，次关键词无法获得成交</p>
                                         <div class="row line_0">
                                             <div class="col-md-10">
@@ -521,7 +535,7 @@
                 </div>
                 </div>
                 <div class='task_confirm_freight'>
-                    <p>2.设置商品收取运费的方式 <span class='red_font'>必选</span></p>  
+                    <p>2.设置商品收取运费的方式 <span class='red_font'>必选</span></p>
                     <div>
                         <div>
                             <input type="checkbox">
@@ -671,6 +685,9 @@
                             good_detail_info.searchprice=$(ele).val()
                             break;
                         case 8:
+                            good_detail_info.article=$(ele).val()
+                            break;
+                        case 9:
                             good_detail_info.effectdate=$(ele).val()
                     }
                 }
@@ -824,7 +841,7 @@
             })
             arr=arr_0
            })
-            
+
             return arr;
         }
         //折扣与服务
@@ -900,6 +917,7 @@
                     $("#spec1").attr("value",data.spec1);
                     $("#spec2").attr("value",data.spec2);
                     $("#brand").attr("value",data.brand);
+                    $("#article").attr("value",data.article);
                     var sel=document.getElementById('storename');
                     var bool = true;
                     datastorename = data.storename;

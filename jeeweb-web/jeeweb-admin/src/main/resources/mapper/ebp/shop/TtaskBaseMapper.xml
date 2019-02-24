@@ -130,7 +130,7 @@
     </if>
 
     <if test="tTitle != '' and tTitle != null">
-      and sb.tTitle like #{tTitle}
+      and t.t_title like #{tTitle}
     </if>
 
     <if test="status != '' and status != null">

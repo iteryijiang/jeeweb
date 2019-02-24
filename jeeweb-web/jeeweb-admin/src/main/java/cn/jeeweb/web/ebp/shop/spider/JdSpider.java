@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -182,7 +184,7 @@ public class JdSpider {
     /**
      *
      * @Title: getGoodTitle_one
-     * @Description: 获取 单 商品品牌
+     * @Description: 获取 单 商品店铺
      * @param @param url
      * @return String 返回类型
      * @author  iter
@@ -194,7 +196,32 @@ public class JdSpider {
         //select 获取标签
         String title = document.select("div[class='name']").get(0).text();
         if(title!=null && title.length()>0){
-            title = title.replaceAll("品牌： ","");
+            title = title.replaceAll("店铺： ","");
+        }
+        return title;
+    }
+    /**
+     *
+     * @Title: getGoodarticleByurl
+     * @Description: 获取 单 商品货号
+     * @param @param url
+     * @return String 返回类型
+     * @author  iter
+     * @throws
+     */
+    public  static String getGoodarticleByurl(Document document) throws Exception{
+        //根据url  获取html内容
+//        Document document = Jsoup.connect(url).maxBodySize(0).get();
+        //select 获取标签
+        Element elements = document.select("ul[class='parameter2 p-parameter-list']").first();
+        String title = "";
+        List<Node> ns = elements.childNodes();
+        for (Node n:ns){
+            if(n.outerHtml().indexOf("货号：")>0){
+                System.out.println();
+                title = n.attr("title");
+                break;
+            }
         }
         return title;
     }

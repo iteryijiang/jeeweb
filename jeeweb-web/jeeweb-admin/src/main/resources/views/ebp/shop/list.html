@@ -21,18 +21,20 @@
 
 <#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList" sortname="taskno" sortorder="desc" sortable="false">
 <#grid:column label="任务编号"  name="taskno"/>
-<#grid:column label="店铺名" name="shopname" query="true" condition="like"/>
-<#grid:column label="商品标题"  name="tTitle" query="true"  condition="like" />
-<#grid:column label="搜索关键字"  name="keyword"  />
-<#grid:column label="品牌"  name="brand"  />
-<#grid:column label="商品单价"  name="tPrice"/>
-<#grid:column label="实付金额"  name="actualprice"  />
-<#grid:column label="发布时间"  name="createDate"  />
-<#grid:column label="生效时间"  name="effectdate"  query="true"  queryMode="date"  condition="between"  />
-<#grid:column label="任务单数"  name="tasknum" />
-<#grid:column label="已接单数"  name="receivingnum"  sortable="true"/>
-<#grid:column label="已下单单数"  name="ordernum"  sortable="true"/>
-<#grid:column label="已发货单数"  name="deliverynum"  sortable="false"/>
+<#grid:column label="店铺名" name="shopname" query="true" condition="like" width="140" />
+<#grid:column label="商品标题"  name="tTitle" query="true"  condition="like" width="140" />
+<#grid:column label="搜索关键字"  name="keyword" width="100"/>
+<#grid:column label="品牌"  name="brand" width="100"/>
+<#grid:column label="货号"  name="article" query="true"  condition="like" width="100"/>
+<#grid:column label="商品单价"  name="tPrice" width="80"/>
+<#grid:column label="实付金额"  name="actualprice" width="80"/>
+<#grid:column label="发布时间"  name="createDate" width="100"/>
+<#grid:column label="最后接单时间"  name="lasttakingdate" width="100"/>
+<#grid:column label="生效时间"  name="effectdate"  query="true" width="100" queryMode="date"  condition="between"  />
+<#grid:column label="任务单数"  name="tasknum" width="80" />
+<#grid:column label="已接单数"  name="receivingnum"  width="80" sortable="true"/>
+<#grid:column label="已下单单数"  name="ordernum"  width="80" sortable="true"/>
+<#grid:column label="已发货单数"  name="deliverynum"  width="80" sortable="false"/>
 <#grid:column label="任务状态"  name="status" width="60" dict="basestate" queryMode="select"  condition="eq" query="true" />
 <#grid:column label="sys.common.opt"  name="opt" formatter="button" />
 <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />

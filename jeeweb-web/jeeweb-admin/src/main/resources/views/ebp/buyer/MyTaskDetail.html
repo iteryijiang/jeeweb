@@ -1,268 +1,268 @@
-<!DOCTYPE html>
-<% layout('/layouts/form.html', {title: '任务详情', formId: 'tmyTaskForm', bodyClass: 'white-bg', libs: ''}){ %>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>任务详情</title>
-<link rel="stylesheet" href="${staticPath}/shop/css/bootstrap.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/swiper-3.4.2.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/fileinput.min.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/ProjectGlobal.css">
-<link rel="stylesheet" href="${staticPath}/shop/css/global.css">
-<link rel="stylesheet" href="${staticPath}/shop/icomoon/style.css">
-<script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
-<script src='${staticPath}/shop/js/bootstrap.min.js'></script>
-<script src='${staticPath}/shop/js/fileinput.min.js'></script>
-<script src='${staticPath}/shop/js/fileinput.min.js'></script>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-</head>
-<body onload="init()">
-    <!-- 用户信息栏 -->
+<!--<!DOCTYPE html>-->
+<!--<% layout('/layouts/form.html', {title: '任务详情', formId: 'tmyTaskForm', bodyClass: 'white-bg', libs: ''}){ %>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--<meta charset="UTF-8">-->
+<!--<title>任务详情</title>-->
+<!--<link rel="stylesheet" href="${staticPath}/shop/css/bootstrap.min.css">-->
+<!--<link rel="stylesheet" href="${staticPath}/shop/css/swiper-3.4.2.min.css">-->
+<!--<link rel="stylesheet" href="${staticPath}/shop/css/fileinput.min.css">-->
+<!--<link rel="stylesheet" href="${staticPath}/shop/css/ProjectGlobal.css">-->
+<!--<link rel="stylesheet" href="${staticPath}/shop/css/global.css">-->
+<!--<link rel="stylesheet" href="${staticPath}/shop/icomoon/style.css">-->
+<!--<script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>-->
+<!--<script src='${staticPath}/shop/js/bootstrap.min.js'></script>-->
+<!--<script src='${staticPath}/shop/js/fileinput.min.js'></script>-->
+<!--<script src='${staticPath}/shop/js/fileinput.min.js'></script>-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">-->
+<!--</head>-->
+<!--<body onload="init()">-->
+    <!--&lt;!&ndash; 用户信息栏 &ndash;&gt;-->
 
-    <!-- 中间主体 -->
-    <div class='main_container task_detail'>
-        <!-- <img style='width:100%' src="img/banner_01_1.png" alt=""> -->
-         <!-- 任务详情头部 -->
-         <div class='task_area_tab'>
-                <h2>任务详情</h2>
-                <div class="col-md-10">
-                    <ul>
-                        <li class='active' id="li_1">
-                            <em id="em_1" class='process'>1</em>
-                            <span>接手任务</span>
-                            <span class='time' id="receivingdate"></span>
-                        </li>
-                        <li id="li_2" ${tmyTask.taskstate=="2"||tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='active'":""}>
-                            <em id="em_2" ${tmyTask.taskstate=="2"||tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='process'":""}>2</em>
-                            <span>买手下单</span>
-                            <span class='time' id="orderdate"></span>
-                        </li>
-                        <li id="li_3" ${tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='active'":""}>
-                            <em id="em_3" ${tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='process'":""}>3</em>
-                            <span >商家发货</span>
-                            <span class='time' id="deliverydate"></span>
-                        </li>
-                        <li id="li_4" ${tmyTask.taskstate=="4"?"class='active'":""}>
-                            <em id="em_4" ${tmyTask.taskstate=="4"?"class='process'":""}>4</em>
-                            <span>确认收货</span>
-                            <span class='time' id="confirmdate"></span>
-                        </li>
-                        <!--<li id="li_5">-->
-                            <!--<em id="em_5">5</em>-->
-                            <!--<span>商家退款</span>-->
+    <!--&lt;!&ndash; 中间主体 &ndash;&gt;-->
+    <!--<div class='main_container task_detail'>-->
+        <!--&lt;!&ndash; <img style='width:100%' src="img/banner_01_1.png" alt=""> &ndash;&gt;-->
+         <!--&lt;!&ndash; 任务详情头部 &ndash;&gt;-->
+         <!--<div class='task_area_tab'>-->
+                <!--<h2>任务详情</h2>-->
+                <!--<div class="col-md-10">-->
+                    <!--<ul>-->
+                        <!--<li class='active' id="li_1">-->
+                            <!--<em id="em_1" class='process'>1</em>-->
+                            <!--<span>接手任务</span>-->
+                            <!--<span class='time' id="receivingdate"></span>-->
                         <!--</li>-->
-                        <!--<li id="li_6">-->
-                            <!--<em id="em_6">6</em>-->
-                            <!--<span>卖家确认退款</span>-->
+                        <!--<li id="li_2" ${tmyTask.taskstate=="2"||tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='active'":""}>-->
+                            <!--<em id="em_2" ${tmyTask.taskstate=="2"||tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='process'":""}>2</em>-->
+                            <!--<span>买手下单</span>-->
+                            <!--<span class='time' id="orderdate"></span>-->
                         <!--</li>-->
-                        <!--<li class='last'  id="li_7">-->
-                            <!--<em id="em_7">7</em>-->
-                            <!--<span>任务完成</span>-->
+                        <!--<li id="li_3" ${tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='active'":""}>-->
+                            <!--<em id="em_3" ${tmyTask.taskstate=="3"||tmyTask.taskstate=="4"?"class='process'":""}>3</em>-->
+                            <!--<span >商家发货</span>-->
+                            <!--<span class='time' id="deliverydate"></span>-->
                         <!--</li>-->
-                    </ul>
-                </div>
-         </div>
-         <!-- 任务信息 -->
-         <div class='task_area_info'>
-                <div class='left'>
-                    <h4>任务信息</h4>
-                    <div>
-                        <p>
-                             <span>下单终端：</span>
-                             <span>手机</span>
-                        </p>
-                        <p>
-                            <span>买号：</span>
-                            <span>${tmyTask.buyerid}</span>
-                       </p>
-                       <p>
-                            <span>垫付本金：</span>
-                            <span><b class='red_font'>${tmyTask.pays}</b>元</span>
-                        </p>
-                    </div>
-                    <div>
-                        <p>
-                            <span>返款类型：</span>
-                            <span>平台退款</span>
-                        </p>
-                        <p>
-                            <span>返款金额：</span>
-                            <span>${tmyTask.pays}</span>
-                        </p>
-                    </div>
-                    <div>
-                        <p>
-                            <span>任务编号：</span>
-                            <span></span>
-                        </p>
-                        <p>
-                            <span>任务接手时间：</span>
-                            <span>${tmyTask.createDate}</span>
-                        </p>
-                        <p>
-                            <span>商家账号：</span>
-                            <span></span>
-                        </p>
-                    </div>
-                    <div>
-                        <p>
-                            <span>关键字评论内容</span>
-                            <span> 2018-12-06 19:00:09</span>
-                        </p>
-                    </div>
-                </div>
-                <div class='right'>
-                    <div>
-                        <span>任务状态：</span>
-                        <span>
-                            ${tmyTask.taskstate}
-                        </span>
-                    </div>
-                </div>
-         </div>
-         <!-- 任务进展 -->
-         <div class='task_area_process'>
-            <div class="table-responsive">
-                <table class="table">
-                  <caption>任务进展</caption>
-                  <thead>
-                    <tr>
-                      <th>服务项目</th>
-                      <th>完成时间</th>
-                      <th>状态</th>
-                      <th>操作</th></tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>搜索关键字截图</td>
-                      <td>2018-12-09 17:00:23</td>
-                      <td></td><td><!--<input type="button" value="上传" onclick="sub()">--></td>
-                    </tr>
-                    <tr>
-                      <td>搜索关键字</td>
-                      <td>2018-12-09 17:00:23</td>
-                        <td></td><td><!--<input type="button"  value="录入" onclick="upTask('1')">--></td>
-                    </tr>
-                    <tr>
-                      <td>下单和支付</td>
-                      <td>2018-12-09 17:00:23</td>
-                      <td><img src="${staticPath}/shop/img/icon-g.png" alt="">买手已完成，订单号：${tmyTask.jdorderno}</td>
-                      <td><button class='btn btn-warning' onclick="upTask('2')">下单提交</button></td>
-                    </tr>
-                    <tr>
-                      <td>商家发货</td>
-                      <td>2018-12-09 17:00:23</td>
-                      <td>已退货</td> <td></td>
-                    </tr>
-                    <tr>
-                        <td>收货并好评</td>
-                        <td>2018-12-09 17:00:23</td>
-                        <td>已退货</td><td><button class='btn btn-warning' onclick="upTask('4')">好评提交</button></td>
-                    </tr>
-                    <tr class='receive_good'>
-                        <td>
-                            <ul>
-                                <li>买号：${tmyTask.buyerid}</li>
-                                <li>商品名称： ${tmyTask.goodsname}</li>
-                                <li>评价内容：${tmyTask.evaluate}</li>
-                                <li>评论截图：<a href="#"></a></li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>平台返款</td>
-                        <td>2018-12-09 17:00:23</td>
-                        <td>已退货</td>
-                    </tr>
-                    <tr>
-                        <td>平台返款完成</td>
-                        <td>2018-12-09 17:00:23</td>
-                        <td>已退货</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-         </div> 
-         <!-- 商品信息 -->
-         <div class='task_area_goodinfo'>
-                <div class="table-responsive">
-                    <table class="table">
-                        <caption>商品信息</caption>
-                        <thead>
-                        <tr>
-                            <th>商品</th>
-                            <th>单价（元）</th>
-                            <th>数量</th>
-                            <!--<th>运费（元）</th>-->
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <img src="${taskbase.imgurl}" alt="">
-                                    <span><a href="${taskbase.tUrl}" target="_blank">${taskbase.tTitle}</a></span>
-                                </td>
-                                <td>${taskbase.tPrice}</td>
-                                <td>${taskbase.tNum}</td>
-                                <!--<td>${taskbase.totalprice}</td>-->
-                            </tr>
-                    </table>
-                </div>
-                <!--<div >买手实付款：<b class='red_font'></b></div>-->
-         </div>
-    </div>
-</body>
-<script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
-<script>
+                        <!--<li id="li_4" ${tmyTask.taskstate=="4"?"class='active'":""}>-->
+                            <!--<em id="em_4" ${tmyTask.taskstate=="4"?"class='process'":""}>4</em>-->
+                            <!--<span>确认收货</span>-->
+                            <!--<span class='time' id="confirmdate"></span>-->
+                        <!--</li>-->
+                        <!--&lt;!&ndash;<li id="li_5">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<em id="em_5">5</em>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span>商家退款</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<li id="li_6">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<em id="em_6">6</em>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span>卖家确认退款</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<li class='last'  id="li_7">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<em id="em_7">7</em>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span>任务完成</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</li>&ndash;&gt;-->
+                    <!--</ul>-->
+                <!--</div>-->
+         <!--</div>-->
+         <!--&lt;!&ndash; 任务信息 &ndash;&gt;-->
+         <!--<div class='task_area_info'>-->
+                <!--<div class='left'>-->
+                    <!--<h4>任务信息</h4>-->
+                    <!--<div>-->
+                        <!--<p>-->
+                             <!--<span>下单终端：</span>-->
+                             <!--<span>手机</span>-->
+                        <!--</p>-->
+                        <!--<p>-->
+                            <!--<span>买号：</span>-->
+                            <!--<span>${tmyTask.buyerid}</span>-->
+                       <!--</p>-->
+                       <!--<p>-->
+                            <!--<span>垫付本金：</span>-->
+                            <!--<span><b class='red_font'>${tmyTask.pays}</b>元</span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                        <!--<p>-->
+                            <!--<span>返款类型：</span>-->
+                            <!--<span>平台退款</span>-->
+                        <!--</p>-->
+                        <!--<p>-->
+                            <!--<span>返款金额：</span>-->
+                            <!--<span>${tmyTask.pays}</span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                        <!--<p>-->
+                            <!--<span>任务编号：</span>-->
+                            <!--<span></span>-->
+                        <!--</p>-->
+                        <!--<p>-->
+                            <!--<span>任务接手时间：</span>-->
+                            <!--<span>${tmyTask.createDate}</span>-->
+                        <!--</p>-->
+                        <!--<p>-->
+                            <!--<span>商家账号：</span>-->
+                            <!--<span></span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                        <!--<p>-->
+                            <!--<span>关键字评论内容</span>-->
+                            <!--<span> 2018-12-06 19:00:09</span>-->
+                        <!--</p>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class='right'>-->
+                    <!--<div>-->
+                        <!--<span>任务状态：</span>-->
+                        <!--<span>-->
+                            <!--${tmyTask.taskstate}-->
+                        <!--</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+         <!--</div>-->
+         <!--&lt;!&ndash; 任务进展 &ndash;&gt;-->
+         <!--<div class='task_area_process'>-->
+            <!--<div class="table-responsive">-->
+                <!--<table class="table">-->
+                  <!--<caption>任务进展</caption>-->
+                  <!--<thead>-->
+                    <!--<tr>-->
+                      <!--<th>服务项目</th>-->
+                      <!--<th>完成时间</th>-->
+                      <!--<th>状态</th>-->
+                      <!--<th>操作</th></tr>-->
+                  <!--</thead>-->
+                  <!--<tbody>-->
+                    <!--<tr>-->
+                      <!--<td>搜索关键字截图</td>-->
+                      <!--<td>2018-12-09 17:00:23</td>-->
+                      <!--<td></td><td>&lt;!&ndash;<input type="button" value="上传" onclick="sub()">&ndash;&gt;</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                      <!--<td>搜索关键字</td>-->
+                      <!--<td>2018-12-09 17:00:23</td>-->
+                        <!--<td></td><td>&lt;!&ndash;<input type="button"  value="录入" onclick="upTask('1')">&ndash;&gt;</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                      <!--<td>下单和支付</td>-->
+                      <!--<td>2018-12-09 17:00:23</td>-->
+                      <!--<td><img src="${staticPath}/shop/img/icon-g.png" alt="">买手已完成，订单号：${tmyTask.jdorderno}</td>-->
+                      <!--<td><button class='btn btn-warning' onclick="upTask('2')">下单提交</button></td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                      <!--<td>商家发货</td>-->
+                      <!--<td>2018-12-09 17:00:23</td>-->
+                      <!--<td>已退货</td> <td></td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td>收货并好评</td>-->
+                        <!--<td>2018-12-09 17:00:23</td>-->
+                        <!--<td>已退货</td><td><button class='btn btn-warning' onclick="upTask('4')">好评提交</button></td>-->
+                    <!--</tr>-->
+                    <!--<tr class='receive_good'>-->
+                        <!--<td>-->
+                            <!--<ul>-->
+                                <!--<li>买号：${tmyTask.buyerid}</li>-->
+                                <!--<li>商品名称： ${tmyTask.goodsname}</li>-->
+                                <!--<li>评价内容：${tmyTask.evaluate}</li>-->
+                                <!--<li>评论截图：<a href="#"></a></li>-->
+                            <!--</ul>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td>平台返款</td>-->
+                        <!--<td>2018-12-09 17:00:23</td>-->
+                        <!--<td>已退货</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td>平台返款完成</td>-->
+                        <!--<td>2018-12-09 17:00:23</td>-->
+                        <!--<td>已退货</td>-->
+                    <!--</tr>-->
+                  <!--</tbody>-->
+                <!--</table>-->
+              <!--</div>-->
+         <!--</div> -->
+         <!--&lt;!&ndash; 商品信息 &ndash;&gt;-->
+         <!--<div class='task_area_goodinfo'>-->
+                <!--<div class="table-responsive">-->
+                    <!--<table class="table">-->
+                        <!--<caption>商品信息</caption>-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th>商品</th>-->
+                            <!--<th>单价（元）</th>-->
+                            <!--<th>数量</th>-->
+                            <!--&lt;!&ndash;<th>运费（元）</th>&ndash;&gt;-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody>-->
+                            <!--<tr>-->
+                                <!--<td>-->
+                                    <!--<img src="${taskbase.imgurl}" alt="">-->
+                                    <!--<span><a href="${taskbase.tUrl}" target="_blank">${taskbase.tTitle}</a></span>-->
+                                <!--</td>-->
+                                <!--<td>${taskbase.tPrice}</td>-->
+                                <!--<td>${taskbase.tNum}</td>-->
+                                <!--&lt;!&ndash;<td>${taskbase.totalprice}</td>&ndash;&gt;-->
+                            <!--</tr>-->
+                    <!--</table>-->
+                <!--</div>-->
+                <!--&lt;!&ndash;<div >买手实付款：<b class='red_font'></b></div>&ndash;&gt;-->
+         <!--</div>-->
+    <!--</div>-->
+<!--</body>-->
+<!--<script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>-->
+<!--<script>-->
 
 
-    function init(){
-        $("#receivingdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.receivingdate}")));
-        $("#orderdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.orderdate}")));
-        $("#deliverydate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.deliverydate}")));
-        $("#confirmdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.confirmdate}")));
-    }
-    function sub(){
-        $.ajax({
-            url: "${adminPath}/buyer/TmyTask/${tmyTask.id}/updateTaskState",
-            contentType:'application/json;charset=utf-8',
-            dataType: "json",
-            success: function(data){
-            },
-            error: function(data){
-            }
-        });
+    <!--function init(){-->
+        <!--$("#receivingdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.receivingdate}")));-->
+        <!--$("#orderdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.orderdate}")));-->
+        <!--$("#deliverydate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.deliverydate}")));-->
+        <!--$("#confirmdate").html(dateFtt("yyyy-MM-dd",new Date("${tmyTask.confirmdate}")));-->
+    <!--}-->
+    <!--function sub(){-->
+        <!--$.ajax({-->
+            <!--url: "${adminPath}/buyer/TmyTask/${tmyTask.id}/updateTaskState",-->
+            <!--contentType:'application/json;charset=utf-8',-->
+            <!--dataType: "json",-->
+            <!--success: function(data){-->
+            <!--},-->
+            <!--error: function(data){-->
+            <!--}-->
+        <!--});-->
 
-    }
-    function upTask(state){
-        // var tmytask = {id:"${tmyTask.id}",taskState:state};
-        $.ajax({
-            url: "${adminPath}/buyer/TmyTask/${tmyTask.id}/"+state+"/upTaskState",
-            success: function(data){
-                alert("操作成功！");
-            }
-        });
-    }
-    function dateFtt(fmt,date)
-    { //author: meizz
-        var o = {
-            "M+" : date.getMonth()+1,                 //月份
-            "d+" : date.getDate(),                    //日
-            "h+" : date.getHours(),                   //小时
-            "m+" : date.getMinutes(),                 //分
-            "s+" : date.getSeconds(),                 //秒
-            "q+" : Math.floor((date.getMonth()+3)/3), //季度
-            "S"  : date.getMilliseconds()             //毫秒
-        };
-        if(/(y+)/.test(fmt))
-            fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
-        for(var k in o)
-            if(new RegExp("("+ k +")").test(fmt))
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-        return fmt;
-    }
+    <!--}-->
+    <!--function upTask(state){-->
+        <!--// var tmytask = {id:"${tmyTask.id}",taskState:state};-->
+        <!--$.ajax({-->
+            <!--url: "${adminPath}/buyer/TmyTask/${tmyTask.id}/"+state+"/upTaskState",-->
+            <!--success: function(data){-->
+                <!--alert("操作成功！");-->
+            <!--}-->
+        <!--});-->
+    <!--}-->
+    <!--function dateFtt(fmt,date)-->
+    <!--{ //author: meizz-->
+        <!--var o = {-->
+            <!--"M+" : date.getMonth()+1,                 //月份-->
+            <!--"d+" : date.getDate(),                    //日-->
+            <!--"h+" : date.getHours(),                   //小时-->
+            <!--"m+" : date.getMinutes(),                 //分-->
+            <!--"s+" : date.getSeconds(),                 //秒-->
+            <!--"q+" : Math.floor((date.getMonth()+3)/3), //季度-->
+            <!--"S"  : date.getMilliseconds()             //毫秒-->
+        <!--};-->
+        <!--if(/(y+)/.test(fmt))-->
+            <!--fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));-->
+        <!--for(var k in o)-->
+            <!--if(new RegExp("("+ k +")").test(fmt))-->
+                <!--fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));-->
+        <!--return fmt;-->
+    <!--}-->
 
 
-</script>
-</html>
-<% } %>
+<!--</script>-->
+<!--</html>-->
+<!--<% } %>-->
