@@ -165,28 +165,17 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         return mav;
     }
 
-    public Map sumNumAndPrice(String userid,String create1,String create2,String shopname,String tTitle, String status){
-        Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DATE,1);
-        Date date2 = date;
-        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
-            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
-        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
-            create1 = create2;
-        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
-            create2 = create1;
-        }
-        Map map = ttaskBaseService.sumNumAndPrice(userid,create1,create2,shopname,tTitle,status);
+    public Map sumNumAndPrice(Map m){
+        Map map = ttaskBaseService.sumNumAndPrice(m);
         if(map==null){
             map = new HashMap();
             map.put("sumActualprice",0);
             map.put("sumFinishPrice",0);
             map.put("sumOrderPrice",0);
             map.put("sumDeliveryPrice",0);
-            map.put("sumCount",0);
             map.put("sumtasknum",0);
+            map.put("sumcanreceivenum",0);
+            map.put("sumunanswerednum",0);
             map.put("sumreceivingnum",0);
             map.put("sumordernum",0);
             map.put("sumdeliverynum",0);
@@ -279,9 +268,6 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         propertyPreFilterable.addQueryProperty("id");
 
         Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DATE,1);
-        Date date2 = date;
         String create1 = "";
         String create2 = "";
 
@@ -302,7 +288,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
             create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
         }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
             create1 = create2;
         }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
@@ -336,9 +322,6 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         propertyPreFilterable.addQueryProperty("id");
 
         Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DATE,1);
-        Date date2 = date;
         String create1 = "";
         String create2 = "";
         int multiple = 2;
@@ -364,7 +347,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
             create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
         }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
             create1 = create2;
         }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
@@ -398,9 +381,6 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         propertyPreFilterable.addQueryProperty("id");
 
         Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DATE,1);
-        Date date2 = new Date();
         String create1 = "";
         String create2 = "";
         String shopname = "";
@@ -435,7 +415,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
             create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
         }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
             create1 = create2;
         }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
@@ -667,130 +647,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @Log(logType = LogType.SELECT)
     @RequiresMethodPermissions("myTaskCreate")
     public void myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws IOException {
-        List listBase = new ArrayList();
-
-        try {
-            String user = UserUtils.getPrincipal().getId();
-            int count = 3;
-            int countSum = 7;
-            int minute = 10;
-            try{
-                String sum = DictUtils.getDictValue("一个任务单店接单数","tasknum",count+"");
-                count = Integer.parseInt(sum);
-                countSum = Integer.parseInt(DictUtils.getDictValue("一个任务总连接数","tasknum",countSum+""));
-                minute = Integer.parseInt(DictUtils.getDictValue("一个任务领取间隔时长","tasknum",minute+""));
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            //活动当日全订单
-            List<TtaskBase> list = ttaskBaseService.selectShopTask("",count+2,user,minute);
-            //获得可领取总店铺数
-            int sumshop = countSum/count+1;
-            if(list!=null&&!list.isEmpty()){
-                //保存任务单
-                TmyTask tmyTask = new TmyTask();
-                tmyTask.setMytaskno(TsequenceSpider.getTaskNo());
-                tmyTask.setState("0");
-                tmyTaskService.insert(tmyTask);
-                BigDecimal tprice = new BigDecimal(0.0);
-
-                //根据订单得到全店铺
-                Map<String,Integer> shopMap = new HashMap<String,Integer>();
-                for (int i=0;i<list.size();i++) {
-                    TtaskBase tb = (TtaskBase)list.get(i);
-                    if(!shopMap.containsKey(tb.getStorename())){
-                        shopMap.put(tb.getStorename(),1);
-                    }else {
-                        int aa = 1+shopMap.get(tb.getStorename());
-                        shopMap.put(tb.getStorename(),aa);
-                    }
-                }
-                //根据全店铺和所需店铺数得到可用店铺
-                Map<String,Integer> newShopMap = new HashMap<String,Integer>();
-                while(true){
-                    Random rand = new Random();
-                    int randInt = rand.nextInt(shopMap.size()) + 1;
-                    int a = 1;
-                    Iterator<Map.Entry<String, Integer>> entries = shopMap.entrySet().iterator();
-                    while (entries.hasNext()) {
-                        Map.Entry<String, Integer> entry = entries.next();
-                        if(randInt==a){
-                            if(!newShopMap.containsKey(entry.getKey())) {
-                                newShopMap.put(entry.getKey(), entry.getValue());
-                            }
-                            break;
-                        }
-                        a++;
-                    }
-                    if(newShopMap.size()==shopMap.size()||newShopMap.size()==sumshop){
-                        break;
-                    }
-                }
-//                List new_list =new ArrayList<>();//需要保存的订单
-                //循环店铺，接取任务
-                Iterator<Map.Entry<String, Integer>> newentries = newShopMap.entrySet().iterator();
-                int zsum = 1;
-                while (newentries.hasNext()) {
-                    Map.Entry<String, Integer> entry = newentries.next();
-                    int dsum = 1;
-                    String countR = "";
-                    int countRI = 1;
-                    if(entry.getValue()==1){
-                        countR = ",1,";
-                    }
-                    //根据每个店铺接取数和店铺发布订单数获得每个店铺随机得到第几个订单。
-                    while(true&&entry.getValue()>1){
-                        Random rand = new Random();
-                        int randInt = rand.nextInt(entry.getValue()) + 1;
-                        if(countR.indexOf(","+randInt+",")==-1){
-                            countR = countR+","+randInt+",";
-                            countRI++;
-                        }
-                        if(countRI>count){
-                            break;
-                        }
-                    }
-
-                    int storeInt = 1;
-                    for (int i=0;i<list.size();i++) {
-                        TtaskBase tb = (TtaskBase)list.get(i);
-                        if(entry.getKey().equals(tb.getStorename())&&countR.indexOf(","+storeInt+",")>=0){
-                            TmyTaskDetail my = new TmyTaskDetail();
-                            tb.setCanreceivenum(tb.getCanreceivenum()-1);
-                            tb.setLasttakingdate(new Date());
-                            ttaskBaseService.insertOrUpdate(tb);
-                            my.setGoodsname(tb.gettTitle());//
-                            my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                            my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                            my.setTaskstate("1");//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                            my.setTasktype(tb.gettType());//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-                            my.setTaskstatus("0");
-                            my.setPays(tb.getActualprice());
-                            my.setReceivingdate(new Date());
-                            my.setMytaskid(tmyTask.getId());
-                            my.setTaskshopurl(tb.gettUrl()+"_"+tb.getStorename());
-                            tmyTaskDetailService.insert(my);
-                            tprice = tprice.add(tb.getActualprice());
-                            dsum++;
-                            zsum++;
-                        }
-                        if(entry.getKey().equals(tb.getStorename())){
-                            storeInt++;
-                        }
-                        if(dsum>count||zsum>countSum){
-                            break;
-                        }
-                    }
-                    if(zsum>countSum){
-                        break;
-                    }
-                }
-                tmyTask.setTotalprice(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
-                tmyTaskService.insertOrUpdate(tmyTask);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        ttaskBaseService.myTaskCreate();
     }
 
     @GetMapping(value = "{id}/uploadQrcode")
@@ -852,7 +709,27 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             String shopname = jsonObject.getString("shopname");
             String tTitle = jsonObject.getString("tTitle");
             String status = jsonObject.getString("status");
-            map = sumNumAndPrice(userid,create1,create2,(StringUtils.isNotEmpty(shopname)?"%"+shopname+"%":null),(StringUtils.isNotEmpty(tTitle)?"%"+tTitle+"%":null),status);
+            String article = jsonObject.getString("article");
+
+            Date date = new Date();
+            if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
+                create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+                create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
+                create1 = create2;
+            }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
+                create2 = create1;
+            }
+
+            Map m = new HashMap();
+            m.put("userid",userid);
+            m.put("create1",create1);
+            m.put("create2",create2);
+            m.put("shopname",(StringUtils.isNotEmpty(shopname)?"%"+shopname+"%":null));
+            m.put("tTitle",(StringUtils.isNotEmpty(tTitle)?"%"+tTitle+"%":null));
+            m.put("status",status);
+            m.put("article",(StringUtils.isNotEmpty(article)?"%"+article+"%":null));
+            map = sumNumAndPrice(m);
         }catch (Exception e){
             e.printStackTrace();
         }

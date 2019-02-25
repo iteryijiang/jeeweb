@@ -80,12 +80,9 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
 
     public Map sumNumAndPrice(String userid,String create1,String create2){
         Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DATE,1);
-        Date date2 = date;
         if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
             create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
         }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
             create1 = create2;
         }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
@@ -302,9 +299,6 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         propertyPreFilterable.addQueryProperty("id");
 
         Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DATE,1);
-        Date date2 = date;
         String create1 = "";
         String create2 = "";
         String buyerName = "";
@@ -329,7 +323,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         }
         if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
             create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            create2 = DateUtils.formatDate(date2,"yyyy-MM-dd");
+            create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
         }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
             create1 = create2;
         }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){

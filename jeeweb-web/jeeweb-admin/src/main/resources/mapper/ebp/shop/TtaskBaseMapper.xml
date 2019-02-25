@@ -84,7 +84,8 @@
     T_task_Base t
     WHERE
     t.storename = t1.storename
-    and t.id not in (select d.taskid from t_my_task_detail d where d.create_date between date_add(now(), interval - ${minute} minute) and date_add(now(), interval + 1 minute))
+    and (t.lasttakingdate is null or t.lasttakingdate  <![CDATA[<]]> date_add(now(), interval - ${minute} minute))
+    -- and t.id not in (select d.taskid from t_my_task_detail d where d.create_date between date_add(now(), interval - ${minute} minute) and date_add(now(), interval + 1 minute))
     AND t.id <![CDATA[<]]> t1.id
                AND t.STATUS = '0'
                AND t.canreceivenum <![CDATA[>]]> 0
@@ -95,7 +96,8 @@
     T_task_Base t1
     where
     t1.STATUS = '0'
-    and t1.id not in (select d.taskid from t_my_task_detail d where d.create_date between date_add(now(), interval - ${minute} minute) and date_add(now(), interval + 1 minute))
+    and (t1.lasttakingdate is null or t1.lasttakingdate <![CDATA[<]]> date_add(now(), interval - ${minute} minute))
+    -- and t1.id not in (select d.taskid from t_my_task_detail d where d.create_date between date_add(now(), interval - ${minute} minute) and date_add(now(), interval + 1 minute))
     AND t1.canreceivenum <![CDATA[>]]> 0
     and DATE_FORMAT(t1.effectdate,'%Y-%m-%d') = DATE_FORMAT(curdate(),'%Y-%m-%d')
     and DATE_FORMAT(t1.effectdate,'%H:%i:%S') <![CDATA[<=]]> DATE_FORMAT(now(),'%H:%i:%S')
@@ -107,36 +109,41 @@
 
   <select id="sumNumAndPrice" resultType="java.util.Map">
     select sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(finishPrice) sumFinishPrice,sum(count) sumCount,
-    sum(tasknum) sumtasknum,sum(tasknum)-sum(canreceivenum) sumreceivingnum,sum(finishnum) sumfinishnum,sum(deliverynum) sumdeliverynum,sum(ordernum) sumordernum
+    sum(tasknum) sumtasknum,sum(canreceivenum) sumcanreceivenum,sum(tasknum)-sum(canreceivenum) sumunanswerednum,sum(finishnum) sumfinishnum,sum(deliverynum) sumdeliverynum,sum(ordernum) sumordernum
+    ,sum(receivingnum) sumreceivingnum
     from t_task_base t left join t_shop_base sb on t.storename=sb.id LEFT JOIN (
     select taskid,sum(deliveryPrice) deliveryPrice,sum(orderPrice) orderPrice,sum(finishPrice) finishPrice,count(1) count,
-    sum(finishnum) finishnum,sum(deliverynum) deliverynum,sum(ordernum) ordernum
+    sum(finishnum) finishnum,sum(deliverynum) deliverynum,sum(ordernum) ordernum,sum(receivingnum) receivingnum
     from (select taskid,
         case when taskstate=4 then pays else 0 end finishPrice,
         case when taskstate=3 then pays else 0 end deliveryPrice,
         case when taskstate=2 then pays else 0 end orderPrice,
     case when taskstate=4 then 1 else 0 end finishnum,
     case when taskstate=3 then 1 else 0 end deliverynum,
-    case when taskstate=2 then 1 else 0 end ordernum
-     from t_my_task_detail where (DATE_FORMAT(create_date,'%Y-%m-%d') BETWEEN #{createDate1} and #{createDate2})) a group by taskid ) b
+    case when taskstate=2 then 1 else 0 end ordernum,
+    case when taskstate=1 then 1 else 0 end receivingnum
+     from t_my_task_detail where (DATE_FORMAT(create_date,'%Y-%m-%d') BETWEEN #{map.create1} and #{map.create2})) a group by taskid ) b
     on t.id=b.taskid
     where
     1=1
-    <if test="createby != '' and createby != null">
-      and shopid=#{createby}
+    <if test="map.userid != '' and map.userid != null">
+      and shopid=#{map.userid}
     </if>
-    <if test="shopname != '' and shopname != null">
-      and sb.shopname like #{shopname}
-    </if>
-
-    <if test="tTitle != '' and tTitle != null">
-      and t.t_title like #{tTitle}
+    <if test="map.shopname != '' and map.shopname != null">
+      and sb.shopname like #{map.shopname}
     </if>
 
-    <if test="status != '' and status != null">
-      and t.status = #{status}
+    <if test="map.tTitle != '' and map.tTitle != null">
+      and t.t_title like #{map.tTitle}
     </if>
-     and (DATE_FORMAT(effectdate,'%Y-%m-%d') BETWEEN #{createDate1} and #{createDate2})
+
+    <if test="map.status != '' and map.status != null">
+      and t.status = #{map.status}
+    </if>
+    <if test="map.article != '' and map.article != null">
+      and t.article like #{map.article}
+    </if>
+     and (DATE_FORMAT(effectdate,'%Y-%m-%d') BETWEEN #{map.create1} and #{map.create2})
   </select>
 
   <select id="selectFinanceList" resultType="java.util.Map">
