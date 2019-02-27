@@ -223,6 +223,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                         ss[0] = create1;
                         ss[1] = create2;
                     }
+                    queryable.getCondition().remove(Filter);
                     queryable.getCondition().and(Condition.Operator.between,"effectdate",ss);
                 }
             }
@@ -646,8 +647,57 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequestMapping(value = "myTaskCreate", method = { RequestMethod.GET, RequestMethod.POST })
     @Log(logType = LogType.SELECT)
     @RequiresMethodPermissions("myTaskCreate")
-    public void myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws IOException {
-        ttaskBaseService.myTaskCreate();
+    public Response myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws Exception {
+        try {
+            boolean bool = ttaskBaseService.createMyTask();
+            if(!bool){
+                return Response.ok("无可领取任务！");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return Response.ok("领取失败！");
+        }
+        return Response.ok("领取成功！");
+
+//        ttaskBaseService.myTaskMap();
+//        List<TtaskBase> list_tb = new ArrayList<TtaskBase>();
+//        TtaskBase t1 = new TtaskBase();
+//        t1.settTitle("A");
+//        t1.setCanreceivenum(5l);
+//        t1.setCanreceivenums(t1.getCanreceivenum());
+//        list_tb.add(t1);
+//
+//        TtaskBase t2 = new TtaskBase();
+//        t2.settTitle("B");
+//        t2.setCanreceivenum(4l);
+//        t2.setCanreceivenums(t2.getCanreceivenum());
+//        list_tb.add(t2);
+//
+//        TtaskBase t3 = new TtaskBase();
+//        t3.settTitle("D");
+//        t3.setCanreceivenum(4l);
+//        t3.setCanreceivenums(t3.getCanreceivenum());
+//        list_tb.add(t3);
+//
+//        TtaskBase t4 = new TtaskBase();
+//        t4.settTitle("C");
+//        t4.setCanreceivenum(3l);
+//        t4.setCanreceivenums(t4.getCanreceivenum());
+//        list_tb.add(t4);
+//
+//        List<TtaskBase> list_oldtb = new ArrayList<TtaskBase>();
+//        list_oldtb.addAll(list_tb);
+//        Map a = ttaskBaseService.shopMap(list_tb,1,2,new HashMap(),1);
+//        Iterator<Map.Entry<Integer, List<TtaskBase>>> a1 = a.entrySet().iterator();
+//
+//        while (a1.hasNext()) {
+//            Map.Entry<Integer, List<TtaskBase>> aentry = a1.next();
+//            System.out.println(aentry.getKey());
+//            for(int i=0;i<aentry.getValue().size();i++){
+//                TtaskBase bb = aentry.getValue().get(i);
+//                System.out.println(">>>>>>>>>>>>>>>>>>>"+bb.gettTitle()+"_______________"+bb.getCanreceivenum());
+//            }
+//        }
     }
 
     @GetMapping(value = "{id}/uploadQrcode")

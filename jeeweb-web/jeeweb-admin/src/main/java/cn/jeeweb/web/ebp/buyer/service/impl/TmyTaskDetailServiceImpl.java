@@ -38,8 +38,9 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
     public List<Map> groupBytaskstate(String taskId){
         return baseMapper.groupBytaskstate(taskId);
     }
-    public Map  sumNumAndPrice(String createby,String createDate1, String createDate2){
-        return baseMapper.sumNumAndPrice(createby,createDate1,createDate2);
+
+    public Map  sumNumAndPrice(Map m){
+        return baseMapper.sumNumAndPrice(m);
     }
 
     public List<TmyTaskDetail> selectMytaskList(String mytaskid){

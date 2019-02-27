@@ -18,7 +18,7 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 	List<TmyTaskDetail> selBaseIdMyTaskDetailList(@Param("taskId") String taskId);
 	List<Map> groupBytaskstatus(@Param("taskId") String taskId);
 	List<Map> groupBytaskstate(@Param("taskId") String taskId);
-	Map sumNumAndPrice(@Param("createby") String createby,@Param("createDate1") String createDate1,@Param("createDate2") String createDate2);
+	Map sumNumAndPrice(@Param("map") Map m);
 	List<TmyTaskDetail> selectMytaskList(@Param("mytaskid") String mytaskid);
 
 

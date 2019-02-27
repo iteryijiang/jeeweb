@@ -120,8 +120,8 @@
                         divid += "                      </tr><tr>\n";
                         divid += "<td><img src=\""+list[j].qrcodeurl+"\"></td>";
                     }
-                    divid += "<td><input type='text' style=\"width:"+win+"px;\" value='"+(list[j].buyerjdnick==undefined?"":list[j].buyerjdnick)+"' onblur=\"upbuyerjdnick(this.value,'"+list[j].id+"')\"></td>";
-                    divid += "<td><input type='text' style=\"width:"+win+"px;\" value='" + (list[j].jdorderno == undefined ? "" : list[j].jdorderno) + "' onblur=\"upjdorderno(this.value,'" + list[j].id + "')\"></td>";
+                    divid += "<td><input type='text' style=\"width:"+win+"px;\" id='buyerjdnick_"+list[j].id+"' value='"+(list[j].buyerjdnick==undefined?"":list[j].buyerjdnick)+"' onblur=\"upbuyerjdnick(this.value,'"+list[j].id+"')\"></td>";
+                    divid += "<td><input type='text' style=\"width:"+win+"px;\" id='jdorderno_"+list[j].id+"' value='" + (list[j].jdorderno == undefined ? "" : list[j].jdorderno) + "' onblur=\"upjdorderno(this.value,'" + list[j].id + "')\"></td>";
                     if(!navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
                         divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
                     }
@@ -158,6 +158,19 @@
         return fmt;
     }
     function upTask(id,state){
+        var buyerjdnick_  = $("#buyerjdnick_"+id).val();
+        var jdorderno_  = $("#jdorderno_"+id).val();
+
+        if(buyerjdnick_==""||buyerjdnick_==undefined){
+            alert("请填写京东账号");
+            return;
+        }
+        if(buyerjdnick_==""||buyerjdnick_==undefined){
+            alert("请填写订单号");
+            return;
+        }
+        upbuyerjdnick(buyerjdnick_,id);
+        upjdorderno(jdorderno_,id);
         $.ajax({
             url: "${adminPath}/buyer/TmyTask/"+id+"/"+state+"/upTaskState",
             success: function(data){
@@ -167,18 +180,22 @@
         });
     }
     function upbuyerjdnick(value,id) {
-        $.ajax({
-            url: "${adminPath}/buyer/TmyTaskDetail/"+id+"/"+value+"/upbuyerjdnick",
-            success: function(data){
-            }
-        });
+        if(value!=""&&value!=undefined) {
+            $.ajax({
+                url: "${adminPath}/buyer/TmyTaskDetail/" + id + "/" + value + "/upbuyerjdnick",
+                success: function (data) {
+                }
+            });
+        }
     }
     function upjdorderno(value,id) {
-        $.ajax({
-            url: "${adminPath}/buyer/TmyTaskDetail/"+id+"/"+value+"/upjdorderno",
-            success: function(data){
-            }
-        });
+        if(value!=""&&value!=undefined) {
+            $.ajax({
+                url: "${adminPath}/buyer/TmyTaskDetail/" + id + "/" + value + "/upjdorderno",
+                success: function (data) {
+                }
+            });
+        }
     }
 </script>
 </html>

@@ -61,13 +61,13 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     @GetMapping
     @RequiresMethodPermissions("view")
     public ModelAndView TaskList(Model model, HttpServletRequest request, HttpServletResponse response) {
-        String userid = UserUtils.getPrincipal().getId();
-        Date date = new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.add(calendar.DATE,1);
-        Date date2 = calendar.getTime();
-        Map map = sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
-        model.addAttribute("map",map);
+//        String userid = UserUtils.getPrincipal().getId();
+//        Date date = new Date();
+//        Calendar calendar = new GregorianCalendar();
+//        calendar.add(calendar.DATE,1);
+//        Date date2 = calendar.getTime();
+//        Map map = sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
+//        model.addAttribute("map",map);
         ModelAndView mav = displayModelAndView("list");
         return mav;
     }
@@ -78,17 +78,8 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         return mav;
     }
 
-    public Map sumNumAndPrice(String userid,String create1,String create2){
-        Date date = new Date();
-        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
-            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
-        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
-            create1 = create2;
-        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
-            create2 = create1;
-        }
-        Map map = tmyTaskDetailService.sumNumAndPrice(userid,create1,create2);
+    public Map sumNumAndPrice(Map m){
+        Map map = tmyTaskDetailService.sumNumAndPrice(m);
         return map;
     }
 
@@ -152,6 +143,31 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)) {
             entityWrapper.eq("create_by", userid);
+        }
+        if(queryable.getCondition()!=null) {
+            String create1 = "";
+            String create2 = "";
+            Condition.Filter Filter = queryable.getCondition().getFilterFor("createDate");
+            if (Filter != null) {
+                Object o = Filter.getValue();
+                if (o instanceof String[]) {
+                    String[] ss = (String[]) o;
+                    if (ss != null && ss.length >= 2) {
+                        create1 = ss[0];
+                        create2 = ss[1] + " 23:59:59";
+                        ss[0] = create1;
+                        ss[1] = create2;
+                    } else if (ss != null && ss.length >= 1) {
+                        create1 = ss[0];
+                        create2 = ss[0] + " 23:59:59";
+                        ss = new String[2];
+                        ss[0] = create1;
+                        ss[1] = create2;
+                    }
+                    queryable.getCondition().remove(Filter);
+                    queryable.getCondition().and(Condition.Operator.between, "createDate", ss);
+                }
+            }
         }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
@@ -283,7 +299,23 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
             String userid = UserUtils.getPrincipal().getId();
             String create1 = jsonObject.getString("create1");
             String create2 = jsonObject.getString("create2");
-            map = sumNumAndPrice(userid,create1,create2);
+            String state = jsonObject.getString("state");
+            Date date = new Date();
+            if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
+                create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+                create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
+                create1 = create2;
+            }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
+                create2 = create1;
+            }
+
+            Map m = new HashMap();
+            m.put("userid",userid);
+            m.put("create1",create1);
+            m.put("create2",create2);
+            m.put("state",state);
+            map = sumNumAndPrice(m);
         }catch (Exception e){
             e.printStackTrace();
         }

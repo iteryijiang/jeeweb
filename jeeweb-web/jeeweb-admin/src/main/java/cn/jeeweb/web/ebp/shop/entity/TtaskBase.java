@@ -64,6 +64,9 @@ public class TtaskBase extends DataEntity<String> {
 
 
 	@TableField(exist = false)
+	private Long canreceivenums;//可接单数	(参与计算)
+
+	@TableField(exist = false)
 	private Long receivingnum;//已接单数
 
 	@TableField(exist = false)
@@ -410,5 +413,13 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setLasttakingdate(Date lasttakingdate) {
 		this.lasttakingdate = lasttakingdate;
+	}
+
+	public Long getCanreceivenums() {
+		return canreceivenums;
+	}
+
+	public void setCanreceivenums(Long canreceivenums) {
+		this.canreceivenums = canreceivenums;
 	}
 }

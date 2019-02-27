@@ -11,10 +11,10 @@
         <tr>
             <td><p>已接单数：<span style="color:green;font-weight: bold" id="sumunanswerednum"></span>&nbsp;&nbsp;&nbsp;</p></td>
             <td><p>未接单数：<span style="color:blue;font-weight: bold" id="sumcanreceivenum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已接单、未下单：<span style="color:blue;font-weight: bold" id="sumreceivingnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已下单单数：<span style="color:red;font-weight: bold" id="sumordernum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已发货单数：<span style="color:blue;font-weight: bold" id="sumdeliverynum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已完成单数：<span style="color:blue;font-weight: bold" id="sumfinishnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>已接单、待下单：<span style="color:blue;font-weight: bold" id="sumreceivingnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>已下单、待发货：<span style="color:red;font-weight: bold" id="sumordernum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>已发货、待收货	：<span style="color:blue;font-weight: bold" id="sumdeliverynum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>已收货、完成：<span style="color:blue;font-weight: bold" id="sumfinishnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
         </tr>
     </table>
     <br>
@@ -58,7 +58,7 @@
     function getload(){
         var data={};
         data.create1 = $("#ttaskBaseGrid_effectdate_start").val();
-        data.create2 = $("#ttaskBaseGrid_effectdate_start").val();
+        data.create2 = $("#ttaskBaseGrid_effectdate_end").val();
         data.shopname = $("input[name='shopname']").val();
         data.tTitle = $("input[name='tTitle']").val();
         data.status = $("select[name='status']").val();

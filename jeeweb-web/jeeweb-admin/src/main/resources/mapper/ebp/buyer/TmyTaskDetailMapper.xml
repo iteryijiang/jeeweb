@@ -60,11 +60,15 @@
         sum(case when taskstate=4 then pays else 0 end) as sumFinishPrice,
         sum(case when taskstate=3 then pays else 0 end) as sumDeliveryPrice,
         sum(case when taskstate=2 then pays else 0 end) as sumOrderPrice
-         from t_my_task_detail t,t_task_base tb where 1=1
+         from t_my_task_detail t,t_task_base tb,t_my_task m where 1=1
          and t.taskid = tb.id
+         and t.mytaskid = m.id
          and tb.status <![CDATA[<>]]> '2'
-         and t.create_by=#{createby}
-         and (DATE_FORMAT(t.create_date,'%Y-%m-%d') BETWEEN #{createDate1} and #{createDate2})
+         and t.create_by=#{map.userid}
+        <if test="map.state != '' and map.state != null">
+            and m.state = #{map.state}
+        </if>
+         and (DATE_FORMAT(t.create_date,'%Y-%m-%d') BETWEEN #{map.create1} and #{map.create2})
     </select>
 
     <select id="listFinanceBuyerReport" resultType="java.util.Map">

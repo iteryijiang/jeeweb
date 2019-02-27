@@ -19,7 +19,7 @@
     <#grid:column label="确认下单金额"  name="orderprice"  width="80"/>
     <#grid:column label="确认发货金额"  name="deliveryprice"  width="80"/>
     <#grid:column label="领取日期"  name="createDate"  width="60"  query="true"  queryMode="date"  condition="between" />
-    <#grid:column label="任务状态"  name="state"  width="60" dict="basestate" queryMode="select" width="80" condition="eq" query="true" condition="between" />
+    <#grid:column label="任务状态"  name="state"  width="60" dict="basestate" queryMode="select" width="80" condition="eq" query="true" />
     <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
     <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh"  winwidth="100%" winheight="100%"  outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTask/\"+row.id+\"/detail' />
     <#grid:toolbar title="领取任务"   icon="fa-download"  onclick="gettask()"  />
@@ -36,7 +36,7 @@
             contentType:'application/json;charset=utf-8',
             dataType: "json",
             success: function(data){
-                alert("领取成功!");
+                alert(data.msg);
                 search('taskbase');
             },
             error: function(data){
@@ -51,11 +51,15 @@
     }
     getload();
     function getload(){
+        var data={};
+        data.create1 = $("#taskbase_createDate_start").val();
+        data.create2 = $("#taskbase_createDate_end").val();
+        data.state = $("select[name='state']").val();
         $.ajax({
             type: "POST",
             url: "${adminPath}/buyer/TmyTask/showMyTaskLoad",
             contentType:'application/json;charset=utf-8',
-            data: JSON.stringify({"create1":$("#taskbase_createDate_start").val(),"create2":$("#taskbase_createDate_start").val()}),
+            data: JSON.stringify(data),
             dataType: "json",
             success: function(data){
                 $("#sumPrice").html(data.sumPrice==undefined?"0":data.sumPrice);

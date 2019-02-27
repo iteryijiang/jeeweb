@@ -107,6 +107,20 @@
     a.group_id <![CDATA[<=]]> ${count}
   </select>
 
+  <select id="selectShopTaskNew" resultMap="TtaskBase">
+    SELECT *
+    FROM
+    T_task_Base t
+    WHERE
+    1=1
+   and (t.lasttakingdate is null or t.lasttakingdate  <![CDATA[<]]> date_add(now(), interval - ${minute} minute))
+               AND t.STATUS = '0'
+               AND t.canreceivenum <![CDATA[>]]> 0
+    and DATE_FORMAT(t.effectdate,'%Y-%m-%d') = DATE_FORMAT(curdate(),'%Y-%m-%d')
+    and DATE_FORMAT(t.effectdate,'%H:%i:%S') <![CDATA[<=]]> DATE_FORMAT(now(),'%H:%i:%S')
+    order by t.storename asc,t.canreceivenum desc
+  </select>
+
   <select id="sumNumAndPrice" resultType="java.util.Map">
     select sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(finishPrice) sumFinishPrice,sum(count) sumCount,
     sum(tasknum) sumtasknum,sum(canreceivenum) sumcanreceivenum,sum(tasknum)-sum(canreceivenum) sumunanswerednum,sum(finishnum) sumfinishnum,sum(deliverynum) sumdeliverynum,sum(ordernum) sumordernum

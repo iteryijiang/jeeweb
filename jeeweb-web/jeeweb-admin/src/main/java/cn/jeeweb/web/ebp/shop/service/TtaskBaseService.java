@@ -9,6 +9,7 @@ import java.util.Map;
 public interface TtaskBaseService extends ICommonService<TtaskBase> {
 
     public List<TtaskBase> selectShopTask(String shopid,int count,String user,int minute);
+    public List<TtaskBase> selectShopTaskNew(int minute);
 
     public Map sumNumAndPrice(Map m);
 
@@ -17,5 +18,14 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
     public List<Map> selectWithdrawalMoneyList( String createDate1, String createDate2,int multiple);
     public List<Map> listFinanceShopReport(Map map);
 
+    public Map shopMap(List<TtaskBase> list_tb,int count,int countSum,Map<Integer,List<TtaskBase>> m,int i);
+    /*历史随机领取任务单**/
     public void myTaskCreate();
+
+    public Map myTaskMap(int count,int minute);
+
+    /**
+     * 新的根据店铺组单后，领取任务单
+     * */
+    public boolean createMyTask() throws Exception;
 }

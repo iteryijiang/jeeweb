@@ -28,7 +28,7 @@ public class ShiroConfigProperties {
     //表示是否存储散列后的密码为16进制，需要和生成密码时的一样
     private Boolean credentialsStoredCredentialsHexEncoded=Boolean.TRUE;
     //全局session超时时间 1000*30*60milliseconds = 30 分钟（1800000）
-    private Integer sessionGlobalSessionTimeout=1800000;
+    private Integer sessionGlobalSessionTimeout=3600000;
     //session验证时间间隔(即验证会话是否还有效) 1000*60*60milliseconds = 1小时（3600000）
     private Integer sessionValidationInterval=3600000;
     //session 缓存的名字
