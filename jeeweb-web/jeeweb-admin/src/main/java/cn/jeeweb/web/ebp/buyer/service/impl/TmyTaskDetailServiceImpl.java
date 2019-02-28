@@ -46,13 +46,18 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
     public List<TmyTaskDetail> selectMytaskList(String mytaskid){
         return baseMapper.selectMytaskList(mytaskid);
     }
+
+    public  List<TmyTaskDetail> listNoSendGood(){
+        return baseMapper.listNoSendGood();
+    }
+
     public List<Map> listFinanceBuyerReport(Map map){
         return baseMapper.listFinanceBuyerReport(map);
     }
 
     @Transactional
     public void upTaskState(String taskState,TmyTaskDetail td){
-        if(UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())||"3".equals(taskState)){
+         if("3".equals(taskState)||UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())){
             TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
             if("2".equals(taskState)&&"1".equals(td.getTaskstate())){
                 td.setOrderdate(new Date());
@@ -69,6 +74,10 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
                     tt.setDeliveryprice(td.getPays());
                 }else {
                     tt.setDeliveryprice(tt.getDeliveryprice().add(td.getPays()));
+                }
+                // job 任务，自动发货
+                if(UserUtils.getPrincipal()==null){
+                    td.setRemarks("平台自动发货!");
                 }
             }else if("4".equals(taskState)&&"3".equals(td.getTaskstate())) {
                 td.setConfirmdate(new Date());

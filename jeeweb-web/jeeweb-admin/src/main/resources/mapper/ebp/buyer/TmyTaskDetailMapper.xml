@@ -89,5 +89,7 @@
         group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),b.buyerName
         order by DATE_FORMAT(t.create_date,'%Y-%m-%d')
     </select>
-
+    <select id="listNoSendGood"  resultMap="TmyTaskDetail">
+        SELECT * from t_my_task_detail where taskstate='2' and timestampdiff(hour,orderdate,now()) >= 24;
+    </select>
 </mapper>
