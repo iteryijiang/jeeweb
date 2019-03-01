@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.shop.service;
 
 import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
+import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 
 import java.util.List;
@@ -28,4 +29,14 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
      * 新的根据店铺组单后，领取任务单
      * */
     public boolean createMyTask() throws Exception;
+
+    /**
+     * 任务发布
+     * */
+    public boolean addTask(TtaskBase ttaskBase, TshopInfo si);
+
+    /**
+     * 任务撤销
+     * */
+    public boolean upTask(TtaskBase ttaskBase, TshopInfo si);
 }

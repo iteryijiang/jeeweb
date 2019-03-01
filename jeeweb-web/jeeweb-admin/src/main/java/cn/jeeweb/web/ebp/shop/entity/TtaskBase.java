@@ -53,12 +53,14 @@ public class TtaskBase extends DataEntity<String> {
 	private String taskno;//	varchar	200	0	-1	0	0	0	0		0	任务编号	utf8	utf8_general_ci		0	0
 	private Long canreceivenum;//	int	8	0	-1	0	0	0	0		0	可接单数				0	0
 	private String storename;//	varchar	32	0	-1	0	0	0	0		0	店铺	utf8	utf8_general_ci		0	0
-	private BigDecimal actualprice;//	decimal	10	0	-1	0	0	0	0		0	实付金额				0	0
+	private BigDecimal actualprice;//	decimal	10	0	-1	0	0	0	0		0	实付金额				0	0taskdeposit
 	private String qrcodeurl;
 	private String brand;
 	private String article;//	varchar	255	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	private Date lasttakingdate;//	datetime	0	0	-1	0	0	0	0		0					0	0
+	private BigDecimal taskdeposit;//	decimal	10	0	-1	0	0	0	0		0	冻结金额				0	0
+	private BigDecimal presentdeposit;//	decimal	10	0	-1	0	0	0	0		0	当前佣金额				0	0
 
 
 
@@ -421,5 +423,21 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setCanreceivenums(Long canreceivenums) {
 		this.canreceivenums = canreceivenums;
+	}
+
+	public BigDecimal getTaskdeposit() {
+		return taskdeposit;
+	}
+
+	public void setTaskdeposit(BigDecimal taskdeposit) {
+		this.taskdeposit = taskdeposit;
+	}
+
+	public BigDecimal getPresentdeposit() {
+		return presentdeposit;
+	}
+
+	public void setPresentdeposit(BigDecimal presentdeposit) {
+		this.presentdeposit = presentdeposit;
 	}
 }

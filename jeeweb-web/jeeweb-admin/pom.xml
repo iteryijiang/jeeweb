@@ -103,6 +103,14 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/lib/jsoup-1.11.3.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>zxing</artifactId>
+            <version>3.3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/lib/zxing-3.3.2.jar</systemPath>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>

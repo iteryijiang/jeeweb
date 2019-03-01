@@ -35,6 +35,8 @@
     <result property="storename" column="storename" jdbcType="VARCHAR" />
     <result property="actualprice" column="actualprice" jdbcType="DOUBLE" />
     <result property="brand" column="brand" jdbcType="VARCHAR" />
+    <result property="taskdeposit" column="taskdeposit" jdbcType="DOUBLE" />
+    <result property="presentdeposit" column="presentdeposit" jdbcType="DOUBLE" />
   </resultMap>
   
   <sql id="Base_Column_List" >

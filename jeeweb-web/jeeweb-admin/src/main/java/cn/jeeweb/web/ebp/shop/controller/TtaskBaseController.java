@@ -71,8 +71,12 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("view")
     public ModelAndView list(Model model, HttpServletRequest request, HttpServletResponse response) {
         TtaskBase tb = new TtaskBase();
+        TshopInfo si = tshopInfoService.selectOne(UserUtils.getPrincipal().getId());
+        if(si==null){
+            si = new TshopInfo();
+        }
         model.addAttribute("tb",tb);
-        model.addAttribute("data",tb);
+        model.addAttribute("si",si);
         return displayModelAndView("ReleaseTask");
     }
 
@@ -112,19 +116,36 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 
         try {
             ttaskBase.setShopid(UserUtils.getUser().getId());
-    //      ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
+            TshopInfo si = tshopInfoService.selectOne(ttaskBase.getShopid());
+            //      ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
             ttaskBase.setTaskno(TsequenceSpider.getShopNo());
             ttaskBase.setCanreceivenum(ttaskBase.getTasknum());
             if(ttaskBase.gettPrice()!=null&&ttaskBase.gettNum()!=null){
-                ttaskBase.setTotalprice(ttaskBase.gettPrice().multiply(new BigDecimal(ttaskBase.gettNum())));
+                ttaskBase.setTotalprice(ttaskBase.getActualprice().multiply(new BigDecimal(ttaskBase.getTasknum())));
             }
             ttaskBase.setStatus("0");
-            ttaskBaseService.insert(ttaskBase);
+            Double countSum = Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5"));
+            BigDecimal price = ttaskBase.getTotalprice().add(new BigDecimal(ttaskBase.getTasknum()*countSum));
+            if(si.getTotaldeposit()==null) {
+                return Response.error("发布失败，您无押金，请充值！");
+            }else if(si.getTotaldeposit().compareTo(price)<0){
+                return Response.error("发布失败，您押金不够，请充值！");
+            }
+            si.setTotaldeposit(si.getTotaldeposit().subtract(price));
+            if(si.getTaskdeposit()==null){
+                si.setTaskdeposit(price);
+            }else {
+                si.setTaskdeposit(si.getTaskdeposit().add(price));
+            }
+            ttaskBase.setTaskdeposit(price);
+            ttaskBase.setPresentdeposit(new BigDecimal(countSum));
+            ttaskBaseService.addTask(ttaskBase,si);
         }catch (Exception e){
             e.printStackTrace();
+            return Response.error("发布失败！");
         }
         //保存之后
-        return Response.ok("添加成功");
+        return Response.ok("发布成功！");
     }
 
     @PostMapping("update")
@@ -731,16 +752,26 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public void upTaskState(@PathVariable("id") String id,@PathVariable("status") String status, HttpServletRequest request,
                             HttpServletResponse response) {
         TtaskBase tb = ttaskBaseService.selectById(id);
+        TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
         tb.setStatus(status);
-        ttaskBaseService.insertOrUpdate(tb);
+        if(tb.getPresentdeposit()!=null){
+            BigDecimal price = tb.getPresentdeposit().multiply(new BigDecimal(tb.getCanreceivenum())).add(tb.getActualprice().multiply(new BigDecimal(tb.getCanreceivenum())));
+            si.setTotaldeposit(si.getTotaldeposit().add(price));
+            si.setTaskdeposit(si.getTaskdeposit().subtract(price));
+        }
+        ttaskBaseService.upTask(tb,si);
     }
 
     @GetMapping(value = "{id}/myAgainList")
     public ModelAndView myAgainList(@PathVariable("id") String id, Model model,HttpServletRequest request,
                                     HttpServletResponse response) throws IOException {
         TtaskBase tb = ttaskBaseService.selectById(id);
+        TshopInfo si = tshopInfoService.selectOne(UserUtils.getPrincipal().getId());
+        if(si==null){
+            si = new TshopInfo();
+        }
         model.addAttribute("tb",tb);
-        model.addAttribute("data",tb);
+        model.addAttribute("si",si);
         ModelAndView mav = displayModelAndView("ReleaseTask");
         return mav;
     }

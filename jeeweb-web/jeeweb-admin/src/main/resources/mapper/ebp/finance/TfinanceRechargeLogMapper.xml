@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.finance.mapper.TfinanceRechargeLogMapper" >
+  <resultMap id="TfinanceRechargeLog" type="cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog" >
+      <id column="id" property="id" jdbcType="VARCHAR" />
+      <result property="shopid" column="shopid" jdbcType="VARCHAR" />
+      <result property="storeid" column="storeid" jdbcType="VARCHAR" />
+      <result property="tradetype" column="tradetype" jdbcType="VARCHAR" />
+      <result property="shopid" column="shopid" jdbcType="VARCHAR" />
+      <result property="producedeposit" column="producedeposit" jdbcType="DOUBLE" />
+      <result property="availabledeposit" column="availabledeposit" jdbcType="DOUBLE" />
+  </resultMap>
+  
+
+  <select id="selectUserList" resultMap="TfinanceRechargeLog">
+      select t.* from t_finance_recharge_log t
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+
+</mapper>

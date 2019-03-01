@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -14,4 +15,8 @@ import java.util.List;
 public interface TshopBaseMapper extends BaseMapper<TshopBase> {
 
     List<TshopBase> selectShopList(Pagination page, @Param("ew") Wrapper<TshopBase> wrapper);
+
+    default List<TshopBase> selectShopList1(Pagination page, @Param("ew") Wrapper<TshopBase> wrapper) {
+        return null;
+    }
 }

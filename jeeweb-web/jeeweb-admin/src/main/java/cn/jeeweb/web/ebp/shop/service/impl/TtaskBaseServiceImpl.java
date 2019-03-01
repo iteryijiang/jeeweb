@@ -8,6 +8,10 @@ import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
+import cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog;
+import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
+import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
+import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.mapper.TtaskBaseMapper;
 import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
@@ -32,8 +36,6 @@ import java.util.*;
 public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, TtaskBase> implements TtaskBaseService {
 
     @Autowired
-    private TtaskBaseService ttaskBaseService;
-    @Autowired
     private TshopInfoService tshopInfoService;
     @Autowired
     private TmyTaskService tmyTaskService;
@@ -41,6 +43,8 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
     private TmyTaskDetailService tmyTaskDetailService;
     @Autowired
     private TshopBaseService tshopBaseService;
+    @Autowired
+    private TfinanceRechargeLogService tfinanceRechargeLogService;
     public List<TtaskBase> selectShopTask(String shopid,int count,String user,int minute){
         return baseMapper.selectShopTask(shopid,count,user,minute);
     }
@@ -52,7 +56,20 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
         return baseMapper.sumNumAndPrice(m);
     }
 
-
+    public boolean addTask(TtaskBase ttaskBase, TshopInfo si){
+        tshopInfoService.updateById(si);
+        insert(ttaskBase);
+        TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),TfinanceRechargeService.rechargetype_2,ttaskBase.getTaskdeposit(),si.getTotaldeposit());
+        tfinanceRechargeLogService.insert(log);
+        return true;
+    }
+    public boolean upTask(TtaskBase ttaskBase, TshopInfo si){
+        tshopInfoService.updateById(si);
+        updateById(ttaskBase);
+        TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),TfinanceRechargeService.rechargetype_4,ttaskBase.getTaskdeposit(),si.getTotaldeposit());
+        tfinanceRechargeLogService.insert(log);
+        return true;
+    }
     @Override
     public Page<TtaskBase> selectPage(Page<TtaskBase> page, Wrapper<TtaskBase> wrapper) {
         wrapper.eq("1", "1");
@@ -250,7 +267,7 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
 
                 tmyTask.setTotalprice(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
                 tmyTaskService.insert(tmyTask);
-                ttaskBaseService.updateBatchById(new_tasklist);
+                updateBatchById(new_tasklist);
                 tmyTaskDetailService.insertBatch(new_list,countSum);
             }else {
                 return false;
@@ -334,7 +351,7 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                     e.printStackTrace();
                 }
                 //活动当日全订单
-                List<TtaskBase> list = ttaskBaseService.selectShopTask("",count+2,user,minute);
+                List<TtaskBase> list = selectShopTask("",count+2,user,minute);
                 //获得可领取总店铺数
                 int sumshop = countSum/count+1;
                 if(list!=null&&!list.isEmpty()){
@@ -441,7 +458,7 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                     }
                     tmyTask.setTotalprice(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
 
-                    ttaskBaseService.updateBatchById(new_tasklist);
+                    updateBatchById(new_tasklist);
                     tmyTaskDetailService.insertBatch(new_list,countSum);
                     tmyTaskService.insertOrUpdate(tmyTask);
                 }

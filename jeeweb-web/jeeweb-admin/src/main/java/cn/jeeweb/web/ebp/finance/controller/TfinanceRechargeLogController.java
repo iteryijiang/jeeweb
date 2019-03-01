@@ -1,4 +1,4 @@
-package cn.jeeweb.web.ebp.shop.controller;
+package cn.jeeweb.web.ebp.finance.controller;
 
 import cn.jeeweb.common.http.PageResponse;
 import cn.jeeweb.common.http.Response;
@@ -15,8 +15,13 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.finance.entity.TfinanceRecharge;
+import cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog;
+import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
+import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
+import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
@@ -29,49 +34,57 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 
 
 @RestController
-@RequestMapping("${jeeweb.admin.url.prefix}/shop/TshopInfo")
-@ViewPrefix("ebp/shop")
-@RequiresPathPermission("shop:TshopInfo")
-@Log(title = "订单详情")
-public class TshopInfoController extends BaseBeanController<TshopInfo> {
+@RequestMapping("${jeeweb.admin.url.prefix}/finance/TfinanceRechargeLog")
+@ViewPrefix("ebp/finance")
+@RequiresPathPermission("finance:TfinanceRechargeLog")
+@Log(title = "交易日志管理")
+public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRechargeLog> {
 
     @Autowired
-    private TshopInfoService tshopInfoService;
+    private TfinanceRechargeLogService tfinanceRechargeLogService;
+
+
 
     @GetMapping
     @RequiresMethodPermissions("view")
     public ModelAndView TaskList(Model model, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView mav = displayModelAndView("listshopinfo");
+        ModelAndView mav = displayModelAndView("list");
         return mav;
     }
 
     @GetMapping(value = "add")
     public ModelAndView add(Model model, HttpServletRequest request, HttpServletResponse response) {
-        model.addAttribute("data", new TshopInfo());
+        model.addAttribute("data", new TfinanceRecharge());
         return displayModelAndView ("edit");
     }
 
     @PostMapping("add")
     @Log(logType = LogType.INSERT)
-    public Response add(TshopInfo entity, BindingResult result,
+    public Response add(TfinanceRechargeLog entity, BindingResult result,
                         HttpServletRequest request, HttpServletResponse response) {
         // 验证错误
-        this.checkError(entity,result);
-        tshopInfoService.insert(entity);
+        try {
+            tfinanceRechargeLogService.insert(entity);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return Response.ok("添加成功");
     }
 
     @PostMapping("update")
     @Log(logType = LogType.UPDATE)
     @RequiresMethodPermissions("update")
-    public Response update(@RequestBody TshopInfo entity, BindingResult result,
+    public Response update(@RequestBody TfinanceRechargeLog entity, BindingResult result,
                            HttpServletRequest request, HttpServletResponse response) {
         try {
-            TshopInfo tb = tshopInfoService.selectById(entity.getId());
-            tshopInfoService.insertOrUpdate(tb);
+            TfinanceRechargeLog tb = tfinanceRechargeLogService.selectById(entity.getId());
+            tfinanceRechargeLogService.insertOrUpdate(tb);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -82,11 +95,10 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
     @Log(logType = LogType.DELETE)
     @RequiresMethodPermissions("delete")
     public Response delete(@PathVariable("id") String id) {
-        tshopInfoService.deleteById(id);
+
+        tfinanceRechargeLogService.deleteById(id);
         return Response.ok("删除成功");
     }
-
-
 
 
     /**
@@ -98,13 +110,15 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
      */
     @RequestMapping(value = "ajaxList", method = { RequestMethod.GET, RequestMethod.POST })
     @PageableDefaults(sort = "create_date=desc")
+    @Log(logType = LogType.SELECT)
+    @RequiresMethodPermissions("view")
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
-        EntityWrapper<TshopInfo> entityWrapper = new EntityWrapper<>(entityClass);
+        EntityWrapper<TfinanceRechargeLog> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)) {
-            entityWrapper.eq("create_by", userid);
+            entityWrapper.eq("t.create_by", userid);
         }
         if(queryable.getCondition()!=null) {
             String create1 = "";
@@ -134,9 +148,8 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageResponse<TshopInfo> pagejson = new PageResponse<>(tshopInfoService.list(queryable,entityWrapper));
+        PageResponse<TfinanceRechargeLog> pagejson = new PageResponse<>(tfinanceRechargeLogService.list(queryable,entityWrapper));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }
-
 }

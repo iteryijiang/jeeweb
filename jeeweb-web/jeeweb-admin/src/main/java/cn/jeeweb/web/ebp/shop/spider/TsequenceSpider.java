@@ -36,4 +36,12 @@ public class TsequenceSpider {
         long st =  tsequenceService.nextNum(bhkey);
         return  bhkey+String.format("%04d", st);
     }
+    /**
+     * 充值流水号
+     * */
+    public static String getRechargeNo()throws Exception{
+        String bhkey = "C"+DateUtils.formatDate(new Date(),"yyyyMMdd");
+        long st =  tsequenceService.nextNum(bhkey);
+        return  bhkey+String.format("%04d", st);
+    }
 }

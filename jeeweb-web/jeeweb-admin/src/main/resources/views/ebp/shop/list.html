@@ -70,18 +70,18 @@
             data: JSON.stringify(data),
             dataType: "json",
             success: function(data){
-                $("#sumActualprice").html(data.sumActualprice);
-                $("#sumOrderPrice").html(data.sumOrderPrice);
-                $("#sumDeliveryPrice").html(data.sumDeliveryPrice);
-                $("#sumFinishPrice").html(data.sumFinishPrice);
-                $("#sumtasknum").html(data.sumtasknum);
+                $("#sumActualprice").html(data.sumActualprice==undefined?"0":data.sumActualprice);
+                $("#sumOrderPrice").html(data.sumOrderPrice==undefined?"0":data.sumOrderPrice);
+                $("#sumDeliveryPrice").html(data.sumDeliveryPrice==undefined?"0":data.sumDeliveryPrice);
+                $("#sumFinishPrice").html(data.sumFinishPrice==undefined?"0":data.sumFinishPrice);
+                $("#sumtasknum").html(data.sumtasknum==undefined?"0":data.sumtasknum);
 
-                $("#sumcanreceivenum").html(data.sumcanreceivenum);
-                $("#sumunanswerednum").html(data.sumunanswerednum);
-                $("#sumreceivingnum").html(data.sumreceivingnum);
-                $("#sumordernum").html(data.sumordernum);
-                $("#sumdeliverynum").html(data.sumdeliverynum);
-                $("#sumfinishnum").html(data.sumfinishnum);
+                $("#sumcanreceivenum").html(data.sumcanreceivenum==undefined?"0":data.sumcanreceivenum);
+                $("#sumunanswerednum").html(data.sumunanswerednum==undefined?"0":data.sumunanswerednum);
+                $("#sumreceivingnum").html(data.sumreceivingnum==undefined?"0":data.sumreceivingnum);
+                $("#sumordernum").html(data.sumordernum==undefined?"0":data.sumordernum);
+                $("#sumdeliverynum").html(data.sumdeliverynum==undefined?"0":data.sumdeliverynum);
+                $("#sumfinishnum").html(data.sumfinishnum==undefined?"0":data.sumfinishnum);
             }
         });
     }
