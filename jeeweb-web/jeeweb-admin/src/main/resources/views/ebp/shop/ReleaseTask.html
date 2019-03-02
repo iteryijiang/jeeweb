@@ -32,8 +32,8 @@
                         <!--<span><a href="#">延长技术服务时长</a></span>-->
                 <!--</div>-->
                <div class="col-md-5">
-                    <span>可用押金：<b class='red_font'>${tb.totaldeposit}</b>元</span>
-                    <span>冻结押金：<b class='red_font'>${tb.taskdeposit}</b>元</span>
+                    <span>可用押金：<b class='red_font'>${si.totaldeposit}</b>元</span>
+                    <span>冻结押金：<b class='red_font'>${si.taskdeposit}</b>元</span>
                </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="tasknum">任务单数:</label>
-                                    <input type="number" class="form-control must-fill" id="tasknum" placeholder="" value="">
+                                    <input type="number" class="form-control must-fill" id="tasknum" placeholder="" value="" oninput="sum(this.value,$('#actualprice').val())">
                                     <label for="inputNum">次数<span><b class='red_font margin_0'>必填</b></span></label>
                                 </div>
                             </form>
@@ -156,7 +156,7 @@
                                 </div>
                                 <div class="form-group">
                                   <label for="actualprice">实付金额:</label>
-                                  <input type="number" class="form-control must-fill" id="actualprice" placeholder="" value="${tb.actualprice}">
+                                  <input type="number" class="form-control must-fill" id="actualprice" placeholder="" value="${tb.actualprice}"  oninput="sum($('#tasknum').val(),this.value)">
                                   <label for="actualprice">元<span><b class='red_font margin_0'>必填</b></span></label>
                                 </div>
                                 <div class="form-group">
@@ -165,6 +165,20 @@
                                     <label for="inputNum">件<span><!--（出于安全，建议每单不要超过2件）--><b class='red_font margin_0'>必填</b></span></label>
                                 </div>
                                 <!--<span>下单总金额<b class='red_font' id="numsum">0</b>元</span>-->
+                            </form>
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <label>佣金单价（单链接）:</label>
+                                    <label><span><b style="color: green;font-size: 18px" >${presentdeposit}</b></span></label>
+                                </div>
+                                <div class="form-group">
+                                    <label>佣金总价:</label>
+                                    <label><span id="presentdepositsum" style="color: red;font-size: 18px"></span></label>
+                                </div>
+                                <div class="form-group">
+                                    <label>账户可用余额:</label>
+                                    <label><b style="color: green;font-size: 18px">${si.totaldeposit}</b></span></label>
+                                </div>
                             </form>
                             <form class="form-inline">
                                 <div class="form-group">
@@ -952,6 +966,12 @@
         // if("${tb.effectdate}"!=null&&"${tb.effectdate}"!=""){
         //     $("#effectdate").val(dateFtt("yyyy-MM-dd",new Date("${tb.effectdate}")));
         // }
+        function sum(tasknum,actualprice){
+            if(tasknum!=undefined&&actualprice!=undefined&&tasknum!=""&&actualprice!=""){
+                $('#presentdepositsum').html(tasknum*actualprice+(${presentdeposit}*tasknum));
+
+            }
+        }
         function dateFtt(fmt,date)
         { //author: meizz
             var o = {

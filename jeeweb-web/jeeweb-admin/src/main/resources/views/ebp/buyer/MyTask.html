@@ -126,9 +126,9 @@
                         divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
                     }
                     if(list[j].taskstate=="1"){
-                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','2')\">确定下单</button></p></td>";
+                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','2',$(this),'确定下单')\">确定下单</button></p></td>";
                     }else if(list[j].taskstate=="3"){
-                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','4')\">确定收货</button></p></td>";
+                        divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','4',$(this),'确定收货')\">确定收货</button></p></td>";
                     }
                     divid +="</tr>";
                 }
@@ -157,7 +157,7 @@
                 fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
         return fmt;
     }
-    function upTask(id,state){
+    function upTask(id,state,obj,name){
         var buyerjdnick_  = $("#buyerjdnick_"+id).val();
         var jdorderno_  = $("#jdorderno_"+id).val();
 
@@ -173,9 +173,15 @@
         upjdorderno(jdorderno_,id);
         $.ajax({
             url: "${adminPath}/buyer/TmyTask/"+id+"/"+state+"/upTaskState",
+            beforeSend:function(){//触发ajax请求开始时执行
+                obj.val('提交中').attr('disabled',true);//改变提交按钮上的文字并将按钮设置为不可点击
+            },
             success: function(data){
                 alert("操作成功！");
                 location.reload();
+            },
+            complete:function(){//ajax请求完成时执行
+                obj.val(name).attr('disabled',false);//改变提交按钮上的文字并将按钮设置为可以点击
             }
         });
     }

@@ -36,7 +36,7 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
     public boolean addTask(TtaskBase ttaskBase, TshopInfo si);
 
     /**
-     * 任务撤销
+     * 任务状态修改
      * */
-    public boolean upTask(TtaskBase ttaskBase, TshopInfo si);
+    public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype);
 }

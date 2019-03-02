@@ -22,6 +22,7 @@ import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
+import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopBase;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
@@ -77,6 +78,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         model.addAttribute("tb",tb);
         model.addAttribute("si",si);
+        model.addAttribute("presentdeposit",Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5")));
         return displayModelAndView("ReleaseTask");
     }
 
@@ -759,7 +761,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             si.setTotaldeposit(si.getTotaldeposit().add(price));
             si.setTaskdeposit(si.getTaskdeposit().subtract(price));
         }
-        ttaskBaseService.upTask(tb,si);
+        ttaskBaseService.upTask(tb,si,TfinanceRechargeService.rechargetype_4);
     }
 
     @GetMapping(value = "{id}/myAgainList")
@@ -772,6 +774,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         model.addAttribute("tb",tb);
         model.addAttribute("si",si);
+        model.addAttribute("presentdeposit",Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5")));
         ModelAndView mav = displayModelAndView("ReleaseTask");
         return mav;
     }
