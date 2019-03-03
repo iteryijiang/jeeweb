@@ -22,6 +22,7 @@ import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
+import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
@@ -55,6 +56,12 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
     @RequiresMethodPermissions("view")
     public ModelAndView TaskList(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("list");
+        return mav;
+    }
+    @GetMapping(value = "listShopFinance")
+    @RequiresMethodPermissions("listShopFinance")
+    public ModelAndView listShopFinance(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("listShopFinance");
         return mav;
     }
 
@@ -117,32 +124,26 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
         EntityWrapper<TfinanceRechargeLog> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
-        if (!StringUtils.isEmpty(userid)) {
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
             entityWrapper.eq("t.create_by", userid);
         }
+        entityWrapper.setTableAlias("t");
         if(queryable.getCondition()!=null) {
-            String create1 = "";
-            String create2 = "";
-            Condition.Filter Filter = queryable.getCondition().getFilterFor("createDate");
-            if (Filter != null) {
-                Object o = Filter.getValue();
-                if (o instanceof String[]) {
-                    String[] ss = (String[]) o;
-                    if (ss != null && ss.length >= 2) {
-                        create1 = ss[0];
-                        create2 = ss[1] + " 23:59:59";
-                        ss[0] = create1;
-                        ss[1] = create2;
-                    } else if (ss != null && ss.length >= 1) {
-                        create1 = ss[0];
-                        create2 = ss[0] + " 23:59:59";
-                        ss = new String[2];
-                        ss[0] = create1;
-                        ss[1] = create2;
-                    }
-                    queryable.getCondition().remove(Filter);
-                    queryable.getCondition().and(Condition.Operator.between, "createDate", ss);
-                }
+            Condition.Filter filter = queryable.getCondition().getFilterFor("createDate");
+            if (filter != null) {
+                queryable.getCondition().remove(filter);
+                queryable.getCondition().and(Condition.Operator.between, "createDate", TaskUtils.whereDate(filter));
+            }
+            Condition.Filter Filter_loginname = queryable.getCondition().getFilterFor("loginname");
+            if(Filter_loginname!=null){
+                queryable.getCondition().remove(Filter_loginname);
+                entityWrapper.like("s.loginname",Filter_loginname.getValue().toString());
+            }
+
+            Condition.Filter Filter_name = queryable.getCondition().getFilterFor("shopname");
+            if(Filter_name!=null){
+                queryable.getCondition().remove(Filter_name);
+                entityWrapper.like("b.shopname",Filter_name.getValue().toString());
             }
         }
         // 预处理
@@ -152,4 +153,6 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }
+
+
 }

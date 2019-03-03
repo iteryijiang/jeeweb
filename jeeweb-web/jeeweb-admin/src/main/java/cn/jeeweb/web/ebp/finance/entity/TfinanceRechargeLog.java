@@ -33,7 +33,12 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 	@TableField(exist = false)
 	private String loginname;
 	@TableField(exist = false)
-	private String username;
+	private String shopname;
+
+
+	public TfinanceRechargeLog(){
+
+	}
 
 	public TfinanceRechargeLog(String shopid,String tradetype,BigDecimal producedeposit,BigDecimal availabledeposit){
 		this.shopid = shopid;
@@ -120,11 +125,11 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 		this.loginname = loginname;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getShopname() {
+		return shopname;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setShopname(String shopname) {
+		this.shopname = shopname;
 	}
 }

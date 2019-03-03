@@ -1,24 +1,24 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单管理',''), libs: ''}){ %>
-<div>
-    <table cellpadding="10" style="font-size:18px;padding: 10px">
-        <tr>
-            <td><p>实付总价：<span style="color:green;font-weight: bold" id="sumActualprice"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>买手确认下单实付金额：<span style="color:green;font-weight: bold" id="sumOrderPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>商家确认发货实付金额：<span style="color:red;font-weight: bold" id="sumDeliveryPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>完成实付金额：<span style="color:red;font-weight: bold" id="sumFinishPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>任务单数：<span style="color:green;font-weight: bold" id="sumtasknum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-        </tr>
-        <tr>
-            <td><p>已接单数：<span style="color:green;font-weight: bold" id="sumunanswerednum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>未接单数：<span style="color:blue;font-weight: bold" id="sumcanreceivenum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已接单、待下单：<span style="color:blue;font-weight: bold" id="sumreceivingnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已下单、待发货：<span style="color:red;font-weight: bold" id="sumordernum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已发货、待收货	：<span style="color:blue;font-weight: bold" id="sumdeliverynum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已收货、完成：<span style="color:blue;font-weight: bold" id="sumfinishnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-        </tr>
-    </table>
-    <br>
-</div>
+<!--<div>-->
+    <!--<table cellpadding="10" style="font-size:18px;padding: 10px">-->
+        <!--<tr>-->
+            <!--<td><p>实付总价：<span style="color:green;font-weight: bold" id="sumActualprice"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>买手确认下单实付金额：<span style="color:green;font-weight: bold" id="sumOrderPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>商家确认发货实付金额：<span style="color:red;font-weight: bold" id="sumDeliveryPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>完成实付金额：<span style="color:red;font-weight: bold" id="sumFinishPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>任务单数：<span style="color:green;font-weight: bold" id="sumtasknum"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td><p>已接单数：<span style="color:green;font-weight: bold" id="sumunanswerednum"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>未接单数：<span style="color:blue;font-weight: bold" id="sumcanreceivenum"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>已接单、待下单：<span style="color:blue;font-weight: bold" id="sumreceivingnum"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>已下单、待发货：<span style="color:red;font-weight: bold" id="sumordernum"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>已发货、待收货	：<span style="color:blue;font-weight: bold" id="sumdeliverynum"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+            <!--<td><p>已收货、完成：<span style="color:blue;font-weight: bold" id="sumfinishnum"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
+        <!--</tr>-->
+    <!--</table>-->
+    <!--<br>-->
+<!--</div>-->
 
 <#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList" sortname="taskno" sortorder="desc" sortable="false">
 <#grid:column label="任务编号"  name="taskno"/>
@@ -48,41 +48,41 @@
 <#grid:toolbar  function="reset" />
 </#grid:grid>
 <% } %>
-<script>
-    function search(gridId){
-        var page = $("#"+gridId).getGridParam('page'); // 获取当前页码
-        searchByPage(gridId,page);
-        getload();
-    }
-    getload();
-    function getload(){
-        var data={};
-        data.create1 = $("#ttaskBaseGrid_effectdate_start").val();
-        data.create2 = $("#ttaskBaseGrid_effectdate_end").val();
-        data.shopname = $("input[name='shopname']").val();
-        data.tTitle = $("input[name='tTitle']").val();
-        data.status = $("select[name='status']").val();
-        data.article = $("input[name='article']").val();
-        $.ajax({
-            type: "POST",
-            url: "${adminPath}/shop/TtaskBase/showTaskBaseLoad",
-            contentType:'application/json;charset=utf-8',
-            data: JSON.stringify(data),
-            dataType: "json",
-            success: function(data){
-                $("#sumActualprice").html(data.sumActualprice==undefined?"0":data.sumActualprice);
-                $("#sumOrderPrice").html(data.sumOrderPrice==undefined?"0":data.sumOrderPrice);
-                $("#sumDeliveryPrice").html(data.sumDeliveryPrice==undefined?"0":data.sumDeliveryPrice);
-                $("#sumFinishPrice").html(data.sumFinishPrice==undefined?"0":data.sumFinishPrice);
-                $("#sumtasknum").html(data.sumtasknum==undefined?"0":data.sumtasknum);
+<!--<script>-->
+    <!--function search(gridId){-->
+        <!--var page = $("#"+gridId).getGridParam('page'); // 获取当前页码-->
+        <!--searchByPage(gridId,page);-->
+        <!--getload();-->
+    <!--}-->
+    <!--getload();-->
+    <!--function getload(){-->
+        <!--var data={};-->
+        <!--data.create1 = $("#ttaskBaseGrid_effectdate_start").val();-->
+        <!--data.create2 = $("#ttaskBaseGrid_effectdate_end").val();-->
+        <!--data.shopname = $("input[name='shopname']").val();-->
+        <!--data.tTitle = $("input[name='tTitle']").val();-->
+        <!--data.status = $("select[name='status']").val();-->
+        <!--data.article = $("input[name='article']").val();-->
+        <!--$.ajax({-->
+            <!--type: "POST",-->
+            <!--url: "${adminPath}/shop/TtaskBase/showTaskBaseLoad",-->
+            <!--contentType:'application/json;charset=utf-8',-->
+            <!--data: JSON.stringify(data),-->
+            <!--dataType: "json",-->
+            <!--success: function(data){-->
+                <!--$("#sumActualprice").html(data.sumActualprice==undefined?"0":data.sumActualprice);-->
+                <!--$("#sumOrderPrice").html(data.sumOrderPrice==undefined?"0":data.sumOrderPrice);-->
+                <!--$("#sumDeliveryPrice").html(data.sumDeliveryPrice==undefined?"0":data.sumDeliveryPrice);-->
+                <!--$("#sumFinishPrice").html(data.sumFinishPrice==undefined?"0":data.sumFinishPrice);-->
+                <!--$("#sumtasknum").html(data.sumtasknum==undefined?"0":data.sumtasknum);-->
 
-                $("#sumcanreceivenum").html(data.sumcanreceivenum==undefined?"0":data.sumcanreceivenum);
-                $("#sumunanswerednum").html(data.sumunanswerednum==undefined?"0":data.sumunanswerednum);
-                $("#sumreceivingnum").html(data.sumreceivingnum==undefined?"0":data.sumreceivingnum);
-                $("#sumordernum").html(data.sumordernum==undefined?"0":data.sumordernum);
-                $("#sumdeliverynum").html(data.sumdeliverynum==undefined?"0":data.sumdeliverynum);
-                $("#sumfinishnum").html(data.sumfinishnum==undefined?"0":data.sumfinishnum);
-            }
-        });
-    }
-</script>
+                <!--$("#sumcanreceivenum").html(data.sumcanreceivenum==undefined?"0":data.sumcanreceivenum);-->
+                <!--$("#sumunanswerednum").html(data.sumunanswerednum==undefined?"0":data.sumunanswerednum);-->
+                <!--$("#sumreceivingnum").html(data.sumreceivingnum==undefined?"0":data.sumreceivingnum);-->
+                <!--$("#sumordernum").html(data.sumordernum==undefined?"0":data.sumordernum);-->
+                <!--$("#sumdeliverynum").html(data.sumdeliverynum==undefined?"0":data.sumdeliverynum);-->
+                <!--$("#sumfinishnum").html(data.sumfinishnum==undefined?"0":data.sumfinishnum);-->
+            <!--}-->
+        <!--});-->
+    <!--}-->
+<!--</script>-->

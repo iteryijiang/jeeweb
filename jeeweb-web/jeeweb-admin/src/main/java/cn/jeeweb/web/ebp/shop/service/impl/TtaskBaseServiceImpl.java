@@ -55,6 +55,13 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
     public Map sumNumAndPrice(Map m){
         return baseMapper.sumNumAndPrice(m);
     }
+    public Map showTaskBaseLoadFinance(Map m){
+        return baseMapper.showTaskBaseLoadFinance(m);
+    }
+
+    public Integer sumTtaskBase(Map m){
+        return baseMapper.sumTtaskBase(m);
+    }
 
     public boolean addTask(TtaskBase ttaskBase, TshopInfo si){
         tshopInfoService.updateById(si);

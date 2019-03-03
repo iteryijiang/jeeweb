@@ -14,6 +14,10 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
 
     public Map sumNumAndPrice(Map m);
 
+    public Map showTaskBaseLoadFinance(Map m);
+
+    public Integer sumTtaskBase(Map m);
+
     public List<Map> selectFinanceList( String createDate1, String createDate2);
 
     public List<Map> selectWithdrawalMoneyList( String createDate1, String createDate2,int multiple);

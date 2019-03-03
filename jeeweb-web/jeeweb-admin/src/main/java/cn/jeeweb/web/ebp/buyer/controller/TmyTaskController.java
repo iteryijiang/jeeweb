@@ -25,6 +25,7 @@ import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.modules.sys.entity.Menu;
 import cn.jeeweb.web.modules.sys.entity.OperationLog;
 import cn.jeeweb.web.utils.UserUtils;
@@ -145,28 +146,10 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
             entityWrapper.eq("create_by", userid);
         }
         if(queryable.getCondition()!=null) {
-            String create1 = "";
-            String create2 = "";
-            Condition.Filter Filter = queryable.getCondition().getFilterFor("createDate");
-            if (Filter != null) {
-                Object o = Filter.getValue();
-                if (o instanceof String[]) {
-                    String[] ss = (String[]) o;
-                    if (ss != null && ss.length >= 2) {
-                        create1 = ss[0];
-                        create2 = ss[1] + " 23:59:59";
-                        ss[0] = create1;
-                        ss[1] = create2;
-                    } else if (ss != null && ss.length >= 1) {
-                        create1 = ss[0];
-                        create2 = ss[0] + " 23:59:59";
-                        ss = new String[2];
-                        ss[0] = create1;
-                        ss[1] = create2;
-                    }
-                    queryable.getCondition().remove(Filter);
-                    queryable.getCondition().and(Condition.Operator.between, "createDate", ss);
-                }
+            Condition.Filter filter = queryable.getCondition().getFilterFor("createDate");
+            if (filter != null) {
+                queryable.getCondition().remove(filter);
+                queryable.getCondition().and(Condition.Operator.between, "createDate", TaskUtils.whereDate(filter));
             }
         }
         // 预处理
@@ -300,20 +283,11 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
             String create1 = jsonObject.getString("create1");
             String create2 = jsonObject.getString("create2");
             String state = jsonObject.getString("state");
-            Date date = new Date();
-            if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
-                create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-                create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
-                create1 = create2;
-            }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
-                create2 = create1;
-            }
-
+            String[] creates = TaskUtils.whereNewDate(create1,create2);
             Map m = new HashMap();
             m.put("userid",userid);
-            m.put("create1",create1);
-            m.put("create2",create2);
+            m.put("create1",creates[0]);
+            m.put("create2",creates[1]);
             m.put("state",state);
             map = sumNumAndPrice(m);
         }catch (Exception e){
@@ -331,39 +305,21 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         propertyPreFilterable.addQueryProperty("id");
 
         Date date = new Date();
-        String create1 = "";
-        String create2 = "";
         String buyerName = "";
         if(queryable.getCondition()!=null){
-            Condition.Filter Filter = queryable.getCondition().getFilterFor("countCreateDate");
-            if(Filter!=null){
-                Object o = Filter.getValue();
-                if(o instanceof String[]){
-                    String[] ss = (String[])o;
-                    if(ss!=null&&ss.length>=2){
-                        create1 = ss[0];
-                        create2 = ss[1];
-                    }else if(ss!=null&&ss.length>=1){
-                        create1 = ss[0];
-                    }
-                }
-            }
             Condition.Filter buyerNameFilter = queryable.getCondition().getFilterFor("buyerName");
             if(buyerNameFilter!=null){
                 buyerName = "%"+(String)buyerNameFilter.getValue()+"%";
             }
         }
-        if(StringUtils.isEmpty(create1)&&StringUtils.isEmpty(create2)){
-            create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
-            create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
-        }else if(StringUtils.isEmpty(create1)&&StringUtils.isNotEmpty(create2)){
-            create1 = create2;
-        }else if(StringUtils.isNotEmpty(create1)&&StringUtils.isEmpty(create2)){
-            create2 = create1;
+        String[] creates = TaskUtils.whereNewDate("","");
+        if(queryable.getCondition()!=null){
+            Condition.Filter filter = queryable.getCondition().getFilterFor("countCreateDate");
+            creates = TaskUtils.whereDate(filter);
         }
         Map par_map = new HashMap();
-        par_map.put("createDate1",create1);
-        par_map.put("createDate2",create2);
+        par_map.put("createDate1",creates[0]);
+        par_map.put("createDate2",creates[1]);
         par_map.put("buyerName",buyerName);
         List<Map> list = tmyTaskDetailService.listFinanceBuyerReport(par_map);
         Double sumPrice = 0.0;

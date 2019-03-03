@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service("TshopInfoService1")
@@ -19,5 +20,9 @@ public class TshopInfoServiceImpl extends CommonServiceImpl<TshopInfoMapper, Tsh
 
     public TshopInfo  selectOne(String userid){
         return baseMapper.selectOne(userid);
+    }
+
+    public Map selectSumOne(Map m){
+        return baseMapper.selectSumOne(m);
     }
 }

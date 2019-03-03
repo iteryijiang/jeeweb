@@ -38,4 +38,15 @@
     <select id="selectOne"  resultMap="TshopInfo">
         SELECT t.* FROM T_shop_Info t where t.userid = #{userid} limit 1
     </select>
+
+  <select id="selectSumOne" resultType="java.util.Map">
+        SELECT sum(totaldeposit) sumTotaldeposit,sum(taskdeposit) sumTaskdeposit FROM T_shop_Info t where
+        1=1
+      <if test="map.userid != '' and map.userid != null">
+        and t.userid=#{map.userid}
+      </if>
+      <if test="map.loginname != '' and map.loginname != null">
+          and t.loginname like #{map.loginname}
+      </if>
+   </select>
 </mapper>

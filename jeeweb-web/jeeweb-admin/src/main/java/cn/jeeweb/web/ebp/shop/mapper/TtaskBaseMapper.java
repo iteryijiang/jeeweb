@@ -21,6 +21,10 @@ public interface TtaskBaseMapper extends BaseMapper<TtaskBase> {
 //@Param("createby") String createby, @Param("createDate1") String createDate1, @Param("createDate2") String createDate2, @Param("shopname") String shopname,@Param("tTitle")String tTitle,@Param("status") String status
 	Map sumNumAndPrice(@Param("map") Map map);
 
+	Map showTaskBaseLoadFinance(@Param("map") Map map);
+
+	Integer sumTtaskBase(@Param("map") Map map);
+
 	List<TtaskBase> selectShopList(Pagination page, @Param("ew") Wrapper<TtaskBase> wrapper);
 
 	List<Map> selectFinanceList(@Param("createDate1") String createDate1, @Param("createDate2") String createDate2);

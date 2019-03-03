@@ -13,7 +13,8 @@
   
 
   <select id="selectUserList" resultMap="TfinanceRechargeLog">
-      select t.* from t_finance_recharge_log t
+      select t.*,s.loginname,b.shopname from t_finance_recharge_log t left join t_shop_info s on t.shopid=s.userid
+      left join t_shop_base b on t.storeid=b.id
        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
 		  <where>
 		    ${ew.sqlSegment}
