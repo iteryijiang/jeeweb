@@ -1,0 +1,27 @@
+<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('shop.shopbase.addshop',''), formId: 'shopBaseForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+<#form:form id="shopBaseForm" modelAttribute="data" method="post" class="form-horizontal">
+	<#form:hidden path="id"/>
+	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+		<tbody>
+		<tr>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>销售用户:</label></td>
+			<td  class="width-35" >
+				<#form:select path="userid" class="form-control"  htmlEscape="false"  nullmsg="请输入销售用户！"
+				items="${lsitSold}"
+				itemLabel="soldlogin" itemValue="userid"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>商户:</label>
+			</td>
+			<td class="width-35" >
+				<#form:select path="shopid" class="form-control"  htmlEscape="false"  nullmsg="请输入商户！"
+				items="${lsitShop}"
+				itemLabel="loginname" itemValue="userid"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</#form:form>
+<% } %>

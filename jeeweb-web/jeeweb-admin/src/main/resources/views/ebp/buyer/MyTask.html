@@ -34,6 +34,11 @@
                     <p>任务总价：<span>${tmyTask.totalprice}</span></p>
                 </div>
             </div>
+            <div>
+                京东账号：<input type="text" width="120px" id="buyerjdnick">
+                <!--订单号：<input type="text" width="120px" id="jdorderno">-->
+                <button class='btn btn-warning' onclick="upTaskDetail()">批量保存</button>
+            </div>
         </div>
         <!-- 订单详情表格 -->
         <!--<div class=task_table>-->
@@ -202,6 +207,18 @@
                 }
             });
         }
+    }
+    function upTaskDetail(){
+        var buyerjdnick_  = $("#buyerjdnick").val();
+        // var jdorderno_  = $("#jdorderno").val();
+        //+ "/" +jdorderno_
+        $.ajax({
+            url: "${adminPath}/buyer/TmyTaskDetail/${tmyTask.id}/" + buyerjdnick_  +"/upTaskDetail",
+            success: function (data) {
+                alert("操作成功！");
+                location.reload();
+            }
+        });
     }
 </script>
 </html>

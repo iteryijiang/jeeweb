@@ -732,6 +732,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             String create2 = jsonObject.getString("create2");
             String loginname = jsonObject.getString("loginname");
             String shopname = jsonObject.getString("shopname");
+            String status = jsonObject.getString("status");
 
             String[] creates = TaskUtils.whereNewDate(create1,create2);
 
@@ -739,6 +740,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             m.put("userid",userid);
             m.put("create1",creates[0]);
             m.put("create2",creates[1]);
+            m.put("status",status);
             m.put("loginname",(StringUtils.isNotEmpty(loginname)?"%"+loginname+"%":null));
             m.put("shopname",(StringUtils.isNotEmpty(shopname)?"%"+shopname+"%":null));
             map = ttaskBaseService.showTaskBaseLoadFinance(m);

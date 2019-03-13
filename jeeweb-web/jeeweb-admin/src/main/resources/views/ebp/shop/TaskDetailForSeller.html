@@ -56,16 +56,16 @@
                         <div class='item'>手机Pad端:<span><b class='yel'>${tb.tasknum}</b>单</span></div>
                         <div class='item'>进行中：<span><b class='yel'>${(taskstatus0==null?0:taskstatus0)}</b>单，未接手<b class='yel'>${tb.tasknum-(taskstatus0==null?0:taskstatus0)-(taskstatus1==null?0:taskstatus1)}</b>单，已完成：<b class='yel'>${(taskstatus1==null?0:taskstatus1)}</b>单</span></div>
                     </div>
-                    <div class='keyword'>
-                        <p>商品搜索关键字词</p>
-                        <div class='item'>
-                            <div>
-                                <div class='lf'>淘宝app搜索关键词：</div>
-                                <div class='rt'>
-                                    <span>${tb.spec1}</span>
-                                    <span>${tb.spec2}</span>
-                                </div>
-                            </div>
+                    <!--<div class='keyword'>-->
+                        <!--<p>商品搜索关键字词</p>-->
+                        <!--<div class='item'>-->
+                            <!--<div>-->
+                                <!--<div class='lf'>京东APP搜索关键词：</div>-->
+                                <!--<div class='rt'>-->
+                                    <!--<span>${tb.spec1}</span>-->
+                                    <!--<span>${tb.spec2}</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
                             <!--<div>-->
                                 <!--<div class='lf'>淘宝app搜索关键词2：</div>-->
                                 <!--<div class='rt'>-->
@@ -87,8 +87,8 @@
                                     <!--<span>长过膝</span>-->
                                 <!--</div>-->
                             <!--</div>-->
-                        </div>
-                    </div>
+                        <!--</div>-->
+                    <!--</div>-->
                     <div>
                         <p>任务编号：<span>${tb.taskno}</span></p>
                         <p>任务发布时间：${createDateFormat}</p>
@@ -323,7 +323,7 @@
                     // tr += "<td>"+(json[i].tasktype==undefined?"":json[i].tasktype)+"</td>";
                     tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].createDate)))+"</td>";
                     tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p></td>";//<p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a>
-                    tr += "<td>"+(json[i].taskstateName==undefined?"":json[i].taskstateName)+"</td>";
+                    tr += "<td>"+(json[i].taskstateName==undefined?"":json[i].taskstateName)+(json[i].remarks==undefined?"":"("+json[i].remarks+")")+"</td>";
                     // tr += "<td>"+(json[i].expressno==undefined?"":json[i].expressno)+"</td>";
                     tr += "<td>"+(json[i].pays==undefined?"":json[i].pays)+"</td>";
                     if(json[i].taskstate=="2"){

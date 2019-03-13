@@ -101,7 +101,7 @@ public class LoginLogController extends BaseBeanController<LoginLog> {
     @RequestMapping("export")
     @RequiresMethodPermissions("export")
     private void export(ModelMap map, Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
-                          HttpServletResponse response) throws IOException {
+                        HttpServletResponse response) throws IOException {
         EntityWrapper<LoginLog> entityWrapper = new EntityWrapper<LoginLog>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         // 预处理

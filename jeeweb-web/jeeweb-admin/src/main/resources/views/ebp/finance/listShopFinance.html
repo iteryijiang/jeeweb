@@ -20,6 +20,18 @@
             <td><p>已收货、完成：<span style="color:blue;font-weight: bold" id="sumfinishnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
         </tr>
         <tr>
+            <td style="font-size: 15px">
+                <div class="col-sm-12">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label class="control-label">任务状态：</label>
+                            <select id="status" class="form-control"><option value="">请选择</option></select>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
             <td colspan="6"><h3 style="color: #000000;">商户余额信息</h3><hr /></td>
         </tr>
         <tr>
@@ -28,6 +40,7 @@
             <!--<td><p>等级：<span style="color:red;font-weight: bold" id="accountlevel"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
             <td><p>累计发布单数：<span style="color:red;font-weight: bold" id="sumTaskBase"></span>&nbsp;&nbsp;&nbsp;</p></td>
         </tr>
+
     </table>
     <br>
 </div>
@@ -37,7 +50,7 @@
 <#grid:column label="商户号" name="loginname" query="true" condition="like" width="140" />
 <#grid:column label="店铺" name="shopname" query="true"  condition="like" width="140" />
 <#grid:column label="交易类型" name="tradetype" width="80" dict="tradetype" queryMode="select" condition="eq" query="true"/>
-<#grid:column label="发生金额" name="producedeposit" width="100"/>
+<#grid:column label="发生金额" name="producedepositName" width="100"/>
 <#grid:column label="余额" name="availabledeposit" width="100"/>
 
 <#grid:toolbar  function="search" />
@@ -45,6 +58,12 @@
 </#grid:grid>
 <% } %>
 <script>
+    $(function() {
+        var dicList = ${dicList};
+        for (var i = 0; i < dicList.length; i++) {
+            $("#status").append("<option value='" + dicList[i].value + "'>" + dicList[i].label + "</option>");
+        }
+    })
     function search(gridId){
         var page = $("#"+gridId).getGridParam('page'); // 获取当前页码
         searchByPage(gridId,page);
@@ -57,6 +76,7 @@
         data.create2 = $("#TfinanceRechargeLogGrid_createDate_end").val();
         data.loginname = $("input[name='loginname']").val();
         data.shopname = $("input[name='shopname']").val();
+        data.status =  $("#status").val();
         $.ajax({
             type: "POST",
             url: "${adminPath}/shop/TtaskBase/showTaskBaseLoadFinance",

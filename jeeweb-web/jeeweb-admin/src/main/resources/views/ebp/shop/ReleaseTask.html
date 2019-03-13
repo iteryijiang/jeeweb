@@ -92,485 +92,162 @@
     <!-- 主体 -->
     <div class='main_container'>
 
-            <div class="get-menu">
-                <a href="#">商家</a>
-                <span>></span>
-                <a class="A1" href="#">发布任务</a>
-            </div>
-            <img style='width:100%' src="img/banner_01_1.png" alt="">
-             <!-- 发布任务 -->
-
-            <div class='task_area'>
-                <div style='display:none' class='warn_info'>请完整填写以下信息</div>
-                <!-- 商品信息 -->
-                <div class='task_goods_info'>
-                    <div class='good_basic_info'>
-                        <div>
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="inputLink" class="col-sm-2 control-label">商品链接:</label>
-                                    <div class="col-sm-6">
-                                         <input class="form-control must-fill" id="inputLink" placeholder="" onblur="showOpen(this)" value="${tb.tUrl}">
-                                    </div>
-                                    <label for="inputLink" class="col-sm-1 control-label red_font">必填</label>
-                                </div>
-                            </form>
-                        </div>
-                        <div>
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label for="inputTab" class="col-sm-2 control-label">商品标题:</label>
-                                    <div class="col-sm-5">
-                                         <input class="form-control must-fill" id="inputTab" placeholder="" value="${tb.tTitle}">
-                                    </div>
-                                    <label for="inputTab" class="col-sm-1 control-label red_font">必填</label>
-                                </div>
-                            </form>
-                        </div>
-                        <div>
-                            <form class="form-inline">
-                                <div class="form-group">
-                                    <label for="storename">店铺:</label>
-                                    <!--<input type="number" class="form-control must-fill" id="storename" placeholder="">-->
-                                    <select id="storename" disabled="disabled">
-                                        <option value="">===请选择===</option>
-                                    </select>
-
-                                    <label for="storename"><b class='red_font margin_0'>必填</b></label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="brand">品牌:</label>
-                                    <input type="text" class="form-control" id="brand" placeholder="" value="${tb.brand}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="tasknum">任务单数:</label>
-                                    <input type="number" class="form-control must-fill" id="tasknum" placeholder="" value="" oninput="sum(this.value,$('#actualprice').val())">
-                                    <label for="inputNum">次数<span><b class='red_font margin_0'>必填</b></span></label>
-                                </div>
-                            </form>
-                            <form class="form-inline">
-                                <div class="form-group">
-                                    <label for="inputPrice">单品售价:</label>
-                                    <input type="number" class="form-control must-fill" id="inputPrice" placeholder="" value="${tb.tPrice}">
-                                    <label for="inputPrice">元<b class='red_font margin_0'>必填</b></label>
-                                </div>
-                                <div class="form-group">
-                                  <label for="actualprice">实付金额:</label>
-                                  <input type="number" class="form-control must-fill" id="actualprice" placeholder="" value="${tb.actualprice}"  oninput="sum($('#tasknum').val(),this.value)">
-                                  <label for="actualprice">元<span><b class='red_font margin_0'>必填</b></span></label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputNum">每单拍:</label>
-                                    <input type="number" class="form-control must-fill" id="inputNum" placeholder="" value="1" readonly>
-                                    <label for="inputNum">件<span><!--（出于安全，建议每单不要超过2件）--><b class='red_font margin_0'>必填</b></span></label>
-                                </div>
-                                <!--<span>下单总金额<b class='red_font' id="numsum">0</b>元</span>-->
-                            </form>
-                            <form class="form-inline">
-                                <div class="form-group">
-                                    <label>佣金单价（单链接）:</label>
-                                    <label><span><b style="color: green;font-size: 18px" >${presentdeposit}</b></span></label>
-                                </div>
-                                <div class="form-group">
-                                    <label>佣金总价:</label>
-                                    <label><span id="presentdepositsum" style="color: red;font-size: 18px"></span></label>
-                                </div>
-                                <div class="form-group">
-                                    <label>账户可用余额:</label>
-                                    <label><b style="color: green;font-size: 18px">${si.totaldeposit}</b></span></label>
-                                </div>
-                            </form>
-                            <form class="form-inline">
-                                <div class="form-group">
-                                  <label for="searchprice">搜索页面展示价格:</label>
-                                  <input type="text" class="form-control" id="searchprice" placeholder="" value="${tb.searchprice}">
-                                  <label for="searchprice">元<span class='color_0'>非必填，如该商品有满减、促销、多规格等情况，请填写此金额</span></label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="article">货号:</label>
-                                    <input type="text" class="form-control" id="article" placeholder="" value="${tb.article}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="effectdate">生效时间:</label>
-                                    <input id="effectdate" style="width: 180px" class="form-control"  type="text" readonly="readonly" onclick="laydate()" >
-                                </div>
-                             </form>
-                            <form class="form-inline">
-                                <div class="form-group">
-                                    <div class="wrapper wrapper-content animated fadeInRight">
-                                        <label>上传二维码:</label>
-                                        <div class="portlet-body">
-                                            <#form:form id="avatarForm" modelAttribute="tb"  method="post" class="form-horizontal">
-                                                <#form:hidden path="id" />
-                                                <div class="form-group">
-                                                    <div class="col-sm-3" >
-                                                        <#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px"  fileInputHeight="100px"  path="qrcodeurl"/>
-                                                    </div>
-                                                </div>
-                                                <!--<div class="form-group">-->
-                                                    <!--<div class="col-sm-4 col-sm-offset-3" >-->
-                                                        <!--<button class="btn btn-primary" type="submit">提交</button>-->
-                                                    <!--</div>-->
-                                                <!--</div>-->
-                                            </#form:form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                             <p class='red_font'>如商家发布的是手机端任务，请务必填写手机端展示的商品主图、页面搜索价格和商品筛选分类、排序等。</p>
-                        </div>
-                    </div>
-                    <div>
-                        <p class='border_0'>如何找到您的商品：</p>
-                      <div id='task_accordin' class='radio'>
-                          <div class='item'>a
-                                <div class="radio">
-                                    <!--<label>-->
-                                        <!--<input type="radio" name="optionsRadios" id="0" value="pc_taobao" >-->
-                                        <!--使用<b class="red_font">"淘宝搜索框"</b>查找商品<b class="red_font">（选择使用“淘宝搜索框”查找商品后，此任务默认电脑端任务；）</b>-->
-                                    <!--</label>-->
-                                </div>
-                              <div  class='item_area'>
-                                    <p>请上传<b class="red_font">“淘宝商品主图”</b>，以便于买手快速找到任务商品<span>（图片大小为：1200x1200以内，且不能大于2M，格式为jpg、png、gif）</span></p>
-                                    <div class='good_upload'>
-                                        <div id='good_pic0'>
-                                            <!-- <img  src="img/goods_pic.png" alt=""> -->
-                                        </div>
-                                        <div class="col-xs-12 col-sm-4 col-md-4">
-                                                <div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle;width:100%">
-                                                    <button class="btn btn-warning fileinput-button" type="button">上传图片</button>
-                                                    <input type="file" class="jobData" onchange="loadFile(this.files[0],0)" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">
-                                                </div>
-                                        </div>
-                                    </div>
-                                    <div class='good_keyword' id='keyword0'>
-                                        <div class='item' id="1">
-                                            <p>关键字来源1：</p>
-                                            <label for="">让买手在<b class='red_font'>taobao.com</b>搜索关键字进入“搜索列表”</label>
-                                            <input type="text" class='must-fill'>
-                                            <span class='red_font'>必填</span>
-                                            <div class='good_cond'>
-                                                <p>
-                                                    <label for="">规格：</label>
-                                                    <input type="text" placeholder="如：颜色" class='spec0'>
-                                                    <input type="text" placeholder="如：尺寸" class='spec1'>
-                                                    <span class='color_0'>非必填</span>
-                                                </p>
-                                                <p>
-                                                    <label for="">在当前列表中，告诉买手通过筛选分类找到商品</label>
-                                                    <input type="text" class='classify0'>
-                                                    <input type="text" class='classify1'>
-                                                    <input type="text" class='classify2'>
-                                                    <input type="text" class='classify3'>
-                                                    <span class='color_0'>最多四个分类，非必填</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='good_detail'>
-
-                                        <p class='red_font'>注意：请确保可根据您任务中提供的关键字及商品筛选分类可以在淘宝前10页找到任务商品；否则会导致买手找不到商品，次关键词无法获得成交</p>
-                                        <div class="row line_0">
-                                            <div class="col-md-10">
-                                                    <a class='add' onclick='addKeyword(0)' href="javascript:;">+可多添加一个淘宝搜索关键字方案</a>
-                                                    <span>（最多可添加4个方案）</span>
-                                            </div>
-                                            <div class="col-md-2">可提高任务安全保障</div>
-                                        </div>
-                                        <p>缩小搜索范围：</p>
-                                        <div>
-                                            <p>让买手用列表筛选中"<b>价格筛选</b>"、"<b>商品所在地</b>"缩小范围<span  class='color_0'>非必填，买手可通过筛选价格或所在地更方便找到您的商品</span></p>
-                                            <form class="form-inline">
-                                                <div class="form-group">
-                                                    <label for="exampleInputName2">价格：</label>
-                                                    <input type="number" class="form-control pc_low"  placeholder="">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="exampleInputEmail2">元-</label>
-                                                    <input type="number" class="form-control pc_high"  placeholder="">
-                                                    <label for="">元</label>
-                                                </div>
-                                                <span  class='color_0'>非必填</span>
-                                                <span>商品所在地</span>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                        <span class='drop0'>北京</span>
-                                                        <input type="hidden" id="tasklocation1">
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider">
-                                                            <ul class='hot-city'>
-                                                                <li>上海</li>
-                                                                <li>北京</li>
-                                                                <li>成都</li>
-                                                                <li>广州</li>
-                                                            </ul>
-                                                            <li role="separator" class="divider"></li>
-                                                            <ul class='province'>
-                                                                <li>广东</li>
-                                                                <li>浙江</li>
-                                                                <li>江苏</li>
-                                                            </ul>
-                                                    </ul>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                              </div>
-                          </div>
-                          <div class='item'>
-                                <div class="radio">
-                                    <label>
-                                        <input type="radio" name="optionsRadios" id="1" value="mobile_taobao">
-                                        使用<b class="red_font">"手机淘宝"</b>查找商品<b class="red_font">（选择使用“手机淘宝”查找商品后，此任务默认无线手机端任务；）</b>
-                                    </label>
-                                </div>
-                                <div class='item_area'>
-                                        <p>请上传第1张<b class="red_font">“商品主图”</b>，<b class='red_font'>必填</b><span>（图片大小为：1200x1200以内，且不能大于2M，格式为jpg、png、gif）</span></p>
-                                        <div class='good_upload'>
-                                            <div class='must-fill' id='good_pic1'>
-                                                 <img id="img0" src="${tb.imgurl!=null?tb.imgurl:"img/goods_pic.png"}" alt="">
-                                            </div>
-                                            <!--<div class="col-xs-12 col-sm-4 col-md-4">-->
-                                                    <!--<div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle;width:100%">-->
-                                                        <!--<button class="btn btn-warning fileinput-button" type="button">上传图片</button>-->
-                                                        <!--<input type="file" class="jobData" onchange="loadFile(this.files[0],1)" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">-->
-                                                    <!--</div>-->
-                                            <!--</div>-->
-                                            <!--<p style='margin-top:50px;'>请上传第2张<b class="red_font">“商品主图”</b><span  class='color_0'>，非必填，若手机淘宝有2张主图请务必上传，以便买手找到商品</span></p>-->
-                                            <!--<div id='good_pic2'>-->
-                                                <!--&lt;!&ndash; <img src="img/goods_pic.png" alt=""> &ndash;&gt;-->
-                                            <!--</div>-->
-                                            <!--<div class="col-xs-12 col-sm-4 col-md-4">-->
-                                                    <!--<div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle;width:100%">-->
-                                                        <!--<button class="btn btn-warning fileinput-button" type="button">上传图片</button>-->
-                                                        <!--<input type="file" class="jobData" onchange="loadFile(this.files[0],2)" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">-->
-                                                    <!--</div>-->
-                                            <!--</div>-->
-                                        </div>
-                                        <div class='good_keyword' id='keyword1'>
-                                            <div class='item' id=1>
-                                                <p>关键字来源1：</p>
-                                                <label for="">让买手打开<b class='red-font'>手机淘宝APP</b>搜索关键字进入“搜索列表”</label>
-                                                <input type="text" class='must-fill' value="${tb.keyword}" style="width: 220px">
-                                                <span class='red_font'>必填</span>
-                                                <div class='good_cond'>
-                                                    <p>
-                                                        <label for="">规格：</label>
-                                                        <input type="text" placeholder="如：颜色" id="spec1" class='spec0' value="${tb.spec1}">
-                                                        <input type="text" placeholder="如：尺寸" id="spec2" class='spec1' value="${tb.spec2}">
-                                                        <span class='color_0'>非必填</span>
-                                                    </p>
-                                                </div>
-                                                <div class='good_detail'>
-                                                    <p class='red_font'>注意：请商家确保所给关键词可以在手机端前20屏找到商品，否则会导致买手找不到商品，此关键词无法获得成交</p>
-                                                        <form class="form-inline">
-                                                            <div class="form-group">
-                                                                <label for="exampleInputName2">价格区间：</label>
-                                                                <input type="number" class="form-control mobile_low"  placeholder="" value="${tb.lowpoint}">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="exampleInputEmail2">元-</label>
-                                                                <input type="number" class="form-control mobile_high"  placeholder="" value="${tb.highpoint}">
-                                                                <label for="">元</label>
-                                                            </div>
-                                                        </form>
-                                                        <div class="row discount_service" style='margin:0'>
-                                                            <label for="" class='col-md-2' >折扣和服务：</label>
-                                                            <div class="radio col-md-10" style='margin:0;'>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="包邮"> 包邮
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="天猫"> 天猫
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="全球购"> 全球购
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="消费者保障"> 消费者保障
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="手机专享"> 手机专享
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="淘金币"> 淘金币
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="7+天退换货"> 7+天退换货
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="促销"> 促销
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="花呗分期"> 花呗分期
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="天猫超市"> 天猫超市
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="天猫国际"> 天猫国际
-                                                                    </label>
-                                                                    <label class="checkbox-inline">
-                                                                    <input type="checkbox"  value="通用排序"> 通用排序
-                                                                    </label>
-                                                            </div>
-                                                        </div>
-                                                        <!-- <span>非必填</span> -->
-                                                        <label for="">发货地：</label>
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                                <span class='drop1'>北京</span>
-                                                                <input type="hidden" id="tasklocation">
-                                                                <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider">
-                                                                    <ul class='hot-city'>
-                                                                        <li data-value="上海">上海</li>
-                                                                        <li data-value="北京">北京</li>
-                                                                        <li data-value="成都">成都</li>
-                                                                        <li data-value="广州">广州</li>
-                                                                    </ul>
-                                                                    <li role="separator" class="divider"></li>
-                                                                    <ul class='province'>
-                                                                        <li data-value="广东">广东</li>
-                                                                        <li data-value="浙江">浙江</li>
-                                                                        <li data-value="江苏">江苏</li>
-                                                                    </ul>
-                                                            </ul>
-                                                        </div>
-                                                        <form class="form-inline">
-                                                            <div class="form-group">
-                                                                <label for="exampleInputName2">商品分类：</label>
-                                                                <input type="text" class="form-control good_spec"  placeholder="" value="${tb.classify1}">
-                                                            </div>
-                                                        </form>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class='good_last'>
-                                            <!--<div class="row line_0">-->
-                                                <!--<div class="col-md-10">-->
-                                                        <!--<a class="add" onclick='addKeyword(1)' href="javascript:;">+添加一个手机淘宝搜索关键字方案</a>-->
-                                                        <!--<span>（最多可添加4个方案）</span>-->
-                                                <!--</div>-->
-                                                <!--<div class="col-md-2">可提高任务安全保障</div>-->
-                                            <!--</div>-->
-                                        <p>缩小搜索范围：</p>
-                                        <p>让买手用列表筛选中"<b>排序</b>"、"<b>商品规格</b>"缩小范围<span>选填</span></p>
-                                        <div>
-                                            <label for="">商品排序：</label>
-                                            <div class="dropdown">
-                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                    <span class='drop2'>${tb.tasksort!=null?tb.tasksort:"综合排序"}</span>
-                                                    <input type="hidden" id="tbtasksort">
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu sort" aria-labelledby="dropdownMenu1">
-                                                    <li data-value="综合排序">综合排序</li>
-                                                    <li data-value="销量有限">销量有限</li>
-                                                    <li data-value="价格从低到高">价格从低到高</li>
-                                                    <li data-value="价格从高到低">价格从高到低</li>
-                                                    <li data-value="信用排序">信用排序</li>
-                                                </ul>
-                                        </div>
-                                    </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                      </div>
-                    </div>
-                    <div class='make-sure'>
-                        <button class='btn btn-warning' onclick="TaskConfirm(0)">确认提交信息</button>
-                        <!--<button id='aaa11' onclick="aa()">刷新测试</button>-->
-                    </div>
-                </div>
-                            <!-- 提交信息后显示 -->
-            <div class='task_confirm'>
-                <div class='task_confirm_basic'>
-                        <p>1.填写商品信息</p>
-                        <div>
-                            <div class='row'>
-                                <div class='good-title col-md-10'>
-                                    <b>商品:</b>
-                                    <span>经典百搭版型 chic棉质外套 2018秋季新款英伦中长款卡其色女风衣</span>
-                                </div>
-                                <div class='col-md-2'>
-                                    <a href="#" class='modify'>
-                                        修改
-                                    </a>
-                                </div>
-                            </div>
-                            <div class='row'>
-                                <div class='col-md-2'>
-                                    <b>单品售价：</b>
-                                    <span><b class='red_font'>200</b>元</span>
-                                </div>
-                                <div class='col-md-2'>
-                                    <b>此单品每单拍：</b>
-                                    <span><b class='red_font'>1</b>个</span>
-                                </div>
-                            </div>
-                        </div>
-                <div>
-                    <p>如何找到您的商品：</p>
-                    <div class='search-method'>使用"淘宝搜索框"查找商品</div>
-                    <div class='keyword-container'>
-                        <div class='row'>
-                            <div class='col-md-2'>
-                                <b>来源关键字1：大衣</b>
-                            </div>
-                            <div class='col-md-8 row'>
-                               <div class='col-md-6 keyword-classify'>
-                                <span>所在分类:</span>
-                                <ul>
-                                    <li>11111</li>
-                                    <li>11111</li>
-                                    <li>11111</li>
-                                    <li>11111</li>
-                                </ul>
-                               </div>
-                               <div class='col-md-6 keyword-price'>
-                                价格：
-                                <span>100</span>
-                                <em>-</em>
-                                <span>200</span>
-                                元
-                               </div>
-                            </div>
-                            <div class='col-md-2 keyword-location'>
-                                所在地：
-                                <span>珠三角</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
-                <div class='task_confirm_freight'>
-                    <p>2.设置商品收取运费的方式 <span class='red_font'>必选</span></p>
-                    <div>
-                        <div>
-                            <input type="checkbox">
-                            <label for="">商品不包邮<span>无需买手联系客服。商家每单额外支出10元作为运费押金，任务完成后运费押金将全部退还给商家</span></label>
-                        </div>
-                        <div>
-                            <input type="checkbox">
-                            <label for="">商品本身包邮<span>买手按照商品实际金额下单</span></label>
-                        </div>
-                    </div>
-                    <button id='task_confirm_sure' class='btn btn-warning make-sure' onclick="TaskConfirm(1)">确认提交信息</button>
-                    <p class='red_font'>为了保障任务安全，商家在店铺详情页、旺旺自动回复等方面提到的快递发货方式，请务必与平台使用的快递方式保持一致。</p>
-                </div>
-            </div>
-            </div>
-            <!--<div class='prev_next'>-->
-                <!--<a href="#" class='prev'>上一步</a>-->
-                <!--<a href="javascript:;" class='next' onclick="getNext()">下一步</a>-->
-            <!--</div>-->
-            <!-- 警告框 -->
+    <div class="get-menu">
+        <a href="#">商家</a>
+        <span>></span>
+        <a class="A1" href="#">发布任务</a>
     </div>
+     <!-- 发布任务 -->
+
+    <div class='task_area'>
+        <div style='display:none' class='warn_info'>请完整填写以下信息</div>
+        <!-- 商品信息 -->
+        <div class='task_goods_info'>
+            <div class='good_basic_info'>
+                <div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputLink" class="col-sm-2 control-label">商品链接:</label>
+                            <div class="col-sm-6">
+                                 <input class="form-control must-fill" id="inputLink" placeholder="" onblur="showOpen(this)" value="${tb.tUrl}">
+                            </div>
+                            <label for="inputLink" class="col-sm-1 control-label red_font">必填</label>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputTab" class="col-sm-2 control-label">商品标题:</label>
+                            <div class="col-sm-5">
+                                 <input class="form-control must-fill" id="inputTab" placeholder="" value="${tb.tTitle}">
+                            </div>
+                            <label for="inputTab" class="col-sm-1 control-label red_font">必填</label>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="storename">店铺:</label>
+                            <select id="storename" disabled="disabled">
+                                <option value="">===请选择===</option>
+                            </select>
+
+                            <label for="storename"><b class='red_font margin_0'>必填</b></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="brand">品牌:</label>
+                            <input type="text" class="form-control" id="brand" placeholder="" value="${tb.brand}">
+                        </div>
+                        <div class="form-group">
+                            <label for="tasknum">任务单数:</label>
+                            <input type="number" class="form-control must-fill" id="tasknum" placeholder="" value="" oninput="sum(this.value,$('#actualprice').val())">
+                            <label for="inputNum">次数<span><b class='red_font margin_0'>必填</b></span></label>
+                        </div>
+                    </form>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="inputPrice">单品售价:</label>
+                            <input type="number" class="form-control must-fill" id="inputPrice" placeholder="" value="${tb.tPrice}">
+                            <label for="inputPrice">元<b class='red_font margin_0'>必填</b></label>
+                        </div>
+                        <div class="form-group">
+                          <label for="actualprice">实付金额:</label>
+                          <input type="number" class="form-control must-fill" id="actualprice" placeholder="" value="${tb.actualprice}"  oninput="sum($('#tasknum').val(),this.value)">
+                          <label for="actualprice">元<span><b class='red_font margin_0'>必填</b></span></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputNum">每单拍:</label>
+                            <input type="number" class="form-control must-fill" id="inputNum" placeholder="" value="1" readonly>
+                            <label for="inputNum">件<span><!--（出于安全，建议每单不要超过2件）--><b class='red_font margin_0'>必填</b></span></label>
+                        </div>
+                        <!--<span>下单总金额<b class='red_font' id="numsum">0</b>元</span>-->
+                    </form>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label>佣金单价（单链接）:</label>
+                            <label><span><b style="color: green;font-size: 18px" >${presentdeposit}</b></span></label>
+                        </div>
+                        <div class="form-group">
+                            <label>佣金总价:</label>
+                            <label><span id="presentdepositsum" style="color: red;font-size: 18px"></span></label>
+                        </div>
+                        <div class="form-group">
+                            <label>账户可用余额:</label>
+                            <label><b style="color: green;font-size: 18px">${si.totaldeposit}</b></span></label>
+                        </div>
+                    </form>
+                    <form class="form-inline">
+                        <div class="form-group">
+                          <label for="searchprice">搜索页面展示价格:</label>
+                          <input type="text" class="form-control" id="searchprice" placeholder="" value="${tb.searchprice}">
+                          <label for="searchprice">元<span class='color_0'>非必填，如该商品有满减、促销、多规格等情况，请填写此金额</span></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="article">货号:</label>
+                            <input type="text" class="form-control" id="article" placeholder="" value="${tb.article}">
+                        </div>
+                        <div class="form-group">
+                            <label for="effectdate">生效时间:</label>
+                            <input id="effectdate" style="width: 180px" class="form-control"  type="text" readonly="readonly" onclick="laydate()" >
+                        </div>
+                     </form>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <div class="wrapper wrapper-content animated fadeInRight">
+                                <label>上传二维码:</label>
+                                <div class="portlet-body">
+                                    <#form:form id="avatarForm" modelAttribute="tb"  method="post" class="form-horizontal">
+                                        <#form:hidden path="id" />
+                                        <div class="form-group">
+                                            <div class="col-sm-3" >
+                                                <#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px"  fileInputHeight="100px"  path="qrcodeurl"/>
+                                            </div>
+                                        </div>
+                                    </#form:form>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <p class='border_0'>如何找到您的商品：</p>
+            <div id='task_accordin' class='radio'>
+                  <div class='item'>
+                    <div class='item_area'>
+                        <p>请上传第1张<b class="red_font">“商品主图”</b>，<b class='red_font'>必填</b><span>（图片大小为：1200x1200以内，且不能大于2M，格式为jpg、png、gif）</span></p>
+                        <div class='good_upload'>
+                            <div class='must-fill' id='good_pic1'>
+                                 <img id="img0" src="${tb.imgurl!=null?tb.imgurl:"img/goods_pic.png"}" alt="">
+                            </div>
+                        </div>
+                        <div class='good_keyword' id='keyword1'>
+                            <div class='item' id=1>
+                                <p>关键字来源：</p>
+                                <label for="">让买手打开<b class='red-font'>京东APP</b>搜索关键字进入“搜索列表”</label>
+                                <input type="text" id="keyword" class='must-fill' value="${tb.keyword}" style="width: 220px">
+                                <span class='red_font'>必填</span>
+                                <div class='good_cond'>
+                                    <p>
+                                        <label for="">规格：</label>
+                                        <input type="text" placeholder="如：颜色" id="spec1" class='spec0' value="${tb.spec1}">
+                                        <input type="text" placeholder="如：尺寸" id="spec2" class='spec1' value="${tb.spec2}">
+                                        <span class='color_0'>非必填</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class='make-sure'>
+                                <button class='btn btn-warning' onclick="TaskConfirm(0)">确认提交信息</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+
+        </div>
+    </div>
+
 </body>
 <script src='${staticPath}/shop/js/swiper-3.4.2.min.js'></script>
 <!--<script src='${staticPath}/shop/js/layui.all.js'></script>-->
@@ -587,50 +264,6 @@
             var item="<img id='img"+i+"' src='+img/"+file.name+"'>"
             $('#good_pic'+i).append(item)
         }
-        //  增加关键字
-        function addKeyword(num){
-            var len=$('.good_keyword').eq(num).children('.item').length
-            var text='';
-            var item=''
-           if(num=='0'){
-            text='taobao.com'
-            item+="<div class='item'><p>关键字来源"+(len+1)+"：<button onclick=deleteItem("+num+")>删除</button></p>";
-            item+="<label>让买手在<b class='red_font'>"+text+"</b>搜索关键字进入“搜索列表”</label>";
-            item+="<input type='text' class='must-fill'><span class='red_font'>必填</span>";
-            item+= "<div class='good_cond'><p><label>规格：</label><input type='text' placeholder='如：颜色' class='spec0'><input type='text' placeholder='如：尺寸' class='spec1'>";
-            item+="<span class='color_0'>非必填</span></p><p><label>在当前列表中，告诉买手通过筛选分类找到商品</label><input type='text' class='classify0'>";
-            item+= "<input type='text' class='classify1'><input type='text' class='classify2'><input type='text' class='classify3'><span class='color_0'>最多四个分类，非必填</span>";
-            item+="</p></div></div>"
-           }else{
-               text='手机淘宝'
-                item+="<div class='item'><p>关键字来源"+(len+1)+"：<button onclick='deleteItem("+num+")'>删除</button></p>"
-                item+="<label>让买手在<b class='red_font'>"+text+"</b>搜索关键字进入“搜索列表”</label><input type='text' class='must-fill'>"
-                item+="<span class='red_font'>必填</span><div class='good_cond'><p>"
-                item+="<label>规格：</label><input type='text' placeholder='如：颜色' class='spec0'>"
-                item+="<input type='text' placeholder='如：尺寸' class='spec1'><span class='color_0'>非必填</span></p></div>"
-                item+="<div class='good_detail'><p class='red_font'>注意：请商家确保所给关键词可以在手机端前20屏找到商品，否则会导致买手找不到商品，此关键词无法获得成交</p>"
-                item+="<form class='form-inline'><div class='form-group'><label for='exampleInputName2'>价格区间：</label>"
-                item+="<input type='number' class='form-control mobile_low'></div><div class='form-group'>"
-                item+="<label>元-</label><input type='number' class='form-control mobile_high'>"
-                item+="<label>元</label></div></form>"
-                item+="<div class='row discount_service' style='margin:0'><labelclass='col-md-2'>折扣和服务：</label><div class='radio col-md-10' style='margin:0;'>"
-                item+="<label class='checkbox-inline'><input type='checkbox' value='包邮'> 包邮</label><label class='checkbox-inline'><input type='checkbox' value='天猫'> 天猫</label>"
-                item+="<label class='checkbox-inline'><input type='checkbox' value='全球购'> 全球购</label><label class='checkbox-inline'><input type='checkbox' value='消费者保障'> 消费者保障</label>"
-                item+="<label class='checkbox-inline'><input type='checkbox' value='手机专享'> 手机专享</label><label class='checkbox-inline'><input type='checkbox' value='淘金币'> 淘金币</label>"
-                item+="<label class='checkbox-inline'><input type='checkbox' value='7+天退换货'> 7+天退换货</label><label class='checkbox-inline'><input type='checkbox' value='促销'> 促销</label>"
-                item+="<label class='checkbox-inline'><input type='checkbox' value='花呗分期'> 花呗分期</label><label class='checkbox-inline'><input type='checkbox' value='天猫超市'> 天猫超市</label>"
-                item+="<label class='checkbox-inline'><input type='checkbox' value='天猫国际'> 天猫国际</label><label class='checkbox-inline'><input type='checkbox' value='通用排序'> 通用排序</label></div></div>"
-                item+="<!-- <span>非必填</span> --><label>发货地：</label><div class='dropdown'><button class='btn btn-default dropdown-toggle' type='button' id='dropdownMenu1' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'>"
-                item+="<span class='drop1'>北京</span><span class='caret'></span></button><ul class='dropdown-menu' aria-labelledby='dropdownMenuDivider'>"
-                item+=  "<ul class='hot-city'><li>上海</li><li>北京</li> <li>成都</li><li>广州</li></ul><li role='separator' class='divider'></li><ul class='province'><li>广东</li><li>浙江</li><li>江苏</li></ul> </ul>"
-                item+="</div><form class='form-inline'><div class='form-group'><label for='exampleInputName2'>商品分类：</label><input type='text' class='form-control good_spec'> </div> </form></div></div>"
-            }
-            if(len>3){
-                return
-            }
-            $('.good_keyword').eq(num).append(item)
-            console.log($('.good_keyword'))
-        }
         // 必填项失去焦点基本验证
         $('.must-fill').bind('blur',function(){
             if($(this).val()==''){
@@ -639,11 +272,6 @@
             $(this).css('border','1px solid #ddd')
             }
         })
-        //删除增加的关键字项
-        function deleteItem(i){
-            var len=$('.good_keyword').eq(i).find('.item').length;
-            $('.good_keyword').eq(i).find('.item').eq(len-1).remove()
-        }
 
         //手机商品基本信息good_basic_info
         var good_basic_info={};
@@ -654,269 +282,108 @@
        var datastorename="";
        //商品具体信息
         //默认现实手机端
-        $('#task_accordin .item_area').eq("1").show();
-        $('#task_accordin input[type=radio]').prop("checked",true);
-
-       $('#task_accordin input[type=radio]').bind('click',function(){
-           radio_index=$(this).prop('id')
-            var index=$(this).prop('id')
-            $('#task_accordin .item_area').hide()
-            $('#task_accordin .item_area').eq(index).show()
-            good_detail_info.method=$(this).val()
-        })
-        function aa(){
-        }
+        $('#task_accordin .item_area').show();
        function TaskConfirm(index){
-           if(index=='0'){//第一次提交确认信息
-             $('.good_basic_info').find('input').each(function(index,ele){
-                if($(this).hasClass('must-fill') && $(this).val()==''){
-                    $(this).addClass('red').focus()
-                }else{
-                    $(this).removeClass('red')
-                    switch(index){
-                        case 0:
-                            good_detail_info.tUrl=$(ele).val()
-                            break;
-                        case 1:
-                            good_detail_info.tTitle=$(ele).val()
-                            break;
-                        case 2:
-                            good_detail_info.brand = $(ele).val()
-                            break;
-                        case 3:
-                            good_detail_info.tasknum=$(ele).val()
-                            break;
-                        case 4:
-                            good_detail_info.tPrice=$(ele).val()
-                            break;
-                        case 5:
-                            good_detail_info.actualprice=$(ele).val()
-                            break;
-                        case 6:
-                            good_detail_info.tNum=$(ele).val()
-                            break;
-                        case 7:
-                            good_detail_info.searchprice=$(ele).val()
-                            break;
-                        case 8:
-                            good_detail_info.article=$(ele).val()
-                            break;
-                        case 9:
-                            good_detail_info.effectdate=$(ele).val()
-                    }
+         $('.good_basic_info').find('input').each(function(index,ele){
+            if($(this).hasClass('must-fill') && $(this).val()==''){
+                $(this).addClass('red').focus()
+            }else{
+                $(this).removeClass('red')
+                switch(index){
+                    case 0:
+                        good_detail_info.tUrl=$(ele).val()
+                        break;
+                    case 1:
+                        good_detail_info.tTitle=$(ele).val()
+                        break;
+                    case 2:
+                        good_detail_info.brand = $(ele).val()
+                        break;
+                    case 3:
+                        good_detail_info.tasknum=$(ele).val()
+                        break;
+                    case 4:
+                        good_detail_info.tPrice=$(ele).val()
+                        break;
+                    case 5:
+                        good_detail_info.actualprice=$(ele).val()
+                        break;
+                    case 6:
+                        good_detail_info.tNum=$(ele).val()
+                        break;
+                    case 7:
+                        good_detail_info.searchprice=$(ele).val()
+                        break;
+                    case 8:
+                        good_detail_info.article=$(ele).val()
+                        break;
+                    case 9:
+                        good_detail_info.effectdate=$(ele).val()
                 }
-             })
-             //商品具体信息
-              if($('#task_accordin input[type=radio]').prop('checked')==false){
-                $('#task_accordin').addClass('red')
-              }else{
-                $('#task_accordin').removeClass('red')
-              }
-              good_detail_info.storename = $("#storename").val();
-              good_detail_info.qrcodeurl = $("#qrcodeurl").val();
-              // good_detail_info.brand = $("#brand").val();
-             if(good_detail_info.storename==""){
-                alert("该商品链接所属“"+datastorename+"”店铺，您暂无权限发布！");
-                return;
-             }
-             if(good_detail_info.tasknum==""||good_detail_info.tasknum==undefined){
-                alert("请填写任务单数");
-                return;
-             }
-             if(good_detail_info.actualprice==""||good_detail_info.actualprice==undefined){
-                alert("请填写实付金额");
-                return;
-               }
-             if(good_detail_info.effectdate==""||good_detail_info.effectdate==undefined){
-                alert("请填写生效时间");
-                return;
-             }else {
-                 good_detail_info.effectdate = new Date(good_detail_info.effectdate);
-             }
-             if(good_detail_info.qrcodeurl==""||good_detail_info.qrcodeurl==undefined){
-                  alert("请上传二维码图片");
-                  return;
-             }
-              GetCheckboxInfo(good_detail_info.method);
-             if(good_detail_info.keyword==""||good_detail_info.keyword==undefined){
-                alert("请填写关键字");
-                return;
-             }
-            //填充任务信息
-            // TaskAreaInfo()
-               console.log(good_detail_info);
-               good_detail_info.tType="jd";//先暂时默认jd，后续改为字典获取。
-               $.ajax({
-                   type: "POST",
-                   url: "${adminPath}/shop/TtaskBase/add",
-                   contentType:'application/json;charset=utf-8',
-                   data: JSON.stringify(good_detail_info),
-                   dataType: "json",
-                   success: function(data){
-                       alert(data.msg);
-                       //刷新表单
-                       window.parent.location.reload()//刷新父页面
-
-                       var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
-
-                       parent.layer.close(index)
-                   },
-                   error: function(data){
-                   }
-               });
+            }
+         })
+         //商品具体信息
+          if($('#task_accordin input[type=radio]').prop('checked')==false){
+            $('#task_accordin').addClass('red')
+          }else{
+            $('#task_accordin').removeClass('red')
+          }
+          good_detail_info.storename = $("#storename").val();
+          good_detail_info.qrcodeurl = $("#qrcodeurl").val();
+          good_detail_info.keyword = $("#keyword").val();
+          good_detail_info.spec1 = $("#spec1").val();
+          good_detail_info.spec2 = $("#spec2").val();
+          good_detail_info.imgurl=$('#good_pic1 img').prop('src');
+          // good_detail_info.brand = $("#brand").val();
+         if(good_detail_info.storename==""){
+            alert("该商品链接所属“"+datastorename+"”店铺，您暂无权限发布！");
+            return;
+         }
+         if(good_detail_info.tasknum==""||good_detail_info.tasknum==undefined){
+            alert("请填写任务单数");
+            return;
+         }
+         if(good_detail_info.actualprice==""||good_detail_info.actualprice==undefined){
+            alert("请填写实付金额");
+            return;
            }
+         if(good_detail_info.effectdate==""||good_detail_info.effectdate==undefined){
+            alert("请填写生效时间");
+            return;
+         }else {
+             good_detail_info.effectdate = new Date(good_detail_info.effectdate);
+         }
+         if(good_detail_info.qrcodeurl==""||good_detail_info.qrcodeurl==undefined){
+              alert("请上传二维码图片");
+              return;
+         }
+         if(good_detail_info.keyword==""||good_detail_info.keyword==undefined){
+            alert("请填写关键字");
+            return;
+         }
+        //填充任务信息
+        // TaskAreaInfo()
+           console.log(good_detail_info);
+           good_detail_info.tType="jd";//先暂时默认jd，后续改为字典获取。
+           $.ajax({
+               type: "POST",
+               url: "${adminPath}/shop/TtaskBase/add",
+               contentType:'application/json;charset=utf-8',
+               data: JSON.stringify(good_detail_info),
+               dataType: "json",
+               success: function(data){
+                   alert(data.msg);
+                   //刷新表单
+                   window.parent.location.reload()//刷新父页面
+
+                   var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
+
+                   parent.layer.close(index)
+               },
+               error: function(data){
+               }
+           });
        }
-        //checkbox各项信息搜集
-        function GetCheckboxInfo(method){
-            console.log($("#task_accordin .item").eq(radio_index).find('.must-fill'))
-           $("#task_accordin .item").eq(radio_index).find('.must-fill').each(function(i,index){
-                console.log(index)
-                if($(index).val()==''){
-                    $(index).addClass('red').focus()
-                }else{
-                    $(index).removeClass('red')
-                    isNext=true
-                }
-            })
-
-            if(method=='pc_taobao'){
-                good_detail_info.TaskPriceSection={}
-                good_detail_info.MainTaskPic0=$('#good_pic0 img').prop('src');
-                // good_detail_info.KeywordsArray.Keyword0=$('')
-                GetKeywords($('#keyword0'),method)
-                good_detail_info.TaskPriceSection.low_point=$('.pc_low').val();
-                good_detail_info.TaskPriceSection.high_point=$('.pc_high').val();
-            }else{
-                good_detail_info.imgurl=$('#good_pic1 img').prop('src')//手机端主照片1
-                // good_detail_info.MainTaskPic2=$('#good_pic2 img').prop('src')//手机端主照片2
-                good_detail_info.tasksort=$('.drop2').html()//手机端商品排序
-
-                GetKeywords($('#keyword1'),method)
-            }
-            console.log(good_detail_info)
-        }
-        //获取相应的所有关键词
-        function GetKeywords(ele,method){
-            good_detail_info.ttaskFees=[]//关键词数组
-            ele.find('.item').each(function(index,item){
-                var object={}
-                if(method=='pc_taobao'){
-                    object.search_keyword=$(item).find('.must-fill').val();//pc端关键字
-                    object.search_spec=[]//pc端规格两项
-                    object.search_spec[0]=$(item).find('.spec0').val();
-                    object.search_spec[1]=$(item).find('.spec1').val();
-                    //pc端搜索分类四项
-                    object.search_classify=[]
-                    object.search_classify[0]=$(item).find('.classify0').val();
-                    object.search_classify[1]=$(item).find('.classify1').val();
-                    object.search_classify[2]=$(item).find('.classify2').val();
-                    object.search_classify[3]=$(item).find('.classify3').val();
-                    //所在地
-                    object.TaskLocation=$(item).find('.drop0').html();
-                }else{
-                    good_detail_info.ttaskFees=GetMobileKeywords()
-                }
-                 if(method=='pc_taobao'){
-                    good_detail_info.ttaskFees.push(object)
-                 }
-
-            })
-
-        }
-        //下拉框的点击
-            $(document).on('click','.dropdown-menu li',function(){
-            var text=$(this).html();
-            var text_val=$(this).prop('data-value')
-            var target;
-            if(good_detail_info.method=='pc_taobao'){
-                target=$(this).parent().parent().siblings().children('.drop0')
-                target.html(text).next().val(text_val)
-            }else{
-                if($(this).parent().hasClass('sort')==true){
-                    target=$(this).parent().siblings().children('.drop2')
-                    target.html(text).next().val(text_val)
-                }else{
-                    target=$(this).parent().parent().siblings().children('.drop1')
-                    target.html(text).next().val(text_val)
-
-                }
-            }
-        })
-        //折扣与服务
-       function GetDiscountAndService(ele){
-                var arr=[]
-           $(ele).each(function(i,element){
-            var arr_0=[]
-               $(element).find('input[type=checkbox]').each(function(index,item){
-                if($(item).prop('checked')==true){
-                    console.log($(item).val())
-                    arr_0.push($(item).val())
-                }
-            })
-            arr=arr_0
-           })
-
-            return arr;
-        }
-        //折扣与服务
-        function GetDiscountAndServiceString(ele){
-            var arr="";
-            $(ele).each(function(i,element){
-                $(element).find('input[type=checkbox]').each(function(index,item){
-                    if($(item).prop('checked')==true){
-                        console.log($(item).val())
-                        arr = arr+$(item).val()+",";
-                    }
-                })
-            })
-
-            return arr;
-        }
-        //获取手机端关键字项
-        function GetMobileKeywords(){
-            var arr=[]
-            $('#keyword1 .item').each(function(index,item){
-                var obj={}
-                //1.关键字
-                obj.search_keyword=$(item).find('.must-fill').val()
-                good_detail_info.keyword=$(item).find('.must-fill').val()
-                //2.规格
-                // obj.search_keyword=$(item).find('.must-fill').val();//手机端关键字
-                obj.search_spec=[]//手机端规格两项
-                obj.search_spec[0]=$(item).find('.spec0').val();
-                obj.search_spec[1]=$(item).find('.spec1').val();
-                good_detail_info.spec1=$(item).find('.spec0').val();
-                good_detail_info.spec2=$(item).find('.spec1').val();
-                //3.价格区间
-                obj.TaskPriceSection={}
-                obj.TaskPriceSection.low_point=$(item).find('.mobile_low').val();
-                obj.TaskPriceSection.high_point=$(item).find('.mobile_high').val();
-                good_detail_info.lowpoint=$(item).find('.mobile_low').val();
-                good_detail_info.highpoint=$(item).find('.mobile_high').val();
-                //4.折扣和服务
-                obj.TaskDisService=GetDiscountAndService($('.discount_service'));//手机端商品折扣与服务
-                good_detail_info.taskdisser=GetDiscountAndServiceString($('.discount_service'));
-                //5.发货地
-                obj.TaskLocation=$(item).find('.drop1').html();//手机端发货地
-                good_detail_info.tasklocation=$(item).find('.drop1').html();//手机端发货地
-                console.log($(item).find('.drop1').html())
-                //6.商品分类
-                obj.TaskSpecify=$(item).find('.good_spec').val();//手机端商品分类
-                good_detail_info.classify1=$(item).find('.good_spec').val();//手机端商品分类
-                arr.push(obj)
-            })
-            return arr;
-        }
-        //下一步
-        function getNext(){
-            if(isNext==true){
-                $('.next').prop('href','./ReleaseTaskNum.html')
-            }else{
-                console.log(111)
-                $('html,body').animate({scrollTop:0},1000).find('.task_area').css('border','2px solid red');
-                $('.warn_info').show()
-            }
-        }
         function showOpen(turl){
             $.ajax({
                 type: "POST",

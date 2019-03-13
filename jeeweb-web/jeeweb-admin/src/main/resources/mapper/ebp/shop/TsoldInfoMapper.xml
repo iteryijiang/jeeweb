@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TsoldInfoMapper" >
+  <resultMap id="TsoldInfo" type="cn.jeeweb.web.ebp.shop.entity.TsoldInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="soldname" column="soldname" jdbcType="VARCHAR" />
+    <result property="soldlogin" column="soldlogin" jdbcType="VARCHAR" />
+    <result property="accountlevel" column="accountlevel" jdbcType="VARCHAR" />
+    <result property="totaldeposit" column="totaldeposit" jdbcType="NUMERIC" />
+    <result property="availableDeposit" column="availableDeposit" jdbcType="NUMERIC" />
+    <result property="userid" column="userid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="selectUserList" resultMap="TsoldInfo">
+	  select t.* from T_sold_Info t
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+</mapper>

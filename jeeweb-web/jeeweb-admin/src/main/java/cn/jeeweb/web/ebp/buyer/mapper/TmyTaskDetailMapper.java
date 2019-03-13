@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.buyer.mapper;
 
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
+import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
@@ -24,6 +25,10 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 
 	List<Map> listFinanceBuyerReport(@Param("map") Map map);
 
-
 	List<TmyTaskDetail> listNoSendGood();
+
+
+	List<TmyTaskDetail> listDetail(Pagination page, @Param("ew") Wrapper<TmyTaskDetail> wrapper);
+
+	List<TmyTaskDetail> listDetail(@Param("ew") Wrapper<TmyTaskDetail> wrapper);
 }

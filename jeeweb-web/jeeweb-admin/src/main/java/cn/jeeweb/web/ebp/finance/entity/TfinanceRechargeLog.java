@@ -34,6 +34,9 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 	private String loginname;
 	@TableField(exist = false)
 	private String shopname;
+	@TableField(exist = false)
+	private String producedepositName;
+
 
 
 	public TfinanceRechargeLog(){
@@ -131,5 +134,13 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 
 	public void setShopname(String shopname) {
 		this.shopname = shopname;
+	}
+
+	public String getProducedepositName() {
+		return producedepositName;
+	}
+
+	public void setProducedepositName(String producedepositName) {
+		this.producedepositName = producedepositName;
 	}
 }

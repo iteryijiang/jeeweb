@@ -186,7 +186,9 @@
     <if test="map.shopname != '' and map.shopname != null">
       and sb.shopname like #{map.shopname}
     </if>
-
+    <if test="map.status != '' and map.status != null">
+      and t.status = #{map.status}
+    </if>
     <if test="map.loginname != '' and map.loginname != null">
       and si.loginname like #{map.loginname}
     </if>

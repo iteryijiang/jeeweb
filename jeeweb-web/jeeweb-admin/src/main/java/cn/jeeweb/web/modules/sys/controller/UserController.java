@@ -12,7 +12,9 @@ import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
+import cn.jeeweb.web.ebp.shop.entity.TsoldInfo;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
+import cn.jeeweb.web.ebp.shop.service.TsoldInfoService;
 import cn.jeeweb.web.modules.sys.entity.*;
 import cn.jeeweb.web.modules.sys.service.*;
 import cn.jeeweb.web.utils.UserUtils;
@@ -30,6 +32,7 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -43,7 +46,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -80,6 +85,8 @@ public class UserController extends BaseBeanController<User> {
 	private TshopInfoService tshopInfoService;
 	@Autowired
 	private TbuyerInfoService tbuyerInfoService;
+	@Autowired
+	private TsoldInfoService tsoldInfoService;
 
 
 	@GetMapping
@@ -261,31 +268,55 @@ public class UserController extends BaseBeanController<User> {
 				userRole.setRoleId(roleid);
 				userRoleList.add(userRole);
 				if("3a0e855344644a7a904ec74846d46cc3".equals(roleid)){//保存商铺用户
-					TshopInfo tshopInfo = new TshopInfo();
+					TshopInfo tshopInfo = tshopInfoService.selectOne(entity.getId());
+					if(tshopInfo==null){
+						tshopInfo = new TshopInfo();
+						tshopInfo.setLoginname(entity.getUsername());
+						tshopInfo.setAccountlevel("1");
+						tshopInfo.setTotaldeposit(new BigDecimal(0.0));
+						tshopInfo.setTaskdeposit(new BigDecimal(0.0));
+						tshopInfo.setExtractdeposit(new BigDecimal(0.0));
+						tshopInfo.setAvailabledeposit(new BigDecimal(0.0));
+						tshopInfo.setStatus("0");
+						tshopInfo.setUserid(entity.getId());
+					}
 					tshopInfo.setShopname(entity.getRealname());
-					tshopInfo.setLoginname(entity.getUsername());
-					tshopInfo.setAccountlevel("1");
-					tshopInfo.setTotaldeposit(new BigDecimal(0.0));
-					tshopInfo.setTaskdeposit(new BigDecimal(0.0));
-					tshopInfo.setExtractdeposit(new BigDecimal(0.0));
-					tshopInfo.setAvailabledeposit(new BigDecimal(0.0));
-					tshopInfo.setStatus("0");
-					tshopInfo.setUserid(entity.getId());
 					try {
-						tshopInfoService.insert(tshopInfo);
+						tshopInfoService.insertOrUpdate(tshopInfo);
 					}catch (Exception e){
 						e.printStackTrace();
 					}
 				}else if("402880e45b5d7636015b5d8baca60000".equals(roleid)){//保存买手用户
-					TbuyerInfo tbi = new TbuyerInfo();
+					Map map = new HashMap();
+					map.put("userid",entity.getId());
+					TbuyerInfo tbi = (TbuyerInfo)tbuyerInfoService.selectByMap(map).get(0);
+					if(tbi==null){
+						tbi = new TbuyerInfo();
+						tbi.setLoginname(entity.getUsername());
+						tbi.setAccountlevel("1");
+						tbi.setPhonenum(new BigDecimal(0.0));
+						tbi.setTotalmoney(new BigDecimal(0.0));
+						tbi.setWithdrawalmoney("0");
+						tbi.setUserid(entity.getId());
+					}
+
 					tbi.setBuyername(entity.getRealname());
-					tbi.setLoginname(entity.getUsername());
-					tbi.setAccountlevel("1");
-					tbi.setPhonenum(new BigDecimal(0.0));
-					tbi.setTotalmoney(new BigDecimal(0.0));
-					tbi.setWithdrawalmoney("0");
-					tbi.setUserid(entity.getId());
-					tbuyerInfoService.insert(tbi);
+					tbuyerInfoService.insertOrUpdate(tbi);
+				}else if("ea9402a4fb914905be62b3152eab56ca".equals(roleid)){//保存销售用户
+					EntityWrapper<TsoldInfo> entityWrapper = new EntityWrapper<TsoldInfo>();
+					entityWrapper.eq("userid", entity.getId());
+					TsoldInfo tsi =  tsoldInfoService.selectOne(entityWrapper);
+					if(tsi==null){
+						tsi = new TsoldInfo();
+						tsi.setSoldlogin(entity.getUsername());
+						tsi.setAccountlevel("1");
+						tsi.setTotaldeposit(new BigDecimal(0.0));
+						tsi.setAvailabledeposit(new BigDecimal(0.0));
+						tsi.setUserid(entity.getId());
+					}
+					tsi.setSoldname(entity.getRealname());
+
+					tsoldInfoService.insertOrUpdate(tsi);
 				}
 			}
 			userRoleService.insertBatch(userRoleList);

@@ -239,8 +239,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     @RequiresMethodPermissions("upTaskState")
     public void upTaskState(@PathVariable("id") String id,@PathVariable("taskState") String taskState, HttpServletRequest request,
                             HttpServletResponse response) {
-        TmyTaskDetail td = tmyTaskDetailService.selectById(id);
-        tmyTaskDetailService.upTaskState(taskState,td);
+        tmyTaskDetailService.upTaskState(taskState,null,id);
     }
     @RequestMapping(value = "ajaxTreeList")
     @Log(logType = LogType.SELECT)

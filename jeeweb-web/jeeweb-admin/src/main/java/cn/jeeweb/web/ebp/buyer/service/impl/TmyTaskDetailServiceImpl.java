@@ -1,6 +1,11 @@
 package cn.jeeweb.web.ebp.buyer.service.impl;
 
+import cn.jeeweb.common.mybatis.mvc.parse.QueryToWrapper;
 import cn.jeeweb.common.mybatis.mvc.service.impl.CommonServiceImpl;
+import cn.jeeweb.common.query.data.Page;
+import cn.jeeweb.common.query.data.PageImpl;
+import cn.jeeweb.common.query.data.Pageable;
+import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.mapper.TmyTaskDetailMapper;
@@ -12,6 +17,7 @@ import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.utils.UserUtils;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
@@ -62,8 +68,11 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
     }
 
     @Transactional
-    public void upTaskState(String taskState,TmyTaskDetail td){
+    public void upTaskState(String taskState,TmyTaskDetail td,String id){
         synchronized(this) {
+            if(td==null){
+                td = selectById(id);
+            }
             if ("3".equals(taskState) || UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())) {
                 TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
                 if ("2".equals(taskState) && "1".equals(td.getTaskstate())) {
@@ -134,5 +143,30 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
                 tmyTaskService.updateById(tt);
             }
         }
+    }
+
+    public Page<TmyTaskDetail> listDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper) {
+        QueryToWrapper<TmyTaskDetail> queryToWrapper = new QueryToWrapper<TmyTaskDetail>();
+        queryToWrapper.parseCondition(wrapper, queryable);
+        // 排序问题
+        queryToWrapper.parseSort(wrapper, queryable);
+        Pageable pageable = queryable.getPageable();
+        com.baomidou.mybatisplus.plugins.Page<TmyTaskDetail> page = new com.baomidou.mybatisplus.plugins.Page<TmyTaskDetail>(
+                pageable.getPageNumber(), pageable.getPageSize());
+//        com.baomidou.mybatisplus.plugins.Page<TmyTaskDetail> content = baseMapper.listDetail(page, wrapper);
+        wrapper.eq("1", "1");
+        page.setRecords(baseMapper.listDetail(page, wrapper));
+        return new PageImpl<TmyTaskDetail>(page.getRecords(), queryable.getPageable(), page.getTotal());
+//        return page;
+    }
+
+    public List<TmyTaskDetail> listNoPageDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper) {
+        QueryToWrapper<TmyTaskDetail> queryToWrapper = new QueryToWrapper<TmyTaskDetail>();
+
+        queryToWrapper.parseCondition(wrapper, queryable);
+        // 排序问题
+        queryToWrapper.parseSort(wrapper, queryable);
+        return baseMapper.listDetail(wrapper);
+
     }
 }

@@ -28,13 +28,24 @@
   <select id="selectUserList" resultMap="TmyTaskDetail">
 	  select
    	    <include refid="Base_Column_List" />
-      from T_shop_Info t
+      from T_my_Task_Detail t
        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
 		  <where>
 		    ${ew.sqlSegment}
 		  </where>
 	   </if>
   </select>
+
+    <select id="listDetail" resultMap="TmyTaskDetail">
+        select t.*,bi.buyerName buyeridName,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article from T_my_Task_Detail t
+        left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
+        left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
 
     <select id="selBaseIdMyTaskDetailList" resultMap="TmyTaskDetail">
         select t.*,s.realname buyeridName from T_my_Task_Detail t,sys_user s where t.buyerid=s.id and t.taskId=#{taskId}
@@ -70,7 +81,7 @@
     </select>
 
     <select id="listFinanceBuyerReport" resultType="java.util.Map">
-        select DATE_FORMAT(t.create_date,'%Y-%m-%d') countCreateDate,b.buyerName,
+        select DATE_FORMAT(t.create_date,'%Y-%m-%d') countCreateDate,b.buyerName,b.userid,
         sum(pays) sumPrice,count(1) sumNum,
         sum(case when taskstate=4 then 1 else 0 end) as sumFinishNum,
         sum(case when taskstate=4 then pays else 0 end) as sumFinishPrice,
@@ -82,7 +93,7 @@
             and b.buyerName like #{map.buyerName}
         </if>
          and (t.create_date BETWEEN #{map.createDate1} and #{map.createDate2})
-        group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),b.buyerName
+        group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),b.buyerName,b.userid
         order by DATE_FORMAT(t.create_date,'%Y-%m-%d')
     </select>
     <select id="listNoSendGood"  resultMap="TmyTaskDetail">

@@ -1,5 +1,7 @@
 package cn.jeeweb.web.ebp.finance.controller;
 
+import cn.jeeweb.beetl.tags.dict.Dict;
+import cn.jeeweb.beetl.tags.dict.DictUtils;
 import cn.jeeweb.common.http.PageResponse;
 import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
@@ -21,7 +23,6 @@ import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
-import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
@@ -35,7 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,6 +51,9 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
     @Autowired
     private TfinanceRechargeLogService tfinanceRechargeLogService;
 
+    @Autowired
+    private TshopInfoService tshopInfoService;
+
 
 
     @GetMapping
@@ -61,6 +65,10 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
     @GetMapping(value = "listShopFinance")
     @RequiresMethodPermissions("listShopFinance")
     public ModelAndView listShopFinance(Model model, HttpServletRequest request, HttpServletResponse response) {
+        List<Dict> dicList = DictUtils.getDictList("basestate");
+        String content = JSON.toJSONString(dicList);
+        List<TshopInfo> lsit = tshopInfoService.selectByMap(new HashMap<>());
+        model.addAttribute("dicList", content);
         ModelAndView mav = displayModelAndView("listShopFinance");
         return mav;
     }
@@ -150,6 +158,14 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         PageResponse<TfinanceRechargeLog> pagejson = new PageResponse<>(tfinanceRechargeLogService.list(queryable,entityWrapper));
+        List<TfinanceRechargeLog> new_lsit = new ArrayList<TfinanceRechargeLog>();
+        for (TfinanceRechargeLog a:pagejson.getResults()) {
+            String s = "+";
+            if(TfinanceRechargeService.rechargetype_2.equals(a.getTradetype())||TfinanceRechargeService.rechargetype_3.equals(a.getTradetype())){
+                s="-";
+            }
+            a.setProducedepositName(s+a.getProducedeposit());
+        }
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }

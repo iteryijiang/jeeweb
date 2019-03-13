@@ -34,7 +34,7 @@ public class ShopTask {
             System.out.println("开始自动发货："+list.size()+"条");
             long starttime = System.currentTimeMillis();
             for (TmyTaskDetail tmyTaskDetail:list){
-                tmyTaskDetailService.upTaskState("3", tmyTaskDetail);
+                tmyTaskDetailService.upTaskState("3", tmyTaskDetail,"");
             }
             long endtime = System.currentTimeMillis();
             long usetime = (endtime - starttime)/1000;

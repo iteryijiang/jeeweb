@@ -1,5 +1,6 @@
 package cn.jeeweb.web.ebp.shop.controller;
 
+import cn.jeeweb.beetl.tags.dict.DictUtils;
 import cn.jeeweb.common.http.PageResponse;
 import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
@@ -15,8 +16,9 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
-import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
-import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
+import cn.jeeweb.web.ebp.shop.entity.TsoldInfo;
+import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.service.TsoldInfoService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
@@ -30,49 +32,54 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
-@RequestMapping("${jeeweb.admin.url.prefix}/shop/TshopInfo")
+@RequestMapping("${jeeweb.admin.url.prefix}/shop/TsoldInfo")
 @ViewPrefix("ebp/shop")
-@RequiresPathPermission("shop:TshopInfo")
-@Log(title = "订单详情")
-public class TshopInfoController extends BaseBeanController<TshopInfo> {
+@RequiresPathPermission("shop:TsoldInfo")
+@Log(title = "销售用户")
+public class TsoldInfoController extends BaseBeanController<TsoldInfo> {
 
     @Autowired
-    private TshopInfoService tshopInfoService;
+    private TsoldInfoService TsoldInfoService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
     public ModelAndView TaskList(Model model, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView mav = displayModelAndView("listshopinfo");
+        ModelAndView mav = displayModelAndView("lisTsoldInfo");
         return mav;
     }
 
+
     @GetMapping(value = "add")
     public ModelAndView add(Model model, HttpServletRequest request, HttpServletResponse response) {
-        model.addAttribute("data", new TshopInfo());
+        model.addAttribute("data", new TsoldInfo());
         return displayModelAndView ("edit");
     }
 
     @PostMapping("add")
     @Log(logType = LogType.INSERT)
-    public Response add(TshopInfo entity, BindingResult result,
+    public Response add(TsoldInfo entity, BindingResult result,
                         HttpServletRequest request, HttpServletResponse response) {
         // 验证错误
         this.checkError(entity,result);
-        tshopInfoService.insert(entity);
+        TsoldInfoService.insert(entity);
         return Response.ok("添加成功");
     }
 
     @PostMapping("update")
     @Log(logType = LogType.UPDATE)
     @RequiresMethodPermissions("update")
-    public Response update(@RequestBody TshopInfo entity, BindingResult result,
+    public Response update(@RequestBody TsoldInfo entity, BindingResult result,
                            HttpServletRequest request, HttpServletResponse response) {
         try {
-            TshopInfo tb = tshopInfoService.selectById(entity.getId());
-            tshopInfoService.insertOrUpdate(tb);
+            TsoldInfo tb = TsoldInfoService.selectById(entity.getId());
+            TsoldInfoService.insertOrUpdate(tb);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -83,7 +90,7 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
     @Log(logType = LogType.DELETE)
     @RequiresMethodPermissions("delete")
     public Response delete(@PathVariable("id") String id) {
-        tshopInfoService.deleteById(id);
+        TsoldInfoService.deleteById(id);
         return Response.ok("删除成功");
     }
 
@@ -101,7 +108,7 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
     @PageableDefaults(sort = "create_date=desc")
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
-        EntityWrapper<TshopInfo> entityWrapper = new EntityWrapper<>(entityClass);
+        EntityWrapper<TsoldInfo> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)) {
@@ -117,9 +124,8 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageResponse<TshopInfo> pagejson = new PageResponse<>(tshopInfoService.list(queryable,entityWrapper));
+        PageResponse<TsoldInfo> pagejson = new PageResponse<>(TsoldInfoService.list(queryable,entityWrapper));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }
-
 }

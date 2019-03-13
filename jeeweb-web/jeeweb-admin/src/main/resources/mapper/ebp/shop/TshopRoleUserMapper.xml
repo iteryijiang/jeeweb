@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TshopRoleUserMapper" >
+  <resultMap id="TshopRoleUser" type="cn.jeeweb.web.ebp.shop.entity.TshopRoleUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="userid" column="userid" jdbcType="VARCHAR" />
+      <result property="shopid" column="shopid" jdbcType="VARCHAR" />
+      <result property="storeid" column="storeid" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectShopList" resultMap="TshopRoleUser">
+	  select t.*,s.soldlogin username,si.loginname shopname from t_shop_role_user t left join t_shop_info si on t.shopid=si.userid left join t_sold_info s
+      on t.userid=s.userid
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+    <select id="listSoldFinance" resultType="java.util.Map">
+        select DATE_FORMAT(tb.effectdate,'%Y-%m-%d') effectdate,s.shopname,s.loginname,sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end) tasknum,
+        sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end)-sum(finishcount) unanswerednum,sum(case when tb.status=2 then 0 else tb.canreceivenum end) canreceivenum,
+        sum(finishcount) finishnum,(sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end)-sum(finishcount))*${map.multiple} unansweredPrice,sum(finishcount)*${map.multiple} finishPrice
+         from t_shop_role_user t left join t_shop_info s on t.shopid=s.userid left join t_task_base tb on t.shopid=tb.shopid
+         left join (select taskid,sum(case when taskstate='4' then 1 else 0 end) finishcount from t_my_task_detail m,t_task_base b,t_shop_role_user s where
+          m.taskid=b.id and b.shopid=s.shopid  and s.userid=#{map.userid} group by taskid) my on tb.id=my.taskid
+        where 1=1
+        and t.userid=#{map.userid}
+        and (tb.effectdate BETWEEN #{map.createDate1} and #{map.createDate2})
+        <if test="map.loginname != '' and map.loginname != null">
+            and s.loginname like #{map.loginname}
+        </if>
+        group by DATE_FORMAT(tb.effectdate,'%Y-%m-%d'),s.shopname,s.loginname
+        order by DATE_FORMAT(tb.effectdate,'%Y-%m-%d')
+    </select>
+
+    <select id="sumListSoldFinance" resultType="java.util.Map">
+        select sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end) sumtasknum,
+        sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end)-sum(finishcount) sumunanswerednum,sum(case when tb.status=2 then 0 else tb.canreceivenum end) sumcanreceivenum,
+        sum(finishcount) sumfinishnum,(sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end)-sum(finishcount))*${map.multiple} sumunansweredPrice,sum(finishcount)*${map.multiple} sumfinishPrice
+        from t_shop_role_user t left join t_shop_info s on t.shopid=s.userid left join t_task_base tb on t.shopid=tb.shopid
+        left join (select taskid,sum(case when taskstate='4' then 1 else 0 end) finishcount from t_my_task_detail m,t_task_base b,t_shop_role_user s where
+        m.taskid=b.id and b.shopid=s.shopid and s.userid=#{map.userid} group by taskid) my on tb.id=my.taskid
+        where 1=1
+        and t.userid=#{map.userid}
+        <if test="map.loginname != '' and map.loginname != null">
+            and s.loginname like #{map.loginname}
+        </if>
+    </select>
+</mapper>
