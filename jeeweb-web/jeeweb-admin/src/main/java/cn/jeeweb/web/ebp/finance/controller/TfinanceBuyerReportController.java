@@ -29,6 +29,7 @@ import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.modules.sys.entity.LoginLog;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -41,9 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 @RestController
@@ -148,10 +147,10 @@ public class TfinanceBuyerReportController extends BaseBeanController<TfinanceBu
         EntityWrapper<TfinanceBuyerReport> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         if(queryable.getCondition()!=null) {
-            Condition.Filter filter = queryable.getCondition().getFilterFor("createDate");
+            Condition.Filter filter = queryable.getCondition().getFilterFor("countcreatedate");
             if (filter != null) {
                 queryable.getCondition().remove(filter);
-                queryable.getCondition().and(Condition.Operator.between, "createDate", TaskUtils.whereDate(filter));
+                queryable.getCondition().and(Condition.Operator.between, "countcreatedate", TaskUtils.whereDate(filter));
             }
             Condition.Filter filter_buyeridName = queryable.getCondition().getFilterFor("buyeridName");
             if (filter_buyeridName != null) {
@@ -164,6 +163,11 @@ public class TfinanceBuyerReportController extends BaseBeanController<TfinanceBu
                 entityWrapper.like("b.loginname", filter_loginName.getValue().toString());
             }
         }
+        if(queryable.getCondition()==null||queryable.getCondition().getFilterFor("countcreatedate")==null){
+            Date date = DateUtils.dateAddDay(null,-1);
+            String[] creates = TaskUtils.whereNewDate(DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date,"yyyy-MM-dd"));
+            entityWrapper.between("countcreatedate",creates[0],creates[1]);
+        }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
@@ -171,6 +175,44 @@ public class TfinanceBuyerReportController extends BaseBeanController<TfinanceBu
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }
+
+    @RequestMapping(value = "showBuyerReportLoad", method = { RequestMethod.GET, RequestMethod.POST })
+    public void showBuyerReportLoad(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                                 HttpServletResponse response) throws IOException {
+        Map map = new HashMap();
+        try {
+            String userid = "";
+            if (!"admin".equals(UserUtils.getUser().getUsername())) {
+                userid = UserUtils.getPrincipal().getId();
+            }
+            String create1 = jsonObject.getString("create1");
+            String create2 = jsonObject.getString("create2");
+            String buyeridName = jsonObject.getString("buyeridName");
+            String loginName = jsonObject.getString("loginName");
+            String status = jsonObject.getString("status");
+            if(StringUtils.isEmpty(create1)||StringUtils.isEmpty(create2)){
+                Date date = DateUtils.dateAddDay(null,-1);
+                create1 = DateUtils.formatDate(date,"yyyy-MM-dd");
+                create2 = DateUtils.formatDate(date,"yyyy-MM-dd");
+            }
+
+            String[] creates = TaskUtils.whereNewDate(create1,create2);
+
+            Map m = new HashMap();
+            m.put("userid",userid);
+            m.put("create1",creates[0]);
+            m.put("create2",creates[1]);
+            m.put("buyeridName",(StringUtils.isNotEmpty(buyeridName)?"%"+buyeridName+"%":null));
+            m.put("loginName",(StringUtils.isNotEmpty(loginName)?"%"+loginName+"%":null));
+            m.put("status",status);
+            map = tfinanceBuyerReportService.showBuyerReportLoad(m);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
+    }
+
 
     @RequestMapping("export")
     @RequiresMethodPermissions("export")

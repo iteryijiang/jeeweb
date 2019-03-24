@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Transactional
 @Service("tfinanceBuyerReportService")
 public class TfinanceBuyerReportServiceImpl extends CommonServiceImpl<TfinanceBuyerReportMapper, TfinanceBuyerReport> implements TfinanceBuyerReportService {
@@ -36,5 +38,8 @@ public class TfinanceBuyerReportServiceImpl extends CommonServiceImpl<TfinanceBu
         tshopInfoService.updateById(si);
         deleteById(tr);
         return true;
+    }
+    public Map showBuyerReportLoad(Map m){
+        return baseMapper.showBuyerReportLoad(m);
     }
 }

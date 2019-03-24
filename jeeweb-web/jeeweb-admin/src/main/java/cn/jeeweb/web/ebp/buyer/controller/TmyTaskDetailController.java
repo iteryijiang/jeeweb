@@ -11,6 +11,7 @@ import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
 import cn.jeeweb.common.query.annotation.PageableDefaults;
 import cn.jeeweb.common.query.data.Condition;
+import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
@@ -43,10 +44,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RestController
@@ -72,6 +70,13 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     public ModelAndView buyerDetail(@PathVariable("id") String id,Model model, HttpServletRequest request, HttpServletResponse response) {
         model.addAttribute("id",id);
         ModelAndView mav = displayModelAndView("list_buyer_detail");
+        return mav;
+    }
+
+    @GetMapping(value = "shopbasehtml")
+    @RequiresMethodPermissions("shopbasehtml")
+    public ModelAndView shopbasehtml(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("list_shop_base");
         return mav;
     }
 
@@ -184,6 +189,62 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         PageResponse<TmyTaskDetail> pagejson = new PageResponse<TmyTaskDetail>(tmyTaskDetailService.listDetail(queryable,entityWrapper));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
+    }
+
+    @RequestMapping(value = "listShopBaseDetail", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("listShopBaseDetail")
+    public void listShopBaseDetail(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                               HttpServletResponse response) throws IOException {
+        EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
+        String[] s = {"id","tUrl"};
+        propertyPreFilterable.addQueryProperty(s);
+        entityWrapper.setTableAlias("t");
+        // 预处理
+        if(queryable.getCondition()!=null) {
+            Condition.Filter filter_receivingdate = queryable.getCondition().getFilterFor("receivingdate");
+            if (filter_receivingdate != null) {
+                queryable.getCondition().remove(filter_receivingdate);
+                queryable.getCondition().and(Condition.Operator.between, "receivingdate", TaskUtils.whereDate(filter_receivingdate));
+            }
+
+            Condition.Filter filter_shopLoginname = queryable.getCondition().getFilterFor("shopLoginname");
+            if (filter_shopLoginname != null) {
+                queryable.getCondition().remove(filter_shopLoginname);
+                entityWrapper.like("s.loginname", filter_shopLoginname.getValue().toString());
+            }
+
+            Condition.Filter filter_shopidName = queryable.getCondition().getFilterFor("shopidName");
+            if (filter_shopidName != null) {
+                queryable.getCondition().remove(filter_shopidName);
+                entityWrapper.like("s.shopname", filter_shopidName.getValue().toString());
+            }
+            Condition.Filter filter_shopname = queryable.getCondition().getFilterFor("shopname");
+            if (filter_shopname != null) {
+                queryable.getCondition().remove(filter_shopname);
+                entityWrapper.like("sb.shopname", filter_shopname.getValue().toString());
+            }
+            Condition.Filter filter_article = queryable.getCondition().getFilterFor("article");
+            if (filter_article != null) {
+                queryable.getCondition().remove(filter_article);
+                entityWrapper.like("tb.article", filter_article.getValue().toString());
+            }
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
+            PageResponse<TmyTaskDetail> pagejson = new PageResponse<TmyTaskDetail>(tmyTaskDetailService.listShopBaseDetail(queryable,entityWrapper));
+            String content = JSON.toJSONString(pagejson, filter);
+            StringUtils.printJson(response,content);
+        }else {
+            SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
+//            new PageImpl<TmyTaskDetail>(new ArrayList<>(), queryable.getPageable(), 0);
+            PageResponse<TmyTaskDetail> pagejson = new PageResponse<TmyTaskDetail>();
+            String content = JSON.toJSONString(pagejson, filter);
+            StringUtils.printJson(response,content);
+        }
+//        if(queryable.getCondition()==null||queryable.getCondition().getFilterFor("receivingdate")==null) {
+//            String[] creates = TaskUtils.whereNewDate("", "");
+//            entityWrapper.between("receivingdate", creates[0], creates[1]);
+//        }
+
     }
 
 

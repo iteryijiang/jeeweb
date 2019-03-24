@@ -22,15 +22,16 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String goodsname;//
 	private String buyerid;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String taskid;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	@Excel(name = "订单状态", orderNum = "8",replace= {"已接单、待下单_1", "已下单、待发货_2", "已发货、待收货_3", "已收货、完成_4"},width = 30)
+	@Excel(name = "订单状态", orderNum = "10",replace= {"已接单、待下单_1", "已下单、待发货_2", "已发货、待收货_3", "已收货、完成_4"},width = 30)
 	private String taskstate;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String tasktype;//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private BigDecimal commision;//
+	@Excel(name = "实付金额", orderNum = "9", width = 15)
 	private BigDecimal pays;//实付金额
 
-	@Excel(name = "京东账号", orderNum = "6",width = 20)
+	@Excel(name = "京东账号", orderNum = "7",width = 20)
 	private String buyerjdnick;//京东账号	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	@Excel(name = "订单号", orderNum = "7",width = 20)
+	@Excel(name = "订单号", orderNum = "8",width = 20)
 	private String jdorderno; //京东订单号
 	private String buyerclient;//下单终端：手机，电脑
 	private String expressno; //快递单号
@@ -38,10 +39,10 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String taskstatus;//	varchar	32	0	-1	0	0	0	0		0	下单状态（进行中,已完成）	utf8	utf8_general_ci		0	0
 
 	@JSONField(format="yyyy-MM-dd HH:mm")
-	@Excel(name = "领取时间", orderNum = "1",format="yyyy-MM-dd HH:mm",width = 30)
+	@Excel(name = "领取时间", orderNum = "2",format="yyyy-MM-dd HH:mm",width = 30)
 	private java.util.Date receivingdate;//接受任务时间
 	@JSONField(format="yyyy-MM-dd HH:mm")
-	@Excel(name = "完成时间", orderNum = "2",format="yyyy-MM-dd HH:mm",width = 30)
+	@Excel(name = "完成时间", orderNum = "3",format="yyyy-MM-dd HH:mm",width = 30)
 	private java.util.Date orderdate;//买手下单时间
 	@JSONField(format="yyyy-MM-dd HH:mm")
 	private java.util.Date deliverydate;//商家发货时间
@@ -59,20 +60,23 @@ public class TmyTaskDetail extends DataEntity<String> {
 	@Excel(name = "平台编号", orderNum = "0",width = 20)
 	private String buyeridName;
 
+	@TableField(exist = false)
+	@Excel(name = "平台登录名", orderNum = "1",width = 20)
+	private String buyeridLogin;
 
 	@TableField(exist = false)
-	@Excel(name = "商家名称", orderNum = "4",width = 20)
+	@Excel(name = "商家名称", orderNum = "5",width = 20)
 	private String shopidName;
 
 	@TableField(exist = false)
-	@Excel(name = "商家号", orderNum = "3",width = 20)
+	@Excel(name = "商家号", orderNum = "4",width = 20)
 	private String shopLoginname;
 
 	@TableField(exist = false)
 	private String taskstateName;
 
 	@TableField(exist = false)
-	@Excel(name = "店铺名", orderNum = "5",width = 20)
+	@Excel(name = "店铺名", orderNum = "6",width = 20)
 	private String shopname;
 
 	@TableField(exist = false)
@@ -102,6 +106,9 @@ public class TmyTaskDetail extends DataEntity<String> {
 	@TableField(exist = false)
 	@Excel(name = "货号", orderNum = "4",width = 20)
 	private String article;
+
+	@TableField(exist = false)
+	private String tTitle;
 
 	@Override
 	public String getId() {
@@ -387,5 +394,19 @@ public class TmyTaskDetail extends DataEntity<String> {
 		this.shopLoginname = shopLoginname;
 	}
 
+	public String getBuyeridLogin() {
+		return buyeridLogin;
+	}
 
+	public void setBuyeridLogin(String buyeridLogin) {
+		this.buyeridLogin = buyeridLogin;
+	}
+
+	public String gettTitle() {
+		return tTitle;
+	}
+
+	public void settTitle(String tTitle) {
+		this.tTitle = tTitle;
+	}
 }

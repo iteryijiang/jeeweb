@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -25,12 +26,13 @@ public interface TtaskBaseMapper extends BaseMapper<TtaskBase> {
 
 	Integer sumTtaskBase(@Param("map") Map map);
 
+	Integer sumCanreceivenum(@Param("minute") int minute);
+
 	List<TtaskBase> selectShopList(Pagination page, @Param("ew") Wrapper<TtaskBase> wrapper);
 
 	List<Map> selectFinanceList(@Param("createDate1") String createDate1, @Param("createDate2") String createDate2);
 
-	List<Map> selectWithdrawalMoneyList(@Param("createDate1") String createDate1, @Param("createDate2") String createDate2, @Param("multiple") int multiple);
+	List<Map> selectWithdrawalMoneyList(@Param("map") Map map);
 
 	List<Map> listFinanceShopReport(@Param("map") Map map);
-
 }

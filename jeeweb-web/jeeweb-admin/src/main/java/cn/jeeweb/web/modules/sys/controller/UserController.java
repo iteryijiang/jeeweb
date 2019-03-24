@@ -288,8 +288,9 @@ public class UserController extends BaseBeanController<User> {
 					}
 				}else if("402880e45b5d7636015b5d8baca60000".equals(roleid)){//保存买手用户
 					Map map = new HashMap();
-					map.put("userid",entity.getId());
-					TbuyerInfo tbi = (TbuyerInfo)tbuyerInfoService.selectByMap(map).get(0);
+					EntityWrapper<TbuyerInfo> entityWrapper = new EntityWrapper<TbuyerInfo>();
+					entityWrapper.eq("userid", entity.getId());
+					TbuyerInfo tbi =  tbuyerInfoService.selectOne(entityWrapper);
 					if(tbi==null){
 						tbi = new TbuyerInfo();
 						tbi.setLoginname(entity.getUsername());

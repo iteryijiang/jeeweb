@@ -118,6 +118,12 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public Response add(@RequestBody TtaskBase ttaskBase,HttpServletRequest request, HttpServletResponse response) {
 
         try {
+            if(StringUtils.isEmpty(ttaskBase.gettUrl())||StringUtils.isEmpty(ttaskBase.getQrcodeurl())){
+                return Response.error("订单地址或二维码为空！");
+            }
+            if(null==ttaskBase.getEffectdate()){
+                return Response.error("生效时间为空！");
+            }
             ttaskBase.setShopid(UserUtils.getUser().getId());
             TshopInfo si = tshopInfoService.selectOne(ttaskBase.getShopid());
             //      ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
@@ -287,18 +293,27 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
 
-        int multiple = 2;
+        Double multiple = 2.0;
         try{
-            multiple = Integer.parseInt(DictUtils.getDictValue("一个任务单佣金","tasknum",multiple+""));
+            multiple = Double.parseDouble(DictUtils.getDictValue("一个任务单佣金","tasknum",multiple+""));
         }catch (Exception e){
 
         }
+        String userid = "";
+        if (!"admin".equals(UserUtils.getUser().getUsername())) {
+            userid = UserUtils.getPrincipal().getId();
+        }
         String[] creates = TaskUtils.whereNewDate("","");
         if(queryable.getCondition()!=null){
-            Condition.Filter filter = queryable.getCondition().getFilterFor("effectdate");
+            Condition.Filter filter = queryable.getCondition().getFilterFor("countCreateDate");
             creates = TaskUtils.whereDate(filter);
         }
-        List<Map> list = ttaskBaseService.selectWithdrawalMoneyList(creates[0],creates[1],multiple);
+        Map parmas_map = new HashMap();
+        parmas_map.put("createDate1",creates[0]);
+        parmas_map.put("createDate2",creates[1]);
+        parmas_map.put("multiple",multiple);
+        parmas_map.put("userid",userid);
+        List<Map> list = ttaskBaseService.selectWithdrawalMoneyList(parmas_map);
         Long sumCount = 0l;
         Long sumConfirm = 0l;
         BigDecimal sumWithdrawalmoney = new BigDecimal(0.0);
@@ -492,6 +507,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         TtaskBase tb = ttaskBaseService.selectById(id);
         TshopInfo tsi = tshopInfoService.selectOne(tb.getShopid());
         TshopBase tsb = tshopBaseService.selectById(tb.getStorename());
+        String display = "none";
+        if ("admin".equals(UserUtils.getUser().getUsername())) {
+            display = "block";
+        }
+        model.addAttribute("display",display);
         model.addAttribute("tb",tb);
         model.addAttribute("tsi",tsi);
         model.addAttribute("tsb",tsb);
@@ -575,6 +595,14 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("myTaskCreate")
     public Response myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws Exception {
         try {
+            //如果上一任务未完成，则不能领取任务
+            Map map = new HashMap();
+            map.put("userid",UserUtils.getPrincipal().getId());
+            map.put("taskstate","1");
+            if(tmyTaskDetailService.sumMyTask(map)>0){
+                return Response.ok("您有未确定下单任务，无法领取！");
+            }
+
             boolean bool = ttaskBaseService.createMyTask();
             if(!bool){
                 return Response.ok("无可领取任务！");

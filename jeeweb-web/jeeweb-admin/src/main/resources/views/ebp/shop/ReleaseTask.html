@@ -351,7 +351,7 @@
             alert("请填写生效时间");
             return;
          }else {
-             good_detail_info.effectdate = new Date(good_detail_info.effectdate);
+             good_detail_info.effectdate = new Date(good_detail_info.effectdate.replace(/-/g,"/"));
          }
          if(good_detail_info.qrcodeurl==""||good_detail_info.qrcodeurl==undefined){
               alert("请上传二维码图片");

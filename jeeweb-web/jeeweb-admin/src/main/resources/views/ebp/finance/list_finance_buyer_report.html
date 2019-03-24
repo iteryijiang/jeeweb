@@ -1,9 +1,11 @@
 <% layout('/layouts/list.html', {title: '买手财务报表', libs: ''}){ %>
 
 <div>
-    <table cellpadding="10" style="font-size:18px;padding: 10px" align="center">
+    <table cellpadding="10" style="font-size:18px;padding: 10px">
         <tr>
-            <td><br>买手财务报表</td>
+            <td><p>任务总价汇总：<span style="color:green;font-weight: bold" id="sumprice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>确认下单汇总：<span style="color:blue;font-weight: bold" id="sumorderprice"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>连接数汇总：<span style="color:red;font-weight: bold" id="sumnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
         </tr>
     </table>
     <br>
@@ -14,10 +16,7 @@
 <#grid:column label="买手号" width="140"  name="loginName" query="true" condition="like"/>
 <#grid:column label="任务总价" width="140"  name="sumprice"/>
 <#grid:column label="确认下单金额" width="100"  name="sumorderprice"  />
-<#grid:column label="确认发货金额" width="120"  name="sumdeliveryprice"/>
-<#grid:column label="完成金额" width="120"  name="sumfinishprice"/>
 <#grid:column label="链接数" width="100"  name="sumnum"/>
-<#grid:column label="完成链接数" width="100"  name="sumfinishnum"/>
 <#grid:column label="状态" width="100"  name="status" dict="buyerFinanceStatus" queryMode="select" condition="eq" query="true"/>
 <#grid:column label="sys.common.opt"  name="opt" formatter="button" />
 <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" winwidth="100%" winheight="100%" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/\"+row.id+\"/buyerDetail' />
@@ -28,3 +27,31 @@
 <#grid:toolbar  function="reset" />
 </#grid:grid>
 <% } %>
+<script>
+    function search(gridId){
+        var page = $("#"+gridId).getGridParam('page'); // 获取当前页码
+        searchByPage(gridId,page);
+        getload();
+    }
+    getload();
+    function getload(){
+        var data={};
+        data.create1 = $("#tfinanceBuyerReportGrid_countcreatedate_start").val();
+        data.create2 = $("#tfinanceBuyerReportGrid_countcreatedate_end").val();
+        data.buyeridName = $("input[name='buyeridName']").val();
+        data.loginName = $("input[name='loginName']").val();
+        data.status = $("select[name='status']").val();
+        $.ajax({
+            type: "POST",
+            url: "${adminPath}/finance/tfinanceBuyerReport/showBuyerReportLoad",
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function(data){
+                $("#sumprice").html(data.sumprice==undefined?"0":data.sumprice);
+                $("#sumorderprice").html(data.sumorderprice==undefined?"0":data.sumorderprice);
+                $("#sumnum").html(data.sumnum==undefined?"0":data.sumnum);
+            }
+        });
+    }
+</script>

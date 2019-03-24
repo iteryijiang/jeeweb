@@ -8,9 +8,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TfinanceBuyerReportMapper extends BaseMapper<TfinanceBuyerReport> {
 	
 	List<TfinanceBuyerReport> selectUserList(Pagination page, @Param("ew") Wrapper<TfinanceBuyerReport> wrapper);
+
+	Map showBuyerReportLoad(@Param("map") Map map);
 }

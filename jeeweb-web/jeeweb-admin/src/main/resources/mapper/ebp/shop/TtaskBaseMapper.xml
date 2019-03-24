@@ -49,7 +49,7 @@
   </sql>
 
   <select id="selectShopList" resultMap="TtaskBase">
-    select t.*,s.shopname,(t.tasknum-t.canreceivenum) receivingnum,b.deliverynum,b.ordernum from T_task_Base t left join t_shop_base s on t.storename = s.id
+    select t.*,s.shopname,(t.tasknum-t.canreceivenum) receivingnum,b.deliverynum,b.ordernum,b.confirmnum from T_task_Base t left join t_shop_base s on t.storename = s.id
     left join (select taskid,sum(confirm) confirmnum,sum(delivery) deliverynum,sum(order1) ordernum from
     (select taskid,case when taskstate=4 then 1 else 0 end confirm,
     case when taskstate=3 then 1 else 0 end delivery,
@@ -110,18 +110,26 @@
   </select>
 
   <select id="selectShopTaskNew" resultMap="TtaskBase">
-    SELECT *
-    FROM
-    T_task_Base t
-    WHERE
-    1=1
-   and (t.lasttakingdate is null or t.lasttakingdate  <![CDATA[<]]> date_add(now(), interval - ${minute} minute))
-               AND t.STATUS = '0'
-               AND t.canreceivenum <![CDATA[>]]> 0
+    SELECT * FROM T_task_Base t
+    WHERE 1=1
+    AND t.STATUS = '0' AND t.canreceivenum <![CDATA[>]]> 0
+    <if test="minute != '' and minute gt 0">
+      and (t.lasttakingdate is null or t.lasttakingdate  <![CDATA[<]]> date_add(now(), interval - ${minute} minute))
+    </if>
     and DATE_FORMAT(t.effectdate,'%Y-%m-%d') = DATE_FORMAT(curdate(),'%Y-%m-%d')
     and DATE_FORMAT(t.effectdate,'%H:%i:%S') <![CDATA[<=]]> DATE_FORMAT(now(),'%H:%i:%S')
     order by t.storename asc,t.canreceivenum desc
   </select>
+  <!-- 获取领取任务时，剩余任务总单数 -->
+  <select id="sumCanreceivenum" resultType="java.lang.Integer">
+      SELECT sum(canreceivenum) FROM T_task_Base t
+      WHERE 1=1
+      AND t.STATUS = '0' AND t.canreceivenum <![CDATA[>]]> 0
+      and (t.lasttakingdate is null or t.lasttakingdate  <![CDATA[<]]> date_add(now(), interval - ${minute} minute))
+      and t.effectdate <![CDATA[>=]]> curdate()
+      and t.effectdate <![CDATA[<=]]> now()
+    </select>
+
 <!-- 历史商户统计查询，隐藏 -->
   <select id="sumNumAndPrice" resultType="java.util.Map">
     select sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(finishPrice) sumFinishPrice,sum(count) sumCount,
@@ -207,10 +215,13 @@
 
   <select id="selectWithdrawalMoneyList" resultType="java.util.Map">
      select DATE_FORMAT(t.create_date,'%Y-%m-%d') countCreateDate,b.buyerName,sum(1) sumCount,sum( case when taskstate=4 then 1 else 0 end) sumConfirm
-    ,sum( case when taskstate=4 then 1 else 0 end)*${multiple} sumWithdrawalmoney
+    ,sum( case when taskstate=4 then 1 else 0 end)*${map.multiple} sumWithdrawalmoney
     from t_my_task_detail t left join t_buyer_info b on t.buyerid=b.userid
       where 1=1
-         and (t.create_date BETWEEN #{createDate1} and #{createDate2})
+        <if test="map.userid != '' and map.userid != null">
+          and t.buyerid=#{map.userid}
+        </if>
+         and (t.create_date BETWEEN #{map.createDate1} and #{map.createDate2})
         group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),t.buyerid
         order by DATE_FORMAT(t.create_date,'%Y-%m-%d')
   </select>

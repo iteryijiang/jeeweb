@@ -37,8 +37,20 @@
   </select>
 
     <select id="listDetail" resultMap="TmyTaskDetail">
-        select t.*,bi.buyerName buyeridName,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article from T_my_Task_Detail t
+        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article from T_my_Task_Detail t
         left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
+        left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
+
+    <select id="listShopBaseDetail" resultMap="TmyTaskDetail">
+        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article,
+        tb.t_Title tTitle,tb.t_Url tUrl,tb.brand,tb.keyword,tb.spec1,tb.spec2
+        from T_my_Task_Detail t left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
         left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
         <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
             <where>
@@ -49,6 +61,10 @@
 
     <select id="selBaseIdMyTaskDetailList" resultMap="TmyTaskDetail">
         select t.*,s.realname buyeridName from T_my_Task_Detail t,sys_user s where t.buyerid=s.id and t.taskId=#{taskId}
+    </select>
+
+    <select id="sumMyTask" resultType="java.lang.Integer">
+        select count(1) from T_my_Task_Detail t,sys_user s where t.buyerid=#{map.userid} and t.taskstate=#{map.taskstate}
     </select>
 
     <select id="groupBytaskstatus" resultType="java.util.Map">

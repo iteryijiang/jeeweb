@@ -78,6 +78,9 @@ public class TtaskBase extends DataEntity<String> {
 	private Long deliverynum;//已发货单数
 
 	@TableField(exist = false)
+	private Long confirmnum;//已完成单数
+
+	@TableField(exist = false)
 	private String shopname;//店铺名
 
 	/** 创建时间 */
@@ -439,5 +442,13 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setPresentdeposit(BigDecimal presentdeposit) {
 		this.presentdeposit = presentdeposit;
+	}
+
+	public Long getConfirmnum() {
+		return confirmnum;
+	}
+
+	public void setConfirmnum(Long confirmnum) {
+		this.confirmnum = confirmnum;
 	}
 }

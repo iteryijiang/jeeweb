@@ -4,6 +4,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -60,6 +61,18 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 			formatDate = DateFormatUtils.format(date, "yyyy-MM-dd");
 		}
 		return formatDate;
+	}
+	/**
+	 * 得到某日前N天，或后N天。
+	 * day 1 后一天，day -1前一天
+	 */
+	public static Date dateAddDay(Date date,int day) {
+		Calendar calendar = Calendar.getInstance();
+		if(date!=null){
+			calendar.setTime(date);
+		}
+		calendar.add(Calendar.DATE, day);
+		return calendar.getTime();
 	}
 
 	/**

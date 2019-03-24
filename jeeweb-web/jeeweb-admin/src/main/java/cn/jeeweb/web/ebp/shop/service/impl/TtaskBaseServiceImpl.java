@@ -87,8 +87,8 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
     public List<Map> selectFinanceList( String createDate1, String createDate2) {
         return baseMapper.selectFinanceList(createDate1,createDate2);
     }
-    public List<Map> selectWithdrawalMoneyList( String createDate1, String createDate2,int multiple) {
-        return baseMapper.selectWithdrawalMoneyList(createDate1,createDate2,multiple);
+    public List<Map> selectWithdrawalMoneyList(Map map) {
+        return baseMapper.selectWithdrawalMoneyList(map);
     }
     public List<Map> listFinanceShopReport(Map map) {
         return baseMapper.listFinanceShopReport(map);
@@ -146,17 +146,24 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
      * */
     @Transactional
     public boolean createMyTask() throws Exception{
+        long starttime = System.currentTimeMillis();//开始领取任务
         synchronized(this) {
             String user = UserUtils.getPrincipal().getId();
 
             int count = 3;
             int countSum = 7;
             int minute = 10;
+            int canreceivenum = 400;
             try {
                 String sum = DictUtils.getDictValue("一个任务单店接单数", "tasknum", count + "");
                 count = Integer.parseInt(sum);
                 countSum = Integer.parseInt(DictUtils.getDictValue("一个任务总连接数", "tasknum", countSum + ""));
                 minute = Integer.parseInt(DictUtils.getDictValue("一个任务领取间隔时长", "tasknum", minute + ""));
+                canreceivenum = Integer.parseInt(DictUtils.getDictValue("解除领取间隔时间限制阈值", "tasknum", canreceivenum + ""));
+                int sumCanreceivenum =  baseMapper.sumCanreceivenum(minute);
+                if(canreceivenum>=sumCanreceivenum){
+                    minute = 0;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -164,6 +171,12 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
             int sumshop = (int) Math.ceil(countSum / count);
 
             Map<String, Map<String, Map<Integer, List<TtaskBase>>>> map = myTaskMap(count, minute);
+            long endtime = System.currentTimeMillis();
+            long usetime = (endtime - starttime);//每个店铺组合单时间
+            long usetime1 = 0l;//得到具体多组任务时间
+            long usetime2 = 0l;//保存具体多组任务时间
+            long usetime3 = 0l;//保存具体单组任务时间
+
             //根据店铺订单得到每个店铺对应 组单
             Map<String, Map<Integer, List<TtaskBase>>> shopDoubleMap = map.get("1");
             //根据店铺订单得到每个店铺对应 只有一单
@@ -203,6 +216,9 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                             break;
                         }
                     }
+                    long endtime1 = System.currentTimeMillis();
+                    usetime1 = (endtime1 - starttime);//得到具体多组任务时间
+
                     Iterator<Map.Entry<String, Map<Integer, List<TtaskBase>>>> entries = newDoubleShopMap.entrySet().iterator();
                     while (entries.hasNext()) {
                         Map.Entry<String, Map<Integer, List<TtaskBase>>> entry = entries.next();
@@ -235,7 +251,8 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                         }
                     }
                 }
-
+                long endtime2 = System.currentTimeMillis();
+                usetime2 = (endtime2 - starttime);//保存具体多组任务时间
                 if(createCount<=countSum) {
                     Iterator<Map.Entry<String, Map<Integer, List<TtaskBase>>>> entriesOne = shopOneMap.entrySet().iterator();
                     while (entriesOne.hasNext()) {
@@ -271,6 +288,8 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                         }
                     }
                 }
+                long endtime3 = System.currentTimeMillis();
+                usetime3 = (endtime3 - starttime);//保存具体单组任务时间
 
                 tmyTask.setTotalprice(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
                 tmyTaskService.insert(tmyTask);
@@ -279,6 +298,7 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
             }else {
                 return false;
             }
+            System.out.println("一个任务领取单各个阶段耗时：(每个店铺组合单时间"+usetime+"毫秒，得到具体多组任务时间"+usetime1+"毫秒，保存具体多组任务时间"+usetime2+"毫秒，保存具体单组任务时间"+usetime3+"毫秒)");
             return true;
         }
     }

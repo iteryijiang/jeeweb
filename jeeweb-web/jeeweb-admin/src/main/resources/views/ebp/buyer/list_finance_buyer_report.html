@@ -1,0 +1,19 @@
+<% layout('/layouts/list.html', {title: '买手财务报表', libs: ''}){ %>
+
+<#grid:grid id="listFinanceBuyerReportGrid" url="${adminPath}/buyer/TmyTask/listFinanceBuyerReport" sortname="countcreatedate" sortorder="desc" rowNum="20">
+<#grid:column label="日期"  name="countcreatedate" query="true"  queryMode="date" condition="between" />
+<#grid:column label="买手名称" width="140"  name="buyeridName" query="true" condition="like"/>
+<#grid:column label="买手号" width="140"  name="loginName" query="true" condition="like"/>
+<#grid:column label="任务总价" width="140"  name="sumprice"/>
+<#grid:column label="确认下单金额" width="100"  name="sumorderprice"  />
+<#grid:column label="链接数" width="100"  name="sumnum"/>
+<#grid:column label="状态" width="100"  name="status" dict="buyerFinanceStatus" queryMode="select" condition="eq" query="true"/>
+<#grid:column label="sys.common.opt"  name="opt" formatter="button" />
+<#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" winwidth="100%" winheight="100%" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/\"+row.id+\"/buyerDetail' />
+<!--<#grid:button title="对账" exp="row.status==0" tipMsg="你确定要进行对账吗?" outclass="btn-primary" groupname="opt" function="rowConfirm" url="${adminPath}/finance/tfinanceBuyerReport/updatestatus" />-->
+
+
+<#grid:toolbar  function="search"  />
+<#grid:toolbar  function="reset" />
+</#grid:grid>
+<% } %>

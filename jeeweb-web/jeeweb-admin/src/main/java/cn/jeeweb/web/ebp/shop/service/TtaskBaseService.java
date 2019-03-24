@@ -20,7 +20,7 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
 
     public List<Map> selectFinanceList( String createDate1, String createDate2);
 
-    public List<Map> selectWithdrawalMoneyList( String createDate1, String createDate2,int multiple);
+    public List<Map> selectWithdrawalMoneyList(Map map);
     public List<Map> listFinanceShopReport(Map map);
 
     public Map shopMap(List<TtaskBase> list_tb,int count,int countSum,Map<Integer,List<TtaskBase>> m,int i);
@@ -43,4 +43,5 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
      * 任务状态修改
      * */
     public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype);
+
 }
