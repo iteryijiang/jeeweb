@@ -83,7 +83,7 @@ public class LoginLogUtils {
     public static void recordLoginLog(String username,String status,String message)
     {
         final UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
-        final String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
+//        final String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
         //创建异步任务
         Task task  = new Task()
         {
@@ -97,8 +97,8 @@ public class LoginLogUtils {
                 // 封装对象
                 LoginLog loginLog = new LoginLog();
                 loginLog.setLoginName(username);
-                loginLog.setLoginIp(ip);
-                loginLog.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
+//                loginLog.setLoginIp(ip);
+//                loginLog.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
                 loginLog.setBrowser(browser);
                 loginLog.setOs(os);
                 loginLog.setMsg(message);

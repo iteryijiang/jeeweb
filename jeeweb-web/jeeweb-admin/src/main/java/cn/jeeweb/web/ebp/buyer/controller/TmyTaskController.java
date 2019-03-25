@@ -234,12 +234,25 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
      * 我的任务状态：TmyTask中state:0进行中，1完成
      * 任务单状态：TmyTaskDetail中taskstatust:0进行中，1完成
      * */
-    @GetMapping("{id}/{taskState}/upTaskState")
+    @RequestMapping(value = "upTaskState", method = { RequestMethod.GET, RequestMethod.POST })
     @Log(logType = LogType.UPDATE)
     @RequiresMethodPermissions("upTaskState")
-    public void upTaskState(@PathVariable("id") String id,@PathVariable("taskState") String taskState, HttpServletRequest request,
+    public Response upTaskState(@RequestBody JSONObject jsonObject, HttpServletRequest request,
                             HttpServletResponse response) {
-        tmyTaskDetailService.upTaskState(taskState,null,id);
+        try {
+            String id = jsonObject.getString("id");
+            String state = jsonObject.getString("state");
+            String buyerjdnick = jsonObject.getString("buyerjdnick");
+            String jdorderno = jsonObject.getString("jdorderno");
+            TmyTaskDetail td = tmyTaskDetailService.selectById(id);
+            td.setBuyerjdnick(buyerjdnick);
+            td.setJdorderno(jdorderno);
+            tmyTaskDetailService.upTaskState(state,td,id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Response.ok("修改失败！");
+        }
+        return Response.ok("修改成功！");
     }
     @RequestMapping(value = "ajaxTreeList")
     @Log(logType = LogType.SELECT)

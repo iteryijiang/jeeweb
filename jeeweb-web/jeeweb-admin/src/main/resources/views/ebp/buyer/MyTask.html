@@ -165,27 +165,31 @@
     function upTask(id,state,obj,name){
         var buyerjdnick_  = $("#buyerjdnick_"+id).val();
         var jdorderno_  = $("#jdorderno_"+id).val();
-
         if(buyerjdnick_==""||buyerjdnick_==undefined){
             alert("请填写京东账号");
             return;
         }
-        if(buyerjdnick_==""||buyerjdnick_==undefined){
+        if(jdorderno_==""||jdorderno_==undefined){
             alert("请填写订单号");
             return;
         }
-        upbuyerjdnick(buyerjdnick_,id);
-        upjdorderno(jdorderno_,id);
+        obj.val('提交中').attr('disabled',true);//改变提交按钮上的文字并将按钮设置为不可点击
+        var data={};
+        data.id = id;
+        data.state = state;
+        data.buyerjdnick = buyerjdnick_;
+        data.jdorderno = jdorderno_;
         $.ajax({
-            url: "${adminPath}/buyer/TmyTask/"+id+"/"+state+"/upTaskState",
-            beforeSend:function(){//触发ajax请求开始时执行
-                obj.val('提交中').attr('disabled',true);//改变提交按钮上的文字并将按钮设置为不可点击
-            },
+            type: "POST",
+            url: "${adminPath}/buyer/TmyTask/upTaskState",
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: "json",
             success: function(data){
-                alert("操作成功！");
+                alert(data.msg);
                 location.reload();
             },
-            complete:function(){//ajax请求完成时执行
+            error: function(){
                 obj.val(name).attr('disabled',false);//改变提交按钮上的文字并将按钮设置为可以点击
             }
         });

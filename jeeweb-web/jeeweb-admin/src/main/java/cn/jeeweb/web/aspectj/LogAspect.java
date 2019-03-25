@@ -98,8 +98,8 @@ public class LogAspect
             String browser = userAgent.getBrowser().getName();
             operationLog.setBrowser(browser);
             operationLog.setOs(os);
-            String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
-            operationLog.setOperationIp(ip);
+//            String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
+//            operationLog.setOperationIp(ip);
             operationLog.setRequestUri(ServletUtils.getRequest().getRequestURI());
             if (currentUser != null)
             {

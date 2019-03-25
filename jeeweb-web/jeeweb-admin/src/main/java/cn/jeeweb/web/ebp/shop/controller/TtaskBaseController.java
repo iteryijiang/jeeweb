@@ -591,7 +591,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
      * @throws IOException
      */
     @RequestMapping(value = "myTaskCreate", method = { RequestMethod.GET, RequestMethod.POST })
-    @Log(logType = LogType.SELECT)
+    @Log(logType = LogType.INSERT)
     @RequiresMethodPermissions("myTaskCreate")
     public Response myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws Exception {
         try {

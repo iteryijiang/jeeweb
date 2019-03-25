@@ -153,6 +153,11 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
                 queryable.getCondition().remove(Filter_name);
                 entityWrapper.like("b.shopname",Filter_name.getValue().toString());
             }
+        }else {
+            if(queryable.getCondition()==null||queryable.getCondition().getFilterFor("createDate")==null) {
+                String[] creates = TaskUtils.whereNewDate("", "");
+                entityWrapper.between("t.create_date", creates[0], creates[1]);
+            }
         }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);

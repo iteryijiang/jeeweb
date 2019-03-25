@@ -69,79 +69,77 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
 
     @Transactional
     public void upTaskState(String taskState,TmyTaskDetail td,String id){
-        synchronized(this) {
-            if(td==null){
-                td = selectById(id);
-            }
-            if ("3".equals(taskState) || UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())) {
-                TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
-                if ("2".equals(taskState) && "1".equals(td.getTaskstate())) {
-                    td.setOrderdate(new Date());
-                    //确定下单，任务单下单金额增加
-                    if (tt.getOrderprice() == null) {
-                        tt.setOrderprice(td.getPays());
-                    } else {
-                        tt.setOrderprice(tt.getOrderprice().add(td.getPays()));
-                        if (tt.getTotalprice().compareTo(tt.getOrderprice()) < 0) {
-                            tt.setOrderprice(tt.getTotalprice());
-                        }
-                    }
-                } else if ("3".equals(taskState) && "2".equals(td.getTaskstate())) {
-                    td.setDeliverydate(new Date());
-                    //确定下单，任务单发货金额增加
-                    if (tt.getDeliveryprice() == null) {
-                        tt.setDeliveryprice(td.getPays());
-                    } else {
-                        tt.setDeliveryprice(tt.getDeliveryprice().add(td.getPays()));
-                        if (tt.getTotalprice().compareTo(tt.getDeliveryprice()) < 0) {
-                            tt.setDeliveryprice(tt.getTotalprice());
-                        }
-                    }
-                    // job 任务，自动发货
-                    if (UserUtils.getPrincipal() == null) {
-                        td.setRemarks("平台自动发货!");
-                    }
-                } else if ("4".equals(taskState) && "3".equals(td.getTaskstate())) {
-                    td.setConfirmdate(new Date());
-                    td.setTaskstatus("1");//修改订单为已完成状态
-
-                    //计算我的任务单是否完成
-                    List<TmyTaskDetail> ttList = tmyTaskDetailService.selectMytaskList(td.getMytaskid());
-                    boolean ttbool = true;
-                    for (TmyTaskDetail ttd : ttList) {
-                        if (!td.getId().equals(ttd.getId()) && !"1".equals(ttd.getTaskstatus())) {
-                            ttbool = false;
-                        }
-                    }
-                    if (ttbool) {
-                        tt.setState("1");
-                    }
-
-                    //计算商家任务单是否完成
-                    List<TmyTaskDetail> tsList = tmyTaskDetailService.selBaseIdMyTaskDetailList(td.getTaskid());
-                    boolean tsbool = true;
-                    for (TmyTaskDetail ttd : tsList) {
-                        if (!td.getId().equals(ttd.getId()) && !"1".equals(ttd.getTaskstatus())) {
-                            tsbool = false;
-                        }
-                    }
-                    TtaskBase tb = ttaskBaseService.selectById(td.getTaskid());
-                    if (tsbool && !"2".equals(tb.getStatus())) {
-                        tb.setStatus("1");
-                        ttaskBaseService.insertOrUpdate(tb);
-                    }
-                    if (tb.getPresentdeposit() != null) {
-                        TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
-                        BigDecimal price = tb.getPresentdeposit().add(tb.getActualprice());
-                        si.setTotaldeposit(si.getTotaldeposit().add(price));
-                        si.setTaskdeposit(si.getTaskdeposit().subtract(price));
-                        ttaskBaseService.upTask(tb, si, TfinanceRechargeService.rechargetype_4);
+        if(td==null){
+            td = selectById(id);
+        }
+        if ("3".equals(taskState) || UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())) {
+            TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
+            if ("2".equals(taskState) && "1".equals(td.getTaskstate())) {
+                td.setOrderdate(new Date());
+                //确定下单，任务单下单金额增加
+                if (tt.getOrderprice() == null) {
+                    tt.setOrderprice(td.getPays());
+                } else {
+                    tt.setOrderprice(tt.getOrderprice().add(td.getPays()));
+                    if (tt.getTotalprice().compareTo(tt.getOrderprice()) < 0) {
+                        tt.setOrderprice(tt.getTotalprice());
                     }
                 }
-                td.setTaskstate(taskState);
-                tmyTaskDetailService.updateById(td);
-                tmyTaskService.updateById(tt);
+            } else if ("3".equals(taskState) && "2".equals(td.getTaskstate())) {
+                td.setDeliverydate(new Date());
+                //确定下单，任务单发货金额增加
+                if (tt.getDeliveryprice() == null) {
+                    tt.setDeliveryprice(td.getPays());
+                } else {
+                    tt.setDeliveryprice(tt.getDeliveryprice().add(td.getPays()));
+                    if (tt.getTotalprice().compareTo(tt.getDeliveryprice()) < 0) {
+                        tt.setDeliveryprice(tt.getTotalprice());
+                    }
+                }
+                // job 任务，自动发货
+                if (UserUtils.getPrincipal() == null) {
+                    td.setRemarks("平台自动发货!");
+                }
+            } else if ("4".equals(taskState) && "3".equals(td.getTaskstate())) {
+                td.setConfirmdate(new Date());
+                td.setTaskstatus("1");//修改订单为已完成状态
+
+                //计算我的任务单是否完成
+                List<TmyTaskDetail> ttList = tmyTaskDetailService.selectMytaskList(td.getMytaskid());
+                boolean ttbool = true;
+                for (TmyTaskDetail ttd : ttList) {
+                    if (!td.getId().equals(ttd.getId()) && !"1".equals(ttd.getTaskstatus())) {
+                        ttbool = false;
+                    }
+                }
+                if (ttbool) {
+                    tt.setState("1");
+                }
+
+                //计算商家任务单是否完成
+                List<TmyTaskDetail> tsList = tmyTaskDetailService.selBaseIdMyTaskDetailList(td.getTaskid());
+                boolean tsbool = true;
+                for (TmyTaskDetail ttd : tsList) {
+                    if (!td.getId().equals(ttd.getId()) && !"1".equals(ttd.getTaskstatus())) {
+                        tsbool = false;
+                    }
+                }
+                TtaskBase tb = ttaskBaseService.selectById(td.getTaskid());
+                if (tsbool && !"2".equals(tb.getStatus())) {
+                    tb.setStatus("1");
+                    ttaskBaseService.insertOrUpdate(tb);
+                }
+                if (tb.getPresentdeposit() != null) {
+                    TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
+                    BigDecimal price = tb.getPresentdeposit().add(tb.getActualprice());
+                    si.setTotaldeposit(si.getTotaldeposit().add(price));
+                    si.setTaskdeposit(si.getTaskdeposit().subtract(price));
+                    ttaskBaseService.upTask(tb, si, TfinanceRechargeService.rechargetype_4);
+                }
             }
+            td.setTaskstate(taskState);
+            tmyTaskDetailService.updateById(td);
+            tmyTaskService.updateById(tt);
         }
     }
 
