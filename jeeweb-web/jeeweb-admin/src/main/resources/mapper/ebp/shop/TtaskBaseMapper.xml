@@ -227,7 +227,7 @@
   </select>
 
   <select id="listFinanceShopReport" resultType="java.util.Map">
-    select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(finishPrice) sumFinishPrice,sum(count) sumCount,
+    select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sb.id basenameid,sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(finishPrice) sumFinishPrice,sum(count) sumCount,
     sum(tasknum) sumtasknum,sum(tasknum)-sum(canreceivenum) sumreceivingnum,sum(finishnum) sumfinishnum,sum(deliverynum) sumdeliverynum,sum(ordernum) sumordernum
     from t_task_base t left join t_shop_info s on t.shopid=s.userid left join t_shop_base sb on t.storename=sb.id LEFT JOIN (
     select taskid,sum(deliveryPrice) deliveryPrice,sum(orderPrice) orderPrice,sum(finishPrice) finishPrice,count(1) count,

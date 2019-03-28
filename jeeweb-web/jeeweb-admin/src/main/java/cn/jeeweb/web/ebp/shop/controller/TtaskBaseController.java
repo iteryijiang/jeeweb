@@ -384,6 +384,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         Long sumdeliverynum = 0l;
         Long sumfinishnum = 0l;
         for (Map map:list) {
+            map.put("id",map.get("basenameid")+"_"+map.get("counteffectdate"));
             sumActualprice += Double.parseDouble((map.get("sumActualprice")==null?"0":map.get("sumActualprice")).toString());
             sumOrderPrice += Double.parseDouble((map.get("sumOrderPrice")==null?"0":map.get("sumOrderPrice")).toString());
             sumDeliveryPrice += Double.parseDouble((map.get("sumDeliveryPrice")==null?"0":map.get("sumDeliveryPrice")).toString());
@@ -395,6 +396,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             sumfinishnum += Long.parseLong((map.get("sumfinishnum")==null?"0":map.get("sumfinishnum")).toString());
         }
         Map map = new HashMap();
+        map.put("id","1");
         map.put("countCreateDate","");
         map.put("shopname","合计");
         map.put("sumActualprice",sumActualprice);
@@ -407,6 +409,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         map.put("sumdeliverynum",sumdeliverynum);
         map.put("sumfinishnum",sumfinishnum);
         list.add(map);
+        // 预处理
         String content = JSON.toJSONString(list);
         StringUtils.printJson(response,content);
     }

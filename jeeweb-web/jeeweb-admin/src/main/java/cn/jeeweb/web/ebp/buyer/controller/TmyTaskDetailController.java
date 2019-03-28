@@ -17,12 +17,14 @@ import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.common.utils.BeanUtils;
 import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailExport;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
 import cn.jeeweb.web.ebp.finance.service.TfinanceBuyerReportService;
@@ -68,6 +70,13 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     @GetMapping(value = "{id}/buyerDetail")
     @RequiresMethodPermissions("buyerDetail")
     public ModelAndView buyerDetail(@PathVariable("id") String id,Model model, HttpServletRequest request, HttpServletResponse response) {
+        boolean bool = false;
+        if(id.indexOf("_")>=0){
+            if (!"admin".equals(UserUtils.getUser().getUsername())) {
+                bool = true;
+            }
+        }
+        model.addAttribute("showHidden",bool);
         model.addAttribute("id",id);
         ModelAndView mav = displayModelAndView("list_buyer_detail");
         return mav;
@@ -153,10 +162,18 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     public void ajaxListDetail(@PathVariable("id") String id,Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
         TfinanceBuyerReport fbr = ttService.selectById(id);
-        String[] creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(),"yyyy-MM-dd"),DateUtils.formatDate(fbr.getCountcreatedate(),"yyyy-MM-dd"));
         EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
-        entityWrapper.eq("t.buyerid", fbr.getBuyerid());
+        String[] creates = new String[2];
+        if(fbr==null){
+            String[] ids = id.split("_");
+            creates = TaskUtils.whereNewDate(ids[1],ids[1]);
+            entityWrapper.eq("sb.id", ids[0]);
+        }else {
+            creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(),"yyyy-MM-dd"),DateUtils.formatDate(fbr.getCountcreatedate(),"yyyy-MM-dd"));
+            entityWrapper.eq("t.buyerid", fbr.getBuyerid());
+        }
+
         entityWrapper.between("t.create_date",creates[0],creates[1]);
         entityWrapper.setTableAlias("t");
         // 预处理
@@ -284,10 +301,18 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     public void export(@PathVariable("id") String id,ModelMap map, Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                         HttpServletResponse response) throws IOException {
         TfinanceBuyerReport fbr = ttService.selectById(id);
-        String[] creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(),"yyyy-MM-dd"),DateUtils.formatDate(fbr.getCountcreatedate(),"yyyy-MM-dd"));
         EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
-        entityWrapper.eq("t.buyerid", fbr.getBuyerid());
+        String[] creates = new String[2];
+        if(fbr==null){
+            String[] ids = id.split("_");
+            creates = TaskUtils.whereNewDate(ids[1],ids[1]);
+            entityWrapper.eq("sb.id", ids[0]);
+        }else {
+            creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(),"yyyy-MM-dd"),DateUtils.formatDate(fbr.getCountcreatedate(),"yyyy-MM-dd"));
+            entityWrapper.eq("t.buyerid", fbr.getBuyerid());
+        }
+
         entityWrapper.between("t.create_date",creates[0],creates[1]);
         // 预处理
         if(queryable.getCondition()!=null) {
@@ -320,8 +345,34 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         List<TmyTaskDetail> userList = tmyTaskDetailService.listNoPageDetail(queryable,entityWrapper);
         String title = "买手财务报表详情";
         ExportParams params = new ExportParams(title, title, ExcelType.XSSF);
-        map.put(NormalExcelConstants.DATA_LIST, userList);
-        map.put(NormalExcelConstants.CLASS, TmyTaskDetail.class);
+        if(fbr==null&&!"admin".equals(UserUtils.getUser().getUsername())){
+            List<TmyTaskDetailExport> new_list = new ArrayList<TmyTaskDetailExport>();
+            for (TmyTaskDetail ttd:userList) {
+                TmyTaskDetailExport ttde = new TmyTaskDetailExport();
+                try {
+                    BeanUtils.copyProperties(ttd, ttde);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+//                ttde.setTaskstate(ttd.getTaskstate());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+//                ttde.setPays(ttd.getPays());//实付金额
+//                ttde.setBuyerjdnick(ttd.getBuyerjdnick());//京东账号	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
+//                ttde.setJdorderno(ttd.getJdorderno()); //京东订单号
+//                ttde.setReceivingdate(ttd.getReceivingdate());//接受任务时间
+//                ttde.setOrderdate(ttd.getOrderdate());//买手下单时间
+//                ttde.setShopidName(ttd.getShopidName());
+//                ttde.setShopLoginname(ttd.getShopLoginname());
+//                ttde.setShopname(ttd.getShopname());
+//                ttde.setArticle(ttd.getArticle());
+                new_list.add(ttde);
+            }
+            map.put(NormalExcelConstants.DATA_LIST, new_list);
+            map.put(NormalExcelConstants.CLASS, TmyTaskDetailExport.class);
+        }else {
+            map.put(NormalExcelConstants.DATA_LIST, userList);
+            map.put(NormalExcelConstants.CLASS, TmyTaskDetail.class);
+        }
         map.put(NormalExcelConstants.PARAMS, params);
         map.put("fileName",title+ "-" + DateUtils.getDateTime());
         PoiBaseView.render(map, request, response, NormalExcelConstants.EASYPOI_EXCEL_VIEW);

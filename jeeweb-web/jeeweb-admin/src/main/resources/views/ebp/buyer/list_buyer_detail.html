@@ -1,8 +1,8 @@
 <% layout('/themes/uadmin/layouts/grid-select.html', {title: @MessageUtils.getMessage('买手财务报表',''), libs: ''}){ %>
 <#grid:grid id="TmyTaskDetailGrid" url="${adminPath}/buyer/TmyTaskDetail/${id}/ajaxListDetail" sortname="receivingdate" sortorder="desc" rowNum="20">
 <#grid:toolbar title="导出"   icon="fa-download"  onclick="download()"  />
-<#grid:column label="平台编号"  name="buyeridName"/>
-<#grid:column label="平台登录名"  name="buyeridLogin"/>
+<#grid:column label="平台编号" hidden="${showHidden}"  name="buyeridName"/>
+<#grid:column label="平台登录名" hidden="${showHidden}"  name="buyeridLogin"/>
 <#grid:column label="领取时间" width="140"  name="receivingdate"/>
 <#grid:column label="完成时间" width="140"  name="orderdate"/>
 <#grid:column label="商家号" width="100"  name="shopLoginname"  query="true" condition="like"/>

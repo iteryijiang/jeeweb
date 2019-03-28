@@ -26,12 +26,12 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String taskstate;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String tasktype;//	任务类型：京东/淘宝varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private BigDecimal commision;//
-	@Excel(name = "实付金额", orderNum = "9", width = 15)
+	@Excel(name = "实付金额", orderNum = "11", width = 15)
 	private BigDecimal pays;//实付金额
 
-	@Excel(name = "京东账号", orderNum = "7",width = 20)
+	@Excel(name = "京东账号", orderNum = "8",width = 20)
 	private String buyerjdnick;//京东账号	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
-	@Excel(name = "订单号", orderNum = "8",width = 20)
+	@Excel(name = "订单号", orderNum = "9",width = 20)
 	private String jdorderno; //京东订单号
 	private String buyerclient;//下单终端：手机，电脑
 	private String expressno; //快递单号
@@ -104,7 +104,7 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String brand;
 
 	@TableField(exist = false)
-	@Excel(name = "货号", orderNum = "4",width = 20)
+	@Excel(name = "货号", orderNum = "7",width = 20)
 	private String article;
 
 	@TableField(exist = false)
