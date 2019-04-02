@@ -370,7 +370,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         par_map.put("basename",basename);
         par_map.put("loginname",loginname);
         String userid = UserUtils.getPrincipal().getId();
-        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
             par_map.put("shopid",userid);
         }
         List<Map> list = ttaskBaseService.listFinanceShopReport(par_map);
@@ -690,12 +690,13 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         TtaskBase tb = ttaskBaseService.selectById(id);
         TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
         tb.setStatus(status);
+        BigDecimal price = new BigDecimal(0);
         if(tb.getPresentdeposit()!=null){
-            BigDecimal price = tb.getPresentdeposit().multiply(new BigDecimal(tb.getCanreceivenum())).add(tb.getActualprice().multiply(new BigDecimal(tb.getCanreceivenum())));
+            price = tb.getPresentdeposit().multiply(new BigDecimal(tb.getCanreceivenum())).add(tb.getActualprice().multiply(new BigDecimal(tb.getCanreceivenum())));
             si.setTotaldeposit(si.getTotaldeposit().add(price));
             si.setTaskdeposit(si.getTaskdeposit().subtract(price));
         }
-        ttaskBaseService.upTask(tb,si,TfinanceRechargeService.rechargetype_4);
+        ttaskBaseService.upTask(tb,si,TfinanceRechargeService.rechargetype_4,price);
     }
 
     @GetMapping(value = "{id}/myAgainList")

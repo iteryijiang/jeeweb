@@ -97,7 +97,7 @@
     </select>
 
     <select id="listFinanceBuyerReport" resultType="java.util.Map">
-        select DATE_FORMAT(t.create_date,'%Y-%m-%d') countCreateDate,b.buyerName,b.userid,
+        select DATE_FORMAT(t.create_date,'%Y-%m-%d') countCreateDate,b.buyerName,b.loginName,b.userid,
         sum(pays) sumPrice,count(1) sumNum,
         sum(case when taskstate=4 then 1 else 0 end) as sumFinishNum,
         sum(case when taskstate=4 then pays else 0 end) as sumFinishPrice,
@@ -109,7 +109,7 @@
             and b.buyerName like #{map.buyerName}
         </if>
          and (t.create_date BETWEEN #{map.createDate1} and #{map.createDate2})
-        group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),b.buyerName,b.userid
+        group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),b.buyerName,b.loginName,b.userid
         order by DATE_FORMAT(t.create_date,'%Y-%m-%d')
     </select>
     <select id="listNoSendGood"  resultMap="TmyTaskDetail">

@@ -132,14 +132,15 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
                 if (tb.getPresentdeposit() != null) {
                     TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
                     BigDecimal price = tb.getPresentdeposit().add(tb.getActualprice());
-                    si.setTotaldeposit(si.getTotaldeposit().add(price));
+//                    si.setTotaldeposit(si.getTotaldeposit().add(price));
                     si.setTaskdeposit(si.getTaskdeposit().subtract(price));
-                    ttaskBaseService.upTask(tb, si, TfinanceRechargeService.rechargetype_4);
+                    tshopInfoService.updateById(si);
+//                    ttaskBaseService.upTask(tb, si, TfinanceRechargeService.rechargetype_4,price);
                 }
             }
             td.setTaskstate(taskState);
-            tmyTaskDetailService.updateById(td);
             tmyTaskService.updateById(tt);
+            tmyTaskDetailService.updateById(td);
         }
     }
 

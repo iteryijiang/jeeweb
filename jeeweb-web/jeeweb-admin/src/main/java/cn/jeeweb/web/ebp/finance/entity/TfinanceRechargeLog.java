@@ -20,6 +20,7 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 	private String id;
 	private String shopid;//	varchar	32	0	-1	0	0	0	0		0	商户ID	utf8	utf8_general_ci		0	0
 	private String storeid;//	varchar	32	0	-1	0	0	0	0		0	店铺ID	utf8	utf8_general_ci		0	0
+	private String taskid;//	varchar	32	0	-1	0	0	0	0		0	店铺ID	utf8	utf8_general_ci		0	0
 	private String tradetype;//	varchar	32	0	-1	0	0	0	0		0	操作类型	utf8	utf8_general_ci		0	0
 	private BigDecimal producedeposit;//	bigint	255	0	-1	0	0	0	0		0	操作金额				0	0
 	private BigDecimal availabledeposit;//	bigint	255	0	-1	0	0	0	0		0	剩余金额				0	0
@@ -50,9 +51,10 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 		this.availabledeposit = availabledeposit;
 	}
 
-	public TfinanceRechargeLog(String shopid,String storeid,String tradetype,BigDecimal producedeposit,BigDecimal availabledeposit){
+	public TfinanceRechargeLog(String shopid,String storeid,String taskid,String tradetype,BigDecimal producedeposit,BigDecimal availabledeposit){
 		this.shopid = shopid;
 		this.storeid = storeid;
+		this.taskid = taskid;
 		this.tradetype = tradetype;
 		this.producedeposit = producedeposit;
 		this.availabledeposit = availabledeposit;
@@ -142,5 +144,13 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 
 	public void setProducedepositName(String producedepositName) {
 		this.producedepositName = producedepositName;
+	}
+
+	public String getTaskid() {
+		return taskid;
+	}
+
+	public void setTaskid(String taskid) {
+		this.taskid = taskid;
 	}
 }

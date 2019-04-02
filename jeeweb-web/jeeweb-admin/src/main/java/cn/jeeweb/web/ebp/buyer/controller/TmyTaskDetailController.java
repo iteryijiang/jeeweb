@@ -72,7 +72,7 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     public ModelAndView buyerDetail(@PathVariable("id") String id,Model model, HttpServletRequest request, HttpServletResponse response) {
         boolean bool = false;
         if(id.indexOf("_")>=0){
-            if (!"admin".equals(UserUtils.getUser().getUsername())) {
+            if (!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
                 bool = true;
             }
         }
@@ -345,7 +345,7 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         List<TmyTaskDetail> userList = tmyTaskDetailService.listNoPageDetail(queryable,entityWrapper);
         String title = "买手财务报表详情";
         ExportParams params = new ExportParams(title, title, ExcelType.XSSF);
-        if(fbr==null&&!"admin".equals(UserUtils.getUser().getUsername())){
+        if(fbr==null&&!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
             List<TmyTaskDetailExport> new_list = new ArrayList<TmyTaskDetailExport>();
             for (TmyTaskDetail ttd:userList) {
                 TmyTaskDetailExport ttde = new TmyTaskDetailExport();

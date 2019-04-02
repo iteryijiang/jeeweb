@@ -142,6 +142,7 @@ public class UserUtils {
 		return roleList;
 	}
 
+
 	public static Set<String> getRoleStringList() {
 		Set<Role> roles = Sets.newConcurrentHashSet(getRoleList());
 		return Sets.newHashSet(Collections2.transform(roles, new Function<Role, String>() {
@@ -151,6 +152,8 @@ public class UserUtils {
 			}
 		}));
 	}
+
+
 
 	/**
 	 * 获取当前用户授权菜单

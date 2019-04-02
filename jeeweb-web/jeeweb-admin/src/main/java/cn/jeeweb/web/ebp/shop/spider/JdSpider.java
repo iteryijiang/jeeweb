@@ -155,9 +155,14 @@ public class JdSpider {
         //根据url  获取html内容
 //        Document document = Jsoup.connect(url).maxBodySize(0).get();
         //select 获取标签
-        String title = document.select("div[class='sku-name']").get(0).text();
-        if(title!=null && title.length()>0){
-            title = title.replaceAll("【图片 价格 品牌 报价】-京东","");
+        String title = "";
+        try {
+            String titleName = document.select("div[class='sku-name']").get(0).text();
+            if(titleName!=null && titleName.length()>0){
+                title = titleName.replaceAll("【图片 价格 品牌 报价】-京东","");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return title;
     }
@@ -175,11 +180,16 @@ public class JdSpider {
         //根据url  获取html内容
 //        Document document = Jsoup.connect(url).maxBodySize(0).get();
         //select 获取标签
-        String title = document.select("#parameter-brand").get(0).text();
-        if(title!=null && title.length()>0){
-            title = title.replaceAll("品牌： ","");
+        String brand = "";
+        try {
+            String brandName = document.select("#parameter-brand").get(0).text();
+            if(brandName!=null && brandName.length()>0){
+                brand = brandName.replaceAll("品牌： ","");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return title;
+        return brand;
     }
     /**
      *
@@ -194,9 +204,14 @@ public class JdSpider {
         //根据url  获取html内容
 //        Document document = Jsoup.connect(url).maxBodySize(0).get();
         //select 获取标签
-        String title = document.select("div[class='name']").get(0).text();
-        if(title!=null && title.length()>0){
-            title = title.replaceAll("店铺： ","");
+        String title = "";
+        try {
+            String titleName = document.select("div[class='name']").get(0).text();
+            if(titleName!=null && titleName.length()>0){
+                title = titleName.replaceAll("店铺： ","");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return title;
     }
@@ -213,15 +228,19 @@ public class JdSpider {
         //根据url  获取html内容
 //        Document document = Jsoup.connect(url).maxBodySize(0).get();
         //select 获取标签
-        Element elements = document.select("ul[class='parameter2 p-parameter-list']").first();
         String title = "";
-        List<Node> ns = elements.childNodes();
-        for (Node n:ns){
-            if(n.outerHtml().indexOf("货号：")>0){
-                System.out.println();
-                title = n.attr("title");
-                break;
+        try {
+            Element elements = document.select("ul[class='parameter2 p-parameter-list']").first();
+            List<Node> ns = elements.childNodes();
+            for (Node n:ns){
+                if(n.outerHtml().indexOf("货号：")>0){
+                    System.out.println();
+                    title = n.attr("title");
+                    break;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return title;
     }
@@ -238,9 +257,13 @@ public class JdSpider {
      */
     public  static String getGoodSpec1ByTitle(String title) throws Exception{
         String spec1 = "";
-        if(StringUtils.isNotEmpty(title)){
-            spec1 = title.substring(0,title.lastIndexOf(" "));
-            spec1 = spec1.substring(spec1.lastIndexOf(" ")+1);
+        try {
+            if(StringUtils.isNotEmpty(title)&&title.lastIndexOf(" ")>=0){
+                spec1 = title.substring(0,title.lastIndexOf(" "));
+                spec1 = spec1.substring(spec1.lastIndexOf(" ")+1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return spec1;
     }
@@ -257,8 +280,12 @@ public class JdSpider {
      */
     public  static String getGoodSpec2ByTitle(String title) throws Exception{
         String spec2 = "";
-        if(StringUtils.isNotEmpty(title)){
-            spec2 = title.substring(title.lastIndexOf(" ")+1);
+        try {
+            if(StringUtils.isNotEmpty(title)&&title.lastIndexOf(" ")>=0){
+                spec2 = title.substring(title.lastIndexOf(" ")+1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return spec2;
     }

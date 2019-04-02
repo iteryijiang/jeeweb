@@ -4,6 +4,7 @@ import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,6 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
     /**
      * 任务状态修改
      * */
-    public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype);
+    public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype,BigDecimal price);
 
 }

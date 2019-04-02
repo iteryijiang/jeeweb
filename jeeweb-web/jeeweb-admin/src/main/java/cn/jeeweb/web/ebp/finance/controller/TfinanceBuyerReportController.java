@@ -182,7 +182,7 @@ public class TfinanceBuyerReportController extends BaseBeanController<TfinanceBu
         Map map = new HashMap();
         try {
             String userid = "";
-            if (!"admin".equals(UserUtils.getUser().getUsername())) {
+            if (!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
                 userid = UserUtils.getPrincipal().getId();
             }
             String create1 = jsonObject.getString("create1");
