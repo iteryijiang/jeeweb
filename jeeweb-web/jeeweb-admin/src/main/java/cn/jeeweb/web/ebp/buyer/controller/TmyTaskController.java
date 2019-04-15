@@ -41,6 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -244,10 +245,22 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
             String state = jsonObject.getString("state");
             String buyerjdnick = jsonObject.getString("buyerjdnick");
             String jdorderno = jsonObject.getString("jdorderno");
+//            String bankamount = jsonObject.getString("bankamount");
             TmyTaskDetail td = tmyTaskDetailService.selectById(id);
-            td.setBuyerjdnick(buyerjdnick);
-            td.setJdorderno(jdorderno);
-            tmyTaskDetailService.upTaskState(state,td,id);
+
+            Map map = new HashMap();
+            map.put("storename",StringUtils.isEmpty(td.getStorename())?"NA":td.getStorename());
+            map.put("buyerid",StringUtils.isEmpty(td.getBuyerid())?"NA":td.getBuyerid());
+            map.put("mytaskid",StringUtils.isEmpty(td.getMytaskid())?"NA":td.getMytaskid());
+            List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
+            if(list!=null&&!list.isEmpty()){
+                for (TmyTaskDetail ttd:list) {
+                    ttd.setBuyerjdnick(buyerjdnick);
+                    ttd.setJdorderno(jdorderno);
+                    tmyTaskDetailService.upTaskState(state,ttd,id);
+                }
+            }
+
         }catch (Exception e){
             e.printStackTrace();
             return Response.ok("修改失败！");

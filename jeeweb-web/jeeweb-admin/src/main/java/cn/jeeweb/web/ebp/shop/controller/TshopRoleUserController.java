@@ -221,6 +221,7 @@ public class TshopRoleUserController extends BaseBeanController<TshopRoleUser> {
         }
         String userid = UserUtils.getPrincipal().getId();
         String loginname = "";
+        String shopname = "";
         String[] creates = TaskUtils.whereNewDate("","");
         if(queryable.getCondition()!=null){
             Condition.Filter filter = queryable.getCondition().getFilterFor("effectdate");
@@ -231,10 +232,16 @@ public class TshopRoleUserController extends BaseBeanController<TshopRoleUser> {
                 loginname = "%"+(String)filter_loginname.getValue()+"%";
             }
 
+            Condition.Filter filter_shopname = queryable.getCondition().getFilterFor("shopname");
+            if(filter_shopname!=null){
+                shopname = "%"+(String)filter_shopname.getValue()+"%";
+            }
+
         }
         Map paramMap = new HashMap();
         paramMap.put("userid",userid);
         paramMap.put("loginname",loginname);
+        paramMap.put("shopname",shopname);
         paramMap.put("multiple",multiple);
         paramMap.put("createDate1",creates[0]);
         paramMap.put("createDate2",creates[1]);

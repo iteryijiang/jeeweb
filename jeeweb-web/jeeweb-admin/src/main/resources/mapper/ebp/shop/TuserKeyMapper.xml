@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TuserKeyMapper" >
+  <resultMap id="TuserKey" type="cn.jeeweb.web.ebp.shop.entity.TuserKey" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="userid" column="userid" jdbcType="VARCHAR" />
+      <result property="shopid" column="shopid" jdbcType="VARCHAR" />
+      <result property="storeid" column="storeid" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectUserList" resultMap="TuserKey">
+	  select t.*,si.loginname shopname from t_user_key t left join t_shop_info si on t.userid=si.userid
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+    <select id="sumTuserKey" resultType="java.lang.Integer">
+        select count(1) from t_user_key t
+        where 1=1
+        <if test="map.userid != '' and map.userid != null">
+            and t.userid=#{map.userid}
+        </if>
+        <if test="map.userkey != '' and map.userkey != null">
+            and t.userkey=#{map.userkey}
+        </if>
+        <if test="map.uservalue != '' and map.uservalue != null">
+            and t.uservalue=#{map.uservalue}
+        </if>
+    </select>
+</mapper>

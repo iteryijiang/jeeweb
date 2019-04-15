@@ -13,8 +13,10 @@ import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TsoldInfo;
+import cn.jeeweb.web.ebp.shop.entity.TuserKey;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TsoldInfoService;
+import cn.jeeweb.web.ebp.shop.service.TuserKeyService;
 import cn.jeeweb.web.modules.sys.entity.*;
 import cn.jeeweb.web.modules.sys.service.*;
 import cn.jeeweb.web.utils.UserUtils;
@@ -87,6 +89,8 @@ public class UserController extends BaseBeanController<User> {
 	private TbuyerInfoService tbuyerInfoService;
 	@Autowired
 	private TsoldInfoService tsoldInfoService;
+	@Autowired
+	private TuserKeyService tuserKeyService;
 
 
 	@GetMapping
@@ -285,6 +289,17 @@ public class UserController extends BaseBeanController<User> {
 						tshopInfoService.insertOrUpdate(tshopInfo);
 					}catch (Exception e){
 						e.printStackTrace();
+					}
+					Map map = new HashMap();
+					EntityWrapper<TuserKey> entityWrapper = new EntityWrapper<TuserKey>();
+					entityWrapper.eq("userid", entity.getId());
+					TuserKey tuk =  tuserKeyService.selectOne(entityWrapper);
+					if(tuk==null){
+						tuk = new TuserKey();
+						tuk.setUserid(entity.getId());
+						tuk.setUserkey("1");
+						tuk.setUservalue("0");
+						tuserKeyService.insert(tuk);
 					}
 				}else if("402880e45b5d7636015b5d8baca60000".equals(roleid)){//保存买手用户
 					Map map = new HashMap();

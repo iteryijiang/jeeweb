@@ -27,6 +27,7 @@
 <#grid:grid id="TshopRoleUserGrid" url="${adminPath}/shop/TshopRoleUser/listSoldFinanceajaxList" sortname="createDate" sortorder="desc" sortable="false">
 <#grid:column label="日期" name="effectdate"  query="true" width="100" queryMode="date"  condition="between" />
 <#grid:column label="商户号" name="loginname" query="true" condition="like" width="140" />
+<#grid:column label="商户名" name="shopname" query="true" condition="like" width="140" />
 <#grid:column label="任务单数" name="tasknum" width="80" />
 <#grid:column label="未接单数" name="canreceivenum" width="100"/>
 <#grid:column label="进行中单数" name="unanswerednum" width="100"/>

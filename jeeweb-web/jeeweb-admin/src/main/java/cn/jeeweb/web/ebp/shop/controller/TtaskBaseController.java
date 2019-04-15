@@ -29,6 +29,7 @@ import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.ebp.shop.service.TuserKeyService;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
 import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
@@ -68,6 +69,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     private TmyTaskDetailService tmyTaskDetailService;
     @Autowired
     private TshopBaseService tshopBaseService;
+    @Autowired
+    private TuserKeyService tuserKeyService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -118,13 +121,30 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public Response add(@RequestBody TtaskBase ttaskBase,HttpServletRequest request, HttpServletResponse response) {
 
         try {
+            String userid = UserUtils.getUser().getId();
             if(StringUtils.isEmpty(ttaskBase.gettUrl())||StringUtils.isEmpty(ttaskBase.getQrcodeurl())){
                 return Response.error("订单地址或二维码为空！");
             }
             if(null==ttaskBase.getEffectdate()){
                 return Response.error("生效时间为空！");
             }
-            ttaskBase.setShopid(UserUtils.getUser().getId());
+
+            Date new_date = DateUtils.parseDate(DateUtils.getDate()+" 00:00:00");
+            if(new_date.getTime()>ttaskBase.getEffectdate().getTime()){
+                return Response.error("不能发布生效时间为以前的订单！");
+            }
+            Map map = new HashMap();
+            map.put("userid",userid);
+            map.put("userkey","1");
+            map.put("uservalue","1");
+            int count = tuserKeyService.sumTtaskBase(map);
+            if(count<=0){
+                if(DateUtils.formatDate(new Date(),"yyyy-MM-dd").equals(DateUtils.formatDate(ttaskBase.getEffectdate(),"yyyy-MM-dd"))){
+                    return Response.error("不能发布生效时间为当天的订单！");
+                }
+            }
+
+            ttaskBase.setShopid(userid);
             TshopInfo si = tshopInfoService.selectOne(ttaskBase.getShopid());
             //      ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
             ttaskBase.setTaskno(TsequenceSpider.getShopNo());

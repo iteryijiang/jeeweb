@@ -35,6 +35,7 @@ import cn.jeeweb.web.modules.sys.entity.LoginLog;
 import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -46,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -270,17 +272,55 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     public void upbuyerjdnick(@PathVariable("id") String id,@PathVariable("buyerjdnick") String buyerjdnick, HttpServletRequest request,
                             HttpServletResponse response) {
         TmyTaskDetail td = tmyTaskDetailService.selectById(id);
-        td.setBuyerjdnick(buyerjdnick);
-        tmyTaskDetailService.insertOrUpdate(td);
+        Map map = new HashMap();
+        map.put("storename",StringUtils.isEmpty(td.getStorename())?"NA":td.getStorename());
+        map.put("buyerid",StringUtils.isEmpty(td.getBuyerid())?"NA":td.getBuyerid());
+        map.put("mytaskid",StringUtils.isEmpty(td.getMytaskid())?"NA":td.getMytaskid());
+        List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
+        if(list!=null&&!list.isEmpty()){
+            for (TmyTaskDetail ttd:list) {
+                ttd.setBuyerjdnick(buyerjdnick);
+            }
+            tmyTaskDetailService.updateBatchById(list);
+        }
     }
     @GetMapping("{id}/{jdorderno}/upjdorderno")
     @Log(logType = LogType.UPDATE)
     public void upjdorderno(@PathVariable("id") String id,@PathVariable("jdorderno") String jdorderno, HttpServletRequest request,
                               HttpServletResponse response) {
         TmyTaskDetail td = tmyTaskDetailService.selectById(id);
-        td.setJdorderno(jdorderno);
-        tmyTaskDetailService.insertOrUpdate(td);
+        Map map = new HashMap();
+        map.put("storename",StringUtils.isEmpty(td.getStorename())?"NA":td.getStorename());
+        map.put("buyerid",StringUtils.isEmpty(td.getBuyerid())?"NA":td.getBuyerid());
+        map.put("mytaskid",StringUtils.isEmpty(td.getMytaskid())?"NA":td.getMytaskid());
+        List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
+        if(list!=null&&!list.isEmpty()){
+            for (TmyTaskDetail ttd:list) {
+                ttd.setJdorderno(jdorderno);
+            }
+            tmyTaskDetailService.updateBatchById(list);
+        }
+
     }
+
+    @RequestMapping(value = "upBankamount", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.UPDATE)
+    public Response upBankamount(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                             HttpServletResponse response) {
+        try {
+            String id = jsonObject.getString("id");
+            String bankamount = jsonObject.getString("bankamount");
+            TmyTaskDetail td = tmyTaskDetailService.selectById(id);
+            td.setBankamount(new BigDecimal(bankamount));
+            tmyTaskDetailService.insertOrUpdate(td);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Response.ok("修改失败！");
+        }
+        return Response.ok("修改成功！");
+
+    }
+
     @GetMapping("{id}/{buyerjdnick}/upTaskDetail")
     @Log(logType = LogType.UPDATE)
     public void upTaskDetail(@PathVariable("id") String id,@PathVariable("buyerjdnick") String buyerjdnick, HttpServletRequest request,

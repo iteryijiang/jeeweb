@@ -1,0 +1,12 @@
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('数据权限',''), libs: 'bootstrap-treeview'}){ %>
+	<#grid:grid id="TshopRoleUserGrid" url="${adminPath}/shop/TuserKey/ajaxList">
+        <#grid:column label="商户"  name="shopname" query="true" condition="like"/>
+		<#grid:column label="授权类型"  name="userkey" query="true" condition="eq"   dict="userkey"/>
+		<#grid:column label="授权值"  name="uservalue" query="true" condition="eq"   dict="sf"/>
+
+		<#grid:toolbar   function="update" />
+		<#grid:toolbar function="search"  />
+		<#grid:toolbar function="reset" />
+	</#grid:grid>
+
+<% } %>

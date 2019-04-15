@@ -168,7 +168,7 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                 e.printStackTrace();
             }
             //获得可领取总店铺数
-            int sumshop = (int) Math.ceil(countSum / count);
+            int sumshop = (int) Math.ceil((countSum+0.0) / count);
 
             Map<String, Map<String, Map<Integer, List<TtaskBase>>>> map = myTaskMap(count, minute);
             long endtime = System.currentTimeMillis();
@@ -238,6 +238,8 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                             my.setPays(tb.getActualprice());
                             my.setReceivingdate(new Date());
                             my.setMytaskid(tmyTask.getId());
+                            my.setIsdouble(count+"");
+                            my.setStorename(tb.getStorename());
                             my.setTaskshopurl(tb.gettUrl()+"_"+tb.getStorename());
                             new_list.add(my);
                             tprice = tprice.add(tb.getActualprice());
@@ -275,6 +277,8 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                             my.setPays(tb.getActualprice());
                             my.setReceivingdate(new Date());
                             my.setMytaskid(tmyTask.getId());
+                            my.setIsdouble("1");
+                            my.setStorename(tb.getStorename());
                             my.setTaskshopurl(tb.gettUrl()+"_"+tb.getStorename());
                             new_list.add(my);
                             tprice = tprice.add(tb.getActualprice());
@@ -340,6 +344,9 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
         }
         for (int j = 1; j < countSum; j++) {
             if (j < list_tb.size()) {
+                if(i>=list_tb.size()){
+                    continue;
+                }
                 TtaskBase tb = list_tb.get(i++);
                 tb.setCanreceivenums(tb.getCanreceivenums()-1);
                 retlist.add(tb);

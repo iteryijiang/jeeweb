@@ -50,6 +50,9 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private java.util.Date confirmdate;//确认收货时间
 	private String mytaskid;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String taskshopurl;
+	private String isdouble;//	varchar	32	0	-1	0	0	0	0		0	是否多单	utf8	utf8_general_ci		0	0
+	private String storename;//	varchar	32	0	-1	0	0	0	0		0	店铺	utf8	utf8_general_ci		0	0
+	private BigDecimal bankamount;//银行抵扣金额
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
@@ -408,5 +411,29 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	public void settTitle(String tTitle) {
 		this.tTitle = tTitle;
+	}
+
+	public String getIsdouble() {
+		return isdouble;
+	}
+
+	public void setIsdouble(String isdouble) {
+		this.isdouble = isdouble;
+	}
+
+	public String getStorename() {
+		return storename;
+	}
+
+	public void setStorename(String storename) {
+		this.storename = storename;
+	}
+
+	public BigDecimal getBankamount() {
+		return bankamount;
+	}
+
+	public void setBankamount(BigDecimal bankamount) {
+		this.bankamount = bankamount;
 	}
 }

@@ -19,9 +19,9 @@
   </select>
 
     <select id="listSoldFinance" resultType="java.util.Map">
-        select DATE_FORMAT(tb.effectdate,'%Y-%m-%d') effectdate,s.shopname,s.loginname,sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end) tasknum,
-        sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end)-sum(finishcount) unanswerednum,sum(case when tb.status=2 then 0 else tb.canreceivenum end) canreceivenum,
-        sum(finishcount) finishnum,(sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end)-sum(finishcount))*${map.multiple} unansweredPrice,sum(finishcount)*${map.multiple} finishPrice
+        select DATE_FORMAT(tb.effectdate,'%Y-%m-%d') effectdate,s.shopname,s.loginname,sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end) tasknum,
+        sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end)-sum(finishcount) unanswerednum,sum(case when tb.status=2 then 0 else tb.canreceivenum end) canreceivenum,
+        sum(finishcount) finishnum,(sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end)-sum(finishcount))*${map.multiple} unansweredPrice,sum(finishcount)*${map.multiple} finishPrice
          from t_shop_role_user t left join t_shop_info s on t.shopid=s.userid left join t_task_base tb on t.shopid=tb.shopid
          left join (select taskid,sum(case when taskstate='4' then 1 else 0 end) finishcount from t_my_task_detail m,t_task_base b,t_shop_role_user s where
           m.taskid=b.id and b.shopid=s.shopid  and s.userid=#{map.userid} group by taskid) my on tb.id=my.taskid
@@ -31,14 +31,18 @@
         <if test="map.loginname != '' and map.loginname != null">
             and s.loginname like #{map.loginname}
         </if>
+
+        <if test="map.shopname != '' and map.shopname != null">
+            and s.shopname like #{map.shopname}
+        </if>
         group by DATE_FORMAT(tb.effectdate,'%Y-%m-%d'),s.shopname,s.loginname
         order by DATE_FORMAT(tb.effectdate,'%Y-%m-%d')
     </select>
 
     <select id="sumListSoldFinance" resultType="java.util.Map">
-        select sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end) sumtasknum,
-        sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end)-sum(finishcount) sumunanswerednum,sum(case when tb.status=2 then 0 else tb.canreceivenum end) sumcanreceivenum,
-        sum(finishcount) sumfinishnum,(sum(tb.tasknum)-sum(case when tb.status=2 then 0 else tb.canreceivenum end)-sum(finishcount))*${map.multiple} sumunansweredPrice,sum(finishcount)*${map.multiple} sumfinishPrice
+        select sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end) sumtasknum,
+        sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end)-sum(finishcount) sumunanswerednum,sum(case when tb.status=2 then 0 else tb.canreceivenum end) sumcanreceivenum,
+        sum(finishcount) sumfinishnum,(sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end)-sum(finishcount))*${map.multiple} sumunansweredPrice,sum(finishcount)*${map.multiple} sumfinishPrice
         from t_shop_role_user t left join t_shop_info s on t.shopid=s.userid left join t_task_base tb on t.shopid=tb.shopid
         left join (select taskid,sum(case when taskstate='4' then 1 else 0 end) finishcount from t_my_task_detail m,t_task_base b,t_shop_role_user s where
         m.taskid=b.id and b.shopid=s.shopid and s.userid=#{map.userid} group by taskid) my on tb.id=my.taskid

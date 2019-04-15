@@ -140,6 +140,7 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
             }
             td.setTaskstate(taskState);
             tmyTaskService.updateById(tt);
+            System.out.println("确定下单和确定收货操作:"+td.getId()+",传入状态："+taskState+",状态为："+td.getTaskstate()+"");
             tmyTaskDetailService.updateById(td);
         }
     }
