@@ -76,12 +76,39 @@ public class JDUnionApi {
         return shortURL;
     }
 
+    /*
+        https://union.jd.com/openplatform/api/627
+        通过领券链接查询优惠券的平台、面额、期限、可用状态、剩余数量等详细信息，通常用于和商品信息一起展示优惠券券信息。需向cps-qxsq@jd.com申请权限。
+
+
+        通过接口 获取优惠券 最新可用状态
+        可用数量低于1000个限制发布
+        有效期低于生效时间后72小时的  限制发布
+     */
+    public String getCouponInfo(String couponurl)throws JdException{
+        String SERVER_URL = "https://router.jd.com/api";
+        String appKey = "5e13fa6becc380b136749e57e2d52934";
+        String appSecret ="ffaf8f1b12384d9c89b964f08ff29b36";
+        String accessToken = "";
+
+        JdClient client=new DefaultJdClient(SERVER_URL,accessToken,appKey,appSecret);
+
+        UnionOpenCouponQueryRequest request = new UnionOpenCouponQueryRequest();
+        request.setCouponUrls(new String[]{"+couponurl+"});
+        UnionOpenCouponQueryResponse response = client.execute(request);
+        System.out.println(response.getData().toString());
+        return response.getData().toString();
+    }
+
+
+
     public static void main(String agrs[]){
         JDUnionApi JDUnionApi = new JDUnionApi();
         //JDUnionApi.couponImport();
         try {
+            JDUnionApi.getCouponInfo("http://coupon.m.jd.com/coupons/show.action?key=203d6fb476074ecab137df29da8903ab&roleId=18950122&to=mall.jd.com/index-910797.html");
             //41011489021
-            String shorturl = JDUnionApi.getCouponURL("41011489021","http://coupon.m.jd.com/coupons/show.action?key=203d6fb476074ecab137df29da8903ab&roleId=18950122&to=mall.jd.com/index-910797.html");
+            //String shorturl = JDUnionApi.getCouponURL("41011489021","http://coupon.m.jd.com/coupons/show.action?key=203d6fb476074ecab137df29da8903ab&roleId=18950122&to=mall.jd.com/index-910797.html");
             // shorturl 不为空  才去生成二维码
             //QRCodeUtil.getInstance().genQrCodeImg(null, 300, 300, "d:\\", "qrcode4.jpg", shorturl);
         }catch (Exception e){
