@@ -1,5 +1,6 @@
 package cn.jeeweb.web.ebp.shop.spider;
 
+import cn.jeeweb.beetl.tags.dict.DictUtils;
 import com.jd.open.api.sdk.DefaultJdClient;
 import com.jd.open.api.sdk.JdClient;
 import com.jd.open.api.sdk.JdException;
@@ -54,16 +55,19 @@ public class JDUnionApi {
         https://union.jd.com/openplatform/api/634
      */
     public String getCouponURL(String skuid,String couponurl)throws JdException{
+        System.out.println("========1=======");
+        //联盟ID   1001489696
         String SERVER_URL = "https://router.jd.com/api";
-        String appKey = "your appkey";
-        String appSecret ="your secret";
+        String appKey = "5e13fa6becc380b136749e57e2d52934";
+        String appSecret ="ffaf8f1b12384d9c89b964f08ff29b36";
         String accessToken = "";
         JdClient client=new DefaultJdClient(SERVER_URL,accessToken,appKey,appSecret);
         UnionOpenPromotionBysubunionidGetRequest request = new UnionOpenPromotionBysubunionidGetRequest();
         jd.union.open.promotion.bysubunionid.get.request.PromotionCodeReq promotionCodeReq = new jd.union.open.promotion.bysubunionid.get.request.PromotionCodeReq();
         promotionCodeReq.setMaterialId("https://item.jd.com/"+skuid+".html");
-        promotionCodeReq.setSubUnionId("1000054104");
+        promotionCodeReq.setSubUnionId("1001489696");
         //http://coupon.m.jd.com/coupons/show.action?key=2572412b7bfb4390896774156bee3c5e&roleId=18983871&to=mall.jd.com/index-908143.html
+        System.out.println("========2=======");
         promotionCodeReq.setCouponUrl(couponurl);
         request.setPromotionCodeReq(promotionCodeReq);
         UnionOpenPromotionBysubunionidGetResponse response = client.execute(request);
@@ -76,8 +80,8 @@ public class JDUnionApi {
         JDUnionApi JDUnionApi = new JDUnionApi();
         //JDUnionApi.couponImport();
         try {
-            String shorturl = JDUnionApi.getCouponURL("43563168740","http://coupon.m.jd.com/coupons/show.action?key=2572412b7bfb4390896774156bee3c5e&roleId=18983871&to=mall.jd.com/index-908143.html");
-            QRCodeUtil.getInstance().genQrCodeImg(null, 300, 300, "d:\\", "qrcode3.jpg", "https://u.jd.com/7KCeP0");
+            String shorturl = JDUnionApi.getCouponURL("41011489021","http://coupon.m.jd.com/coupons/show.action?key=203d6fb476074ecab137df29da8903ab&roleId=18950122&to=mall.jd.com/index-910797.html");
+            QRCodeUtil.getInstance().genQrCodeImg(null, 300, 300, "d:\\", "qrcode4.jpg", shorturl);
         }catch (Exception e){
 
         }
