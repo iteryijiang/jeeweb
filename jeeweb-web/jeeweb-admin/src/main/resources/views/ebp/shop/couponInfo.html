@@ -1,0 +1,122 @@
+<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('shop.shopbase.addshop',''), formId: 'shopBaseForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+		<tbody>
+		<tr><td><hr>优惠券有效性验证<hr></td></tr>
+		<tr>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>优惠券链接:</label></td>
+			<td  class="width-70" >
+				<input id="couponUrls" class="form-control"  onblur="showOpen(this)"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label>优惠券可用状态:</label>
+			</td>
+			<td class="width-35" >
+				<input id="yxzt" class="form-control "  />
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">	<label>优惠奍剩余张数:</label></td>
+			<td  class="width-35" >
+				<input id="remainNum" class="form-control" />
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label>开始有效时间:</label>
+			</td>
+			<td class="width-35" >
+				<input id="takeBeginTime" class="form-control"  />
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label>到期有效时间:</label>
+			</td>
+			<td  class="width-35" >
+				<input id="takeEndTime" class="form-control"    />
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label>奍面额:</label>
+			</td>
+			<td  class="width-35" >
+				<input id="discount" class="form-control"    />
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label>错误信息:</label>
+			</td>
+			<td  class="width-35" >
+				<input id="message1" class="form-control"    />
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+
+		<tr><td><hr>生成推广连接<hr></td></tr>
+
+
+		<tr>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>SKUID:</label></td>
+			<td  class="width-70" >
+				<input id="skuid" class="form-control"  onblur="getcouponURL(this)"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label>推广短链接:</label>
+			</td>
+			<td  class="width-35" >
+				<input id="shortURL" class="form-control"    />
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label>错误信息:</label>
+			</td>
+			<td  class="width-35" >
+				<input id="message" class="form-control"    />
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+<script>
+	function showOpen(couponUrls){
+		$.ajax({
+			type: "POST",
+			url: "${adminPath}/shop/TtaskBase/showtCouponInfo",
+			contentType:'application/json;charset=utf-8',
+			data: JSON.stringify({"couponUrls":couponUrls.value}),
+			dataType: "json",
+			success: function(data){
+				$("#yxzt").attr("value",data.yxzt);
+				$("#remainNum").attr("value",data.remainNum);
+				$("#takeBeginTime").attr("value",data.takeBeginTime);
+				$("#takeEndTime").attr("value",data.takeEndTime);
+				$("#discount").attr("value",data.discount);
+				$("#message1").attr("value",data.message);
+			}
+		});
+	}
+
+	function getcouponURL(skuid){
+		var couponUrls = $("#couponUrls");
+		$.ajax({
+			type: "POST",
+			url: "${adminPath}/shop/TtaskBase/getCouponURL",
+			contentType:'application/json;charset=utf-8',
+			data: JSON.stringify({"couponUrls":couponUrls.value,"skuid":skuid.value}),
+			dataType: "json",
+			success: function(data){
+				$("#shortURL").attr("value",data.shortURL);
+				$("#message").attr("value",data.message);
+			}
+		});
+	}
+
+</script>
+<% } %>

@@ -14,6 +14,11 @@ import jd.union.open.coupon.query.response.UnionOpenCouponQueryResponse;
 import jd.union.open.promotion.bysubunionid.get.request.UnionOpenPromotionBysubunionidGetRequest;
 import jd.union.open.promotion.bysubunionid.get.response.UnionOpenPromotionBysubunionidGetResponse;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by YIJIANG on 2019/4/16.
  */
@@ -56,8 +61,8 @@ public class JDUnionApi {
         功能同宙斯接口的优惠券,商品二合一转接API-通过subUnionId获取推广链接、联盟微信手q通过subUnionId获取推广链接。
         https://union.jd.com/openplatform/api/634
      */
-    public String getCouponURL(String skuid,String couponurl)throws JdException{
-        System.out.println("========1=======");
+    public Map getCouponURL(String skuid,String couponurl)throws JdException{
+        Map map = new HashMap<>();
         //联盟ID   1001489696
         String SERVER_URL = "https://router.jd.com/api";
         String appKey = "5e13fa6becc380b136749e57e2d52934";
@@ -75,15 +80,17 @@ public class JDUnionApi {
         UnionOpenPromotionBysubunionidGetResponse response = client.execute(request);
         int code = response.getCode();
         String message = "";
-        if(code==200){
+        if(code==200 && response.getData()!=null){
             // 200为 生成成功
+            String shortURL = response.getData().getShortURL();
+            map.put("shortURL",shortURL);             //短链接
+            System.out.println("生成的短链接为："+shortURL);
         }else{
             // 失败,返回失败消息
-            message = response.getMessage();
         }
-        String shortURL = response.getData().getShortURL();
-        System.out.println("生成的短链接为："+shortURL);
-        return shortURL;
+        map.put("message",response.getMessage()); // 接口调用反馈错误消息
+        map.put("code",code); //接口调用状态代码，200为成功
+        return map;
     }
 
     /*
@@ -95,11 +102,13 @@ public class JDUnionApi {
         可用数量低于1000个限制发布
         有效期低于生效时间后72小时的  限制发布
      */
-    public String getCouponInfoByJDAPI(String couponurl)throws JdException{
+    public Map getCouponInfoByJDAPI(String couponurl)throws JdException{
         String SERVER_URL = "https://router.jd.com/api";
         String appKey = "5e13fa6becc380b136749e57e2d52934";
         String appSecret ="ffaf8f1b12384d9c89b964f08ff29b36";
         String accessToken = "";
+
+        Map map = new HashMap<>();
 
         JdClient client=new DefaultJdClient(SERVER_URL,accessToken,appKey,appSecret);
 
@@ -109,25 +118,33 @@ public class JDUnionApi {
         int code = response.getCode();
         String message = "";
         System.out.println("data length::::"+response.getData().length);
-        CouponResp[] datas = response.getData();
-        CouponResp data = datas[0];
-        String yxzt =  data.getYn(); //有效状态
-        long remainNum = data.getRemainNum(); //优惠奍剩余张数
-        long takeBeginTime = data.getTakeBeginTime(); //开始有效时间
-        long takeEndTime = data.getTakeEndTime(); //到期 有效时间
-        double discount = data.getDiscount(); // 奍面额
-        System.out.println("remainNum:"+remainNum);
-        System.out.println("takeBeginTime:"+takeBeginTime);
-        System.out.println("takeEndTime:"+takeEndTime);
-        System.out.println("discount:"+discount);
+        if(response.getData().length==1){
+            CouponResp[] datas = response.getData();
+            CouponResp data = datas[0];
+            String yxzt =  data.getYn(); //有效状态
+            long remainNum = data.getRemainNum(); //优惠奍剩余张数
+            long takeBeginTime = data.getTakeBeginTime(); //开始有效时间
+            long takeEndTime = data.getTakeEndTime(); //到期 有效时间
+            double discount = data.getDiscount(); // 奍面额
+            map.put("yxzt",yxzt);
+            map.put("remainNum",remainNum);
+            SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date1 = new Date(takeBeginTime);
+            Date date2 = new Date(takeEndTime);
+            map.put("takeBeginTime", sd.format(date1));
+            map.put("takeEndTime",sd.format(date2));
+            map.put("discount",discount);
+        }
+
+        map.put("code",code);
+        map.put("message",response.getMessage());
         if(code==200){
             // 200为 生成成功
         }else{
             // 失败,返回失败消息
             message = response.getMessage();
         }
-        System.out.println(response.getData().toString());
-        return response.getData().toString();
+        return map;
     }
 
 

@@ -30,6 +30,7 @@ import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.service.TuserKeyService;
+import cn.jeeweb.web.ebp.shop.spider.JDUnionApi;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
 import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
@@ -90,6 +91,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @RequiresMethodPermissions("TaskDetail")
     public ModelAndView TaskDetail(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("TaskDetail");
+        return mav;
+    }
+    @GetMapping(value = "viewCouponInfo")
+    public ModelAndView viewCouponInfo(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("couponInfo");
         return mav;
     }
 
@@ -510,6 +516,43 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 map.put("article",article);
             }
 
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
+    }
+
+    /*
+      获取优惠券信息（供前端调用）
+    */
+    @RequestMapping(value = "showtCouponInfo", method = { RequestMethod.GET, RequestMethod.POST })
+    public void showtCouponInfo(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                                HttpServletResponse response) throws IOException {
+        Map map = new HashMap();
+        try {
+            String couponUrls = jsonObject.getString("couponUrls");
+            JDUnionApi JDUnionApi = new JDUnionApi();
+            map = JDUnionApi.getCouponInfoByJDAPI(couponUrls);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
+    }
+    /*
+       获取优惠券推广链接（供前端调用）
+       入参：SKUID、优惠券链接
+     */
+    @RequestMapping(value = "getCouponURL", method = { RequestMethod.GET, RequestMethod.POST })
+    public void getCouponURL(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                          HttpServletResponse response) throws IOException {
+        Map map = new HashMap();
+        try {
+            String couponUrls = jsonObject.getString("couponUrls");
+            String skuid = jsonObject.getString("skuid");
+            JDUnionApi JDUnionApi = new JDUnionApi();
+            map = JDUnionApi.getCouponURL(skuid,couponUrls);
         }catch (Exception e){
             e.printStackTrace();
         }
