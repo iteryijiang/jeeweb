@@ -140,8 +140,11 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
             }
             td.setTaskstate(taskState);
             tmyTaskService.updateById(tt);
-            System.out.println("确定下单和确定收货操作:"+td.getId()+",传入状态："+taskState+",状态为："+td.getTaskstate()+"");
-            tmyTaskDetailService.updateById(td);
+//            System.out.println("确定下单和确定收货操作:"+td.getId()+",传入状态："+taskState+",状态为："+td.getTaskstate()+"");
+            updateById(td);
+            TmyTaskDetail ttd = selectById(td.getId());
+//            System.out.println("修改完成状态:"+td.getId()+",传入状态："+taskState+",状态为："+ttd.getTaskstate()+"");
+
         }
     }
 
@@ -186,5 +189,8 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
 
     public int sumMyTask(Map map) throws Exception{
         return baseMapper.sumMyTask(map);
+    }
+    public int sumTaskBase(Map map) throws Exception{
+        return baseMapper.sumTaskBase(map);
     }
 }

@@ -1,0 +1,33 @@
+<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('等级管理',''), formId: 'shopBaseForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+<#form:form id="shopBaseForm" modelAttribute="data" method="post" class="form-horizontal">
+	<#form:hidden path="id"/>
+	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+		<tbody>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>商户号:</label>
+			</td>
+			<td class="width-35" >
+				<#form:input path="shopname" class="form-control"   htmlEscape="false"  datatype="*"  nullmsg="请输入商户号！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>商户名:</label>
+			</td>
+			<td  class="width-35" >
+				<#form:input path="shopname" class="form-control"   htmlEscape="false"  datatype="*"  nullmsg="请输入商户名！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>商户等级:</label></td>
+			<td  class="width-35" >
+				<#form:select path="accountlevel" class="form-control"  htmlEscape="false"  nullmsg="请输入商户等级！"
+				dict="shopGrade"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</#form:form>
+<% } %>

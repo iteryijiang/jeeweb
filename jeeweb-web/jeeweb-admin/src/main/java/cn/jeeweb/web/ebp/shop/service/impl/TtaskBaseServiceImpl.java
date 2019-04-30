@@ -226,9 +226,14 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                         List<TtaskBase> tbs = RandomDoubleTask(a,1);
                         for (TtaskBase tb : tbs) {
                             TmyTaskDetail my = new TmyTaskDetail();
+                            Map Mytask = new HashMap();
+                            Mytask.put("taskid",tb.getId());
                             tb.setCanreceivenum(tb.getCanreceivenum()-1);
                             tb.setLasttakingdate(new Date());
                             new_tasklist.add(tb);
+                            if(tb.getTasknum()<=tmyTaskDetailService.sumTaskBase(Mytask)){
+                                continue;
+                            }
                             my.setGoodsname(tb.gettTitle());//
                             my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
                             my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
@@ -265,9 +270,14 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                         List<TtaskBase> tbs = a.get(randInt);
                         for (TtaskBase tb : tbs) {
                             TmyTaskDetail my = new TmyTaskDetail();
+                            Map Mytask = new HashMap();
+                            Mytask.put("taskid",tb.getId());
                             tb.setCanreceivenum(tb.getCanreceivenum()-1);
                             tb.setLasttakingdate(new Date());
                             new_tasklist.add(tb);
+                            if(tb.getTasknum()<=tmyTaskDetailService.sumTaskBase(Mytask)){
+                                continue;
+                            }
                             my.setGoodsname(tb.gettTitle());//
                             my.setBuyerid(UserUtils.getUser().getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
                             my.setTaskid(tb.getId());//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
@@ -296,9 +306,14 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                 usetime3 = (endtime3 - starttime);//保存具体单组任务时间
 
                 tmyTask.setTotalprice(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
-                tmyTaskService.insert(tmyTask);
-                updateBatchById(new_tasklist);
                 tmyTaskDetailService.insertBatch(new_list,countSum);
+                System.out.print("任务ID为："+tmyTask.getId());
+                if(new_tasklist!=null&&new_tasklist.size()>0){
+                    tmyTaskService.insert(tmyTask);
+                    updateBatchById(new_tasklist);
+                }else {
+                    return false;
+                }
             }else {
                 return false;
             }

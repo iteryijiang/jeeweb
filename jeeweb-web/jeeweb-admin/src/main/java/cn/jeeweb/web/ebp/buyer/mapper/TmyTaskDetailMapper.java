@@ -36,4 +36,6 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 	List<TmyTaskDetail> listDetail(@Param("ew") Wrapper<TmyTaskDetail> wrapper);
 
 	int sumMyTask(@Param("map") Map map);
+	int sumTaskBase(@Param("map") Map map);
+
 }

@@ -122,7 +122,7 @@
   </select>
   <!-- 获取领取任务时，剩余任务总单数 -->
   <select id="sumCanreceivenum" resultType="java.lang.Integer">
-      SELECT sum(canreceivenum) FROM T_task_Base t
+      SELECT coalesce(sum(canreceivenum),0) FROM T_task_Base t
       WHERE 1=1
       AND t.STATUS = '0' AND t.canreceivenum <![CDATA[>]]> 0
       and (t.lasttakingdate is null or t.lasttakingdate  <![CDATA[<]]> date_add(now(), interval - ${minute} minute))
@@ -227,7 +227,10 @@
   </select>
 
   <select id="listFinanceShopReport" resultType="java.util.Map">
-    select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sb.id basenameid,sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(finishPrice) sumFinishPrice,sum(count) sumCount,
+    select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sb.id basenameid,
+    sum(t.actualprice*(t.tasknum-(case when t.status=2 then t.canreceivenum else 0 end))) sumActualprice,
+    sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,
+    sum(finishPrice) sumFinishPrice,sum(count) sumCount,
     sum(tasknum) sumtasknum,sum(tasknum)-sum(canreceivenum) sumreceivingnum,sum(finishnum) sumfinishnum,sum(deliverynum) sumdeliverynum,sum(ordernum) sumordernum
     from t_task_base t left join t_shop_info s on t.shopid=s.userid left join t_shop_base sb on t.storename=sb.id LEFT JOIN (
     select taskid,sum(deliveryPrice) deliveryPrice,sum(orderPrice) orderPrice,sum(finishPrice) finishPrice,count(1) count,
@@ -243,7 +246,6 @@
     on t.id=b.taskid
     where
     1=1
-    and t.status <![CDATA[<>]]> '2'
     <if test="map.shopname != '' and map.shopname != null">
       and s.shopname like #{map.shopname}
     </if>

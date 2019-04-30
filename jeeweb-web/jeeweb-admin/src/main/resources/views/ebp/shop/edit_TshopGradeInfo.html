@@ -1,0 +1,72 @@
+<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('等级管理',''), formId: 'shopBaseForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+<#form:form id="shopBaseForm" modelAttribute="data" method="post" class="form-horizontal">
+	<#form:hidden path="id"/>
+	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+		<tbody>
+		<tr>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>商户等级:</label></td>
+			<td  class="width-35" >
+				<#form:select path="shopgrade" class="form-control"  htmlEscape="false"  nullmsg="请输入商户等级！"
+				dict="shopGrade"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>0-100:</label>
+			</td>
+			<td class="width-35" >
+				<#form:input path="onehundred" class="form-control"   htmlEscape="false"  datatype="n"  nullmsg="请输入金额！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>101-150:</label>
+			</td>
+			<td  class="width-35" >
+				<#form:input path="onehundredfive" class="form-control"   htmlEscape="false"  datatype="n"  nullmsg="请输入金额！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>151-200:</label>
+			</td>
+			<td class="width-35" >
+				<#form:input path="twohundred" class="form-control"   htmlEscape="false"  datatype="n"  nullmsg="请输入金额！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>201-250:</label>
+			</td>
+			<td  class="width-35" >
+				<#form:input path="twohundredfive" class="form-control"   htmlEscape="false"  datatype="n"  nullmsg="请输入金额！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>251-300:</label>
+			</td>
+			<td class="width-35" >
+				<#form:input path="threehundred" class="form-control"   htmlEscape="false"  datatype="n"  nullmsg="请输入金额！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>300-400:</label>
+			</td>
+			<td  class="width-35" >
+				<#form:input path="fourhundred" class="form-control"   htmlEscape="false"  datatype="n"  nullmsg="请输入金额！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>400-500:</label>
+			</td>
+			<td class="width-35" >
+				<#form:input path="fivehundred" class="form-control"   htmlEscape="false"  datatype="n"  nullmsg="请输入金额！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</#form:form>
+<% } %>

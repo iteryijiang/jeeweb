@@ -18,18 +18,17 @@ import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopBase;
+import cn.jeeweb.web.ebp.shop.entity.TshopGradeInfo;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
-import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
-import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
-import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
-import cn.jeeweb.web.ebp.shop.service.TuserKeyService;
+import cn.jeeweb.web.ebp.shop.service.*;
 import cn.jeeweb.web.ebp.shop.spider.JDUnionApi;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
 import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
@@ -38,6 +37,7 @@ import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
+import org.apache.poi.ss.formula.functions.T;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +72,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     private TshopBaseService tshopBaseService;
     @Autowired
     private TuserKeyService tuserKeyService;
+    @Autowired
+    private TshopGradeInfoService tshopGradeInfoService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -159,8 +161,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 ttaskBase.setTotalprice(ttaskBase.getActualprice().multiply(new BigDecimal(ttaskBase.getTasknum())));
             }
             ttaskBase.setStatus("0");
-            Double countSum = Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5"));
-            BigDecimal price = ttaskBase.getTotalprice().add(new BigDecimal(ttaskBase.getTasknum()*countSum));
+//            Double countSum = Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5"));
+            BigDecimal price = ttaskBase.getTotalprice().add(ttaskBase.getPresentdeposit().multiply(new BigDecimal(ttaskBase.getTasknum())));
             if(si.getTotaldeposit()==null) {
                 return Response.error("发布失败，您无押金，请充值！");
             }else if(si.getTotaldeposit().compareTo(price)<0){
@@ -173,7 +175,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 si.setTaskdeposit(si.getTaskdeposit().add(price));
             }
             ttaskBase.setTaskdeposit(price);
-            ttaskBase.setPresentdeposit(new BigDecimal(countSum));
+//            ttaskBase.setPresentdeposit(new BigDecimal(countSum));
             ttaskBaseService.addTask(ttaskBase,si);
         }catch (Exception e){
             e.printStackTrace();
@@ -866,5 +868,33 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         String content = JSON.toJSONString(map);
         StringUtils.printJson(response,content);
+    }
+
+    @PostMapping(value = "getTshopGrade")
+    public Response getTshopGrade(@RequestBody JSONObject jsonObject,HttpServletRequest request, HttpServletResponse response) {
+        Double tasknum = Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "3"));
+        try {
+            String currentUserId = UserUtils.getUser().getId();
+            TshopInfo tshopInfo = tshopInfoService.selectOne(currentUserId);
+            if(tshopInfo!=null){
+                EntityWrapper<TshopGradeInfo> entityWrapper = new EntityWrapper<TshopGradeInfo>();
+                entityWrapper.eq("shopgrade", tshopInfo.getAccountlevel());
+                TshopGradeInfo tbi =  tshopGradeInfoService.selectOne(entityWrapper);
+                Double actualprice = jsonObject.getDouble("actualprice");
+                int price = TaskUtils.gradePrice(actualprice,tbi);
+                if(price!=-100){
+                    int sum = Integer.parseInt(DictUtils.getDictValue("一个任务单店接单数", "tasknum", "2"));
+                    int sumshop = (int) Math.ceil((price+0.0) / sum);
+                    return Response.ok(sumshop+"");
+                }else {
+                    return Response.ok(price+"");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok(tasknum+"");
+        }
+        return Response.ok(tasknum+"");
     }
 }

@@ -272,35 +272,68 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     public void upbuyerjdnick(@PathVariable("id") String id,@PathVariable("buyerjdnick") String buyerjdnick, HttpServletRequest request,
                             HttpServletResponse response) {
         TmyTaskDetail td = tmyTaskDetailService.selectById(id);
-        Map map = new HashMap();
-        map.put("storename",StringUtils.isEmpty(td.getStorename())?"NA":td.getStorename());
-        map.put("buyerid",StringUtils.isEmpty(td.getBuyerid())?"NA":td.getBuyerid());
-        map.put("mytaskid",StringUtils.isEmpty(td.getMytaskid())?"NA":td.getMytaskid());
-        List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
-        if(list!=null&&!list.isEmpty()){
-            for (TmyTaskDetail ttd:list) {
-                ttd.setBuyerjdnick(buyerjdnick);
-            }
-            tmyTaskDetailService.updateBatchById(list);
-        }
+//        Map map = new HashMap();
+//        map.put("storename",StringUtils.isEmpty(td.getStorename())?"NA":td.getStorename());
+//        map.put("buyerid",StringUtils.isEmpty(td.getBuyerid())?"NA":td.getBuyerid());
+//        map.put("mytaskid",StringUtils.isEmpty(td.getMytaskid())?"NA":td.getMytaskid());
+//        List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
+//        if(list!=null&&!list.isEmpty()){
+//            for (TmyTaskDetail ttd:list) {
+//                ttd.setBuyerjdnick(buyerjdnick);
+//            }
+//            tmyTaskDetailService.updateBatchById(list);
+//        }
+        td.setBuyerjdnick(buyerjdnick);
+        tmyTaskDetailService.updateById(td);
+
     }
     @GetMapping("{id}/{jdorderno}/upjdorderno")
     @Log(logType = LogType.UPDATE)
     public void upjdorderno(@PathVariable("id") String id,@PathVariable("jdorderno") String jdorderno, HttpServletRequest request,
                               HttpServletResponse response) {
         TmyTaskDetail td = tmyTaskDetailService.selectById(id);
-        Map map = new HashMap();
-        map.put("storename",StringUtils.isEmpty(td.getStorename())?"NA":td.getStorename());
-        map.put("buyerid",StringUtils.isEmpty(td.getBuyerid())?"NA":td.getBuyerid());
-        map.put("mytaskid",StringUtils.isEmpty(td.getMytaskid())?"NA":td.getMytaskid());
-        List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
-        if(list!=null&&!list.isEmpty()){
-            for (TmyTaskDetail ttd:list) {
-                ttd.setJdorderno(jdorderno);
-            }
-            tmyTaskDetailService.updateBatchById(list);
-        }
+//        Map map = new HashMap();
+//        map.put("storename",StringUtils.isEmpty(td.getStorename())?"NA":td.getStorename());
+//        map.put("buyerid",StringUtils.isEmpty(td.getBuyerid())?"NA":td.getBuyerid());
+//        map.put("mytaskid",StringUtils.isEmpty(td.getMytaskid())?"NA":td.getMytaskid());
+//        List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
+//        if(list!=null&&!list.isEmpty()){
+//            for (TmyTaskDetail ttd:list) {
+//                ttd.setJdorderno(jdorderno);
+//            }
+//            tmyTaskDetailService.updateBatchById(list);
+//        }
+        td.setJdorderno(jdorderno);
+        tmyTaskDetailService.updateById(td);
 
+    }
+
+    @RequestMapping(value = "upTaskjdorderno", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.UPDATE)
+    public Response upTaskjdorderno(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                                HttpServletResponse response) {
+        try {
+            String id = jsonObject.getString("id");
+            String jdorderno = jsonObject.getString("jdorderno");
+            TmyTaskDetail td = tmyTaskDetailService.selectById(id);
+
+            Map map = new HashMap();
+            map.put("storename",StringUtils.isEmpty(td.getStorename())?"NA":td.getStorename());
+            map.put("buyerid",StringUtils.isEmpty(td.getBuyerid())?"NA":td.getBuyerid());
+            map.put("mytaskid",StringUtils.isEmpty(td.getMytaskid())?"NA":td.getMytaskid());
+            List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
+            if(list!=null&&!list.isEmpty()){
+                for (TmyTaskDetail ttd:list) {
+                    ttd.setJdorderno(jdorderno);
+                }
+            tmyTaskDetailService.updateBatchById(list);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return Response.ok("修改失败！");
+        }
+        return Response.ok("修改成功！");
     }
 
     @RequestMapping(value = "upBankamount", method = { RequestMethod.GET, RequestMethod.POST })
