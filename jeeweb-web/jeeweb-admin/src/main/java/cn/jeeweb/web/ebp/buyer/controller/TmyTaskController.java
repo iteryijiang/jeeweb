@@ -258,6 +258,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
                     ttd.setBuyerjdnick(buyerjdnick);
                     ttd.setJdorderno(jdorderno);
                     tmyTaskDetailService.upTaskState(state,ttd,id);
+//                    System.out.print(DateUtils.getDateTime()+"状态修改完成："+ttd.getId()+",状态为："+ttd.getTaskstate());
                 }
             }
 

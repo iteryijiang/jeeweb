@@ -32,4 +32,6 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
 
     public int sumMyTask(Map map) throws Exception;
 
+    public int sumTaskBase(Map map) throws Exception;
+
 }

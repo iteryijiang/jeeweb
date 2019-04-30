@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TshopGradeInfoMapper" >
+  <resultMap id="TshopInfo" type="cn.jeeweb.web.ebp.shop.entity.TshopGradeInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="shopname" column="shopname" jdbcType="VARCHAR" />
+    <result property="loginname" column="loginname" jdbcType="VARCHAR" />
+    <result property="accountlevel" column="accountlevel" jdbcType="VARCHAR" />
+    <result property="totaldeposit" column="totaldeposit" jdbcType="NUMERIC" />
+    <result property="taskdeposit" column="taskdeposit" jdbcType="NUMERIC" />
+    <result property="extractdeposit" column="extractdeposit" jdbcType="NUMERIC" />
+    <result property="availabledeposit" column="availabledeposit" jdbcType="NUMERIC" />
+    <result property="status" column="status" jdbcType="VARCHAR" />
+    <result property="userid" column="userid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+
+  <select id="selectUserList" resultMap="TshopInfo">
+	  select *
+      from T_shop_Info t
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+</mapper>

@@ -21,7 +21,7 @@
 <!--</div>-->
 
 <#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList" sortname="taskno" sortorder="desc" sortable="false">
-<#grid:column label="任务编号" width="100"  name="taskno"/>
+<#grid:column label="任务编号" width="100" query="true" condition="like" name="taskno"/>
 <#grid:column label="店铺名" name="shopname" query="true" condition="like" width="120" />
 <#grid:column label="商品标题"  name="tTitle" query="true"  condition="like" width="140" />
 <#grid:column label="搜索关键字"  name="keyword" width="100"/>

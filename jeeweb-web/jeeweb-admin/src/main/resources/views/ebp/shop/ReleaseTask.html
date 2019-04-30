@@ -167,10 +167,11 @@
                     <form class="form-inline">
                         <div class="form-group">
                             <label>佣金单价（单链接）:</label>
-                            <label><span><b style="color: green;font-size: 18px" >${presentdeposit}</b></span></label>
+                            <label>
+                                <span id="presentdeposit"  style="color: green;font-size: 18px"></span></label>
                         </div>
                         <div class="form-group">
-                            <label>佣金总价:</label>
+                            <label>扣除金额（佣金总价+每单实付金额）:</label>
                             <label><span id="presentdepositsum" style="color: red;font-size: 18px"></span></label>
                         </div>
                         <div class="form-group">
@@ -238,6 +239,7 @@
                                 </div>
                             </div>
                             <div class='make-sure'>
+                                <input type="hidden" id="presentdepositID">
                                 <button class='btn btn-warning' onclick="TaskConfirm(0)">确认提交信息</button>
                             </div>
                         </div>
@@ -334,6 +336,8 @@
           good_detail_info.spec1 = $("#spec1").val();
           good_detail_info.spec2 = $("#spec2").val();
           good_detail_info.imgurl=$('#good_pic1 img').prop('src');
+          good_detail_info.presentdeposit = $("#presentdepositID").val();
+
           // good_detail_info.brand = $("#brand").val();
          if(good_detail_info.storename==""){
             alert("该商品链接所属“"+datastorename+"”店铺，您暂无权限发布！");
@@ -361,6 +365,10 @@
             alert("请填写关键字");
             return;
          }
+           if(good_detail_info.presentdeposit==-100){
+               alert("实付金额超出限制！");
+               return;
+           }
         //填充任务信息
         // TaskAreaInfo()
            console.log(good_detail_info);
@@ -436,10 +444,26 @@
         //     $("#effectdate").val(dateFtt("yyyy-MM-dd",new Date("${tb.effectdate}")));
         // }
         function sum(tasknum,actualprice){
-            if(tasknum!=undefined&&actualprice!=undefined&&tasknum!=""&&actualprice!=""){
-                $('#presentdepositsum').html(tasknum*actualprice+(${presentdeposit}*tasknum));
-
-            }
+            var data={};
+            data.actualprice = actualprice;
+            $.ajax({
+                type: "POST",
+                url: "${adminPath}/shop/TtaskBase/getTshopGrade",
+                contentType:'application/json;charset=utf-8',
+                data: JSON.stringify(data),
+                dataType: "json",
+                success: function(data){
+                    $('#presentdepositID').val(data.msg);
+                    if(data.msg==-100){
+                        alert("实付金额超出限制！");
+                        return;
+                    }
+                    $('#presentdeposit').html(data.msg);
+                    if(tasknum!=undefined&&actualprice!=undefined&&tasknum!=""&&actualprice!=""){
+                        $('#presentdepositsum').html(tasknum*actualprice+(data.msg*tasknum));
+                    }
+                }
+            });
         }
         function dateFtt(fmt,date)
         { //author: meizz

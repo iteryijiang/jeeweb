@@ -4,6 +4,7 @@ import cn.jeeweb.common.query.data.Condition;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
+import cn.jeeweb.web.ebp.shop.entity.TshopGradeInfo;
 
 import java.util.Date;
 
@@ -56,4 +57,26 @@ public class TaskUtils {
         return retu;
     }
 
+
+    public static int gradePrice(Double actualprice,TshopGradeInfo tbi){
+        int d = 0;
+        if(actualprice<=100){
+            d = tbi.getOnehundred();
+        }else if(actualprice<=150){
+            d = tbi.getOnehundredfive();
+        }else if(actualprice<=200){
+            d = tbi.getTwohundred();
+        }else if(actualprice<=250){
+            d = tbi.getTwohundredfive();
+        }else if(actualprice<=300){
+            d = tbi.getThreehundred();
+        }else if(actualprice<=400){
+            d = tbi.getFourhundred();
+        }else if(actualprice<=500){
+            d = tbi.getFivehundred();
+        }else {
+            return -100;
+        }
+        return d;
+    }
 }

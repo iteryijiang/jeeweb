@@ -1,0 +1,16 @@
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('商户管理',''), libs: 'bootstrap-treeview'}){ %>
+	<#grid:grid id="tshopGradeInfoGrid" url="${adminPath}/shop/TshopGradeInfo/ajaxList"  sortname="shopgrade" sortorder="asc" >
+		<#grid:column label="商户等级"  name="shopgrade"  query="true" queryMode="select"  dict="shopGrade" condition="eq" />
+		<#grid:column label="0-100"  name="onehundred" />
+		<#grid:column label="101-150"  name="onehundredfive" />
+		<#grid:column label="151-200"  name="twohundred"/>
+		<#grid:column label="201-250"  name="twohundredfive" />
+		<#grid:column label="251-300"  name="threehundred"/>
+		<#grid:column label="300-400"  name="fourhundred"/>
+		<#grid:column label="400-500"  name="fivehundred"/>
+		<#grid:toolbar function="update" />
+		<#grid:toolbar function="search"  />
+		<#grid:toolbar function="reset" />
+	</#grid:grid>
+
+<% } %>
