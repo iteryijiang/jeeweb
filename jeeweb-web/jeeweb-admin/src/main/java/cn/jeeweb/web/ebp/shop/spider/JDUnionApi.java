@@ -153,9 +153,9 @@ public class JDUnionApi {
         JDUnionApi JDUnionApi = new JDUnionApi();
         //JDUnionApi.couponImport();
         try {
-            JDUnionApi.getCouponInfoByJDAPI("http://coupon.m.jd.com/coupons/show.action?key=203d6fb476074ecab137df29da8903ab&roleId=18950122&to=mall.jd.com/index-910797.html");
+            //JDUnionApi.getCouponInfoByJDAPI("http://coupon.m.jd.com/coupons/show.action?key=203d6fb476074ecab137df29da8903ab&roleId=18950122&to=mall.jd.com/index-910797.html");
             //41011489021
-            //String shorturl = JDUnionApi.getCouponURL("41011489021","http://coupon.m.jd.com/coupons/show.action?key=203d6fb476074ecab137df29da8903ab&roleId=18950122&to=mall.jd.com/index-910797.html");
+            Map map = JDUnionApi.getCouponURL("28900930154","http://coupon.m.jd.com/coupons/show.action?key=43f75e43c16844a7aad24caae98bb46b&roleId=19267854&to=mall.jd.com/index-607926.html");
             // shorturl 不为空  才去生成二维码
             //QRCodeUtil.getInstance().genQrCodeImg(null, 300, 300, "d:\\", "qrcode4.jpg", shorturl);
         }catch (Exception e){

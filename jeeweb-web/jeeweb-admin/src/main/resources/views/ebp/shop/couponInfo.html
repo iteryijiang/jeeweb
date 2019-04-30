@@ -104,12 +104,13 @@
 	}
 
 	function getcouponURL(skuid){
-		var couponUrls = $("#couponUrls");
+		var couponUrls = $("#couponUrls").val();
+		alert(couponUrls);
 		$.ajax({
 			type: "POST",
 			url: "${adminPath}/shop/TtaskBase/getCouponURL",
 			contentType:'application/json;charset=utf-8',
-			data: JSON.stringify({"couponUrls":couponUrls.value,"skuid":skuid.value}),
+			data: JSON.stringify({"couponUrls":couponUrls,"skuid":skuid.value}),
 			dataType: "json",
 			success: function(data){
 				$("#shortURL").attr("value",data.shortURL);
