@@ -1,4 +1,4 @@
-<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('shop.shopbase.addshop',''), formId: 'shopBaseForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('优惠券',''), libs: ''}){ %>
 	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
 		<tbody>
 		<tr><td colspan="4"><hr><b>优惠券有效性验证<hr></b></td></tr>
@@ -61,7 +61,7 @@
 
 		<tr>
 			<td  class="width-15 active text-right">	<label><font color="red">*</font>SKUID:</label></td>
-			<td  class="width-70" >
+			<td  class="width-70" colspan="3">
 				<input id="skuid" class="form-control"  onblur="getcouponURL(this)"/>
 				<label class="Validform_checktip"></label>
 			</td>
@@ -80,6 +80,14 @@
 			<td  class="width-35" >
 				<input id="message" class="form-control"    />
 				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label>二维码:</label>
+			</td>
+			<td  class="width-35"  colspan="3">
+				<img src="" id="qrcodeurl">
 			</td>
 		</tr>
 		</tbody>
@@ -105,15 +113,15 @@
 
 	function getcouponURL(skuid){
 		var couponUrls = $("#couponUrls").val();
-		alert(couponUrls);
 		$.ajax({
 			type: "POST",
-			url: "${adminPath}/shop/TtaskBase/getCouponURL",
+			url: "${adminPath}/shop/TtaskBase/getCouponURLQRcode",
 			contentType:'application/json;charset=utf-8',
-			data: JSON.stringify({"couponUrls":couponUrls,"skuid":skuid.value}),
+			data: JSON.stringify({"couponurl":couponUrls,"skuid":skuid.value}),
 			dataType: "json",
 			success: function(data){
 				$("#shortURL").attr("value",data.shortURL);
+                $("#qrcodeurl").attr("src",data.filePath);
 				$("#message").attr("value",data.message);
 			}
 		});

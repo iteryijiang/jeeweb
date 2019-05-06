@@ -15,6 +15,7 @@ import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.DateUtils;
+import cn.jeeweb.common.utils.PropertiesUtil;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
@@ -31,23 +32,31 @@ import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.*;
 import cn.jeeweb.web.ebp.shop.spider.JDUnionApi;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
+import cn.jeeweb.web.ebp.shop.spider.QRCodeUtil;
 import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
+import cn.jeeweb.web.modules.oss.entity.Attachment;
+import cn.jeeweb.web.modules.oss.helper.AttachmentHelper;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -74,6 +83,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     private TuserKeyService tuserKeyService;
     @Autowired
     private TshopGradeInfoService tshopGradeInfoService;
+    @Autowired
+    private AttachmentHelper attachmentHelper;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -150,6 +161,26 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 if(DateUtils.formatDate(new Date(),"yyyy-MM-dd").equals(DateUtils.formatDate(ttaskBase.getEffectdate(),"yyyy-MM-dd"))){
                     return Response.error("不能发布生效时间为当天的订单！");
                 }
+            }
+            JDUnionApi JDUnionApi = new JDUnionApi();
+            Map map_url = JDUnionApi.getCouponInfoByJDAPI(ttaskBase.getCouponurl());
+            if(200!=Integer.parseInt(map_url.get("code").toString())){
+                return Response.error("优惠券链接有误.（无法获取优惠券信息）！");
+            }
+            int hh = Integer.parseInt(DictUtils.getDictValue("任务单生效时间校验", "tasknum", "72"));
+            //校验发布时间是否在优惠券之前
+            //
+            Date takeBeginTime = DateUtils.parseDate(map_url.get("takeBeginTime"));
+            Date takeEndTime = DateUtils.parseDate(map_url.get("takeEndTime"));
+            double d = DateUtils.getDistanceOfTwoDate(ttaskBase.getEffectdate(),takeEndTime);
+
+            if(ttaskBase.getEffectdate().getTime()<takeBeginTime.getTime()||(d*24<hh)||ttaskBase.getEffectdate().getTime()>takeEndTime.getTime()){
+                return Response.error("二维码失效，不再有效期内！");
+            }
+            //校验优惠券剩余数是否大于商品任务数据
+            int couponnum = Integer.parseInt(DictUtils.getDictValue("任务单优惠奍剩余张数", "tasknum", "400"));
+            if(couponnum>Integer.parseInt(map_url.get("remainNum").toString())){
+                return Response.error("二维码失效，可用数量不足！");
             }
 
             ttaskBase.setShopid(userid);
@@ -562,6 +593,45 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         StringUtils.printJson(response,content);
     }
 
+    /*
+      获取优惠券推广链接（供前端调用），并生成二维码
+      入参：SKUID、优惠券链接
+    */
+    @RequestMapping(value = "getCouponURLQRcode", method = { RequestMethod.GET, RequestMethod.POST })
+    public void getCouponURLQRcode(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                             HttpServletResponse response) throws IOException {
+        Map map = new HashMap();
+        try {
+            String couponurl = jsonObject.getString("couponurl");
+            String inputLink = jsonObject.getString("inputLink");
+            String skuid = jsonObject.getString("skuid");
+            if(StringUtils.isEmpty(skuid)){
+                skuid = JdSpider.getGoodId_ByURL(inputLink);//获取商品ID
+            }
+            JDUnionApi JDUnionApi = new JDUnionApi();
+            map = JDUnionApi.getCouponURL(skuid,couponurl);
+            if(map.get("shortURL")!=null){
+                PropertiesUtil p = new PropertiesUtil("local.properties");
+                String uploadFilePath = p.getString("local.upload-file-path");
+                String shortURL = map.get("shortURL").toString();
+                File file = QRCodeUtil.getInstance().genQrCodeImg(null, 300, 300, uploadFilePath+"coupon/", (new Date().getTime()+".jpg"), shortURL);
+//                MultipartFile file = multiRequest.getFile(ite.next());
+                request.setAttribute("base_path","/hellows/test");
+//                request.
+                FileInputStream input = new FileInputStream(file);
+                MultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "image/jpeg", IOUtils.toByteArray(input));
+                Attachment attachment = attachmentHelper.upload(request, multipartFile);
+                if(attachment!=null){
+                    map.put("filePath",attachment.getFilePath());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
+    }
+
     @GetMapping(value = "listPool")
     @RequiresMethodPermissions("listPool")
     public ModelAndView listPool(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -673,7 +743,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 
             boolean bool = ttaskBaseService.createMyTask();
             if(!bool){
-                return Response.ok("无可领取任务！");
+                return Response.ok("无可领取任务，请刷新后重新领取！");
             }
         }catch (Exception e){
             e.printStackTrace();

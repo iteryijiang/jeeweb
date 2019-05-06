@@ -61,6 +61,7 @@ public class TtaskBase extends DataEntity<String> {
 	private Date lasttakingdate;//	datetime	0	0	-1	0	0	0	0		0					0	0
 	private BigDecimal taskdeposit;//	decimal	10	0	-1	0	0	0	0		0	冻结金额				0	0
 	private BigDecimal presentdeposit;//	decimal	10	0	-1	0	0	0	0		0	当前佣金额				0	0
+	private String couponurl;
 
 
 
@@ -450,5 +451,13 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setConfirmnum(Long confirmnum) {
 		this.confirmnum = confirmnum;
+	}
+
+	public String getCouponurl() {
+		return couponurl;
+	}
+
+	public void setCouponurl(String couponurl) {
+		this.couponurl = couponurl;
 	}
 }

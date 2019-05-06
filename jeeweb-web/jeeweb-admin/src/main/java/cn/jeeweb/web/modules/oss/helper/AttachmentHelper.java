@@ -54,6 +54,9 @@ public class AttachmentHelper {
     public Attachment upload(HttpServletRequest request, MultipartFile file) throws FileSizeLimitExceededException,
             IOException, FileNameLengthLimitExceededException, InvalidExtensionException {
         String basePath=request.getParameter("base_path");
+        if(StringUtils.isEmpty(basePath)){
+            basePath = (String)request.getAttribute("base_path");
+        }
         String url = uploadHelper.upload(request, file, basePath);
         String filename = file.getOriginalFilename();
         long size = file.getSize();

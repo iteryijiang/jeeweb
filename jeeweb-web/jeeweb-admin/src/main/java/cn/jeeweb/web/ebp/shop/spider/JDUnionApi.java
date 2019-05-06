@@ -134,6 +134,8 @@ public class JDUnionApi {
             map.put("takeBeginTime", sd.format(date1));
             map.put("takeEndTime",sd.format(date2));
             map.put("discount",discount);
+        }else {
+            code = -100;
         }
 
         map.put("code",code);
@@ -153,11 +155,12 @@ public class JDUnionApi {
         JDUnionApi JDUnionApi = new JDUnionApi();
         //JDUnionApi.couponImport();
         try {
+            System.out.print(new Date().getTime());
             //JDUnionApi.getCouponInfoByJDAPI("http://coupon.m.jd.com/coupons/show.action?key=203d6fb476074ecab137df29da8903ab&roleId=18950122&to=mall.jd.com/index-910797.html");
             //41011489021
-            Map map = JDUnionApi.getCouponURL("28900930154","http://coupon.m.jd.com/coupons/show.action?key=43f75e43c16844a7aad24caae98bb46b&roleId=19267854&to=mall.jd.com/index-607926.html");
+            Map map = JDUnionApi.getCouponURL("46354122376","https://coupon.m.jd.com/coupons/show.action?key=402a390565c349c48d9e4865d7e8382f&roleId=18948435&to=mall.jd.com/index-594043.html");
             // shorturl 不为空  才去生成二维码
-            //QRCodeUtil.getInstance().genQrCodeImg(null, 300, 300, "d:\\", "qrcode4.jpg", shorturl);
+//            QRCodeUtil.getInstance().genQrCodeImg(null, 300, 300, "d:\\", "qrcode4.jpg", "");
         }catch (Exception e){
             e.printStackTrace();
         }

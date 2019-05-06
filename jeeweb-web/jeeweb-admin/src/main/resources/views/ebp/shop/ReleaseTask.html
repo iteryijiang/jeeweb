@@ -14,8 +14,6 @@
 <script src='${staticPath}/shop/js/fileinput.min.js'></script>
 <script src="${staticPath}/shop/laydate/laydate.js" charset="UTF-8"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <#html:css name="bootstrap-fileinput,iCheck,Validform" />
-    <#html:js name="bootstrap-fileinput,iCheck,Validform" />
 </head>
 <body>
 <!-- 用户信息栏 -->
@@ -118,6 +116,18 @@
                 <div>
                     <form class="form-horizontal">
                         <div class="form-group">
+                            <label for="inputCouponurl" class="col-sm-2 control-label">商品优惠券链接:</label>
+                            <div class="col-sm-6">
+                                <input class="form-control must-fill" id="inputCouponurl" placeholder="" value="${tb.couponurl}"  onblur="showCouponurl(this)">
+                            </div>
+                            <label for="inputTab" class="col-sm-1 control-label red_font">必填</label>
+                            <button type="button" onclick="getCouponURLQRcode()" class="btn btn-default">生成二维码</button>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
                             <label for="inputTab" class="col-sm-2 control-label">商品标题:</label>
                             <div class="col-sm-5">
                                  <input class="form-control must-fill" id="inputTab" placeholder="" value="${tb.tTitle}">
@@ -195,20 +205,9 @@
                         </div>
                      </form>
                     <form class="form-inline">
-                        <div class="form-group">
-                            <div class="wrapper wrapper-content animated fadeInRight">
-                                <label>上传二维码:</label>
-                                <div class="portlet-body">
-                                    <#form:form id="avatarForm" modelAttribute="tb"  method="post" class="form-horizontal">
-                                        <#form:hidden path="id" />
-                                        <div class="form-group">
-                                            <div class="col-sm-3" >
-                                                <#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px"  fileInputHeight="100px"  path="qrcodeurl"/>
-                                            </div>
-                                        </div>
-                                    </#form:form>
-                                </div>
-                            </div>
+                        <label>二维码:</label>
+                        <div class="portlet-body">
+                           <img src="" id="qrcodeurl" height="200" width="200">
                         </div>
                     </form>
                 </div>
@@ -296,30 +295,33 @@
                         good_detail_info.tUrl=$(ele).val()
                         break;
                     case 1:
-                        good_detail_info.tTitle=$(ele).val()
+                        good_detail_info.couponurl=$(ele).val()
                         break;
                     case 2:
-                        good_detail_info.brand = $(ele).val()
+                        good_detail_info.tTitle=$(ele).val()
                         break;
                     case 3:
-                        good_detail_info.tasknum=$(ele).val()
+                        good_detail_info.brand = $(ele).val()
                         break;
                     case 4:
-                        good_detail_info.tPrice=$(ele).val()
+                        good_detail_info.tasknum=$(ele).val()
                         break;
                     case 5:
-                        good_detail_info.actualprice=$(ele).val()
+                        good_detail_info.tPrice=$(ele).val()
                         break;
                     case 6:
-                        good_detail_info.tNum=$(ele).val()
+                        good_detail_info.actualprice=$(ele).val()
                         break;
                     case 7:
-                        good_detail_info.searchprice=$(ele).val()
+                        good_detail_info.tNum=$(ele).val()
                         break;
                     case 8:
-                        good_detail_info.article=$(ele).val()
+                        good_detail_info.searchprice=$(ele).val()
                         break;
                     case 9:
+                        good_detail_info.article=$(ele).val()
+                        break;
+                    case 10:
                         good_detail_info.effectdate=$(ele).val()
                 }
             }
@@ -331,7 +333,7 @@
             $('#task_accordin').removeClass('red')
           }
           good_detail_info.storename = $("#storename").val();
-          good_detail_info.qrcodeurl = $("#qrcodeurl").val();
+          good_detail_info.qrcodeurl = $("#qrcodeurl")[0].src;
           good_detail_info.keyword = $("#keyword").val();
           good_detail_info.spec1 = $("#spec1").val();
           good_detail_info.spec2 = $("#spec2").val();
@@ -422,6 +424,44 @@
                     if(bool){
                         alert("该商品链接所属“"+data.storename+"”店铺，您暂无权限发布！");
 
+                    }
+                }
+            });
+        }
+        function showCouponurl(couponUrls){
+            $.ajax({
+                type: "POST",
+                url: "${adminPath}/shop/TtaskBase/showtCouponInfo",
+                contentType:'application/json;charset=utf-8',
+                data: JSON.stringify({"couponUrls":couponUrls.value}),
+                dataType: "json",
+                success: function(data){
+                    if(data.code==200){
+                        $("#actualprice").attr("value",($("#inputPrice").val()-data.discount));
+                        alert("优惠奍剩余张数:"+data.remainNum+"\r\n开始有效时间:"+data.takeBeginTime+"\r\n到期有效时间:"+data.takeEndTime+"\r\n优惠奍面额:"+data.discount);
+                    }else {
+                        alert("优惠券链接有误。（无法获取优惠券信息）！");
+                    }
+
+                }
+            });
+        }
+
+        function getCouponURLQRcode(){
+            var inputLink = $("#inputLink").val();
+            var couponurl = $("#inputCouponurl").val();
+            $.ajax({
+                type: "POST",
+                url: "${adminPath}/shop/TtaskBase/getCouponURLQRcode",
+                contentType:'application/json;charset=utf-8',
+                data: JSON.stringify({"couponurl":couponurl,"inputLink":inputLink}),
+                dataType: "json",
+                success: function(data){
+                    if(data.code==200){
+                        $("#qrcodeurl").attr("src",data.filePath);
+                    }else {
+                        $("#qrcodeurl").attr("src","");
+                        alert("生成二维码失败！"+data.message);
                     }
                 }
             });
