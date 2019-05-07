@@ -73,6 +73,8 @@ public class JDUnionApi {
         jd.union.open.promotion.bysubunionid.get.request.PromotionCodeReq promotionCodeReq = new jd.union.open.promotion.bysubunionid.get.request.PromotionCodeReq();
         promotionCodeReq.setMaterialId("https://item.jd.com/"+skuid+".html");
         promotionCodeReq.setSubUnionId("1001489696");
+        promotionCodeReq.setPositionId(1805446437L);
+        //promotionCodeReq.setPid("1001489696_57868_1805446437");
         //http://coupon.m.jd.com/coupons/show.action?key=2572412b7bfb4390896774156bee3c5e&roleId=18983871&to=mall.jd.com/index-908143.html
         System.out.println("========2=======");
         promotionCodeReq.setCouponUrl(couponurl);
