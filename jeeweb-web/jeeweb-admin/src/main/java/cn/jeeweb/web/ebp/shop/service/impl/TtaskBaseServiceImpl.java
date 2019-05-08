@@ -17,6 +17,7 @@ import cn.jeeweb.web.ebp.shop.mapper.TtaskBaseMapper;
 import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.ebp.shop.spider.JdSpider;
 import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.utils.UserUtils;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -351,6 +352,12 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
      * */
     public Map<Integer,List<TtaskBase>> shopMap(List<TtaskBase> list_tb,int count,int countSum,Map<Integer,List<TtaskBase>> m,int i){
         TtaskBase tb0 = list_tb.get(0);
+        String goodids = "";
+        try {
+            goodids += ","+JdSpider.getGoodId_ByURL(tb0.gettUrl())+",";//获取商品ID
+        }catch (Exception e){
+
+        }
         List<TtaskBase> retlist = new ArrayList<TtaskBase>();
         tb0.setCanreceivenums(tb0.getCanreceivenums()-1);
         retlist.add(list_tb.get(0));
@@ -363,6 +370,16 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                     continue;
                 }
                 TtaskBase tb = list_tb.get(i++);
+                String goodid = "";
+                try {
+                    goodid = JdSpider.getGoodId_ByURL(tb.gettUrl());
+                }catch (Exception e){
+
+                }
+                if(goodids.indexOf(","+goodid+",")>=0){
+                    continue;
+                }
+                goodids += ","+goodid+",";//获取商品ID
                 tb.setCanreceivenums(tb.getCanreceivenums()-1);
                 retlist.add(tb);
                 if(tb.getCanreceivenums()==0){

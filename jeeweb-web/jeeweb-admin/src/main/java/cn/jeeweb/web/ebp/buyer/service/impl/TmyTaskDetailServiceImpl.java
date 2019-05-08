@@ -162,6 +162,20 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
         return new PageImpl<TmyTaskDetail>(page.getRecords(), queryable.getPageable(), page.getTotal());
 //        return page;
     }
+
+    public Page<TmyTaskDetail> listDetailGroup(Queryable queryable, Wrapper<TmyTaskDetail> wrapper) {
+        QueryToWrapper<TmyTaskDetail> queryToWrapper = new QueryToWrapper<TmyTaskDetail>();
+        queryToWrapper.parseCondition(wrapper, queryable);
+        // 排序问题
+        queryToWrapper.parseSort(wrapper, queryable);
+        Pageable pageable = queryable.getPageable();
+        com.baomidou.mybatisplus.plugins.Page<TmyTaskDetail> page = new com.baomidou.mybatisplus.plugins.Page<TmyTaskDetail>(
+                pageable.getPageNumber(), pageable.getPageSize());
+        wrapper.eq("1", "1");
+        page.setRecords(baseMapper.listDetailGroup(page, wrapper));
+        return new PageImpl<TmyTaskDetail>(page.getRecords(), queryable.getPageable(), page.getTotal());
+    }
+
     public Page<TmyTaskDetail> listShopBaseDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper) {
         QueryToWrapper<TmyTaskDetail> queryToWrapper = new QueryToWrapper<TmyTaskDetail>();
         queryToWrapper.parseCondition(wrapper, queryable);
@@ -184,6 +198,16 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
         // 排序问题
         queryToWrapper.parseSort(wrapper, queryable);
         return baseMapper.listDetail(wrapper);
+
+    }
+
+    public List<TmyTaskDetail> listNoPageDetailGroup(Queryable queryable, Wrapper<TmyTaskDetail> wrapper) {
+        QueryToWrapper<TmyTaskDetail> queryToWrapper = new QueryToWrapper<TmyTaskDetail>();
+
+        queryToWrapper.parseCondition(wrapper, queryable);
+        // 排序问题
+        queryToWrapper.parseSort(wrapper, queryable);
+        return baseMapper.listDetailGroup(wrapper);
 
     }
 

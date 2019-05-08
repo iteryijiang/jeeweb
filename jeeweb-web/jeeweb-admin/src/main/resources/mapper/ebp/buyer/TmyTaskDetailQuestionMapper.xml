@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TmyTaskDetailQuestionMapper" >
+  <resultMap id="TmyTaskDetailQuestion" type="cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailQuestion" >
+      <id column="id" property="id" jdbcType="VARCHAR" />
+      <result property="buyerid" column="buyerid" jdbcType="VARCHAR" />
+      <result property="taskid" column="taskid" jdbcType="VARCHAR" />
+      <result property="taskstate" column="taskstate" jdbcType="VARCHAR" />
+      <result property="goodsname" column="goodsname" jdbcType="VARCHAR" />
+      <result property="tasktype" column="tasktype" jdbcType="VARCHAR" />
+      <result property="commision" column="commision" jdbcType="DOUBLE" />
+      <result property="pays" column="pays" jdbcType="DOUBLE" />
+      <result property="buyerjdnick" column="buyerjdnick" jdbcType="VARCHAR" />
+      <result property="jdorderno" column="jdorderno" jdbcType="VARCHAR" />
+      <result property="buyerclient" column="buyerclient" jdbcType="VARCHAR" />
+      <result property="expressno" column="expressno" jdbcType="VARCHAR" />
+      <result property="evaluate" column="evaluate" jdbcType="VARCHAR" />
+      <result property="taskstatus" column="taskstatus" jdbcType="VARCHAR" />
+      <result property="mytaskid" column="mytaskid" jdbcType="VARCHAR" />
+      <result property="taskshopurl" column="taskshopurl" jdbcType="VARCHAR" />
+  </resultMap>
+  
+
+  <select id="selectUserList" resultMap="TmyTaskDetailQuestion">
+	  select *
+      from T_my_Task_Detail t
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+
+</mapper>

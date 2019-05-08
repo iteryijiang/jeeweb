@@ -25,6 +25,7 @@ import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailExport;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailExportGroup;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
 import cn.jeeweb.web.ebp.finance.service.TfinanceBuyerReportService;
@@ -81,6 +82,18 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         model.addAttribute("showHidden",bool);
         model.addAttribute("id",id);
         ModelAndView mav = displayModelAndView("list_buyer_detail");
+        return mav;
+    }
+
+    @GetMapping(value = "buyerDetailGroup")
+    @RequiresMethodPermissions("buyerDetailGroup")
+    public ModelAndView buyerDetailGroup(Model model, HttpServletRequest request, HttpServletResponse response) {
+        boolean bool = false;
+        if (!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
+            bool = true;
+        }
+        model.addAttribute("showHidden",bool);
+        ModelAndView mav = displayModelAndView("list_buyer_detailgroup");
         return mav;
     }
 
@@ -209,6 +222,73 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }
+
+    /**
+     * 根据页码和每页记录数，以及查询条件动态加载数据
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "ajaxListDetailGroup", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("ajaxListDetailGroup")
+    public void ajaxListDetailGroup(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                               HttpServletResponse response) throws IOException {
+        EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+        entityWrapper.setTableAlias("t");
+        String[] creates = TaskUtils.whereNewDate("","");
+        if(queryable.getCondition()!=null){
+            Condition.Filter filter = queryable.getCondition().getFilterFor("receivingdates");
+            creates = TaskUtils.whereDate(filter);
+        }
+
+        entityWrapper.between("t.receivingdate",creates[0],creates[1]);
+        // 预处理
+        if(queryable.getCondition()!=null) {
+            Condition.Filter filter_shopLoginname = queryable.getCondition().getFilterFor("shopLoginname");
+            if (filter_shopLoginname != null) {
+                queryable.getCondition().remove(filter_shopLoginname);
+                entityWrapper.like("s.loginname", filter_shopLoginname.getValue().toString());
+            }
+            Condition.Filter filter_shopidName = queryable.getCondition().getFilterFor("shopidName");
+            if (filter_shopidName != null) {
+                queryable.getCondition().remove(filter_shopidName);
+                entityWrapper.like("s.shopname", filter_shopidName.getValue().toString());
+            }
+
+            Condition.Filter filter_buyeridName = queryable.getCondition().getFilterFor("buyeridName");
+            if (filter_buyeridName != null) {
+                queryable.getCondition().remove(filter_buyeridName);
+                entityWrapper.like("bi.buyerName", filter_buyeridName.getValue().toString());
+            }
+            Condition.Filter filter_buyeridLogin = queryable.getCondition().getFilterFor("buyeridLogin");
+            if (filter_buyeridLogin != null) {
+                queryable.getCondition().remove(filter_buyeridLogin);
+                entityWrapper.like("bi.loginname", filter_buyeridLogin.getValue().toString());
+            }
+
+            Condition.Filter filter_shopname = queryable.getCondition().getFilterFor("shopname");
+            if (filter_shopname != null) {
+                queryable.getCondition().remove(filter_shopname);
+                entityWrapper.like("sb.shopname", filter_shopname.getValue().toString());
+            }
+            Condition.Filter filter_article = queryable.getCondition().getFilterFor("article");
+            if (filter_article != null) {
+                queryable.getCondition().remove(filter_article);
+                entityWrapper.like("tb.article", filter_article.getValue().toString());
+            }
+        }
+        entityWrapper.groupBy("buyeridName").groupBy("buyeridLogin").groupBy("receivingdates")
+        .groupBy("orderdates").groupBy("shopLoginname").groupBy("shopidName").groupBy("shopname")
+        .groupBy("buyerjdnick").groupBy("jdorderno").groupBy("taskstate");
+        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
+        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
+        PageResponse<TmyTaskDetail> pagejson = new PageResponse<TmyTaskDetail>(tmyTaskDetailService.listDetailGroup(queryable,entityWrapper));
+        String content = JSON.toJSONString(pagejson, filter);
+        StringUtils.printJson(response,content);
+    }
+
 
     @RequestMapping(value = "listShopBaseDetail", method = { RequestMethod.GET, RequestMethod.POST })
     @RequiresMethodPermissions("listShopBaseDetail")
@@ -446,6 +526,68 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
             map.put(NormalExcelConstants.DATA_LIST, userList);
             map.put(NormalExcelConstants.CLASS, TmyTaskDetail.class);
         }
+        map.put(NormalExcelConstants.PARAMS, params);
+        map.put("fileName",title+ "-" + DateUtils.getDateTime());
+        PoiBaseView.render(map, request, response, NormalExcelConstants.EASYPOI_EXCEL_VIEW);
+    }
+
+    @RequestMapping("exportGroup")
+    public void exportGroup(ModelMap map, Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                       HttpServletResponse response) throws IOException {
+        EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+        entityWrapper.setTableAlias("t");
+        String[] creates = TaskUtils.whereNewDate("","");
+        if(queryable.getCondition()!=null){
+            Condition.Filter filter = queryable.getCondition().getFilterFor("receivingdates");
+            creates = TaskUtils.whereDate(filter);
+        }
+
+        entityWrapper.between("t.receivingdate",creates[0],creates[1]);
+        // 预处理
+        if(queryable.getCondition()!=null) {
+            Condition.Filter filter_shopLoginname = queryable.getCondition().getFilterFor("shopLoginname");
+            if (filter_shopLoginname != null) {
+                queryable.getCondition().remove(filter_shopLoginname);
+                entityWrapper.like("s.loginname", filter_shopLoginname.getValue().toString());
+            }
+
+            Condition.Filter filter_shopidName = queryable.getCondition().getFilterFor("shopidName");
+            if (filter_shopidName != null) {
+                queryable.getCondition().remove(filter_shopidName);
+                entityWrapper.like("s.shopname", filter_shopidName.getValue().toString());
+            }
+            Condition.Filter filter_shopname = queryable.getCondition().getFilterFor("shopname");
+            if (filter_shopname != null) {
+                queryable.getCondition().remove(filter_shopname);
+                entityWrapper.like("sb.shopname", filter_shopname.getValue().toString());
+            }
+            Condition.Filter filter_article = queryable.getCondition().getFilterFor("article");
+            if (filter_article != null) {
+                queryable.getCondition().remove(filter_article);
+                entityWrapper.like("tb.article", filter_article.getValue().toString());
+            }
+        }
+        entityWrapper.groupBy("buyeridName").groupBy("buyeridLogin").groupBy("receivingdates")
+                .groupBy("orderdates").groupBy("shopLoginname").groupBy("shopidName").groupBy("shopname")
+                .groupBy("buyerjdnick").groupBy("jdorderno").groupBy("taskstate");
+
+        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
+        List<TmyTaskDetail> userList = tmyTaskDetailService.listNoPageDetailGroup(queryable,entityWrapper);
+        String title = "买手财务报表汇总";
+        ExportParams params = new ExportParams(title, title, ExcelType.XSSF);
+        List<TmyTaskDetailExportGroup> new_list = new ArrayList<TmyTaskDetailExportGroup>();
+        for (TmyTaskDetail ttd:userList) {
+            TmyTaskDetailExportGroup ttde = new TmyTaskDetailExportGroup();
+            try {
+                BeanUtils.copyProperties(ttd, ttde);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            new_list.add(ttde);
+        }
+        map.put(NormalExcelConstants.DATA_LIST, new_list);
+        map.put(NormalExcelConstants.CLASS, TmyTaskDetailExportGroup.class);
         map.put(NormalExcelConstants.PARAMS, params);
         map.put("fileName",title+ "-" + DateUtils.getDateTime());
         PoiBaseView.render(map, request, response, NormalExcelConstants.EASYPOI_EXCEL_VIEW);

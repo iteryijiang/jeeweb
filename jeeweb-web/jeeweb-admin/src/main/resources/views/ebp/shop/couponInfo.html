@@ -113,6 +113,9 @@
 
 	function getcouponURL(skuid){
 		var couponUrls = $("#couponUrls").val();
+		if(couponUrls==""||skuid==""){
+		    return;
+		}
 		$.ajax({
 			type: "POST",
 			url: "${adminPath}/shop/TtaskBase/getCouponURLQRcode",

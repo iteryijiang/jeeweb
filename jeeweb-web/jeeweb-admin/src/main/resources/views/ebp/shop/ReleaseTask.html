@@ -397,6 +397,9 @@
            });
        }
         function showOpen(turl){
+           if(turl.value==""){
+               return;
+           }
             $.ajax({
                 type: "POST",
                 url: "${adminPath}/shop/TtaskBase/showTitle",
@@ -429,6 +432,14 @@
             });
         }
         function showCouponurl(couponUrls){
+            if($("#inputLink").val()==""){
+                alert("请输入商品链接");
+                $("#inputLink").focus();
+                return;
+            }
+            if(couponUrls.value==""){
+                return;
+            }
             $.ajax({
                 type: "POST",
                 url: "${adminPath}/shop/TtaskBase/showtCouponInfo",
@@ -439,6 +450,7 @@
                     if(data.code==200){
                         $("#actualprice").attr("value",($("#inputPrice").val()-data.discount));
                         alert("优惠奍剩余张数:"+data.remainNum+"\r\n开始有效时间:"+data.takeBeginTime+"\r\n到期有效时间:"+data.takeEndTime+"\r\n优惠奍面额:"+data.discount);
+                        getCouponURLQRcode();
                     }else {
                         alert("优惠券链接有误。（无法获取优惠券信息）！");
                     }

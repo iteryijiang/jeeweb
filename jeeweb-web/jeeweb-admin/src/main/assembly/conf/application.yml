@@ -115,7 +115,7 @@ jeeweb:
   shiro:
      rememeberMeCookieName: jeeweb-rememeberMeCache
      rememeberMeCookieBase64CipherKey: KU471rVNQ6k7PQL4SqxgJg==
-     filter-chain-definitions: /static/**=anon;/jcaptcha*=anon;/upload/**=anon;/admin/logout=logout;/admin/login=jCaptchaValidate,authc;/**=user,sysUser,onlineSession,perms,roles
+     filter-chain-definitions: hellows/test/**=anon;/static/**=anon;/jcaptcha*=anon;/upload/**=anon;/admin/logout=logout;/admin/login=jCaptchaValidate,authc;/**=user,sysUser,onlineSession,perms,roles
   admin:
      url:
        prefix: /admin

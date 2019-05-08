@@ -26,9 +26,13 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
 
     Page<TmyTaskDetail> listDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
 
+    Page<TmyTaskDetail> listDetailGroup(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
+
     Page<TmyTaskDetail> listShopBaseDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
 
     public List<TmyTaskDetail> listNoPageDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
+
+    public List<TmyTaskDetail> listNoPageDetailGroup(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
 
     public int sumMyTask(Map map) throws Exception;
 
