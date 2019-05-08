@@ -7,9 +7,13 @@ import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailQuestion;
 import cn.jeeweb.web.ebp.buyer.mapper.TmyTaskDetailQuestionMapper;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailQuestionService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
+import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional
 @Service("TmyTaskDetailQuestionService")
@@ -17,13 +21,33 @@ public class TmyTaskDetailQuestionServiceImpl extends CommonServiceImpl<TmyTaskD
 
     @Autowired
     private TmyTaskDetailService tmyTaskDetailService;
+    @Autowired
+    private TtaskBaseService ttaskBaseService;
 
 
-    public boolean saveTmyTaskDetailQuestion(TmyTaskDetail tmyTaskDetail) throws Exception{
+    public boolean saveTmyTaskDetailQuestion(TtaskBase ttaskBase,TmyTaskDetail tmyTaskDetail) throws Exception{
+        if(ttaskBase!=null){
+            List<TmyTaskDetail> list = tmyTaskDetailService.selBaseIdMyTaskDetailList(ttaskBase.getId());
+            if(list!=null&&!list.isEmpty()){
+                for (TmyTaskDetail ttd:list) {
+                    if("1".equals(ttd.getTaskstate())||"2".equals(ttd.getTaskstate())){
+                        TmyTaskDetailQuestion tmyTaskDetailQuestion = new TmyTaskDetailQuestion();
+                        BeanUtils.copyProperties(tmyTaskDetail, tmyTaskDetailQuestion);
+                        insert(tmyTaskDetailQuestion);
+                        tmyTaskDetailService.deleteById(tmyTaskDetail.getId());
+                    }
+                }
+            }
+            ttaskBase.setStatus("2");
+            ttaskBaseService.updateById(ttaskBase);
+        }
         if(tmyTaskDetail!=null){
-            TmyTaskDetailQuestion tmyTaskDetailQuestion = new TmyTaskDetailQuestion();
-            BeanUtils.copyProperties(tmyTaskDetail, tmyTaskDetailQuestion);
-            insert(tmyTaskDetailQuestion);
+            if("1".equals(tmyTaskDetail.getTaskstate())||"2".equals(tmyTaskDetail.getTaskstate())){
+                TmyTaskDetailQuestion tmyTaskDetailQuestion = new TmyTaskDetailQuestion();
+                BeanUtils.copyProperties(tmyTaskDetail, tmyTaskDetailQuestion);
+                insert(tmyTaskDetailQuestion);
+                tmyTaskDetailService.deleteById(tmyTaskDetail.getId());
+            }
         }
         return true;
     }
