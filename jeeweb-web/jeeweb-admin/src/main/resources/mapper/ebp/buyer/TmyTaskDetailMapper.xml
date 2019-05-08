@@ -131,4 +131,13 @@
     <select id="sumTaskBase" resultType="java.lang.Integer">
         select count(1) from T_my_Task_Detail t where t.taskid=#{map.taskid} LIMIT 50
     </select>
+
+    <update id="upTaskErrorStatus" parameterType="HashMap">
+        update
+            t_my_task_detail
+        set
+            update_by=#{map.lastRepair},update_date=#{map.lastTime},error_status=#{map.status}
+        where
+            id=#{map.taskId} and del_flag=0 and taskstate between 0 and 2
+    </update>
 </mapper>

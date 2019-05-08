@@ -42,4 +42,11 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 	int sumMyTask(@Param("map") Map map);
 	int sumTaskBase(@Param("map") Map map);
 
+	/**
+	 * 更改任务单异常状态
+	 *
+	 * @param paramMap
+	 * @return
+	 */
+	int upTaskErrorStatus(@Param("map") Map<String,Object> paramMap);
 }

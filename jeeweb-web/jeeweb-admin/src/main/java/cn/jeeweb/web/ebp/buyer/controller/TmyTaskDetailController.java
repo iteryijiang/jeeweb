@@ -22,11 +22,11 @@ import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailExport;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailExportGroup;
+import cn.jeeweb.web.ebp.buyer.entity.*;
+import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerHandleService;
+import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
+import cn.jeeweb.web.ebp.enums.UnusualTaskHandleMethodEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
 import cn.jeeweb.web.ebp.finance.service.TfinanceBuyerReportService;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
@@ -63,6 +63,10 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     private TmyTaskDetailService tmyTaskDetailService;
     @Autowired
     private TfinanceBuyerReportService ttService;
+    @Autowired
+    private TapplyTaskBuyerService tapplyTaskBuyerService;
+    @Autowired
+    private TapplyTaskBuyerHandleService tapplyTaskBuyerHandleService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -597,5 +601,133 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         map.put(NormalExcelConstants.PARAMS, params);
         map.put("fileName",title+ "-" + DateUtils.getDateTime());
         PoiBaseView.render(map, request, response, NormalExcelConstants.EASYPOI_EXCEL_VIEW);
+    }
+
+    /**
+     * 点击进入异常订单申请
+     *
+     * @param model
+     * @param taskId
+     * @return
+     */
+    @GetMapping("{taskId}/unusualTaskApply")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView unusualTaskApply(@PathVariable("taskId") String taskId,Model model,HttpServletRequest request, HttpServletResponse response) {
+        //获取任务信息(包括任务单号、商品相关信息)
+        TmyTaskDetail taskObj=null;
+        TapplyTaskBuyer ttb= new TapplyTaskBuyer();
+        try{
+            taskObj=tmyTaskDetailService.selectById(taskId);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }finally {
+            taskObj=new TmyTaskDetail();
+            taskObj.setId(taskId);
+            model.addAttribute("taskObj",taskObj);
+            model.addAttribute("ttb",ttb);
+            return displayModelAndView("unusualTaskApply");
+        }
+    }
+
+    /**
+     * 申请保存
+     *
+     * @param jsonObject
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("addUnusualTaskApply")
+    @Log(logType = LogType.INSERT)
+    public Response unusualTaskApply(@RequestBody JSONObject jsonObject,HttpServletRequest request, HttpServletResponse response) {
+        //获取任务信息(包括任务单号、商品相关信息)
+        TapplyTaskBuyer obj=new TapplyTaskBuyer();
+        obj.setBuyerTaskId(jsonObject.getString("taskId"));
+        obj.setApplyType(jsonObject.getString("applyType"));
+        obj.setApplyDesc(jsonObject.getString("applyDesc"));
+        if(StringUtils.isEmpty(obj.getBuyerTaskId()) || StringUtils.isEmpty(obj.getApplyType()) || StringUtils.isEmpty(obj.getApplyDesc())){
+            return Response.error("参数错误[未获取到买手任务ID|异常申请类型|异常说明]！");
+        }
+        tapplyTaskBuyerService.insertTapplyTaskBuyer(obj);
+        return Response.ok("保存成功！");
+    }
+
+    @GetMapping(value = "applyTaskList")
+    @RequiresMethodPermissions("applyTaskList")
+    public ModelAndView applyTaskList(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("unUsalTaskApplyList");
+        return mav;
+    }
+
+    /***
+     * AJAX查询查询异常订单申请列表数据
+     *
+     * @param queryable
+     * @param propertyPreFilterable
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "ajaxApplyTaskList", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.SELECT)
+    @RequiresMethodPermissions("applyTaskList")
+    public void getUnusualTaskApply(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String content=null;
+        try{
+            EntityWrapper<TapplyTaskBuyer> entityWrapper = new EntityWrapper<TapplyTaskBuyer>(TapplyTaskBuyer.class);
+            propertyPreFilterable.addQueryProperty("id");
+            if(queryable.getCondition()!=null){
+                //配置过滤参数,需要调整
+                Condition.Filter filter = queryable.getCondition().getFilterFor("effectdate");
+                if(filter!=null){
+                    queryable.getCondition().remove(filter);
+                    queryable.getCondition().and(Condition.Operator.between,"effectdate",TaskUtils.whereDate(filter));
+                }
+                Condition.Filter Filter_name = queryable.getCondition().getFilterFor("buyerTaskNo");
+                if(Filter_name!=null){
+                    queryable.getCondition().remove(Filter_name);
+                    entityWrapper.like("s.shopname",Filter_name.getValue().toString());
+                }
+            }
+            // 预处理
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TapplyTaskBuyer.class);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(TapplyTaskBuyer.class);
+            PageResponse<TapplyTaskBuyer> pagejson = new PageResponse<TapplyTaskBuyer>(tapplyTaskBuyerService.selectApplyPageList(queryable,entityWrapper));
+            content = JSON.toJSONString(pagejson, filter);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }finally {
+            StringUtils.printJson(response,content);
+        }
+    }
+
+
+    /**
+     * 异常订单处理
+     *
+     * @param applyId
+     * @param handleMethod
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("cancelApplyTask/{applyId}/{handleMethod}")
+    @Log(logType = LogType.INSERT)
+    public Response updateUnusualTaskApplyForHandle(@PathVariable("applyId") String applyId,@PathVariable("handleMethod") int handleMethod,HttpServletRequest request, HttpServletResponse response) {
+        try {
+            UnusualTaskHandleMethodEnum handleMethodEnum = UnusualTaskHandleMethodEnum.valueOfCode(handleMethod);
+            if (handleMethodEnum == null) {
+                return Response.error("操作失败[处理方式暂不支持]！");
+            }
+            TapplyTaskBuyerHandle obj = new TapplyTaskBuyerHandle();
+            obj.setApplyTaskId(applyId);
+            obj.setHandleMethod(handleMethod);
+            tapplyTaskBuyerHandleService.updateTapplyTaskBuyerForHandle(obj);
+            return Response.ok("操作成功！");
+        } catch (RuntimeException ex) {
+            return Response.error("操作失败[" + ex.getMessage() + "]！");
+        } catch (Exception ex) {
+            return Response.error("操作失败[系统异常]！");
+        }
     }
 }

@@ -38,4 +38,14 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
 
     public int sumTaskBase(Map map) throws Exception;
 
+    /**
+     * 更改任务单状态
+     *
+     * @param taskId
+     * @param status
+     * @param lastRepair
+     */
+    @Transactional
+    void upTaskErrorStatus(String taskId, int status, String lastRepair);
+
 }

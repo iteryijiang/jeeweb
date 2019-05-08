@@ -17,4 +17,10 @@ public interface TshopInfoMapper extends BaseMapper<TshopInfo> {
 	List<TshopInfo>  findshopInfo();
 	TshopInfo selectOne(String userid);
 	Map selectSumOne(@Param("map") Map map);
+	/**更改商户金额信息
+	 *
+	 * @param map
+	 * @return
+	 */
+	int updateShopMoney(@Param("map") Map map);
 }

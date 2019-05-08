@@ -53,6 +53,11 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String isdouble;//	varchar	32	0	-1	0	0	0	0		0	是否多单	utf8	utf8_general_ci		0	0
 	private String storename;//	varchar	32	0	-1	0	0	0	0		0	店铺	utf8	utf8_general_ci		0	0
 	private BigDecimal bankamount;//银行抵扣金额
+	/**
+	 * 标记为异常任务状态
+	 * 0正常1标记为异常
+	 */
+	private int errorStatus=0;
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
@@ -458,5 +463,13 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	public void setOrderdates(String orderdates) {
 		this.orderdates = orderdates;
+	}
+
+	public int getErrorStatus() {
+		return errorStatus;
+	}
+
+	public void setErrorStatus(int errorStatus) {
+		this.errorStatus = errorStatus;
 	}
 }

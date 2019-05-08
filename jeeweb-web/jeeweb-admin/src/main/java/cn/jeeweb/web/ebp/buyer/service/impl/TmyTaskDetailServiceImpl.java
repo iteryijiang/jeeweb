@@ -24,9 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Transactional
 @Service("TmyTaskDetailService")
@@ -216,5 +214,15 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
     }
     public int sumTaskBase(Map map) throws Exception{
         return baseMapper.sumTaskBase(map);
+    }
+
+    @Transactional
+    public void upTaskErrorStatus(String taskId,int status,String lastRepair){
+        Map<String,Object> paramMap=new HashMap<String,Object>();
+        paramMap.put("taskId",taskId);
+        paramMap.put("status",status);
+        paramMap.put("lastTime", Calendar.getInstance().getTime());
+        paramMap.put("lastRepair",lastRepair);
+        baseMapper.upTaskErrorStatus(paramMap);
     }
 }

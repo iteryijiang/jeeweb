@@ -12,6 +12,7 @@
 <script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
 <script src='${staticPath}/shop/js/bootstrap.min.js'></script>
 <script src='${staticPath}/shop/js/fileinput.min.js'></script>
+<script src='${staticPath}/common/js/curdtools_jqgrid.js'></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
@@ -138,19 +139,22 @@
                     if(!navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
                         divid += "<td>"+(list[j].taskstateName==undefined?"":list[j].taskstateName)+"</td>";
                     }
+                    divid += "<td>";
                     if(count==1){
-                        if(list[j].taskstate=="1"){
-                            divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','2',$(this),'确定下单')\">确定下单</button></p></td>";
-                        }else if(list[j].taskstate=="3"){
-                            divid += "<td><p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','4',$(this),'确定收货')\">确定收货</button></p></td>";
-                        }else{
-                            divid += "<td><p><button class='btn btn-warning' onclick=\"upTaskjdorderno('"+list[j].id+"',$(this))\">订单修改</button></p></td>";
+                        if(list[j].errorStatus == "0"){
+                            if(list[j].taskstate=="1"){
+                                divid += "<p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','2',$(this),'确定下单')\">确定下单</button></p >";
+                            }else if(list[j].taskstate=="3"){
+                                divid += "<p><button class='btn btn-warning' onclick=\"upTask('"+list[j].id+"','4',$(this),'确定收货')\">确定收货</button></p >";
+                            }else{
+                                divid += "<p><button class='btn btn-warning' onclick=\"upTaskjdorderno('"+list[j].id+"',$(this))\">订单修改</button></p >";
+                            }
                         }
-                    }else {
-                        divid += "<td></td><td></td>";
                     }
-
-                    divid += "<td><p><button class='btn btn-warning' onclick=\"upTaskjdorderno('"+list[j].id+"',$(this))\">问题订单</button></p></td>";
+                    if(parseInt(list[j].taskstate)==1&&list[j].errorStatus == "0"){
+                        divid += "<p style='margin-top:4px;'><button class='btn btn-warning' onclick=\"unusualTaskApply('"+list[j].id+"')\">异常反馈</button></p >";
+                    }
+                    divid += "</td>";
                     divid +="</tr>";
                     count++;
                 }
@@ -301,6 +305,12 @@
                 // location.reload();
             }
         });
+    }
+    //异常订单申请
+    function unusualTaskApply(id){
+        var url="${adminPath}/buyer/TmyTaskDetail/" + id + "/unusualTaskApply";
+        //window.open(url);
+        openDialogDetailRefresh("问题反馈",url,"","500px","400px");
     }
 </script>
 </html>

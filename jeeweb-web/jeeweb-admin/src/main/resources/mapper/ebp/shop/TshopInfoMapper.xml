@@ -49,4 +49,13 @@
           and t.loginname like #{map.loginname}
       </if>
    </select>
+
+    <update id="updateShopMoney" parameterType="HashMap">
+        update
+            T_shop_Info
+        set
+            taskDeposit=taskDeposit+#{taskDeposit},AvailableDeposit=#{AvailableDeposit},update_by=#{lastRepair},update_date=#{lastTime}
+        where
+            id=#{shopId}
+    </update>
 </mapper>

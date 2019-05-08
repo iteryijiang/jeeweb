@@ -7,6 +7,9 @@ import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,5 +27,19 @@ public class TshopInfoServiceImpl extends CommonServiceImpl<TshopInfoMapper, Tsh
 
     public Map selectSumOne(Map m){
         return baseMapper.selectSumOne(m);
+    }
+
+    @Override
+    public void updateShopMoney(String shopId, BigDecimal taskDeposit, BigDecimal AvailableDeposit, String lastRepair){
+        Map<String,Object> paramMap=new HashMap<String,Object>();
+        paramMap.put("shopId",shopId);
+        paramMap.put("taskDeposit",taskDeposit);
+        paramMap.put("AvailableDeposit",AvailableDeposit);
+        paramMap.put("lastRepair",lastRepair);
+        paramMap.put("lastTime", Calendar.getInstance().getTime());
+        int num= baseMapper.updateShopMoney(paramMap);
+        if(num !=1){
+            throw  new RuntimeException("更改商户余额失败!");
+        }
     }
 }

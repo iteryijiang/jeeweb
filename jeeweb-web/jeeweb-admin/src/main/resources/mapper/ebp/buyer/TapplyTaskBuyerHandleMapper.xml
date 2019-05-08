@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TapplyTaskBuyerHandleMapper" >
+  <resultMap id="TapplyTaskBuyerHandle" type="cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyerHandle" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="applyTaskId" column="apply_task_id" jdbcType="VARCHAR" />
+    <result property="buyerTaskId" column="buy_task_id" jdbcType="VARCHAR" />
+    <result property="shopTaskId" column="shop_task_id" jdbcType="VARCHAR" />
+      <result property="handleMethod" column="handle_method" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    DISTINCT
+    t.id
+  </sql>
+  
+  <select id="selectUserList" resultMap="TapplyTaskBuyerHandle">
+	  select
+   	    <include refid="Base_Column_List" />
+      from t_apply_task_buyer_handle t
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+</mapper>
