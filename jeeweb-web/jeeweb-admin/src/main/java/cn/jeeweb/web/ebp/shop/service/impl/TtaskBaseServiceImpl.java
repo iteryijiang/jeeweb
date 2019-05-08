@@ -365,7 +365,7 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
             i=1;
         }
         for (int j = 1; j < countSum; j++) {
-            if (j < list_tb.size()) {
+            if (j <= list_tb.size()) {
                 if(i>=list_tb.size()){
                     continue;
                 }
@@ -377,6 +377,7 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
 
                 }
                 if(goodids.indexOf(","+goodid+",")>=0){
+                    list_tb.remove(tb);
                     continue;
                 }
                 goodids += ","+goodid+",";//获取商品ID
@@ -386,12 +387,12 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                     list_tb.remove(tb);
                 }
             }
-            if(tb0.getCanreceivenums()==0){
-                list_tb.remove(tb0);
+        }
+        if(tb0.getCanreceivenums()==0){
+            list_tb.remove(tb0);
 //                break;
-                m.put(count,retlist);
-                return m;
-            }
+            m.put(count,retlist);
+            return m;
         }
         m.put(count,retlist);
         count++;

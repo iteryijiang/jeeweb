@@ -240,6 +240,9 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         String[] creates = TaskUtils.whereNewDate("","");
         if(queryable.getCondition()!=null){
             Condition.Filter filter = queryable.getCondition().getFilterFor("receivingdates");
+            if (filter != null) {
+                queryable.getCondition().remove(filter);
+            }
             creates = TaskUtils.whereDate(filter);
         }
 
@@ -540,6 +543,9 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         String[] creates = TaskUtils.whereNewDate("","");
         if(queryable.getCondition()!=null){
             Condition.Filter filter = queryable.getCondition().getFilterFor("receivingdates");
+            if (filter != null) {
+                queryable.getCondition().remove(filter);
+            }
             creates = TaskUtils.whereDate(filter);
         }
 
