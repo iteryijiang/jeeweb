@@ -67,14 +67,14 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
     public boolean addTask(TtaskBase ttaskBase, TshopInfo si){
         tshopInfoService.updateById(si);
         insert(ttaskBase);
-        TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),ttaskBase.getId(),TfinanceRechargeService.rechargetype_2,ttaskBase.getTaskdeposit(),si.getTotaldeposit());
+        TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),ttaskBase.getId(),TfinanceRechargeService.rechargetype_2,ttaskBase.getTaskdeposit(),si.getAvailabledeposit());
         tfinanceRechargeLogService.insert(log);
         return true;
     }
     public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype,BigDecimal price){
         tshopInfoService.updateById(si);
         updateById(ttaskBase);
-        TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),ttaskBase.getId(),rechargetype,price,si.getTotaldeposit());
+        TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),ttaskBase.getId(),rechargetype,price,si.getAvailabledeposit());
         tfinanceRechargeLogService.insert(log);
         return true;
     }

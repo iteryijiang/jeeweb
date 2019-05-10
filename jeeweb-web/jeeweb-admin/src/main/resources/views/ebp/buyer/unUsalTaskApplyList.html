@@ -2,17 +2,17 @@
 
 <#grid:grid id="ttaskBaseGrid" url="${adminPath}/buyer/TmyTaskDetail/ajaxApplyTaskList" sortname="applyNo" sortorder="desc" sortable="false">
 <#grid:column label="任务编号" width="100" query="true" condition="like" name="buyerTaskNo"/>
-<#grid:column label="商品名称" name="goodsName" width="120" />
-<#grid:column label="商家名称"  name="shopNo" query="true" condition="like" width="140" />
-<#grid:column label="买手名称"  name="buyerNo" query="true" condition="like" width="100"/>
+<#grid:column label="商品名称" name="goodsName" width="140" />
+<#grid:column label="商家名称"  name="shopNo" query="true" condition="like" width="100" />
+<#grid:column label="买手名称"  name="buyerNo" query="true" condition="like" width="80"/>
 <#grid:column label="反馈类型"  name="applyType" dict="applyType" width="80"/>
-<#grid:column label="问题描述"  name="applyDesc" width="80"/>
-<#grid:column label="反馈时间"  name="applyTime" width="70"/>
+<#grid:column label="问题描述"  name="applyDesc" width="120"/>
+<#grid:column label="反馈时间"  name="applyTime" width="80"/>
 <#grid:column label="处理状态"  name="applyStatus" dict="sf"  formatterValue="0:待处理;1:已处理" width="70"/>
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
 
-<#grid:button title="取消买手任务" tipMsg="你确定要取消买手任务么?"  groupname="opt" function="rowConfirm" outclass="btn-warning btn-xs"  url='${adminPath}/buyer/TmyTaskDetail/cancelApplyTask/\"+row.id+\"/1' />
-<#grid:button title="取消商家任务" tipMsg="你确定要取消商家任务么?" groupname="opt" function="rowConfirm" outclass="btn-warning btn-xs"  url='${adminPath}/buyer/TmyTaskDetail/cancelApplyTask/\"+row.id+\"/2' />
+<#grid:button title="取消商家任务" tipMsg="你确定要取消商家任务么?" groupname="opt" function="rowConfirm" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/cancelApplyTask/\"+row.id+\"/2' />
+<#grid:button title="取消反馈" tipMsg="你确定要取消买手问题反馈么?"  groupname="opt" function="rowConfirm" outclass="btn-warning btn-xs"  url='${adminPath}/buyer/TmyTaskDetail/cancelApplyTask/\"+row.id+\"/1' />
 
 
 

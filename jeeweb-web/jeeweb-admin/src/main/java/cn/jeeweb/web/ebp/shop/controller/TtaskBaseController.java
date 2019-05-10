@@ -194,12 +194,12 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             ttaskBase.setStatus("0");
 //            Double countSum = Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5"));
             BigDecimal price = ttaskBase.getTotalprice().add(ttaskBase.getPresentdeposit().multiply(new BigDecimal(ttaskBase.getTasknum())));
-            if(si.getTotaldeposit()==null) {
+            if(si.getAvailabledeposit()==null) {
                 return Response.error("发布失败，您无押金，请充值！");
-            }else if(si.getTotaldeposit().compareTo(price)<0){
+            }else if(si.getAvailabledeposit().compareTo(price)<0){
                 return Response.error("发布失败，您押金不够，请充值！");
             }
-            si.setTotaldeposit(si.getTotaldeposit().subtract(price));
+            si.setAvailabledeposit(si.getAvailabledeposit().subtract(price));
             if(si.getTaskdeposit()==null){
                 si.setTaskdeposit(price);
             }else {
@@ -828,7 +828,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         BigDecimal price = new BigDecimal(0);
         if(tb.getPresentdeposit()!=null){
             price = tb.getPresentdeposit().multiply(new BigDecimal(tb.getCanreceivenum())).add(tb.getActualprice().multiply(new BigDecimal(tb.getCanreceivenum())));
-            si.setTotaldeposit(si.getTotaldeposit().add(price));
+            si.setAvailabledeposit(si.getAvailabledeposit().add(price));
             si.setTaskdeposit(si.getTaskdeposit().subtract(price));
         }
         ttaskBaseService.upTask(tb,si,TfinanceRechargeService.rechargetype_4,price);

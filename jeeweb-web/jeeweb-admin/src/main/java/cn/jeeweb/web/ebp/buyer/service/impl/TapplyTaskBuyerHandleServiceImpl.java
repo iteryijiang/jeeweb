@@ -14,8 +14,10 @@ import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
+import cn.jeeweb.web.ebp.shop.entity.TshopBase;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,7 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
     @Autowired
     private TtaskBaseService ttaskBaseService;
 
+
     @Override
     @Transactional
     public void updateTapplyTaskBuyerForHandle(TapplyTaskBuyerHandle obj) throws Exception{
@@ -67,29 +70,35 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
             TtaskBase taskBase=ttaskBaseService.selectById(taskBuyerObj.getShopTaskId());
             //获取商家任务下对应的所有买手未完成的任务
             List<TmyTaskDetail> buyTaskList=tmyTaskDetailService.selBaseIdMyTaskDetailList(taskBuyerObj.getShopTaskId());
-            //当前没有买手可用任务
-            if(buyTaskList == null || buyTaskList.size()<1){
-                return  ;
+            BigDecimal needBackMoney=BigDecimal.ZERO;
+            //当前存在买手任务
+            if(buyTaskList != null && buyTaskList.size()>0){
+                needBackMoney= updateBuyTaskForHandleUnsualTask(taskBuyerObj,obj,taskBase.getPresentdeposit(),buyTaskList);
             }
-            //调整买手任务信息
-            BigDecimal needBackMoney= updateBuyTaskForHandleUnsualTask(taskBuyerObj,obj,taskBase.getPresentdeposit(),buyTaskList);
-            //实付金额+佣金
-            //返还商家金额=(已领用+未领用)-已下单的
-            tshopInfoService1.updateShopMoney(taskBuyerObj.getShopId(),needBackMoney,BigDecimal.ZERO.subtract(needBackMoney),obj.getCreateBy().getId());
-            TshopInfo info = tshopInfoService1.selectById(taskBuyerObj.getShopId());
-            TfinanceRechargeLog log = new TfinanceRechargeLog(taskBuyerObj.getShopId(),info.getShopname(),taskBuyerObj.getShopTaskId(),TfinanceRechargeService.rechargetype_4,needBackMoney,info.getAvailabledeposit().add(needBackMoney));
+            //剩余的买手任务
+            if(taskBase.getCanreceivenum() > 0){//剩余接单次数
+                //剩余接单的金额=剩余单数*（每单实付金额+佣金）
+                BigDecimal unreceiveMoney=new BigDecimal(taskBase.getCanreceivenum()).multiply(taskBase.getPresentdeposit().add(taskBase.getActualprice()));
+                needBackMoney=needBackMoney.add(unreceiveMoney);
+            }
+            tshopInfoService1.updateShopMoney(taskBuyerObj.getShopId(),BigDecimal.ZERO.subtract(needBackMoney),needBackMoney,obj.getCreateBy().getId());
+            TshopInfo info = tshopInfoService1.selectOne(taskBuyerObj.getShopId());
+            TfinanceRechargeLog log = new TfinanceRechargeLog(taskBuyerObj.getShopId(),taskBase.getStorename(),taskBuyerObj.getShopTaskId(),TfinanceRechargeService.rechargetype_4,needBackMoney,info.getAvailabledeposit().add(needBackMoney));
             tfinanceRechargeLogService.insert(log);
-            //处理商家status发布状态更改为2
+            //更改商家任务状态
+            taskBase.setStatus("2");
+            ttaskBaseService.updateById(taskBase);
             return;
         }
-        //撤销买手订单=>回退申请+买手任务状态
+        //撤销买手订单=>回退申请+买手任务异常申请状态
         TmyTaskDetail buyTaskObj=tmyTaskDetailService.selectById(obj.getBuyerTaskId());
         if(Integer.valueOf(buyTaskObj.getTaskstate())>= BuyerTaskStatusRnum.WAITING_SEND.code){
             throw new RuntimeException("当前买手任务不支持该操作！") ;
         }
         List<TmyTaskDetail> buyTaskList=new ArrayList<TmyTaskDetail>();
         buyTaskList.add(buyTaskObj);
-        //updateBuyTaskForHandleUnsualTask(taskBuyerObj,obj,buyTaskList);
+        buyTaskObj.setErrorStatus(YesNoEnum.NO.code);
+        tmyTaskDetailService.updateById(buyTaskObj);
     }
 
     /**
@@ -117,6 +126,7 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
             insertObj.setHandleMethod(handleObj.getHandleMethod());
             insertObj.setBuyerTaskId(obj.getId());
             insertObj.setShopTaskId(handleObj.getShopTaskId());
+            insertObj.setRemarks(handleObj.getRemarks());
             insertLIst.add(insertObj);
             sumDeposit=sumDeposit.add(obj.getPays()).add(yongJin);
         }

@@ -33,7 +33,7 @@ public class TfinanceRechargeServiceImpl extends CommonServiceImpl<TfinanceRecha
     public boolean addTfinanceRecharge(TshopInfo si,TfinanceRecharge tr){
         insert(tr);
         tshopInfoService.updateById(si);
-        TfinanceRechargeLog log = new TfinanceRechargeLog(tr.getShopid(),TfinanceRechargeService.rechargetype_1,tr.getRechargedeposit(),si.getTotaldeposit());
+        TfinanceRechargeLog log = new TfinanceRechargeLog(tr.getShopid(),TfinanceRechargeService.rechargetype_1,tr.getRechargedeposit(),si.getAvailabledeposit());
         tfinanceRechargeLogService.insert(log);
         return true;
     }
@@ -41,7 +41,7 @@ public class TfinanceRechargeServiceImpl extends CommonServiceImpl<TfinanceRecha
     public boolean delTfinanceRecharge(TshopInfo si,TfinanceRecharge tr){
         tshopInfoService.updateById(si);
         deleteById(tr);
-        TfinanceRechargeLog log = new TfinanceRechargeLog(tr.getShopid(),TfinanceRechargeService.rechargetype_3,tr.getRechargedeposit(),si.getTotaldeposit());
+        TfinanceRechargeLog log = new TfinanceRechargeLog(tr.getShopid(),TfinanceRechargeService.rechargetype_3,tr.getRechargedeposit(),si.getAvailabledeposit());
         tfinanceRechargeLogService.insert(log);
         return true;
     }

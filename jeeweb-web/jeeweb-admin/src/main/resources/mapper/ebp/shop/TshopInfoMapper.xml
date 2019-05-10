@@ -40,7 +40,7 @@
     </select>
 
   <select id="selectSumOne" resultType="java.util.Map">
-        SELECT sum(totaldeposit) sumTotaldeposit,sum(taskdeposit) sumTaskdeposit FROM T_shop_Info t where
+        SELECT sum(availabledeposit) sumTotaldeposit,sum(taskdeposit) sumTaskdeposit FROM T_shop_Info t where
         1=1
       <if test="map.userid != '' and map.userid != null">
         and t.userid=#{map.userid}
@@ -54,8 +54,8 @@
         update
             T_shop_Info
         set
-            taskDeposit=taskDeposit+#{taskDeposit},AvailableDeposit=#{AvailableDeposit},update_by=#{lastRepair},update_date=#{lastTime}
+            taskDeposit=taskDeposit+${map.taskDeposit},AvailableDeposit=AvailableDeposit+${map.AvailableDeposit},update_by=#{map.lastRepair},update_date=#{map.lastTime}
         where
-            id=#{shopId}
+            userid=#{map.shopId}
     </update>
 </mapper>

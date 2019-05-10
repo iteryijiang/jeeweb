@@ -310,7 +310,35 @@
     function unusualTaskApply(id){
         var url="${adminPath}/buyer/TmyTaskDetail/" + id + "/unusualTaskApply";
         //window.open(url);
-        openDialogDetailRefresh("问题反馈",url,"","500px","400px");
+        openDialogTaskApply("问题反馈",url,"","500px","400px");
+    }
+
+
+    //打开对话框(查看)
+    function openDialogTaskApply(title,url,gridId,width,height){
+        if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
+            width='auto';
+            height='auto';
+        }else{//如果是PC端，根据用户设置的width和height显示。
+
+        }
+        top.layer.open({
+            type: 2,
+            id:"MytaskId",
+            area: [width, height],
+            title: title,
+            maxmin: true, //开启最大化最小化按钮
+            content: url ,
+            btn: ['关闭'],
+            cancel: function(index){
+                //刷新表单
+                location.reload();
+            }
+        });
+    }
+
+    function reloads(){
+        location.reload();
     }
 </script>
 </html>

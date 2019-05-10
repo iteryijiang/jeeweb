@@ -241,7 +241,8 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         entityWrapper.setTableAlias("t");
-        String[] creates = TaskUtils.whereNewDate("","");
+        String d = DateUtils.formatDate(DateUtils.dateAddDay(new Date(),-1),"yyyy-MM-dd");
+        String[] creates = TaskUtils.whereNewDate(d,d);
         if(queryable.getCondition()!=null){
             Condition.Filter filter = queryable.getCondition().getFilterFor("receivingdates");
             if (filter != null) {
@@ -678,16 +679,23 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
             propertyPreFilterable.addQueryProperty("id");
             if(queryable.getCondition()!=null){
                 //配置过滤参数,需要调整
-                Condition.Filter filter = queryable.getCondition().getFilterFor("effectdate");
-                if(filter!=null){
-                    queryable.getCondition().remove(filter);
-                    queryable.getCondition().and(Condition.Operator.between,"effectdate",TaskUtils.whereDate(filter));
+                Condition.Filter shopNoFilter = queryable.getCondition().getFilterFor("shopNo");
+                if(shopNoFilter!=null){
+                    queryable.getCondition().remove(shopNoFilter);
+                    entityWrapper.like("sb.shopname",shopNoFilter.getValue().toString());
                 }
-                Condition.Filter Filter_name = queryable.getCondition().getFilterFor("buyerTaskNo");
-                if(Filter_name!=null){
-                    queryable.getCondition().remove(Filter_name);
-                    entityWrapper.like("s.shopname",Filter_name.getValue().toString());
+                Condition.Filter buyerTaskNoFilter = queryable.getCondition().getFilterFor("buyerTaskNo");
+                if(buyerTaskNoFilter!=null){
+                    queryable.getCondition().remove(buyerTaskNoFilter);
+                    entityWrapper.like("mt.mytaskNo",buyerTaskNoFilter.getValue().toString());
                 }
+                Condition.Filter buyerNoFilter = queryable.getCondition().getFilterFor("buyerNo");
+                if(buyerNoFilter!=null){
+                    queryable.getCondition().remove(buyerNoFilter);
+                    entityWrapper.like("buyer.buyerName",buyerNoFilter.getValue().toString());
+                }
+
+
             }
             // 预处理
             QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TapplyTaskBuyer.class);
@@ -722,11 +730,15 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
             TapplyTaskBuyerHandle obj = new TapplyTaskBuyerHandle();
             obj.setApplyTaskId(applyId);
             obj.setHandleMethod(handleMethod);
+            obj.setCreateBy(UserUtils.getUser());
+            obj.setRemarks("此处为默认备注");
             tapplyTaskBuyerHandleService.updateTapplyTaskBuyerForHandle(obj);
             return Response.ok("操作成功！");
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             return Response.error("操作失败[" + ex.getMessage() + "]！");
         } catch (Exception ex) {
+            ex.printStackTrace();
             return Response.error("操作失败[系统异常]！");
         }
     }

@@ -17,8 +17,7 @@
             <label><font color="red">*</font>原因说明:</label>
         </td>
         <td class="width-35" >
-            <textarea id="applyDesc" cols="40" rows="8" >
-            </textarea>
+            <textarea id="applyDesc" cols="40" rows="8" ></textarea>
             <label class="Validform_checktip"></label>
         </td>
     </tr>
@@ -49,8 +48,9 @@
             success: function(data){
                 alert(data.msg);
                 //刷新表单
-               window.parent.location.reload();//刷新父页面
-               window.close();
+                window.parent.location.reload();//刷新父页面
+                var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
+                parent.layer.close(index)
             },
             error: function (data) {
              alert("错误！");

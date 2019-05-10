@@ -87,6 +87,7 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
             } else {
                 si.setTotaldeposit(si.getTotaldeposit().add(entity.getRechargedeposit()));
             }
+            si.setAvailabledeposit(si.getAvailabledeposit().add(entity.getRechargedeposit()));
             entity.setTotaldeposit(si.getTotaldeposit());
             tfinanceRechargeService.addTfinanceRecharge(si,entity);
         }catch (Exception e){
@@ -116,12 +117,12 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
 
         TfinanceRecharge entity = tfinanceRechargeService.selectById(id);
         TshopInfo si = tshopInfoService.selectOne(entity.getShopid());
-        if (si.getTotaldeposit() == null) {
+        if (si.getAvailabledeposit() == null) {
             return Response.error("删除失败，该商户无充值金额！");
         } else {
-            si.setTotaldeposit(si.getTotaldeposit().subtract(entity.getRechargedeposit()));
+            si.setAvailabledeposit(si.getAvailabledeposit().subtract(entity.getRechargedeposit()));
         }
-        if(si.getTotaldeposit().compareTo(BigDecimal.ZERO)<0){
+        if(si.getAvailabledeposit().compareTo(BigDecimal.ZERO)<0){
             return Response.error("删除失败，该商金额不够！");
         }
 
@@ -139,12 +140,12 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
             for(int i=0;i<ids.length;i++){
                 TfinanceRecharge entity = tfinanceRechargeService.selectById(ids[i]);
                 TshopInfo si = tshopInfoService.selectOne(entity.getShopid());
-                if (si.getTotaldeposit() == null) {
+                if (si.getAvailabledeposit() == null) {
                     return Response.error("删除失败，该商户无充值金额！");
                 } else {
-                    si.setTotaldeposit(si.getTotaldeposit().subtract(entity.getRechargedeposit()));
+                    si.setAvailabledeposit(si.getAvailabledeposit().subtract(entity.getRechargedeposit()));
                 }
-                if(si.getTotaldeposit().compareTo(BigDecimal.ZERO)<0){
+                if(si.getAvailabledeposit().compareTo(BigDecimal.ZERO)<0){
                     return Response.error("删除失败，该商金额不够！");
                 }
 

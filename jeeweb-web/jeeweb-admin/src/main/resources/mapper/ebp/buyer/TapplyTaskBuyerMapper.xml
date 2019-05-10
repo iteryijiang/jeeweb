@@ -38,11 +38,11 @@
         sb.shopname shopNo,buyer.buyerName buyerNo,mt.mytaskNo buyerTaskNo,tb.t_Title goodsName
       FROM
          t_apply_task_buyer t
-         inner join t_buyer_info buyer on buyer.userid=t.buyer_id
-         inner join t_my_task_detail td on td.id=t.buyer_task_id
-         inner join t_my_task mt on mt.id=td.mytaskid
-         inner join t_task_base tb on tb.id=td.taskid
-         inner join t_shop_base sb on sb.userid=tb.shopId
+          inner join t_buyer_info buyer on buyer.userid=t.buyer_id
+          inner join t_my_task_detail td on td.id=t.buyer_task_id
+          inner join t_my_task mt on mt.id=td.mytaskid
+          left join t_task_base tb on tb.id=td.taskid
+          left join t_shop_base sb on sb.id=td.storename
        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
 		  <where>
 		    ${ew.sqlSegment}
