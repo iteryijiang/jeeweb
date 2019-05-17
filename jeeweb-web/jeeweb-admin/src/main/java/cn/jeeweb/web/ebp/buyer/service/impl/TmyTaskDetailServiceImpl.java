@@ -65,6 +65,10 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
         return baseMapper.listFinanceBuyerReport(map);
     }
 
+    public List<Map> listTfinanceTaskDoubleReport(Map map){
+        return baseMapper.listTfinanceTaskDoubleReport(map);
+    }
+
     @Transactional
     public void upTaskState(String taskState,TmyTaskDetail td,String id){
         if(td==null){

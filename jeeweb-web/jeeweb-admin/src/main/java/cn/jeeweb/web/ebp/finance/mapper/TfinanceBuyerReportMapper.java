@@ -16,4 +16,7 @@ public interface TfinanceBuyerReportMapper extends BaseMapper<TfinanceBuyerRepor
 	List<TfinanceBuyerReport> selectUserList(Pagination page, @Param("ew") Wrapper<TfinanceBuyerReport> wrapper);
 
 	Map showBuyerReportLoad(@Param("map") Map map);
+
+	Integer sumTfinanceBuyerReport(@Param("map") Map map);
+
 }

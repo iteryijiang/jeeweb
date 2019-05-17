@@ -40,5 +40,9 @@
         and (countcreatedate BETWEEN #{map.create1} and #{map.create2})
     </select>
 
+    <select id="sumTfinanceBuyerReport" resultType="java.lang.Integer">
+        select count(1) from t_finance_buyer_report t
+        where 1=1 and t.countcreatedate = #{map.createDate1}
+    </select>
 
 </mapper>

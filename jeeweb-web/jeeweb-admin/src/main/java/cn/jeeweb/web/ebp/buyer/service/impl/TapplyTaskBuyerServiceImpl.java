@@ -13,6 +13,7 @@ import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.enums.BuyerTaskStatusRnum;
 import cn.jeeweb.web.ebp.enums.YesNoEnum;
+import cn.jeeweb.web.ebp.notice.service.NoticePushService;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -29,6 +30,8 @@ public class TapplyTaskBuyerServiceImpl extends CommonServiceImpl<TapplyTaskBuye
     private TmyTaskDetailService tmyTaskDetailService;
     @Autowired
     private TtaskBaseService ttaskBaseService1;
+    @Autowired
+    private NoticePushService noticePushService;
 
 
     @Transactional
@@ -47,6 +50,7 @@ public class TapplyTaskBuyerServiceImpl extends CommonServiceImpl<TapplyTaskBuye
         baseMapper.insert(obj);
         //更改任务单异常
         tmyTaskDetailService.upTaskErrorStatus(obj.getBuyerTaskId(),YesNoEnum.YES.code,obj.getCreateBy().getId());
+        noticePushService.pushNotice("","4028ea815a3d2a8c015a3d2f8d2a0002","买手["+obj.getCreateBy().getUsername()+"]提出新的异常申请");
     }
 
     @Override

@@ -308,10 +308,10 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         entityWrapper.setTableAlias("t");
         // 预处理
         if(queryable.getCondition()!=null) {
-            Condition.Filter filter_receivingdate = queryable.getCondition().getFilterFor("receivingdate");
-            if (filter_receivingdate != null) {
-                queryable.getCondition().remove(filter_receivingdate);
-                queryable.getCondition().and(Condition.Operator.between, "receivingdate", TaskUtils.whereDate(filter_receivingdate));
+            Condition.Filter filter_orderdate = queryable.getCondition().getFilterFor("orderdate");
+            if (filter_orderdate != null) {
+                queryable.getCondition().remove(filter_orderdate);
+                queryable.getCondition().and(Condition.Operator.between, "orderdate", TaskUtils.whereDate(filter_orderdate));
             }
 
             Condition.Filter filter_shopLoginname = queryable.getCondition().getFilterFor("shopLoginname");
@@ -545,7 +545,8 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         entityWrapper.setTableAlias("t");
-        String[] creates = TaskUtils.whereNewDate("","");
+        String d = DateUtils.formatDate(DateUtils.dateAddDay(new Date(),-1),"yyyy-MM-dd");
+        String[] creates = TaskUtils.whereNewDate(d,d);
         if(queryable.getCondition()!=null){
             Condition.Filter filter = queryable.getCondition().getFilterFor("receivingdates");
             if (filter != null) {

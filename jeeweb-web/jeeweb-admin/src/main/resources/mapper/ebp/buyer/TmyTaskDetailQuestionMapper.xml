@@ -30,6 +30,12 @@
 		  </where>
 	   </if>
   </select>
-
+    <select id="listFinanceBuyerReport" resultType="java.util.Map">
+        select DATE_FORMAT(t.create_date,'%Y-%m-%d') countCreateDate,t.buyerid,
+        sum(pays) errorprice,count(1) errornum
+        from t_my_task_detail_question t where 1=1
+        and (t.create_date BETWEEN #{map.createDate1} and #{map.createDate2})
+        group by countCreateDate,t.buyerid
+    </select>
 
 </mapper>

@@ -1,8 +1,11 @@
 package cn.jeeweb.web.ebp.shop.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.math.BigDecimal;
@@ -26,6 +29,13 @@ public class TshopInfo extends DataEntity<String> {
 	private String status;//	varchar	32	0	-1	0	0	0	0		0	状态	utf8	utf8_general_ci		0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
 
+	/** 创建时间 */
+	@TableField(value = "create_date", fill = FieldFill.INSERT)
+	@JSONField(format="yyyy-MM-dd HH:mm")
+	private java.util.Date createDate;
+
+	@TableField(exist = false)
+	private int sumTasknum;
 
 	@Override
 	public String getId() {
@@ -107,5 +117,23 @@ public class TshopInfo extends DataEntity<String> {
 
 	public void setUserid(String userid) {
 		this.userid = userid;
+	}
+
+	@Override
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	@Override
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public int getSumTasknum() {
+		return sumTasknum;
+	}
+
+	public void setSumTasknum(int sumTasknum) {
+		this.sumTasknum = sumTasknum;
 	}
 }

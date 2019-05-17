@@ -113,6 +113,7 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
                          HttpServletResponse response) throws IOException {
         EntityWrapper<TshopInfo> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
+        entityWrapper.setTableAlias("t");
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)) {
             entityWrapper.eq("create_by", userid);
@@ -124,6 +125,7 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
                 queryable.getCondition().and(Condition.Operator.between, "createDate", TaskUtils.whereDate(filter));
             }
         }
+        entityWrapper.groupBy("t.userid");
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);

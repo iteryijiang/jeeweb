@@ -184,6 +184,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             }
 
             ttaskBase.setShopid(userid);
+            ttaskBase.setSkuid(JdSpider.getGoodId_ByURL(ttaskBase.gettUrl()));
             TshopInfo si = tshopInfoService.selectOne(ttaskBase.getShopid());
             //      ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
             ttaskBase.setTaskno(TsequenceSpider.getShopNo());
@@ -304,12 +305,20 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 queryable.getCondition().remove(Filter_name);
                 entityWrapper.like("s.shopname",Filter_name.getValue().toString());
             }
+            Condition.Filter Filter_loginname = queryable.getCondition().getFilterFor("loginname");
+            if(Filter_loginname!=null){
+                queryable.getCondition().remove(Filter_name);
+                entityWrapper.like("i.loginname",Filter_loginname.getValue().toString());
+            }
 
         }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         PageResponse<TtaskBase> pagejson = new PageResponse<>(ttaskBaseService.list(queryable,entityWrapper));
+        for (TtaskBase tb:pagejson.getResults()) {
+            tb.setSkuid("<a href='"+tb.gettUrl()+"' target='_blank'>"+tb.getSkuid()+"</a>");
+        }
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
     }
@@ -536,7 +545,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 
                 String goodis = JdSpider.getGoodId_ByURL(turl);//获取商品ID
                 String result = JdSpider.getGoodInfos(goodis);//获取商品详细信息
-                String good_price  = JdSpider.getGoodPrice_ByResult(result);//获取商品价格
+//                String good_price  = JdSpider.getGoodPrice_ByResult(result);//获取商品价格
+                String good_price  = JdSpider.getGoodPrice_ByP3(goodis);//获取商品价格
                 String spec1 = JdSpider.getGoodSpec1ByTitle(ttitle);//商品颜色
                 String spec2 = JdSpider.getGoodSpec2ByTitle(ttitle);//商品规格
                 map.put("goodsrc",goodsrc);

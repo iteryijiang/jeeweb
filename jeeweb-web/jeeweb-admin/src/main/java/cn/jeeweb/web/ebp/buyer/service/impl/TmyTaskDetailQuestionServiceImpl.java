@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service("TmyTaskDetailQuestionService")
@@ -54,5 +55,9 @@ public class TmyTaskDetailQuestionServiceImpl extends CommonServiceImpl<TmyTaskD
             }
         }
         return true;
+    }
+
+    public List<Map> listFinanceBuyerReport(Map map){
+        return baseMapper.listFinanceBuyerReport(map);
     }
 }

@@ -1,0 +1,20 @@
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('充值管理',''), libs: 'bootstrap-treeview'}){ %>
+	<#grid:grid id="tfinanceRechargeGrid" url="${adminPath}/finance/TfinanceRecharge/ajaxList"  sortname="createDate" sortorder="desc">
+		<#grid:column label="充值流水号"  name="rechargeno" />
+        <#grid:column label="日期"  name="createDate"  query="true"  queryMode="date"  condition="between"/>
+		<#grid:column label="商户号"  name="loginname" />
+		<#grid:column label="支付单号"  name="paymentno" />
+		<#grid:column label="充值金额"  name="rechargedeposit" width="120"/>
+		<#grid:column label="累积余额"  name="totaldeposit" />
+		<#grid:column label="支付凭证" formatter="image" imageWidth="100" imageHeight="100" name="rechargefile" />
+		<#grid:column label="支付类型"  name="rechargetype" query="true" queryMode="select" width="100" condition="eq" dict="rechargetype"/>
+		<#grid:column label="受理人"  name="username" width="120" />
+		<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
+		<#grid:button groupname="opt" function="delete"/>
+		<#grid:toolbar title="充值" function="add" />
+		<#grid:toolbar   function="delete" />
+		<#grid:toolbar  function="search"  />
+		<#grid:toolbar  function="reset" />
+	</#grid:grid>
+
+<% } %>

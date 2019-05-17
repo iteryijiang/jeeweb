@@ -49,7 +49,8 @@
   </sql>
 
   <select id="selectShopList" resultMap="TtaskBase">
-    select t.*,s.shopname,(t.tasknum-t.canreceivenum) receivingnum,b.deliverynum,b.ordernum,b.confirmnum from T_task_Base t left join t_shop_base s on t.storename = s.id
+    select t.*,i.loginname,s.shopname,(t.tasknum-t.canreceivenum) receivingnum,b.deliverynum,b.ordernum,b.confirmnum from T_task_Base t left join t_shop_base s on t.storename = s.id
+    left join t_shop_info i on t.shopId=i.userid
     left join (select taskid,sum(confirm) confirmnum,sum(delivery) deliverynum,sum(order1) ordernum from
     (select taskid,case when taskstate=4 then 1 else 0 end confirm,
     case when taskstate=3 then 1 else 0 end delivery,

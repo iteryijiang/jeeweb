@@ -15,4 +15,7 @@ public interface TmyTaskDetailQuestionMapper extends BaseMapper<TmyTaskDetailQue
 	
 	List<TmyTaskDetailQuestion> selectUserList(Pagination page, @Param("ew") Wrapper<TmyTaskDetailQuestion> wrapper);
 
+
+	List<Map> listFinanceBuyerReport(@Param("map") Map map);
+
 }

@@ -20,9 +20,7 @@
   </sql>
   
   <select id="selectUserList" resultMap="TshopInfo">
-	  select
-   	    <include refid="Base_Column_List" />
-      from T_shop_Info t
+      select  t.*,sum(b.tasknum-(case when b.status=2 then b.canreceivenum else 0 end)) sumTasknum from T_shop_Info t LEFT JOIN t_task_base b on  t.userid=b.shopId
        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
 		  <where>
 		    ${ew.sqlSegment}

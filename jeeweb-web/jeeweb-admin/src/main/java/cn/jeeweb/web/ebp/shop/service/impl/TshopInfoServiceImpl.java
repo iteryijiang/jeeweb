@@ -2,8 +2,11 @@ package cn.jeeweb.web.ebp.shop.service.impl;
 
 import cn.jeeweb.common.mybatis.mvc.service.impl.CommonServiceImpl;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
+import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.mapper.TshopInfoMapper;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +44,12 @@ public class TshopInfoServiceImpl extends CommonServiceImpl<TshopInfoMapper, Tsh
         if(num !=1){
             throw  new RuntimeException("更改商户余额失败!");
         }
+    }
+
+    @Override
+    public Page<TshopInfo> selectPage(Page<TshopInfo> page, Wrapper<TshopInfo> wrapper) {
+        wrapper.eq("1", "1");
+        page.setRecords(baseMapper.selectUserList(page, wrapper));
+        return page;
     }
 }

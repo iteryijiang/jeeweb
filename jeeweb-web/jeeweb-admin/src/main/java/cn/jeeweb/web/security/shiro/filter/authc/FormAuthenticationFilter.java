@@ -117,7 +117,11 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
 		UserUtils.clearCache();
 		if (p != null && !p.isMobileLogin()) {
 			LoginLogUtils.recordSuccessLoginLog(p.getUsername(),"登陆成功");
-			WebUtils.issueRedirect(request, response, getSuccessUrl(), null, true);
+			String url = getSuccessUrl();
+//			if (UserUtils.getRoleStringList().contains("operation")) {
+//				url = url+"/finance/TfinanceRechargeLog/listShopFinance";
+//			}
+			WebUtils.issueRedirect(request, response, url, null, true);
 		} else {
 			/*Response ajaxJson = new Response();
 			ajaxJson.setRet(Response.RET_SUCCESS);

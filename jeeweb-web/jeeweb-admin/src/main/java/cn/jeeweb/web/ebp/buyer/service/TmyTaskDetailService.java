@@ -34,6 +34,8 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
 
     public List<TmyTaskDetail> listNoPageDetailGroup(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
 
+    public List<Map> listTfinanceTaskDoubleReport(Map map);
+
     public int sumMyTask(Map map) throws Exception;
 
     public int sumTaskBase(Map map) throws Exception;

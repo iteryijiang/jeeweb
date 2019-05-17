@@ -42,4 +42,8 @@ public class TfinanceBuyerReportServiceImpl extends CommonServiceImpl<TfinanceBu
     public Map showBuyerReportLoad(Map m){
         return baseMapper.showBuyerReportLoad(m);
     }
+
+    public Integer sumTfinanceBuyerReport(Map m){
+        return baseMapper.sumTfinanceBuyerReport(m);
+    }
 }

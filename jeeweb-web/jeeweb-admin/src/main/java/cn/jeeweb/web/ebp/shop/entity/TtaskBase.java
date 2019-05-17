@@ -62,6 +62,7 @@ public class TtaskBase extends DataEntity<String> {
 	private BigDecimal taskdeposit;//	decimal	10	0	-1	0	0	0	0		0	冻结金额				0	0
 	private BigDecimal presentdeposit;//	decimal	10	0	-1	0	0	0	0		0	当前佣金额				0	0
 	private String couponurl;
+	private String skuid;
 
 
 
@@ -83,6 +84,9 @@ public class TtaskBase extends DataEntity<String> {
 
 	@TableField(exist = false)
 	private String shopname;//店铺名
+
+	@TableField(exist = false)
+	private String loginname;//商户号
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
@@ -459,5 +463,21 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setCouponurl(String couponurl) {
 		this.couponurl = couponurl;
+	}
+
+	public String getSkuid() {
+		return skuid;
+	}
+
+	public void setSkuid(String skuid) {
+		this.skuid = skuid;
+	}
+
+	public String getLoginname() {
+		return loginname;
+	}
+
+	public void setLoginname(String loginname) {
+		this.loginname = loginname;
 	}
 }

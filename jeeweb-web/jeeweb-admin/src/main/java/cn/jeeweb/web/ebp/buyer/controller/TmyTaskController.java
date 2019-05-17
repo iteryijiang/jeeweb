@@ -23,6 +23,7 @@ import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
+import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
@@ -255,10 +256,12 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
             List<TmyTaskDetail> list = tmyTaskDetailService.selectByMap(map);
             if(list!=null&&!list.isEmpty()){
                 for (TmyTaskDetail ttd:list) {
-                    ttd.setBuyerjdnick(buyerjdnick);
-                    ttd.setJdorderno(jdorderno);
-                    tmyTaskDetailService.upTaskState(state,ttd,id);
+                    if(YesNoEnum.YES.code != ttd.getErrorStatus()){
+                        ttd.setBuyerjdnick(buyerjdnick);
+                        ttd.setJdorderno(jdorderno);
+                        tmyTaskDetailService.upTaskState(state,ttd,id);
 //                    System.out.print(DateUtils.getDateTime()+"状态修改完成："+ttd.getId()+",状态为："+ttd.getTaskstate());
+                    }
                 }
             }
 

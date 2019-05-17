@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="Thu, 19 Nov 1900 08:52:00 GMT">
-    
+
     <title><#spring:message code="sys.site.title" arguments="${platformName}"/></title>
     <meta name="keywords" content="<#spring:message code="sys.site.keywords" arguments="${platformName}"/>">
     <meta name="description" content="<#spring:message code="sys.site.description" arguments="${platformName}"/>">
-     
+
     <!--Loading bootstrap css-->
     <link type="text/css" rel="stylesheet" href="${staticPath}/vendors/jquery-ui-1.10.4.custom/css/ui-lightness/jquery-ui-1.10.4.custom.min.css">
     <#html:css  name="favicon,bootstrap,font-awesome,animate,pace,Validform"/>
@@ -19,106 +19,139 @@
     <!--Loading style-->
     <link type="text/css" rel="stylesheet" href="${staticPath}/uadmin/css/themes/style1/orange-blue.css" class="default-style">
     <link type="text/css" rel="stylesheet" href="${staticPath}/uadmin/css/themes/style1/orange-blue.css" id="theme-change" class="style-change color-change">
-    <link type="text/css" rel="stylesheet" href="${staticPath}/uadmin/css/style-responsive.css"> 
-    
+    <link type="text/css" rel="stylesheet" href="${staticPath}/uadmin/css/style-responsive.css">
+    <style>
+        #winpop { width:400px; height:0px; position:absolute; right:5px; bottom:24px; border:1px solid #00C3D5; margin:0; padding:1px; overflow:hidden; display:none;border-radius: 4px;background:#fff;optic:0.9}
+        #winpop .title { width:100%; height:28px; line-height:28px; background:#00C3D5; font-weight:bold; text-align:left; font-size:14px;padding-left: 20px;margin: -1px;}
+        #winpop .con { width:100%; height:80px; line-height:25px; font-weight:bold; font-size:12px; color:#808080;text-align:left;padding-left: 20px}
+        .closeMsg { position:absolute; right:4px; top:-1px; cursor:pointer; color:#FFFFFF; font-size: 25px;}
+    </style>
+
+
 </head>
 
 <body class=" ">
-    <div>
-        <!--BEGIN BACK TO TOP--><a id="totop" href="#"><i class="fa fa-angle-up"></i></a>
-        <!--END BACK TO TOP-->
-        <% include("/themes/uadmin/include/topbar.html"){}%>
-        <div id="wrapper">
-            <% include("/themes/uadmin/include/left.html"){}%>
-            <!--BEGIN PAGE WRAPPER-->
-            <div id="page-wrapper">
-                <!--BEGIN TITLE & BREADCRUMB PAGE-->
-                <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
-                    <div class="page-header pull-left">
-                        <div class="page-title">控制台</div>
-                    </div>
-                    <ol class="breadcrumb page-breadcrumb pull-left">
-                        <li><i class="fa fa-home"></i>&nbsp;<a href="${adminPath}">首页</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-                        <li class="hidden"><a href="#">控制台</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
-                        <li class="active">控制台</li>
-                    </ol>
-                   
-                    <div class="clearfix"></div>
+<div>
+    <!--BEGIN BACK TO TOP--><a id="totop" href="#"><i class="fa fa-angle-up"></i></a>
+    <!--END BACK TO TOP-->
+    <% include("/themes/uadmin/include/topbar.html"){}%>
+    <div id="wrapper">
+        <% include("/themes/uadmin/include/left.html"){}%>
+        <!--BEGIN PAGE WRAPPER-->
+        <div id="page-wrapper">
+            <!--BEGIN TITLE & BREADCRUMB PAGE-->
+            <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
+                <div class="page-header pull-left">
+                    <div class="page-title">控制台</div>
                 </div>
-                <!--END TITLE & BREADCRUMB PAGE-->
-                <!--BEGIN CONTENT-->
-                <div class="page-content">
-                    <% include("/themes/uadmin/include/main.html"){}%>
-			    </div>
-			    <!--END CONTENT-->
+                <ol class="breadcrumb page-breadcrumb pull-left">
+                    <li><i class="fa fa-home"></i>&nbsp;<a href="${adminPath}">首页</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+                    <li class="hidden"><a href="#">控制台</a>&nbsp;&nbsp;<i class="fa fa-angle-right"></i>&nbsp;&nbsp;</li>
+                    <li class="active">控制台</li>
+                </ol>
+
+                <div class="clearfix"></div>
+            </div>
+            <!--END TITLE & BREADCRUMB PAGE-->
+            <!--BEGIN CONTENT-->
+            <div class="page-content">
+                <% include("/themes/uadmin/include/main.html"){}%>
+            </div>
+            <!--END CONTENT-->
+        </div>
+        <!-- 消息提醒 -->
+        <div id="winpop" style="height: 0px;">
+            <div class="title">您有新的消息<span class="closeMsg" onclick="tips_pop()">×</span></div>
+            <div class="con" id="main_messageContent"></div>
+        </div>
+        <!--BEGIN FOOTER-->
+        <div id="footer">
+            <div class="copyright"><#spring:message code="sys.site.bottom.copyright" /></div>
+        </div>
+        <!--END FOOTER-->
+        <!--END PAGE WRAPPER-->
     </div>
-    <!--BEGIN FOOTER-->
-    <div id="footer">
-        <div class="copyright"><#spring:message code="sys.site.bottom.copyright" /></div>
-    </div>
-    <!--END FOOTER-->
-    <!--END PAGE WRAPPER-->
-    </div>
-    </div>
-    <#html:js  name="jquery,bootstrap,metisMenu,slimscroll,layer,pace,bootstrap-hover-dropdown,jquery-cookie,Validform"/>
-    <script src="${staticPath}/uadmin/js/jquery-migrate-1.2.1.min.js"></script>
-    <script src="${staticPath}/uadmin/js/jquery-ui.js"></script>
-    <!--loading bootstrap js-->
-    <script src="${staticPath}/uadmin/js/html5shiv.js"></script>
-    <script src="${staticPath}/uadmin/js/respond.min.js"></script>
-    <script src="${staticPath}/uadmin/js/jquery.menu.js"></script>
-    <script src="${staticPath}/vendors/slimscroll/jquery.slimscroll.js"></script>
-    <!--CORE JAVASCRIPT-->
-    <script src="${staticPath}/uadmin/js/main.js"></script>
-    <script>
-		$(document).ready(function(){
-			var list_theme = $('.dropdown-theme-setting > li > select#list_theme');
-		    list_theme.on('change', function(){
-		    	var theme=$(this).val();
-		    	$.get('${adminPath}/theme/'+theme+'?url='+window.top.location.href,function(result){   
-		    		//window.location.reload();
-		    		window.top.location.href="${adminPath}";
-		    	});
-		    	//$.get('${adminPath}/theme/'+theme+'?url='+window.top.location.href,function(result){   window.location.reload();});
-		    });
-		});
-		
-		var changePasswordForm;
-		function changePassword(){
-			changePasswordForm.ajaxPost();
-		}
-		$(document).ready(function() {
-			    changePasswordForm=$("#changePasswordForm").Validform({
-				tiptype:function(msg,o,cssctl){
-					if(!o.obj.is("form")){
-						var objtip=o.obj.siblings(".Validform_checktip");
-						cssctl(objtip,o.type);
-						objtip.text(msg);
-					}
-				},beforeSubmit:function(curform){
-					try{
-						var beforeFunc=beforeSubmit;
-						if(beforeFunc&&typeof(beforeFunc)=="function"){
-							return beforeFunc(curform); 
-						}
-					}catch(err){
-						
-					}
-					return true;	
-				},callback:function(result){
-                    if( result.code==0 || result.code== undefined )
-	              	{
-	              	    top.layer.alert(result.msg, {icon: 0, title:'提示'});
-	              	    //运行回调
-	          	        callFunc();
-	              	}else
-	              	{
-	              		top.layer.alert(result.msg, {icon: 0, title:'警告'});
-	              	}
-				}
-			});
-		});
-	</script>
+</div>
+<#html:js  name="jquery,bootstrap,metisMenu,slimscroll,layer,pace,bootstrap-hover-dropdown,jquery-cookie,Validform"/>
+<script src="${staticPath}/uadmin/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="${staticPath}/uadmin/js/jquery-ui.js"></script>
+<!--loading bootstrap js-->
+<script src="${staticPath}/uadmin/js/html5shiv.js"></script>
+<script src="${staticPath}/uadmin/js/respond.min.js"></script>
+<script src="${staticPath}/uadmin/js/jquery.menu.js"></script>
+<script src="${staticPath}/vendors/slimscroll/jquery.slimscroll.js"></script>
+<!--CORE JAVASCRIPT-->
+<script src="${staticPath}/uadmin/js/main.js"></script>
+<script>
+    $(document).ready(function(){
+        var list_theme = $('.dropdown-theme-setting > li > select#list_theme');
+        list_theme.on('change', function(){
+            var theme=$(this).val();
+            $.get('${adminPath}/theme/'+theme+'?url='+window.top.location.href,function(result){
+                //window.location.reload();
+                window.top.location.href="${adminPath}";
+            });
+            //$.get('${adminPath}/theme/'+theme+'?url='+window.top.location.href,function(result){   window.location.reload();});
+        });
+    });
+
+    var changePasswordForm;
+    function changePassword(){
+        changePasswordForm.ajaxPost();
+    }
+    $(document).ready(function() {
+        changePasswordForm=$("#changePasswordForm").Validform({
+            tiptype:function(msg,o,cssctl){
+                if(!o.obj.is("form")){
+                    var objtip=o.obj.siblings(".Validform_checktip");
+                    cssctl(objtip,o.type);
+                    objtip.text(msg);
+                }
+            },beforeSubmit:function(curform){
+                try{
+                    var beforeFunc=beforeSubmit;
+                    if(beforeFunc&&typeof(beforeFunc)=="function"){
+                        return beforeFunc(curform);
+                    }
+                }catch(err){
+
+                }
+                return true;
+            },callback:function(result){
+                if( result.code==0 || result.code== undefined )
+                {
+                    top.layer.alert(result.msg, {icon: 0, title:'提示'});
+                    //运行回调
+                    callFunc();
+                }else
+                {
+                    top.layer.alert(result.msg, {icon: 0, title:'警告'});
+                }
+            }
+        });
+    });
+</script>
+<script type="text/javascript" src="${staticPath}/notice/swfobject.js"></script>
+<script type="text/javascript" src="${staticPath}/notice/web_socket.js"></script>
+<script type="text/javascript" src="${staticPath}/notice/message.js"></script>
+<script type="text/javascript" src="${staticPath}/notice/jquery.notify.js"></script>
+<script type="text/javascript" src="${staticPath}/notice/notice.js"></script>
+<script>
+    websocket(outPutMessage,"","","${loginUser.id}");
+    //输出消息内容
+    function outPutMessage(str) {
+        parseNoticeFn(str);
+    }
+    /***
+     * 播放音频文件
+     *
+     */
+    function playNoticeVoiceFn(){
+        $.notifySetup({sound: '${staticPath}/notice/newMsg.mp3'});
+        $('<p></p>').notify();
+    }
+
+</script>
 </body>
 
 </html>

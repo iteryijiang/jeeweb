@@ -26,6 +26,8 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 
 	List<Map> listFinanceBuyerReport(@Param("map") Map map);
 
+	List<Map> listTfinanceTaskDoubleReport(@Param("map") Map map);
+
 	List<TmyTaskDetail> listNoSendGood();
 
 

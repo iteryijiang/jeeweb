@@ -1,22 +1,22 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('客服查询',''), libs: 'bootstrap-treeview'}){ %>
-<#grid:grid id="TmyTaskDetailGrid" url="${adminPath}/buyer/TmyTaskDetail/listShopBaseDetail" sortname="receivingdate" sortorder="desc" rowNum="20">
+<#grid:grid id="TmyTaskDetailGrid" url="${adminPath}/buyer/TmyTaskDetail/listShopBaseDetail" sortname="orderdate" sortorder="desc" rowNum="20">
 
-<#grid:column label="平台编号" width="90" name="buyeridName"/>
-<#grid:column label="平台登录名" width="100" name="buyeridLogin"/>
 <#grid:column label="京东账号" width="120"  name="buyerjdnick" query="true" condition="like"/>
 <#grid:column label="订单号" width="100"  name="jdorderno" query="true" condition="like"/>
-<#grid:column label="商品名称" width="100" name="tTitle"/>
-<#grid:column label="品牌" width="140"  name="brand"/>
-<#grid:column label="商家号" width="100"  name="shopLoginname"/>
+<#grid:column label="确定下单时间" width="120"  name="orderdate" query="true"  queryMode="date"  condition="between"/>
+<#grid:column label="买手登录名" width="100" name="buyeridLogin"/>
+<#grid:column label="买手平台编号" width="90" name="buyeridName"/>
+<#grid:column label="商户号" width="100"  name="shopLoginname"/>
 <#grid:column label="商家名称" width="100"  name="shopidName"/>
+<#grid:column label="店铺名" width="100"  name="shopname"/>
+<#grid:column label="品牌" width="140"  name="brand"/>
+<#grid:column label="SKU" width="80"  name="skuid"/>
 <#grid:column label="搜索关键字" width="100"  name="keyword"/>
+<#grid:column label="货号" width="80"  name="article"/>
 <#grid:column label="颜色" width="80"  name="spec1"/>
 <#grid:column label="规格" width="80"  name="spec2" />
-<#grid:column label="接单时间" width="120"  name="receivingdate" query="true"  queryMode="date"  condition="between"/>
-<#grid:column label="订单状态" width="100"  name="taskstate" dict="taskstate" query="true" queryMode="select" condition="eq" />
 <#grid:column label="实付金额" width="100"  name="pays" />
-<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
-<#grid:button title="商品详细"  groupname="opt" function="rowDialogDetailRefresh"  winwidth="100%" winheight="100%"  outclass="btn-warning btn-xs" innerclass="fa-search" url='\"+row.tUrl+\"' />
+<#grid:column label="订单状态" width="100"  name="taskstate" dict="taskstate" query="true" queryMode="select" condition="eq" />
 
 <#grid:toolbar  function="search"  />
 <#grid:toolbar  function="reset" />

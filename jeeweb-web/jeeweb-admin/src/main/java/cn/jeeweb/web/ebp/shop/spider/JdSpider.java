@@ -6,6 +6,9 @@ package cn.jeeweb.web.ebp.shop.spider;
  * 京东 爬虫
  */
 import cn.jeeweb.common.utils.StringUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -13,17 +16,13 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
-import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +31,14 @@ import java.util.Map;
 public class JdSpider {
 
     public static void main(String[] args)  {
-        String url = "https://item.jd.com/6837346.html";
+        String url = "https://item.jd.com/44947696886.html";
         try {
             String goodis = getGoodId_ByURL(url);
 //            String goodsrc = getGoodImgByurl(url);
 //            System.out.println("商品src: " + goodsrc);
 //            System.out.println("商品信息: " + goodis);
             if(!StringUtils.isEmpty(goodis)){
-                System.out.println("获取商品店铺："+getGoodStorenameByurl(getDocumentUrl(url)));
+                System.out.println("获取商品价格："+getGoodPrice_ByP3(goodis));
 //                getGoodList(url);
 //                System.out.println("获取商品标题："+getGoodTitleByurl(url));//获取商品标题);
 //                System.out.println("获取商品品牌："+getGoodBrandByurl(url));//获取商品标题);
@@ -107,6 +106,30 @@ public class JdSpider {
         }
         return good_price;
     }
+    public  static String getGoodPrice_ByP3(String skuId) throws Exception{
+        String getPriceUrl = "https://p.3.cn/prices/get?skuid=J_"+skuId;
+        String result = "";
+        HttpClient httpClient = new SSLClient();
+        HttpPost httpPost  = new HttpPost(getPriceUrl);
+        httpPost.addHeader("Content-type","application/json;charset=utf-8");
+        httpPost.addHeader("Accept","application/json");
+        httpPost.setEntity(new StringEntity(new JSONObject().toString(), Charset.forName("UTF-8")));
+        HttpResponse response = httpClient.execute(httpPost);
+        if(response != null){
+            HttpEntity resEntity = response.getEntity();
+            if(resEntity != null){
+                String jsonString = EntityUtils.toString(resEntity, "utf-8");
+                JSONArray jsonArray = JSON.parseArray(jsonString);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                result = jsonObject.getString("p");
+                if(StringUtils.isEmpty(result)){
+                    result = jsonObject.getString("op");
+                }
+            }
+        }
+        return result;
+    }
+
 
     /**
      *

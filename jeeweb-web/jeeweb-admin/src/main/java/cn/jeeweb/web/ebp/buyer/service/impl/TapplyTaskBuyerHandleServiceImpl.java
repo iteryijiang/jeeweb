@@ -14,12 +14,15 @@ import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
+import cn.jeeweb.web.ebp.notice.service.NoticePushService;
 import cn.jeeweb.web.ebp.shop.entity.TshopBase;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.modules.sys.entity.User;
+import cn.jeeweb.web.modules.sys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +49,10 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
     private TfinanceRechargeLogService tfinanceRechargeLogService;
     @Autowired
     private TtaskBaseService ttaskBaseService;
+    @Autowired
+    private NoticePushService noticePushService;
+    @Autowired
+    private IUserService iUserService;
 
 
     @Override
@@ -88,6 +95,10 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
             //更改商家任务状态
             taskBase.setStatus("2");
             ttaskBaseService.updateById(taskBase);
+            //商户消息
+            noticePushService.pushNotice("",taskBuyerObj.getShopId(),"任务单已被取消");
+            //买手消息
+            noticePushService.pushNotice("",taskBuyerObj.getBuyerId(),"任务单已有了新的状态变动");
             return;
         }
         //撤销买手订单=>回退申请+买手任务异常申请状态
@@ -99,6 +110,8 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
         buyTaskList.add(buyTaskObj);
         buyTaskObj.setErrorStatus(YesNoEnum.NO.code);
         tmyTaskDetailService.updateById(buyTaskObj);
+        User user = iUserService.selectById(taskBuyerObj.getBuyerId());
+        noticePushService.pushNotice("",taskBuyerObj.getBuyerId(),"任务单已有了新的状态变动");
     }
 
     /**

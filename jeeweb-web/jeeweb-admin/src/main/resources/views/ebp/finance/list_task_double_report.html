@@ -1,0 +1,48 @@
+<% layout('/layouts/list.html', {title: '链接统计', libs: ''}){ %>
+
+<div>
+    <table cellpadding="10" style="font-size:18px;padding: 10px">
+        <tr>
+            <td><p>双链接数：<span style="color:blue;font-weight: bold" id="sumdoublenum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>单链接数：<span style="color:blue;font-weight: bold" id="sumonenum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+        </tr>
+    </table>
+    <br>
+</div>
+<#grid:grid id="tfinanceBuyerReportGrid" url="${adminPath}/finance/TfinanceTaskDoubleReport/ajaxList" sortname="countcreatedate" sortorder="desc" rowNum="20">
+<#grid:column label="日期"  name="countcreatedate" query="true"  queryMode="date" condition="between" />
+<#grid:column label="用户类型" width="80"  name="usertype" dict="usertype"  formatterValue="1:买手;2:商户"  query="true"  queryMode="select" condition="eq"  />
+<#grid:column label="平台号" width="140"  name="loginname" query="true" condition="like"/>
+<#grid:column label="平台名称" width="140"  name="username" query="true" condition="like"/>
+<#grid:column label="双链接数" width="140"  name="doublenum"/>
+<#grid:column label="单链接数" width="100"  name="onenum"  />
+
+
+<#grid:toolbar  function="search"  />
+<#grid:toolbar  function="reset" />
+</#grid:grid>
+<% } %>
+<script>
+    function search(gridId){
+        var page = $("#"+gridId).getGridParam('page'); // 获取当前页码
+        searchByPage(gridId,page);
+        getload();
+    }
+    getload();
+    function getload(){
+        var data={};
+        data.create1 = $("#tfinanceBuyerReportGrid_countcreatedate_start").val();
+        data.create2 = $("#tfinanceBuyerReportGrid_countcreatedate_end").val();
+        $.ajax({
+            type: "POST",
+            url: "${adminPath}/finance/TfinanceTaskDoubleReport/sumTaskNum",
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function(data){
+                $("#sumdoublenum").html(data.sumdoublenum==undefined?"0":data.sumdoublenum);
+                $("#sumonenum").html(data.sumonenum==undefined?"0":data.sumonenum);
+            }
+        });
+    }
+</script>

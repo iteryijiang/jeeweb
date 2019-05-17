@@ -14,4 +14,6 @@ public interface TfinanceBuyerReportService extends ICommonService<TfinanceBuyer
     public boolean delTfinanceBuyerReport(TshopInfo si, TfinanceBuyerReport tr);
 
     public Map showBuyerReportLoad(Map m);
+
+    public Integer sumTfinanceBuyerReport(Map m);
 }

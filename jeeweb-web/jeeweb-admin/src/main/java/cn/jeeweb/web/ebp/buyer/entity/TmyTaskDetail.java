@@ -124,6 +124,9 @@ public class TmyTaskDetail extends DataEntity<String> {
 	@TableField(exist = false)
 	private String orderdates;
 
+	@TableField(exist = false)
+	private String skuid;
+
 	@Override
 	public String getId() {
 		return id;
@@ -471,5 +474,13 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	public void setErrorStatus(int errorStatus) {
 		this.errorStatus = errorStatus;
+	}
+
+	public String getSkuid() {
+		return skuid;
+	}
+
+	public void setSkuid(String skuid) {
+		this.skuid = skuid;
 	}
 }

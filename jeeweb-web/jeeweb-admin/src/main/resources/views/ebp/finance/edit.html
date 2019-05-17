@@ -1,0 +1,50 @@
+<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('finance:TfinanceRecharge.addTfinanceRecharge',''), formId: 'tfinanceRechargeForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+<#form:form id="tfinanceRechargeForm" modelAttribute="data" method="post" class="form-horizontal">
+	<#form:hidden path="id"/>
+	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+		<tbody>
+		<tr>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>商户号:</label></td>
+			<td  class="width-35" >
+				<#form:select path="shopid" class="form-control"   htmlEscape="false" nullmsg="请选择商户号！"
+				items="${booksQueryList}"
+				itemLabel="loginname" itemValue="userid"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>充值金额:</label>
+			</td>
+			<td class="width-35" >
+				<#form:input path="rechargedeposit" class="form-control " datatype="/^-?[0-9]+$/" nullmsg="请输入充值金额！" errormsg="请输入数字" htmlEscape="false" />
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">	<label><font color="red">*</font>充值类型:</label></td>
+			<td  class="width-35" >
+				<#form:select path="rechargetype" class="form-control"   htmlEscape="false" dict="rechargetype"  datatype="*"  nullmsg="请输入充值类型！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>支付单号:</label>
+			</td>
+			<td class="width-35" >
+				<#form:input path="paymentno" class="form-control"   datatype="*" nullmsg="请输入支付单号！"  htmlEscape="false" />
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+		<tr>
+			<td  class="width-15 active text-right">
+				<label><font color="red">*</font>支付凭证:</label>
+			</td>
+			<td  class="width-35" colspan="3">
+				<#form:fileinput basePath="/hellows/test" showType="avatar" fileInputWidth="100px"
+				fileInputHeight="100px" path="rechargefile" nullmsg="请上传支付凭证！"/>
+				<label class="Validform_checktip"></label>
+			</td>
+		</tr>
+
+		</tbody>
+	</table>
+</#form:form>
+<% } %>

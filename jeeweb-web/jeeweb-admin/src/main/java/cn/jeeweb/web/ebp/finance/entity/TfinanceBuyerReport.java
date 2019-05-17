@@ -39,6 +39,9 @@ public class TfinanceBuyerReport extends DataEntity<String> {
 	@Excel(name = "状态", orderNum = "8",replace= {"未对账_0", "已对账_1"}, width = 15)
 	private String status;//	varchar	32	0	-1	0	0	0	0		0	统计状态	utf8	utf8_general_ci		0	0
 
+	private Double errorprice;//	decimal	10	2	-1	0	0	0	0		0					0	0
+	private Long errornum;//	int	10	0	-1	0	0	0	0		0					0	0
+
 	@JSONField(format="yyyy-MM-dd")
 	@Excel(name = "日期", orderNum = "0",width = 30)
 	private Date countcreatedate;
@@ -178,5 +181,21 @@ public class TfinanceBuyerReport extends DataEntity<String> {
 
 	public void setLoginName(String loginName) {
 		this.loginName = loginName;
+	}
+
+	public Double getErrorprice() {
+		return errorprice;
+	}
+
+	public void setErrorprice(Double errorprice) {
+		this.errorprice = errorprice;
+	}
+
+	public Long getErrornum() {
+		return errornum;
+	}
+
+	public void setErrornum(Long errornum) {
+		this.errornum = errornum;
 	}
 }
