@@ -47,7 +47,7 @@ public class DataGridTag extends AbstractGridHtmlTag {
 	private Object datas;// local时的数据
 	private Boolean pageable = Boolean.TRUE;// 是否分页
 	private String width = "auto"; // 表格宽度
-	private String height = "450";// 表格高度
+	private String height = "650";// 表格高度
 	private Boolean multiselect = true;// 是否多选
 	private Boolean multiSort = Boolean.TRUE;// 是否多列排序
 	private Boolean sortable = Boolean.TRUE;
@@ -56,7 +56,7 @@ public class DataGridTag extends AbstractGridHtmlTag {
 	private Boolean showQueryLabel = Boolean.TRUE;
 	private String onSelectRow = "";
 	private int page = 1;// 页码开始
-	private int rowNum = 10; // 这个参数是要被传递到后台，树结构时候，rowNum无效
+	private int rowNum = 20; // 这个参数是要被传递到后台，树结构时候，rowNum无效
 	private String rowList = "[ 10, 20, 100 ]";
 	private Boolean treeGrid = Boolean.FALSE;// 是否数机构
 	private String expandColumn = "";// 指定那列来展开treegrid，默认为第一列，只有在treeGrid为true时起作用
