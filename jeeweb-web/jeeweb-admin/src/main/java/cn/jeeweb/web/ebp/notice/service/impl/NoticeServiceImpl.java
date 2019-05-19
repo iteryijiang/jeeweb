@@ -39,15 +39,24 @@ public class NoticeServiceImpl extends CommonServiceImpl<NoticeMapper, NoticeInf
 
   @Override
   public void addNotice(NoticeInfo obj){
-    insert(obj);
-    noticePushService.pushNotice(obj.getNoticeGroup(),obj.getNoticeReceive(),obj.getNoticeInfo());
+    try{
+      insert(obj);
+      noticePushService.pushNotice(obj.getNoticeGroup(),obj.getNoticeReceive(),obj.getNoticeInfo());
+    }catch (Exception ex){
+        ex.printStackTrace();
+    }
+
   }
 
   @Override
   public void addNotice(List<NoticeInfo> objList){
-    insertBatch(objList);
-    for(NoticeInfo obj:objList){
-      noticePushService.pushNotice(obj.getNoticeGroup(),obj.getNoticeReceive(),obj.getNoticeInfo());
+    try{
+      insertBatch(objList);
+      for(NoticeInfo obj:objList){
+        noticePushService.pushNotice(obj.getNoticeGroup(),obj.getNoticeReceive(),obj.getNoticeInfo());
+      }
+    }catch (Exception ex){
+      ex.printStackTrace();
     }
   }
 

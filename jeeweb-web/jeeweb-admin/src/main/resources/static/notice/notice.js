@@ -26,13 +26,15 @@ function parseNoticeFn(noticeStr){
  */
 var show=null;
 var hide=null;
-function tips_pop(){
+function tips_pop(type){
     var MsgPop=document.getElementById("winpop");//获取窗口这个对象,即ID为winpop的对象
     var popH=parseInt(MsgPop.style.height);//用parseInt将对象的高度转化为数字,以方便下面比较
-    if (popH==0){ //如果窗口的高度是0
-        MsgPop.style.display="block";//那么将隐藏的窗口显示出来
-        show=setInterval("changeH('up')",2);//开始以每0.002秒调用函数changeH("up"),即每0.002秒向上移动一次
-    }else { //否则
+    if(type==1){
+        if (popH==0){ //如果窗口的高度是0
+            MsgPop.style.display="block";//那么将隐藏的窗口显示出来
+            show=setInterval("changeH('up')",2);//开始以每0.002秒调用函数changeH("up"),即每0.002秒向上移动一次
+        }
+    }else{
         hide=setInterval("changeH('down')",2);//开始以每0.002秒调用函数changeH("down"),即每0.002秒向下移动一次
     }
 }
@@ -68,6 +70,6 @@ function changeH(str) {
  */
 function showNoticeWin(noticeContent){
 	$("#main_messageContent").html(noticeContent);
-	tips_pop();
+	tips_pop(1);
 }
 

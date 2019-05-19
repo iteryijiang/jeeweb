@@ -22,8 +22,11 @@ import cn.jeeweb.web.ebp.notice.enums.NoticeLevelEnum;
 import cn.jeeweb.web.ebp.notice.enums.NoticeRangeEnum;
 import cn.jeeweb.web.ebp.notice.enums.NoticeStatusEnum;
 import cn.jeeweb.web.ebp.notice.service.NoticeService;
+import cn.jeeweb.web.ebp.shop.entity.TshopBase;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.utils.UserUtils;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +46,8 @@ public class TapplyTaskBuyerServiceImpl extends CommonServiceImpl<TapplyTaskBuye
     private TmyTaskService tmyTaskService;
     @Autowired
     private NoticeService noticeService;
+    @Autowired
+    private TshopBaseService tshopBaseService;
 
 
     @Transactional
@@ -53,14 +58,16 @@ public class TapplyTaskBuyerServiceImpl extends CommonServiceImpl<TapplyTaskBuye
             throw new RuntimeException("未获取到任务信息或是任务当前状态不允许执行该操作");
         }
         TmyTask tmTask=tmyTaskService.selectById(taskObj.getMytaskid());
+        obj.setApplyTime(Calendar.getInstance().getTime());
         obj.setApplyStatus(YesNoEnum.NO.code);
         obj.setBuyerId(taskObj.getBuyerid());
+        obj.setBuyerNo(UserUtils.getUser().getUsername());//
+        obj.setBuyerTaskNo(tmTask.getMytaskno());
         obj.setShopTaskId(taskObj.getTaskid());
         TtaskBase taskBaseObj=ttaskBaseService1.selectById(taskObj.getTaskid());
+        TshopBase shopbaseObj=tshopBaseService.selectById(taskObj.getStorename());
         obj.setShopId(taskBaseObj.getShopid());
-        obj.setApplyTime(Calendar.getInstance().getTime());
-        obj.setBuyerTaskNo(tmTask.getMytaskno());
-        obj.setShopName(taskBaseObj.getShopname());
+        obj.setShopName(shopbaseObj.getShopname());
         obj.setGoodsName(taskBaseObj.gettTitle());
         obj.setShopTaskNo(taskBaseObj.getTaskno());
         baseMapper.insert(obj);
