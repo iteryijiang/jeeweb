@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <#html:js  name="bootstrap,iCheck,metisMenu,slimscroll,layer,pace,bootstrap-hover-dropdown,jquery-cookie"/>
 <#html:js  name="${libs!''}"/>
+<!-- 消息提醒 -->
+<style>
+    #winpop { width:400px; height:0px; position:absolute; right:5px; bottom:24px; border:1px solid #00C3D5; margin:0; padding:1px; overflow:hidden; display:none;border-radius: 4px;background:#fff;optic:0.9}
+    #winpop .title { width:100%; height:28px; line-height:28px; background:#00C3D5; font-weight:bold; text-align:left; font-size:14px;padding-left: 20px;margin: -1px;}
+    #winpop .con { width:100%; height:80px; line-height:25px; font-weight:bold; font-size:12px; color:#808080;text-align:left;padding-left: 20px}
+    .closeMsg { position:absolute; right:4px; top:-1px; cursor:pointer; color:#FFFFFF; font-size: 25px;}
+</style>
+<div id="winpop" style="height: 0px;">
+    <div class="title">您有新的消息<span class="closeMsg" onclick="tips_pop(0)">×</span></div>
+    <div class="con" id="main_messageContent"></div>
+</div>
+
 <!--loading bootstrap js-->
 <script src="${staticPath}/uadmin/js/html5shiv.js"></script>
 <script src="${staticPath}/uadmin/js/respond.min.js"></script>
@@ -64,4 +76,25 @@
         radioClass: 'iradio_minimal-grey',
         increaseArea: '20%' // optional
     });
+</script>
+<script type="text/javascript" src="${staticPath}/notice/swfobject.js"></script>
+<script type="text/javascript" src="${staticPath}/notice/web_socket.js"></script>
+<script type="text/javascript" src="${staticPath}/notice/message.js"></script>
+<script type="text/javascript" src="${staticPath}/notice/jquery.notify.js"></script>
+<script type="text/javascript" src="${staticPath}/notice/notice.js"></script>
+<script>
+    websocket(outPutMessage,"","FG","${loginUser.id}");
+    //输出消息内容
+    function outPutMessage(str) {
+        parseNoticeFn(str);
+    }
+    /***
+     * 播放音频文件
+     *
+     */
+    function playNoticeVoiceFn(){
+        $.notifySetup({sound: '${staticPath}/notice/newMsg.mp3'});
+        $('<p></p>').notify();
+    }
+
 </script>
