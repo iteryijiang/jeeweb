@@ -1,0 +1,54 @@
+<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('问题驳回',''), formId: 'ttrunDownApplyTaskForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+
+<#form:form id="ttrunDownApplyTaskForm" modelAttribute="applyObj" method="post" class="form-horizontal">
+<#form:hidden path="id"/>
+<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+    <tbody>
+    <tr>
+        <td  class="width-15 active text-right">
+            <label><font color="red">*</font>驳回原因:</label>
+        </td>
+        <td class="width-35" >
+            <textarea id="remarks" cols="40" rows="8" ></textarea>
+            <label class="Validform_checktip"></label>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</#form:form>
+<div style="text-align:right;padding-right:10px;">
+    <button class='btn btn-warning' onclick="saveUnusualTaskApplyFn()">提交</button>
+</div>
+<% } %>
+
+<script>
+    //异常订单申请保存
+    function saveUnusualTaskApplyFn() {
+        var data={
+            applyId:"${applyObj.id}",
+            remarks:$('#remarks').val()
+        };
+        if(data.remarks =='' || data.remarks==null){
+            alert("未填写问题描述");
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "${adminPath}/buyer/TmyTaskDetail/cancelApplyTaskForBuyer",
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function(data){
+                alert(data.msg);
+                //刷新表单
+                window.parent.location.reload();//刷新父页面
+                var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
+                parent.layer.close(index)
+            },
+            error: function (data) {
+             alert("错误！");
+            }
+        });
+    }
+
+</script>

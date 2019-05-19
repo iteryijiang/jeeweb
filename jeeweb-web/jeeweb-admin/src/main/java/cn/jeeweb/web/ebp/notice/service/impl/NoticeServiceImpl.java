@@ -38,35 +38,30 @@ public class NoticeServiceImpl extends CommonServiceImpl<NoticeMapper, NoticeInf
   private NoticePushService noticePushService;
 
   @Override
-  public void addNoticeForBuyerUnusualTask(String buyer,String shopId,String admin, String taskNo) throws RuntimeException {
-    String msgContent="买手[]对任务单号[]有异常反馈申请";
-    NoticeInfo obj=new NoticeInfo();
-    insert(obj);
-    noticePushService.pushNotice(shopId,msgContent);
-    noticePushService.pushNotice(admin,msgContent);
-  }
-
-  @Override
-  public void addNoticeForAdminRevokeTask(String shopId, List<String> buyerList, String taskNo, String msgContent) throws RuntimeException {
-    List<NoticeInfo> insertList=new ArrayList<NoticeInfo>();
-    for(String buyer:buyerList){
-      NoticeInfo obj=new NoticeInfo();
-      insertList.add(obj);
+  public void addNotice(NoticeInfo obj){
+    try{
+      insert(obj);
+      noticePushService.pushNotice(obj.getNoticeGroup(),obj.getNoticeReceive(),obj.getNoticeInfo());
+    }catch (Exception ex){
+        ex.printStackTrace();
     }
-    insertBatch(insertList);
-    buyerList.add(shopId);
-    noticePushService.pushNotice(buyerList,msgContent);
+
   }
 
   @Override
-  public void addNoticeForAdminTurnDownTask(String buyer, String taskNo, String msgContent) throws RuntimeException {
-    NoticeInfo obj=new NoticeInfo();
-    insert(obj);
-    noticePushService.pushNotice(buyer,msgContent);
+  public void addNotice(List<NoticeInfo> objList){
+    try{
+      insertBatch(objList);
+      for(NoticeInfo obj:objList){
+        noticePushService.pushNotice(obj.getNoticeGroup(),obj.getNoticeReceive(),obj.getNoticeInfo());
+      }
+    }catch (Exception ex){
+      ex.printStackTrace();
+    }
   }
 
   @Override
-  public void updateNoticeStatus(long noticeId,int noticeStatus, String lastRepair) throws RuntimeException {
+  public void updateNoticeStatus(long noticeId,int noticeStatus, String lastRepair)  {
     Map<String,Object> paramMap=new HashMap<String,Object>();
     paramMap.put("noticeId",noticeId);
     paramMap.put("noticeStatus",noticeStatus);
@@ -77,7 +72,7 @@ public class NoticeServiceImpl extends CommonServiceImpl<NoticeMapper, NoticeInf
   }
 
   @Override
-  public Page<NoticeInfo> getPageNoticeList(Queryable queryable, Wrapper<NoticeInfo> wrapper) throws RuntimeException{
+  public Page<NoticeInfo> getPageNoticeList(Queryable queryable, Wrapper<NoticeInfo> wrapper) {
     QueryToWrapper<NoticeInfo> queryToWrapper = new QueryToWrapper<NoticeInfo>();
     queryToWrapper.parseCondition(wrapper, queryable);
     queryToWrapper.parseSort(wrapper, queryable);
@@ -89,7 +84,7 @@ public class NoticeServiceImpl extends CommonServiceImpl<NoticeMapper, NoticeInf
   }
 
   @Override
-  public NoticeInfo getNoticeById(Long id) throws RuntimeException{
+  public NoticeInfo getNoticeById(Long id){
     NoticeInfo obj=selectById(id);
     //消息未读取,需要标记为已经读取
     if(NoticeStatusEnum.UNREAD.code == obj.getNoticeStatus()){

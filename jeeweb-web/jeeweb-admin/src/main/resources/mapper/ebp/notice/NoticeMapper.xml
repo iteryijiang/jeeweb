@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.notice.mapper.NoticeMapper" >
+  <sql id="Base_Column_List" >
+    DISTINCT
+    t.id
+  </sql>
+    <!-- 更新状态 -->
+    <update id="updateNoticeStatus" parameterType="HashMap">
+        update
+            t_notice_info
+        set
+        notice_status=${map.noticeStatus},update_by=#{map.lastRepair},update_date=#{map.lastTime}
+            where
+        id=#{map.noticeId}
+    </update>
+
+  <!-- 分页列表查询-->
+  <select id="selectNoticePageList" resultType="cn.jeeweb.web.ebp.notice.entity.NoticeInfo">
+      SELECT
+        id,notice_range,notice_info,notice_status,notice_biz,notice_biz_no,notice_level,notice_link,notice_receive,notice_group,effect_time,create_by,create_date,update_by,update_date,del_flag,remarks
+      FROM
+        t_notice_info
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+</mapper>

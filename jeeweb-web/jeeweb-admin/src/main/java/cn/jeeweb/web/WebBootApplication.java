@@ -1,5 +1,6 @@
 package cn.jeeweb.web;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfigura
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
@@ -25,6 +27,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @ComponentScan({"cn.jeeweb.common.quartz.config","cn.jeeweb.common.oss","cn.jeeweb.common.sms","cn.jeeweb.ui.tags","cn.jeeweb.ui","cn.jeeweb.beetl.tags","cn.jeeweb.web"})
 @SpringBootApplication(exclude = {RedisAutoConfiguration.class})
 @ServletComponentScan(basePackages = {"cn.jeeweb.web.ebp.notice.base"})
+@EnableTransactionManagement
 // @SpringBootApplication
 public class WebBootApplication {
     public static void main(String[] args) throws Exception {
