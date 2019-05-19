@@ -100,7 +100,7 @@ public class TshopRoleUserController extends BaseBeanController<TshopRoleUser> {
         Map map = new HashMap();
         map.put("userid",entity.getUserid());
         map.put("shopid",entity.getShopid());
-        List<Map> list = TshopRoleUserService.selectByMap(map);
+        List list = TshopRoleUserService.selectByMap(map);
         if(list!=null&&list.size()>0){
             return Response.error("不能重复关联商户！");
         }
