@@ -24,10 +24,6 @@ public class NoticeInfo extends DataEntity<Long> {
   @TableId(value = "id", type = IdType.AUTO)
   private Long id;
   /**
-   * 通知发布者类型
-   */
-  private int noticePublisher;
-  /**
    * 通知范围
    */
   private int noticeRange;
@@ -65,12 +61,25 @@ public class NoticeInfo extends DataEntity<Long> {
   /**
    * 消息持有人=>发布者的名字
    */
-  private String noticeOwner;
+  private String noticeGroup;
   /**
    * 消息的有效截止时间
    */
   @JSONField(format="yyyy-MM-dd HH:mm:ss")
   private Date effectTime;
+
+  public NoticeInfo(int noticeRange, String noticeInfo, int noticeStatus, String noticeBiz, String noticeBizNo, int noticeLevel, String noticeLink, String noticeReceive, String noticeGroup, Date effectTime) {
+    this.noticeRange = noticeRange;
+    this.noticeInfo = noticeInfo;
+    this.noticeStatus = noticeStatus;
+    this.noticeBiz = noticeBiz;
+    this.noticeBizNo = noticeBizNo;
+    this.noticeLevel = noticeLevel;
+    this.noticeLink = noticeLink;
+    this.noticeReceive = noticeReceive;
+    this.noticeGroup = noticeGroup;
+    this.effectTime = effectTime;
+  }
 
   @Override
   public Long getId() {
@@ -82,13 +91,6 @@ public class NoticeInfo extends DataEntity<Long> {
     this.id = id;
   }
 
-  public int getNoticePublisher() {
-    return noticePublisher;
-  }
-
-  public void setNoticePublisher(int noticePublisher) {
-    this.noticePublisher = noticePublisher;
-  }
 
   public int getNoticeRange() {
     return noticeRange;
@@ -154,19 +156,19 @@ public class NoticeInfo extends DataEntity<Long> {
     this.noticeReceive = noticeReceive;
   }
 
-  public String getNoticeOwner() {
-    return noticeOwner;
-  }
-
-  public void setNoticeOwner(String noticeOwner) {
-    this.noticeOwner = noticeOwner;
-  }
-
   public Date getEffectTime() {
     return effectTime;
   }
 
   public void setEffectTime(Date effectTime) {
     this.effectTime = effectTime;
+  }
+
+  public String getNoticeGroup() {
+    return noticeGroup;
+  }
+
+  public void setNoticeGroup(String noticeGroup) {
+    this.noticeGroup = noticeGroup;
   }
 }

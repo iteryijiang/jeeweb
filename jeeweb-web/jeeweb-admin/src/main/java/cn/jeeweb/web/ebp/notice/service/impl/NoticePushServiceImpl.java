@@ -30,14 +30,14 @@ public class NoticePushServiceImpl implements NoticePushService {
   public void pushNotice(String groupId,List<String> memberList,String noticeContent) {
     Publisher publisher = PublisherFactory.getInstance();
     for(String memberNo:memberList){
-      pushNotice("",memberNo,noticeContent);
+      pushNotice(groupId,memberNo,noticeContent);
     }
   }
 
   @Override
   public void pushNotice(String groupId,String memberNo,String noticeContent){
     Publisher publisher = PublisherFactory.getInstance();
-    publisher.publish("", memberNo, noticeContent);
+    publisher.publish(groupId, memberNo, noticeContent);
   }
 
   @Override

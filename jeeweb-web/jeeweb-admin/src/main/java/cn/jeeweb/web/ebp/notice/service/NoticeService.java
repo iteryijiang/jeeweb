@@ -16,38 +16,22 @@ import java.util.List;
 public interface NoticeService {
 
   /**
-   * 买手发布异常任务订单提醒
+   * 添加消息
    *
-   * @param buyer
-   * @param shopId
-   * @param admin
-   * @param taskNo
+   * @param obj
    * @throws RuntimeException
    */
-  void addNoticeForBuyerUnusualTask(String buyer, String shopId, String admin, String taskNo) throws RuntimeException;
+  void addNotice(NoticeInfo obj);
 
   //void addNoticeShop() throws RuntimeException;
 
   /***
-   * 管理员做撤销订单提醒
+   * 添加消息列表
    *
-   * @param shopId
-   * @param buyerList
-   * @param taskNo
-   * @param msgContent
+   * @param objList
    * @throws RuntimeException
    */
-  void addNoticeForAdminRevokeTask(String shopId, List<String> buyerList, String taskNo, String msgContent) throws RuntimeException;
-
-  /**
-   * 管理员做申请驳回提醒
-   *
-   * @param buyer
-   * @param taskNo
-   * @param msgContent
-   * @throws RuntimeException
-   */
-  void addNoticeForAdminTurnDownTask(String buyer, String taskNo, String msgContent) throws RuntimeException;
+  void addNotice(List<NoticeInfo> objList);
 
   /**
    * 更改消息的额状态
@@ -57,7 +41,7 @@ public interface NoticeService {
    * @param lastRepair
    * @throws RuntimeException
    */
-    void updateNoticeStatus(long noticeId, int noticeStatus, String lastRepair) throws RuntimeException;
+    void updateNoticeStatus(long noticeId, int noticeStatus, String lastRepair);
 
   /**
    * 分页查询列表消息
@@ -67,7 +51,7 @@ public interface NoticeService {
    * @return
    * @throws RuntimeException
    */
-    Page<NoticeInfo> getPageNoticeList(Queryable queryable, Wrapper<NoticeInfo> wrapper) throws RuntimeException;
+    Page<NoticeInfo> getPageNoticeList(Queryable queryable, Wrapper<NoticeInfo> wrapper);
 
   /**
    * 读取单个消息
@@ -76,5 +60,5 @@ public interface NoticeService {
    * @return
    * @throws RuntimeException
    */
-    NoticeInfo getNoticeById(Long id) throws RuntimeException;
+    NoticeInfo getNoticeById(Long id);
 }

@@ -22,13 +22,22 @@ public class TapplyTaskBuyer extends DataEntity<String> {
    */
   private String applyType;
   /**
-   * 买手任务单号
+   * 买手任务ID，具体的单个任务链接
+   * 主键
    */
   private String buyerTaskId;
+  /**
+   * m买手任务单号
+   */
+  private String buyerTaskNo;
   /**
    * 买手 ID
    */
   private String buyerId;
+  /**
+   * 买手编号
+   */
+  private String buyerNo;
   /**
    * 商户任务 ID
    */
@@ -37,6 +46,14 @@ public class TapplyTaskBuyer extends DataEntity<String> {
    * 商户 ID
    */
   private String shopId;
+  /**
+   * 商家名称
+   */
+  private String shopName;
+  /**
+   * 商品名称
+   */
+  private String goodsName;
   /**
    * 申请状态
    */
@@ -53,6 +70,7 @@ public class TapplyTaskBuyer extends DataEntity<String> {
   /**
    * 处理时间
    */
+  @JSONField(format="yyyy-MM-dd HH:mm:ss")
   private Date handleTime;
   /**
    * 处理人
@@ -62,35 +80,9 @@ public class TapplyTaskBuyer extends DataEntity<String> {
    * 处理方式
    */
   private int handleMethod;
-
-/*****以下不属于表结构******/
-  /**
-   * 商品名称
-   */
-
-  @TableField(exist = false)
-  private String goodsName;
-  /**
-   * 买手编号
-   */
-
-  @TableField(exist = false)
-  private String buyerNo;
-  /**
-   * 买手任务单号
-   */
-
-  @TableField(exist = false)
-  private String buyerTaskNo;
-  /**
-   * 商户编号
-   */
-  @TableField(exist = false)
-  private String shopNo;
   /**
    * 商户任务单号
    */
-  @TableField(exist = false)
   private String shopTaskNo;
 
   @Override
@@ -215,12 +207,12 @@ public class TapplyTaskBuyer extends DataEntity<String> {
     this.buyerTaskNo = buyerTaskNo;
   }
 
-  public String getShopNo() {
-    return shopNo;
+  public String getShopName() {
+    return shopName;
   }
 
-  public void setShopNo(String shopNo) {
-    this.shopNo = shopNo;
+  public void setShopName(String shopName) {
+    this.shopName = shopName;
   }
 
   public String getShopTaskNo() {

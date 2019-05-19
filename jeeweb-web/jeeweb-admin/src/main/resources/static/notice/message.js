@@ -2,7 +2,7 @@
 	WEB_SOCKET_DEBUG = false;
 	try {WebSocket.loadFlashPolicyFile("xmlsocket://" + host + ":10843");} catch (e) {}
 	var host = window.location.host.split(":")[0];	
-	var defaultUrl ="ws://10.105.44.169:8087";
+	var defaultUrl ="ws://"+host+":8087";
 	var ws;
 	function websocket(listener,url,shop_id,user_id) {
 		if(url == null || url==""){

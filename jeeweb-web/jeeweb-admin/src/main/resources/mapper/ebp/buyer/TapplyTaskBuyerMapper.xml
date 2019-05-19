@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TapplyTaskBuyerMapper" >
-  <resultMap id="TapplyTaskBuyer" type="cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result property="applyNo" column="apply_no" jdbcType="VARCHAR" />
-    <result property="applyType" column="apply_type" jdbcType="VARCHAR" />
-    <result property="buyerTaskId" column="buyer_task_id" jdbcType="VARCHAR" />
-    <result property="buyerId" column="buyer_id" jdbcType="VARCHAR" />
-    <result property="shopTaskId" column="shop_task_id" jdbcType="VARCHAR" />
-    <result property="shopId" column="shop_id" jdbcType="VARCHAR" />
-    <result property="applyStatus" column="apply_status" jdbcType="VARCHAR" />
-    <result property="applyDesc" column="apply_desc" jdbcType="VARCHAR" />
-    <result property="applyTime" column="apply_time" jdbcType="VARCHAR" />
-    <result property="handleTime" column="handle_time" jdbcType="VARCHAR" />
-    <result property="handleMan" column="handle_man" jdbcType="VARCHAR" />
-    <result property="handleMethod" column="handle_method" jdbcType="VARCHAR" />
-  </resultMap>
-  
   <sql id="Base_Column_List" >
     DISTINCT
     t.id
@@ -34,15 +18,9 @@
   <!-- 分页列表查询-->
   <select id="selectApplyPageList" resultType="cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer">
       SELECT
-        t.id,t.apply_type,t.buyer_task_id,t.buyer_id,t.shop_task_id,t.shop_id,t.apply_status,t.apply_desc, t.apply_time, t.handle_time,t.handle_man, t.handle_method,
-        sb.shopname shopNo,buyer.buyerName buyerNo,mt.mytaskNo buyerTaskNo,tb.t_Title goodsName
-      FROM
-         t_apply_task_buyer t
-          inner join t_buyer_info buyer on buyer.userid=t.buyer_id
-          inner join t_my_task_detail td on td.id=t.buyer_task_id
-          inner join t_my_task mt on mt.id=td.mytaskid
-          left join t_task_base tb on tb.id=td.taskid
-          left join t_shop_base sb on sb.id=td.storename
+            id, apply_type,buyer_task_no,buyer_task_id,buyer_id,buyer_no,shop_id,shop_name,shop_task_id,goods_name,apply_status,apply_desc,apply_time,handle_time,handle_man,handle_method,remarks
+      from
+            t_apply_task_buyer t
        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
 		  <where>
 		    ${ew.sqlSegment}

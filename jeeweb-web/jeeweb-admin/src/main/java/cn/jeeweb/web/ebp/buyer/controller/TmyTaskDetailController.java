@@ -680,24 +680,39 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
             propertyPreFilterable.addQueryProperty("id");
             if(queryable.getCondition()!=null){
                 //配置过滤参数,需要调整
-                Condition.Filter shopNoFilter = queryable.getCondition().getFilterFor("shopNo");
+                Condition.Filter shopNoFilter = queryable.getCondition().getFilterFor("shopName");
                 if(shopNoFilter!=null){
                     queryable.getCondition().remove(shopNoFilter);
-                    entityWrapper.like("sb.shopname",shopNoFilter.getValue().toString());
+                    entityWrapper.like("shopName",shopNoFilter.getValue().toString());
                 }
                 Condition.Filter buyerTaskNoFilter = queryable.getCondition().getFilterFor("buyerTaskNo");
                 if(buyerTaskNoFilter!=null){
                     queryable.getCondition().remove(buyerTaskNoFilter);
-                    entityWrapper.like("mt.mytaskNo",buyerTaskNoFilter.getValue().toString());
+                    entityWrapper.like("buyerTaskNo",buyerTaskNoFilter.getValue().toString());
                 }
                 Condition.Filter buyerNoFilter = queryable.getCondition().getFilterFor("buyerNo");
                 if(buyerNoFilter!=null){
                     queryable.getCondition().remove(buyerNoFilter);
-                    entityWrapper.like("buyer.buyerName",buyerNoFilter.getValue().toString());
+                    entityWrapper.like("buyerNo",buyerNoFilter.getValue().toString());
                 }
-
-
+                Condition.Filter applyTypeFilter = queryable.getCondition().getFilterFor("applyType");
+                if(applyTypeFilter!=null){
+                    queryable.getCondition().remove(applyTypeFilter);
+                    entityWrapper.like("applyType",applyTypeFilter.getValue().toString());
+                }
+                Condition.Filter applyStatusFilter = queryable.getCondition().getFilterFor("applyStatus");
+                if(applyStatusFilter!=null){
+                    queryable.getCondition().remove(applyStatusFilter);
+                    entityWrapper.like("applyStatus",applyStatusFilter.getValue().toString());
+                }
+                Condition.Filter applyTimeFilter = queryable.getCondition().getFilterFor("applyTime");
+                if (applyTimeFilter != null) {
+                    queryable.getCondition().remove(applyTimeFilter);
+                    queryable.getCondition().and(Condition.Operator.between, "applyTime", TaskUtils.whereDate(applyTimeFilter));
+                }
             }
+            entityWrapper.orderBy("applyStatus",true);
+            entityWrapper.orderBy("applyTime",false);
             // 预处理
             QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TapplyTaskBuyer.class);
             SerializeFilter filter = propertyPreFilterable.constructFilter(TapplyTaskBuyer.class);
@@ -710,29 +725,80 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         }
     }
 
-
     /**
      * 异常订单处理
+     * 取消商户任务
      *
      * @param applyId
-     * @param handleMethod
      * @param request
      * @param response
      * @return
      */
-    @PostMapping("cancelApplyTask/{applyId}/{handleMethod}")
-    @Log(logType = LogType.INSERT)
-    public Response updateUnusualTaskApplyForHandle(@PathVariable("applyId") String applyId,@PathVariable("handleMethod") int handleMethod,HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping("cancelApplyTaskForShop/{applyId}")
+    @Log(logType = LogType.UPDATE)
+    public Response cancelApplyTaskForShop(@PathVariable("applyId") String applyId,HttpServletRequest request, HttpServletResponse response) {
         try {
-            UnusualTaskHandleMethodEnum handleMethodEnum = UnusualTaskHandleMethodEnum.valueOfCode(handleMethod);
-            if (handleMethodEnum == null) {
-                return Response.error("操作失败[处理方式暂不支持]！");
-            }
             TapplyTaskBuyerHandle obj = new TapplyTaskBuyerHandle();
             obj.setApplyTaskId(applyId);
-            obj.setHandleMethod(handleMethod);
+            obj.setHandleMethod(2);
             obj.setCreateBy(UserUtils.getUser());
-            obj.setRemarks("此处为默认备注");
+            obj.setRemarks("管理员取消商户任务");
+            tapplyTaskBuyerHandleService.updateTapplyTaskBuyerForHandle(obj);
+            return Response.ok("操作成功！");
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            return Response.error("操作失败[" + ex.getMessage() + "]！");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Response.error("操作失败[系统异常]！");
+        }
+    }
+
+    /**
+     * 异常订单处理
+     * 初始化取消买手申请
+     *
+     * @param applyId
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("initTurnDownApplyTask/{applyId}")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView initTurnDownApplyTask(@PathVariable("applyId") String applyId,Model model,HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("turnDownTaskApply");
+        try {
+            TapplyTaskBuyer obj= tapplyTaskBuyerService.selectById(applyId);
+            model.addAttribute("applyObj",obj);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return mav;
+    }
+
+    /**
+     * 异常订单处理
+     * 驳回买手申请
+     *
+     * @param jsonObject
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("cancelApplyTaskForBuyer")
+    @Log(logType = LogType.UPDATE)
+    public Response cancelApplyTaskForBuyer(@RequestBody JSONObject jsonObject,HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if(StringUtils.isEmpty(jsonObject.getString("applyId")) || StringUtils.isEmpty(jsonObject.getString("remarks"))){
+                return Response.error("操作失败[未获取到请求参数信息]！");
+            }
+            TapplyTaskBuyerHandle obj = new TapplyTaskBuyerHandle();
+            obj.setApplyTaskId(jsonObject.getString("applyId"));
+            obj.setHandleMethod(1);
+            obj.setCreateBy(UserUtils.getUser());
+            obj.setRemarks(jsonObject.getString("remarks"));
             tapplyTaskBuyerHandleService.updateTapplyTaskBuyerForHandle(obj);
             return Response.ok("操作成功！");
         } catch (RuntimeException ex) {

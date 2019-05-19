@@ -20,7 +20,7 @@ public class WebsocketPublisher implements Publisher {
 		Message messageObject = new Message(message);
 		Map<String, Queue<Connection>> userIdConnectionMap = WebsocketSubscribe.getInstance().getConnections().get(userId);
 		if (userIdConnectionMap == null || userIdConnectionMap.isEmpty()) {
-			//return;
+			return;
 		}
 		Iterator<Entry<String, Queue<Connection>>> userIdConnectionIt = userIdConnectionMap.entrySet().iterator();
 		while (userIdConnectionIt.hasNext()) {
@@ -51,9 +51,12 @@ public class WebsocketPublisher implements Publisher {
 		Message messageObject = new Message(message);
 		Map<String, Queue<Connection>> userIdConnectionMap = WebsocketSubscribe.getInstance().getConnections().get(shopId);
 		if (userIdConnectionMap == null || userIdConnectionMap.isEmpty()) {
-			//return;
+			return;
 		}
 		Queue<Connection> connections = userIdConnectionMap.get(userId);
+		if(connections == null || connections.isEmpty()){
+				return ;
+		}
 		Iterator<Connection> connectionIt = connections.iterator();
 		while (connectionIt.hasNext()) {
 			Connection connection = connectionIt.next();
