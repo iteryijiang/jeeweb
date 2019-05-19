@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Transactional
-@Service("TshopInfoService1")
+@Service("TshopInfoService")
 public class TshopInfoServiceImpl extends CommonServiceImpl<TshopInfoMapper, TshopInfo> implements TshopInfoService {
 
     public List<TshopInfo> findshopInfo(){

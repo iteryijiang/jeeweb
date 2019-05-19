@@ -76,7 +76,9 @@
     </select>
 
     <select id="sumMyTask" resultType="java.lang.Integer">
-        select count(1) from T_my_Task_Detail t,sys_user s where t.buyerid=#{map.userid} and t.taskstate=#{map.taskstate}
+        select count(1) from T_my_Task_Detail t,sys_user s where
+        t.buyerid=#{map.userid} and t.taskstate=#{map.taskstate}
+        and t.error_Status = 0
     </select>
 
     <select id="groupBytaskstatus" resultType="java.util.Map">
