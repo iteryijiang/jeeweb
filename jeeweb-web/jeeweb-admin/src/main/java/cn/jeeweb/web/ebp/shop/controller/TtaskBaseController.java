@@ -293,13 +293,18 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             entityWrapper.eq("t.create_by", userid);
         }
         entityWrapper.setTableAlias("t");
+        Date date1 = DateUtils.dateAddDay(new Date(),-7);
+        Date date2 = DateUtils.dateAddDay(new Date(),3);
+        String[] creates = TaskUtils.whereNewDate(DateUtils.formatDate(date1),DateUtils.formatDate(date2));
         if(queryable.getCondition()!=null){
             Condition.Filter filter = queryable.getCondition().getFilterFor("effectdate");
-            if(filter!=null){
+            if (filter != null) {
                 queryable.getCondition().remove(filter);
-                queryable.getCondition().and(Condition.Operator.between,"effectdate",TaskUtils.whereDate(filter));
+                creates = TaskUtils.whereDate(filter);
             }
-
+        }
+        entityWrapper.between("t.effectdate",creates[0],creates[1]);
+        if(queryable.getCondition()!=null){
             Condition.Filter Filter_name = queryable.getCondition().getFilterFor("shopname");
             if(Filter_name!=null){
                 queryable.getCondition().remove(Filter_name);
@@ -307,7 +312,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             }
             Condition.Filter Filter_loginname = queryable.getCondition().getFilterFor("loginname");
             if(Filter_loginname!=null){
-                queryable.getCondition().remove(Filter_name);
+                queryable.getCondition().remove(Filter_loginname);
                 entityWrapper.like("i.loginname",Filter_loginname.getValue().toString());
             }
 
@@ -615,11 +620,16 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             String couponurl = jsonObject.getString("couponurl");
             String inputLink = jsonObject.getString("inputLink");
             String skuid = jsonObject.getString("skuid");
-            if(StringUtils.isEmpty(skuid)){
-                skuid = JdSpider.getGoodId_ByURL(inputLink);//获取商品ID
+            String pattern = jsonObject.getString("pattern");
+            if(!"2".equals(pattern)){
+                if(StringUtils.isEmpty(skuid)){
+                    skuid = JdSpider.getGoodId_ByURL(inputLink);//获取商品ID
+                }
+                JDUnionApi JDUnionApi = new JDUnionApi();
+                map = JDUnionApi.getCouponURL(skuid,couponurl);
+            }else {
+                map.put("shortURL",couponurl);
             }
-            JDUnionApi JDUnionApi = new JDUnionApi();
-            map = JDUnionApi.getCouponURL(skuid,couponurl);
             if(map.get("shortURL")!=null){
                 PropertiesUtil p = new PropertiesUtil("local.properties");
                 String uploadFilePath = p.getString("local.upload-file-path");
@@ -632,6 +642,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 MultipartFile multipartFile = new MockMultipartFile("file", file.getName(), "image/jpeg", IOUtils.toByteArray(input));
                 Attachment attachment = attachmentHelper.upload(request, multipartFile);
                 if(attachment!=null){
+                    if("2".equals(pattern)){
+                        map.put("code",200);
+                    }
                     map.put("filePath",attachment.getFilePath());
                 }
             }
@@ -742,22 +755,24 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @Log(logType = LogType.INSERT)
     @RequiresMethodPermissions("myTaskCreate")
     public Response myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws Exception {
-        try {
-            //如果上一任务未完成，则不能领取任务
-            Map map = new HashMap();
-            map.put("userid",UserUtils.getPrincipal().getId());
-            map.put("taskstate","1");
-            if(tmyTaskDetailService.sumMyTask(map)>0){
-                return Response.ok("您有未确定下单任务，无法领取！");
-            }
+        synchronized(this) {
+            try {
+                //如果上一任务未完成，则不能领取任务
+                Map map = new HashMap();
+                map.put("userid", UserUtils.getPrincipal().getId());
+                map.put("taskstate", "1");
+                if (tmyTaskDetailService.sumMyTask(map) > 0) {
+                    return Response.ok("您有未确定下单任务，无法领取！");
+                }
 
-            boolean bool = ttaskBaseService.createMyTask();
-            if(!bool){
-                return Response.ok("无可领取任务，请刷新后重新领取！");
+                boolean bool = ttaskBaseService.createMyTask();
+                if (!bool) {
+                    return Response.ok("无可领取任务，请刷新后重新领取！");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Response.ok("领取失败！");
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return Response.ok("领取失败！");
         }
         return Response.ok("领取成功！");
 

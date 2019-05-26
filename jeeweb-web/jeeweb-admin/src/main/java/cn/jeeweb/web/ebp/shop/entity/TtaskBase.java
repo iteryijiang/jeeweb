@@ -63,6 +63,8 @@ public class TtaskBase extends DataEntity<String> {
 	private BigDecimal presentdeposit;//	decimal	10	0	-1	0	0	0	0		0	当前佣金额				0	0
 	private String couponurl;
 	private String skuid;
+	private String pattern;//任务模式
+	private String renovationurl;//装修页面链接地址
 
 
 
@@ -479,5 +481,21 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setLoginname(String loginname) {
 		this.loginname = loginname;
+	}
+
+	public String getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+
+	public String getRenovationurl() {
+		return renovationurl;
+	}
+
+	public void setRenovationurl(String renovationurl) {
+		this.renovationurl = renovationurl;
 	}
 }

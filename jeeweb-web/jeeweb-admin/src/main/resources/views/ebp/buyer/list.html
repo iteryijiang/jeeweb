@@ -22,14 +22,15 @@
     <#grid:column label="任务状态"  name="state"  width="60" dict="basestate" queryMode="select" width="80" condition="eq" query="true" />
     <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
     <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh"  winwidth="100%" winheight="100%"  outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTask/\"+row.id+\"/detail' />
-    <#grid:toolbar title="领取任务"   icon="fa-download"  onclick="gettask()"  />
+    <#grid:toolbar title="领取任务" id="taskReceive"  icon="fa-download"  onclick="gettask($(this))"  />
     <#grid:toolbar  function="search"  />
     <#grid:toolbar  function="reset" />
 </#grid:grid>
 <% } %>
 <script src='js/jquery-3.3.1.min.js'></script>
 <script>
-    function gettask(){
+    function gettask(obj){
+        obj.attr('disabled',true);//改变提交按钮上的文字并将按钮设置为不可点击
         $.ajax({
             type: "POST",
             url: "${adminPath}/shop/TtaskBase/myTaskCreate",
@@ -38,8 +39,10 @@
             success: function(data){
                 alert(data.msg);
                 search('taskbase');
+                obj.attr('disabled',false);//改变提交按钮上的文字并将按钮设置为可以点击
             },
             error: function(data){
+                obj.attr('disabled',false);//改变提交按钮上的文字并将按钮设置为可以点击
             }
         });
 
