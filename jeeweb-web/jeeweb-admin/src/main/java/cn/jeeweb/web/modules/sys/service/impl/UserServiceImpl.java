@@ -6,6 +6,7 @@ import java.util.List;
 import cn.jeeweb.common.mybatis.mvc.service.impl.CommonServiceImpl;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
 import cn.jeeweb.common.utils.StringUtils;
+import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.modules.sys.entity.UserOrganization;
 import cn.jeeweb.web.modules.sys.entity.UserRole;
@@ -91,6 +92,36 @@ public class UserServiceImpl extends CommonServiceImpl<UserMapper, User> impleme
 		wrapper.eq("1", "1");
 		page.setRecords(baseMapper.selectUserList(page, wrapper));
 		return page;
+	}
+
+	@Override
+	public void updateForChangeFreezeUserStatus(String userId,int status){
+		User user=selectById(userId);
+		if(status == user.getFreezeStatus()){
+			throw  new RuntimeException("操作失败[当前帐号冻结状态不需要更改]");
+		}
+		User updateUser=new User();
+		updateUser.setId(userId);
+		updateUser.setFreezeStatus(YesNoEnum.YES.code==status?YesNoEnum.NO.code:YesNoEnum.YES.code);
+		boolean  retBool=updateById(updateUser);
+		if(!retBool){
+			 throw  new RuntimeException("操作失败[更新帐号冻结状态失败]");
+		}
+	}
+
+	@Override
+	public void updateForChangeReceiveTaskStatusUser(String userId,int status){
+		User user=selectById(userId);
+		if(status == user.getReceiveTaskStatus()){
+			throw  new RuntimeException("操作失败[当前帐号任务领取状态不需要更改]");
+		}
+		User updateUser=new User();
+		updateUser.setId(userId);
+		updateUser.setReceiveTaskStatus(YesNoEnum.YES.code==status?YesNoEnum.NO.code:YesNoEnum.YES.code);
+		boolean  retBool=updateById(updateUser);
+		if(!retBool){
+			throw  new RuntimeException("操作失败[更新帐号任务领取状态失败]");
+		}
 	}
 
 }

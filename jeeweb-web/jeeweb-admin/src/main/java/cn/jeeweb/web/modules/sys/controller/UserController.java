@@ -413,4 +413,30 @@ public class UserController extends BaseBeanController<User> {
 		return validResponse;
 	}
 
+
+	/***
+	 * 更新用户冻结状态
+	 *
+	 * @param userId
+	 * @param status
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@PostMapping("{userId}/freezeUser/{status}")
+	@Log(logType = LogType.UPDATE)
+	@RequiresMethodPermissions("update")
+	public Response updateFreezeUser(@PathVariable String userId,int status, HttpServletRequest request, HttpServletResponse response) {
+		userService.updateForChangeFreezeUserStatus(userId,status);
+		return Response.ok("更新成功");
+	}
+
+	@PostMapping("{userId}/receiveTask/{status}")
+	@Log(logType = LogType.UPDATE)
+	@RequiresMethodPermissions("update")
+	public Response updateReceiveTaskStatus(@PathVariable String userId,int status, HttpServletRequest request, HttpServletResponse response) {
+		userService.updateForChangeReceiveTaskStatusUser(userId,status);
+		return Response.ok("更新成功");
+	}
+
 }
