@@ -21,6 +21,8 @@
 			<#grid:column label="sys.user.username"  name="username"  query="true" condition="like"   />
 			<#grid:column label="sys.user.email"  name="email"  />
 			<#grid:column label="sys.user.phone"  name="phone"  />
+			<#grid:column label="sys.user.freezeStatus" align="center" name="freezeStatus" formatterValue="0:未冻结;1:已冻结" />
+			<#grid:column label="sys.user.receiveTaskStatus" align="center" name="receiveTaskStatus" formatterValue="0:禁止;1:允许"  />
 			<#grid:toolbar title="sys.user.adduser" function="add"/>
 			<#grid:toolbar title="sys.user.updateuser" function="update"/>
 			<#grid:toolbar title="sys.user.modifypwd" icon="fa-database"  function="updateDialog" url="${adminPath}/sys/user/{id}/changePassword"  />
@@ -74,6 +76,7 @@
 					dataType: "json",
 					success: function(data){
 						alert(data.msg);
+						search('userGrid');
 					},
 					error: function (data) {
 						alert("错误！");
@@ -112,6 +115,7 @@
 					dataType: "json",
 					success: function(data){
 						alert(data.msg);
+						search('userGrid');
 					},
 					error: function (data) {
 						alert("错误！");
