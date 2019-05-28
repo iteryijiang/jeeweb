@@ -18,6 +18,16 @@
     DISTINCT
     t.id
   </sql>
+
+    <!-- 关键字获取商户信息 -->
+    <select id="findShopInfoByKeyWord" resultMap="TshopInfo" parameterType="HashMap">
+        SELECT
+            *
+        FROM
+            T_shop_Info t
+        where
+          t.del_flag=0 and t.loginName like '%${map.keyWord}%' or shopName like '%${map.keyWord}%'
+    </select>
   
   <select id="selectUserList" resultMap="TshopInfo">
       select  t.*,sum(b.tasknum-(case when b.status=2 then b.canreceivenum else 0 end)) sumTasknum from T_shop_Info t LEFT JOIN t_task_base b on  t.userid=b.shopId

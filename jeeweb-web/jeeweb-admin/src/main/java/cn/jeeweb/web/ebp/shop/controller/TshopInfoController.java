@@ -22,6 +22,8 @@ import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 
 @RestController
@@ -104,6 +107,36 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
         return Response.ok("删除成功");
     }
 
+    /**
+     * 关键字查询商铺信息
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getShopInfoSuggest")
+    @ResponseBody
+    public JSONArray getShopInfoSuggest(HttpServletRequest request, HttpServletResponse response){
+        try{
+            String keyWord = request.getParameter("keyword");
+            List<TshopInfo> resultList = tshopInfoService.findShopInfoByKeyWord(keyWord);
+            if(!resultList.isEmpty()){
+                JSONArray retObj=new JSONArray();
+                for(TshopInfo obj:resultList){
+                    JSONObject objTemp=new JSONObject();
+                    objTemp.put("showValue",obj.getUserid());
+                    objTemp.put("showText",obj.getShopname()+"["+obj.getLoginname()+"]");
+                    retObj.add(objTemp);
+                }
+                return retObj;
+            }
+            return null;
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+
+    }
 
     /*
      * 商户余额信息统计
