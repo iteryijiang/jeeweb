@@ -15,7 +15,7 @@
 <#grid:column label="货号" width="80"  name="article"/>
 <#grid:column label="颜色" width="80"  name="spec1"/>
 <#grid:column label="规格" width="80"  name="spec2" />
-<#grid:column label="实付金额" width="100"  name="pays" />
+<#grid:column label="实付金额" width="100"  name="pays" formatter="currency" />
 <#grid:column label="订单状态" width="100"  name="taskstate" dict="taskstate" query="true" queryMode="select" condition="eq" />
 
 <#grid:toolbar  function="search"  />

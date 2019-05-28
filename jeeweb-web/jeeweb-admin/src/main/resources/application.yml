@@ -26,9 +26,9 @@ spring:
             enable: true
             required: true
   redis:   #redis 配置
-        host: localhost
+        host: 47.93.1.54
         port: 6379
-        password:
+        password: ytjredis
         jedis:
           pool:
             max-active: 8
@@ -39,8 +39,7 @@ spring:
       basename: i18n/messages,i18n/ValidationMessages
   mvc: # 捕获404
       throw-exception-if-no-handler-found: true
-  resources:
-   add-mappings: false
+      add-mappings: false
   thymeleaf: #关闭默认模板引擎
     cache: false
     enabled: false
@@ -51,8 +50,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: root
-    url: jdbc:mysql://localhost:3306/jeeweb_v2?useUnicode=true&characterEncoding=UTF-8
+    password: Root@2019
+    url: jdbc:mysql://39.108.219.171:3306/jeeweb_test?useUnicode=true&characterEncoding=UTF-8
     type: com.alibaba.druid.pool.DruidDataSource   #这里是配置druid连接池，以下都是druid的配置信息
     filters: stat,wall,log4j
     maxActive: 20

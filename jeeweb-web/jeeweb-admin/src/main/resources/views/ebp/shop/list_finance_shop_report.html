@@ -13,10 +13,10 @@
 <#grid:column label="商家名称" width="140"  name="shopname" query="true" condition="like"/>
 <#grid:column label="商家账号" width="140"  name="loginname" query="true" condition="like"/>
 <#grid:column label="店铺名称" width="160"  name="basename" query="true" condition="like"/>
-<#grid:column label="实付总价" width="100"  name="sumActualprice"  />
-<#grid:column label="买手确认下单实付金额" width="120"  name="sumOrderPrice"/>
-<#grid:column label="商家确认发货实付金额" width="120"  name="sumDeliveryPrice"/>
-<#grid:column label="完成实付金额" width="100"  name="sumFinishPrice"/>
+<#grid:column label="实付总价" width="100"  name="sumActualprice"  formatter="currency" />
+<#grid:column label="买手确认下单实付金额" width="120"  name="sumOrderPrice" formatter="currency"/>
+<#grid:column label="商家确认发货实付金额" width="120"  name="sumDeliveryPrice" formatter="currency"/>
+<#grid:column label="完成实付金额" width="100"  name="sumFinishPrice" formatter="currency"/>
 <#grid:column label="总链接数" width="80"  name="sumCount"/>
 <#grid:column label="已接单数" width="80"  name="sumreceivingnum"/>
 <#grid:column label="已下单单数" width="80"  name="sumordernum"/>

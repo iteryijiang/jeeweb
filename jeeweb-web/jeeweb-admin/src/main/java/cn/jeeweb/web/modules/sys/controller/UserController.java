@@ -11,6 +11,7 @@ import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
+import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TsoldInfo;
 import cn.jeeweb.web.ebp.shop.entity.TuserKey;
@@ -33,6 +34,7 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermission
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.beans.BeanUtils;
@@ -411,6 +413,49 @@ public class UserController extends BaseBeanController<User> {
 			validResponse.setInfo("验证异常，请检查字段是否正确!");
 		}
 		return validResponse;
+	}
+
+
+	/***
+	 * 更新用户冻结状态
+	 *
+	 * @param paramObj
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@PostMapping("updateFreezeStatus")
+	@Log(logType = LogType.UPDATE)
+	@RequiresMethodPermissions("update")
+	public Response updateFreezeUser(@RequestBody JSONObject paramObj, HttpServletRequest request, HttpServletResponse response) {
+		String userId=paramObj.getString("userId");
+		int status=paramObj.getIntValue("status");
+		if(org.apache.commons.lang3.StringUtils.isEmpty(userId) || (YesNoEnum.YES.code !=status && YesNoEnum.NO.code !=status )){
+			return Response.error("更新失败[参数不合法]");
+		}
+		userService.updateForChangeFreezeUserStatus(userId,status);
+		return Response.ok("更新成功");
+	}
+
+	/**
+	 * 更新用户领取任务状态
+	 *
+	 * @param paramObj
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@PostMapping("updatereceiveTask")
+	@Log(logType = LogType.UPDATE)
+	@RequiresMethodPermissions("update")
+	public Response updateReceiveTaskStatus(@RequestBody JSONObject paramObj, HttpServletRequest request, HttpServletResponse response) {
+		String userId=paramObj.getString("userId");
+		int status=paramObj.getIntValue("status");
+		if(org.apache.commons.lang3.StringUtils.isEmpty(userId) || (YesNoEnum.YES.code !=status && YesNoEnum.NO.code !=status )){
+			return Response.error("更新失败[参数不合法]");
+		}
+		userService.updateForChangeReceiveTaskStatus(userId,status);
+		return Response.ok("更新成功");
 	}
 
 }

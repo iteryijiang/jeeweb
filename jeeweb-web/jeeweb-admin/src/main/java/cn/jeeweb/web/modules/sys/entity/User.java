@@ -57,6 +57,18 @@ public class User extends DataEntity<String> {
 	private String status = STATUS_NORMAL;
 
 	/**
+	 * 冻结用户信息
+	 * 默认未冻结0否1是
+	 */
+	private int freezeStatus=0;
+
+	/**
+	 * 用户是否允许领取任务
+	 * 默认允许1是0否
+	 */
+	private int receiveTaskStatus=1;
+
+	/**
 	 * 获取 username
 	 *
 	 * @return: String username
@@ -176,4 +188,19 @@ public class User extends DataEntity<String> {
 		this.status = status;
 	}
 
+	public int getFreezeStatus() {
+		return freezeStatus;
+	}
+
+	public void setFreezeStatus(int freezeStatus) {
+		this.freezeStatus = freezeStatus;
+	}
+
+	public int getReceiveTaskStatus() {
+		return receiveTaskStatus;
+	}
+
+	public void setReceiveTaskStatus(int receiveTaskStatus) {
+		this.receiveTaskStatus = receiveTaskStatus;
+	}
 }

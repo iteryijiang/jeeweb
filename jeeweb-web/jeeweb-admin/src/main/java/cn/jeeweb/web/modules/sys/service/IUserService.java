@@ -49,4 +49,20 @@ public interface IUserService extends ICommonService<User> {
 	 */
 	public User findByPhone(String phone);
 
+	/**
+	 * 更改用户信息用于调整用户的冻结字段状态
+	 *
+	 * @param userId
+	 * @param status
+	 */
+	void updateForChangeFreezeUserStatus(String userId,int status);
+
+	/***
+	 * 更改用户信息用于调整允许领取任务状态
+	 *
+	 * @param userId
+	 * @param status
+	 */
+	void updateForChangeReceiveTaskStatus(String userId,int status);
+
 }
