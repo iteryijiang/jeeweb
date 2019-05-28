@@ -4,8 +4,8 @@
 <#grid:column label="日期"  name="countCreateDate" query="true"  queryMode="date" condition="between" />
 <#grid:column label="买手名称" width="140"  name="buyerName" query="true" condition="like"/>
 <#grid:column label="买手号" width="140"  name="loginName" query="true" condition="like"/>
-<#grid:column label="任务总价" width="140"  name="sumPrice"/>
-<#grid:column label="确认下单金额" width="100"  name="sumOrderPrice"  />
+<#grid:column label="任务总价" width="140"  name="sumPrice" formatter="currency"/>
+<#grid:column label="确认下单金额" width="100"  name="sumOrderPrice"  formatter="currency" />
 <#grid:column label="链接数" width="100"  name="sumNum"/>
 
 <#grid:toolbar  function="search"  />

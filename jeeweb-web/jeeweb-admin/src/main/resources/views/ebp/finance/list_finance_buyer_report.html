@@ -14,9 +14,9 @@
 <#grid:column label="日期"  name="countcreatedate" query="true"  queryMode="date" condition="between" />
 <#grid:column label="买手名称" width="140"  name="buyeridName" query="true" condition="like"/>
 <#grid:column label="买手号" width="140"  name="loginName" query="true" condition="like"/>
-<#grid:column label="任务总价" width="140"  name="sumprice"/>
-<#grid:column label="确认下单金额" width="100"  name="sumorderprice"  />
-<#grid:column label="问题单金额" width="100"  name="errorprice"  />
+<#grid:column label="任务总价" width="140"  name="sumprice" formatter="currency"/>
+<#grid:column label="确认下单金额" width="100"  name="sumorderprice" formatter="currency"  />
+<#grid:column label="问题单金额" width="100"  name="errorprice"  formatter="currency" />
 <#grid:column label="链接数" width="100"  name="sumnum"/>
 <#grid:column label="问题单数" width="100"  name="errornum"/>
 <#grid:column label="状态" width="100"  name="status" dict="buyerFinanceStatus" queryMode="select" condition="eq" query="true"/>

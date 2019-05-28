@@ -11,7 +11,7 @@
 <#grid:column label="京东账号" width="100"  name="buyerjdnick" query="true" condition="like"/>
 <#grid:column label="订单号" width="100"  name="jdorderno" query="true" condition="like"/>
 <#grid:column label="订单状态" width="100"  name="taskstate" dict="taskstate" query="true" queryMode="select" condition="eq" />
-<#grid:column label="实付金额" width="100"  name="pays" />
+<#grid:column label="实付金额" width="100"  name="pays" formatter="currency" />
 
 <#grid:toolbar  function="search"  />
 <#grid:toolbar  function="reset" />

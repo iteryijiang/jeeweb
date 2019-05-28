@@ -5,9 +5,9 @@
 		<#grid:column label="注册时间"  name="createDate" />
 		<#grid:column label="商户等级"  name="accountlevel"  query="true" dict="shopGrade" queryMode="select"  condition="eq"/>
 		<#grid:column label="总完成单数"  name="sumTasknum" />
-		<#grid:column label="总充值金额"  name="totaldeposit" />
-		<#grid:column label="冻结押金"  name="taskdeposit"/>
-		<#grid:column label="账户余额"  name="availabledeposit"/>
+		<#grid:column label="总充值金额"  name="totaldeposit" formatter="currency" />
+		<#grid:column label="冻结押金"  name="taskdeposit" formatter="currency"/>
+		<#grid:column label="账户余额"  name="availabledeposit" formatter="currency"/>
 		<#grid:toolbar function="update" />
 		<#grid:toolbar function="search"  />
 		<#grid:toolbar function="reset" />
