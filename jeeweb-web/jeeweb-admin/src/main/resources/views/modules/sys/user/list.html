@@ -53,6 +53,13 @@
 					alert("未选择用户信息");
 					return;
 				}
+				var confirmObj=true;
+				if(status == 1){
+					confirmObj=confirm("确定要冻结用户信息？");
+				}
+				if(!confirmObj){
+					return ;
+				}
 				var userIds=getSelectUserIdFn(selectRows);
 				var url="${adminPath}/sys/user/updateFreezeStatus";
 				var param={
@@ -83,6 +90,13 @@
 				if(selectRows.length<1){
 					alert("未选择用户信息");
 					return;
+				}
+				var confirmObj=true;
+				if(status == 0){
+					confirmObj=confirm("确定要禁止用户领取任务？");
+				}
+				if(!confirmObj){
+					return ;
 				}
 				var userIds=getSelectUserIdFn(selectRows);
 				var url="${adminPath}/sys/user/updatereceiveTask";
