@@ -22,6 +22,7 @@
 <#grid:column label="已下单单数" width="80"  name="sumordernum"/>
 <#grid:column label="已发货单数" width="80"  name="sumdeliverynum"/>
 <#grid:column label="已完成单数" width="80"  name="sumfinishnum"/>
+<#grid:column label="问题单单数" width="80"  name="sumquestionnum"/>
 <#grid:column label="sys.common.opt"  name="opt" formatter="button" />
 <#grid:button title="详细" exp="row.id!=1"  groupname="opt" function="rowDialogDetailRefresh" winwidth="100%" winheight="100%" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/\"+row.id+\"/buyerDetail' />
 <#grid:toolbar  function="search"  />
