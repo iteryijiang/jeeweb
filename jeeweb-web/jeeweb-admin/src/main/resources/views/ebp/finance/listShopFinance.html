@@ -16,8 +16,8 @@
 
 <#grid:grid id="TfinanceRechargeLogGrid" url="${adminPath}/finance/TfinanceRechargeLog/ajaxList" sortname="createDate" sortorder="desc" sortable="false">
 <#grid:column label="商户号" name="loginname" query="true" condition="like" width="140" />
-<#grid:column label="收入金额" name="producedepositIncomeName" width="100"/>
-<#grid:column label="支出金额" name="producedepositPayName" width="100" formatter="currency"/>
+<#grid:column label="收入金额" name="producedepositIncomeName" formatterColor="ALL:green;" width="100"/>
+<#grid:column label="支出金额" name="producedepositPayName" formatterColor="ALL:red;" width="100"/>
 <#grid:column label="账户余额" name="availabledeposit" width="100" formatter="currency"/>
 <#grid:column label="交易类型" name="tradetype" width="80" dict="tradetype" queryMode="select" condition="eq" query="true"/>
 <#grid:column label="任务编码" name="taskno" width="100" />

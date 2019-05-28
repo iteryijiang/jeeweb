@@ -350,7 +350,7 @@
 		      for(var i =0;i<formatterColors.length;i++){ 
 				 var formatterColorItem = formatterColors[i];
 				 var colorValues=formatterColorItem.split(":");
-				 if(colorValues[0]==value){
+				 if(colorValues[0]==value||colorValues[0]=="ALL"){
 				   cellStyle='color:'+colorValues[1];
 				 }
 			  } 
