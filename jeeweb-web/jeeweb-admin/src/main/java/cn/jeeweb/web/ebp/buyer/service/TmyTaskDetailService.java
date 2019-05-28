@@ -19,7 +19,7 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
     public Map sumNumAndPrice(Map m);
 
     public List<Map> listFinanceBuyerReport(Map map);
-    public List<TmyTaskDetail> listNoSendGood();
+    public List<TmyTaskDetail> listNoSendGood(Map map);
     @Transactional
     public void upTaskState(String taskState,TmyTaskDetail td,String id);
 

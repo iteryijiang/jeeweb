@@ -18,10 +18,12 @@ import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.shop.entity.TshopGradeInfo;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
+import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 
@@ -45,6 +49,8 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
 
     @Autowired
     private TshopInfoService tshopInfoService;
+    @Autowired
+    private TtaskBaseService ttaskBaseService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -131,7 +137,43 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
 
     }
 
+    /*
+     * 商户余额信息统计
+     */
+    @RequestMapping(value = "sumTaskBase", method = { RequestMethod.GET, RequestMethod.POST })
+    public void sumTaskBase(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                                        HttpServletResponse response) throws IOException {
+        Map map = new HashMap();
+        try {
+            String userid = "";
+            if (!"admin".equals(UserUtils.getUser().getUsername())) {
+                userid = UserUtils.getPrincipal().getId();
+            }
+            String create1 = jsonObject.getString("create1");
+            String create2 = jsonObject.getString("create2");
+            String status = jsonObject.getString("status");
 
+            String[] creates = TaskUtils.whereNewDate(create1,create2);
+
+            Map m = new HashMap();
+            m.put("userid",userid);
+            m.put("create1",creates[0]);
+            m.put("create2",creates[1]);
+            m.put("status",status);
+            //获取商户余额，冻结金额等信息
+            Integer i = ttaskBaseService.sumTtaskBase(m);
+            map.put("sumTaskBase",i);
+            Map shopInfoM =  tshopInfoService.selectSumOne(m);
+            if(shopInfoM!=null) {
+                map.put("sumTotaldeposit",shopInfoM.get("sumTotaldeposit"));
+                map.put("sumTaskdeposit",shopInfoM.get("sumTaskdeposit"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        String content = JSON.toJSONString(map);
+        StringUtils.printJson(response,content);
+    }
 
     /**
      * 根据页码和每页记录数，以及查询条件动态加载数据

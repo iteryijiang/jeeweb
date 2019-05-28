@@ -178,20 +178,19 @@
 
   <!-- 商户统计查询，相对应历史减少t_my_task_detail表统计 -->
   <select id="showTaskBaseLoadFinance" resultType="java.util.Map">
-    select sum(t.actualprice*t.tasknum) sumActualprice,sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,sum(finishPrice) sumFinishPrice,sum(count) sumCount,
-    sum(tasknum) sumtasknum,sum(canreceivenum) sumcanreceivenum,sum(tasknum)-sum(canreceivenum) sumunanswerednum,sum(finishnum) sumfinishnum,sum(deliverynum) sumdeliverynum,sum(ordernum) sumordernum
-    ,sum(receivingnum) sumreceivingnum
-    from t_task_base t left join t_shop_info si on t.shopid=si.userid left join t_shop_base sb on t.storename=sb.id LEFT JOIN (
-    select taskid,count(1) count,
-    sum(case when taskstate=4 then pays else 0 end) finishPrice,
-    sum(case when taskstate=3 then pays else 0 end) deliveryPrice,
-    sum(case when taskstate=2 then pays else 0 end) orderPrice,
-    sum(case when taskstate=4 then 1 else 0 end) finishnum,
-    sum(case when taskstate=3 then 1 else 0 end) deliverynum,
-    sum(case when taskstate=2 then 1 else 0 end) ordernum,
-    sum(case when taskstate=1 then 1 else 0 end) receivingnum
-     from t_my_task_detail where (create_date BETWEEN #{map.create1} and #{map.create2}) group by taskid ) b
-    on t.id=b.taskid
+    select
+    sum(t.tasknum) sumtasknum,
+    sum(canreceivenum) sumcanreceivenum,
+    sum(tasknum)-sum(canreceivenum) sumunanswerednum,
+    sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=1)) sumreceivingnum,
+    sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=2)) sumordernum,
+    sum(tasknum)-sum(canreceivenum)-sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id)) sumquestionnum,
+    sum(t.actualprice*t.tasknum) sumActualprice,
+    sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=2)) sumOrderPrice,
+    sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=3)) sumDeliveryPrice,
+    sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=4)) sumfinishnum,
+    sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=4)) sumFinishPrice
+    from t_task_base t left join t_shop_info si on t.shopid=si.userid left join t_shop_base sb on t.storename=sb.id
     where
     1=1
     <if test="map.userid != '' and map.userid != null">
@@ -234,23 +233,17 @@
 
   <select id="listFinanceShopReport" resultType="java.util.Map">
     select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sb.id basenameid,
-    sum(t.actualprice*count) sumActualprice,
-    sum(deliveryPrice) sumDeliveryPrice,sum(orderPrice) sumOrderPrice,
-    sum(finishPrice) sumFinishPrice,sum(count) sumCount,
-    sum(tasknum) sumtasknum,sum(receivingnum) sumreceivingnum,sum(finishnum) sumfinishnum,sum(deliverynum) sumdeliverynum,sum(ordernum) sumordernum
-    from t_task_base t left join t_shop_info s on t.shopid=s.userid left join t_shop_base sb on t.storename=sb.id LEFT JOIN (
-    select taskid,sum(deliveryPrice) deliveryPrice,sum(orderPrice) orderPrice,sum(finishPrice) finishPrice,count(1) count,
-    sum(finishnum) finishnum,sum(deliverynum) deliverynum,sum(ordernum) ordernum,sum(receivingnum) receivingnum
-    from (select taskid,
-    case when taskstate=4 then pays else 0 end finishPrice,
-    case when taskstate=3 then pays else 0 end deliveryPrice,
-    case when taskstate=2 then pays else 0 end orderPrice,
-    case when taskstate=4 then 1 else 0 end finishnum,
-    case when taskstate=3 then 1 else 0 end deliverynum,
-    case when taskstate=2 then 1 else 0 end ordernum,
-    case when taskstate=1 then 1 else 0 end receivingnum
-    from t_my_task_detail where (create_date BETWEEN #{map.createDate1} and #{map.createDate2})) a group by taskid ) b
-    on t.id=b.taskid
+    sum(t.actualprice*(t.tasknum-(case when t.status=2 then canreceivenum else 0 end))) sumActualprice,
+    sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=2)) sumOrderPrice,
+    sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=3)) sumDeliveryPrice,
+    sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=4)) sumFinishPrice,
+    sum(t.tasknum-(case when t.status=2 then canreceivenum else 0 end)) sumCount,
+    sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=1)) sumreceivingnum,
+    sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=2)) sumordernum,
+    sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=3)) sumdeliverynum,
+    sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=4)) sumfinishnum,
+    sum(t.tasknum-(case when t.status=2 then canreceivenum else 0 end)-(select count(1) from t_my_task_detail tmd where tmd.taskid=t.id)) sumquestionnum
+    from t_task_base t left join t_shop_info s on t.shopid=s.userid left join t_shop_base sb on t.storename=sb.id
     where
     1=1
     <if test="map.shopname != '' and map.shopname != null">

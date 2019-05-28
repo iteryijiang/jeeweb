@@ -250,7 +250,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 //        Date date2 = calendar.getTime();
 //        Map map = sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
 //        model.addAttribute("map",map);
-
+        boolean bool = false;
+        if (!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
+            bool = true;
+        }
+        model.addAttribute("showHidden",bool);
         ModelAndView mav = displayModelAndView("list");
         return mav;
     }
@@ -456,6 +460,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         Long sumordernum = 0l;
         Long sumdeliverynum = 0l;
         Long sumfinishnum = 0l;
+        Long sumquestionnum = 0l;
         for (Map map:list) {
             map.put("id",map.get("basenameid")+"_"+map.get("counteffectdate"));
             sumActualprice += Double.parseDouble((map.get("sumActualprice")==null?"0":map.get("sumActualprice")).toString());
@@ -467,6 +472,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             sumordernum += Long.parseLong((map.get("sumordernum")==null?"0":map.get("sumordernum")).toString());
             sumdeliverynum += Long.parseLong((map.get("sumdeliverynum")==null?"0":map.get("sumdeliverynum")).toString());
             sumfinishnum += Long.parseLong((map.get("sumfinishnum")==null?"0":map.get("sumfinishnum")).toString());
+            sumquestionnum += Long.parseLong((map.get("sumquestionnum")==null?"0":map.get("sumquestionnum")).toString());
         }
         Map map = new HashMap();
         map.put("id","1");
@@ -922,8 +928,6 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             }
             String create1 = jsonObject.getString("create1");
             String create2 = jsonObject.getString("create2");
-            String loginname = jsonObject.getString("loginname");
-            String shopname = jsonObject.getString("shopname");
             String status = jsonObject.getString("status");
 
             String[] creates = TaskUtils.whereNewDate(create1,create2);
@@ -933,8 +937,6 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             m.put("create1",creates[0]);
             m.put("create2",creates[1]);
             m.put("status",status);
-            m.put("loginname",(StringUtils.isNotEmpty(loginname)?"%"+loginname+"%":null));
-            m.put("shopname",(StringUtils.isNotEmpty(shopname)?"%"+shopname+"%":null));
             map = ttaskBaseService.showTaskBaseLoadFinance(m);
             if(map==null){
                 map = new HashMap();
@@ -949,14 +951,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 map.put("sumordernum",0);
                 map.put("sumdeliverynum",0);
                 map.put("sumfinishnum",0);
-            }
-            //获取商户余额，冻结金额等信息
-            Integer i = ttaskBaseService.sumTtaskBase(m);
-            map.put("sumTaskBase",i);
-            Map shopInfoM =  tshopInfoService.selectSumOne(m);
-            if(shopInfoM!=null) {
-                map.put("sumTotaldeposit",shopInfoM.get("sumTotaldeposit"));
-                map.put("sumTaskdeposit",shopInfoM.get("sumTaskdeposit"));
+                map.put("sumquestionnum",0);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -977,13 +972,13 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                 TshopGradeInfo tbi =  tshopGradeInfoService.selectOne(entityWrapper);
                 Double actualprice = jsonObject.getDouble("actualprice");
                 int price = TaskUtils.gradePrice(actualprice,tbi);
-                if(price!=-100){
-                    int sum = Integer.parseInt(DictUtils.getDictValue("一个任务单店接单数", "tasknum", "2"));
-                    int sumshop = (int) Math.ceil((price+0.0) / sum);
-                    return Response.ok(sumshop+"");
-                }else {
+//                if(price!=-100){
+//                    int sum = Integer.parseInt(DictUtils.getDictValue("一个任务单店接单数", "tasknum", "2"));
+//                    int sumshop = (int) Math.ceil((price+0.0) / sum);
+//                    return Response.ok(sumshop+"");
+//                }else {
                     return Response.ok(price+"");
-                }
+//                }
             }
 
         } catch (Exception e) {
@@ -991,5 +986,18 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             return Response.ok(tasknum+"");
         }
         return Response.ok(tasknum+"");
+    }
+    /**
+     * 任务总览页面
+     * */
+    @GetMapping(value = "listShopTaskPandect")
+    @RequiresMethodPermissions("listShopTaskPandect")
+    public ModelAndView listShopTaskPandect(Model model, HttpServletRequest request, HttpServletResponse response) {
+        List<Dict> dicList = DictUtils.getDictList("basestate");
+        String content = JSON.toJSONString(dicList);
+        List<TshopInfo> lsit = tshopInfoService.selectByMap(new HashMap<>());
+        model.addAttribute("dicList", content);
+        ModelAndView mav = displayModelAndView("listShopTaskPandect");
+        return mav;
     }
 }

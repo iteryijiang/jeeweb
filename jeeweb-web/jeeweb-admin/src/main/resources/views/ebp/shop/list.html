@@ -22,21 +22,21 @@
 <!--任务编号、发布时间、生效时间、商户号、店铺名、品牌、SKU、搜索关键字、货号、商品单价、实付金额、任务单数、已接单数、已下单数、已发货单数、已完成单数、已撤销单数、任务状态、操作-->
 <#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList" sortname="taskno" sortorder="desc" sortable="false">
 <#grid:column label="任务编号" width="100" query="true" condition="like" name="taskno"/>
-<#grid:column label="发布时间"  name="createDate" width="100"/>
-<#grid:column label="生效时间"  name="effectdate"  query="true" width="100" queryMode="date"  condition="between"  />
-<#grid:column label="商户号" name="loginname" query="true" condition="like" width="120" />
+<#grid:column label="商户号" hidden="${showHidden}" name="loginname" query="true" condition="like" width="120" />
 <#grid:column label="店铺名" name="shopname" query="true" condition="like" width="120" />
-<#grid:column label="品牌"  name="brand" width="80"/>
-<#grid:column label="SKU"  name="skuid" width="80"/>
+<#grid:column label="品牌" hidden="${showHidden}"  name="brand" width="80"/>
+<#grid:column label="SKU"  name="skuid" width="80" query="true"  condition="like"/>
 <#grid:column label="搜索关键字"  name="keyword" width="100"/>
 <#grid:column label="货号"  name="article" query="true"  condition="like" width="80"/>
-<#grid:column label="商品单价"  name="tPrice" width="70" formatter="currency"/>
-<#grid:column label="实付金额"  name="actualprice" width="70" formatter="currency"/>
+<#grid:column label="商品单价"  name="tPrice" width="70"/>
+<#grid:column label="实付金额"  name="actualprice" width="70"/>
+<#grid:column label="发布时间"  name="createDate" width="100"/>
+<#grid:column label="生效时间"  name="effectdate"  query="true" width="100" queryMode="date"  condition="between"  />
 <#grid:column label="任务单数"  name="tasknum" width="60" />
 <#grid:column label="已接单数"  name="receivingnum"  width="60" sortable="true"/>
-<#grid:column label="已下单单数"  name="ordernum"  width="80" sortable="true"/>
-<#grid:column label="已发货单数"  name="deliverynum"  width="80" sortable="false"/>
-<#grid:column label="已完成单数"  name="confirmnum"  width="80" sortable="false"/>
+<#grid:column label="已下单"  name="ordernum"  width="60" sortable="true"/>
+<#grid:column label="已发货"  name="deliverynum"  width="60" sortable="false"/>
+<#grid:column label="已完成"  name="confirmnum"  width="60" sortable="false"/>
 <#grid:column label="任务状态"  name="status" width="60" dict="basestate" queryMode="select"  condition="eq" query="true" />
 <#grid:column label="sys.common.opt"  name="opt" formatter="button" />
 <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />

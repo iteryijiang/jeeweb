@@ -28,7 +28,7 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 
 	List<Map> listTfinanceTaskDoubleReport(@Param("map") Map map);
 
-	List<TmyTaskDetail> listNoSendGood();
+	List<TmyTaskDetail> listNoSendGood(@Param("map") Map map);
 
 
 	List<TmyTaskDetail> listDetail(Pagination page, @Param("ew") Wrapper<TmyTaskDetail> wrapper);

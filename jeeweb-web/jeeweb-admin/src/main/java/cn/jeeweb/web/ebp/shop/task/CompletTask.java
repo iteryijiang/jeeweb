@@ -20,28 +20,26 @@ import java.util.Map;
  * @date: 2019/2/28 16:52
  */
 @Component("shopTask")
-public class ShopTask {
+public class CompletTask {
 
     @Autowired
     private TmyTaskDetailService tmyTaskDetailService;
 
     public void run(){
         try{
-            System.out.println("商户自动发货！");
-            // 获取  已经确认下单 超过24小时 ，还未发货的订单
-            //SELECT * from t_my_task_detail where taskstate='2' and timestampdiff(hour,orderdate,now()) >= 24;
+            System.out.println("自动收货！");
+            // 获取  已发货 超过24小时 ，还未收货 的订单
             Map map = new HashMap<>();
-            map.put("taskstate",2);
-            //upTaskState('3',)
+            map.put("taskstate",3);
             List<TmyTaskDetail> list = tmyTaskDetailService.listNoSendGood(map);
-            System.out.println("开始自动发货："+list.size()+"条");
+            System.out.println("开始自动收货完成："+list.size()+"条");
             long starttime = System.currentTimeMillis();
             for (TmyTaskDetail tmyTaskDetail:list){
                 tmyTaskDetailService.upTaskState("3", tmyTaskDetail,"");
             }
             long endtime = System.currentTimeMillis();
             long usetime = (endtime - starttime)/1000;
-            System.out.println("自动发货总耗时："+usetime+"秒");
+            System.out.println("自动收货总耗时："+usetime+"秒");
         }catch (Exception e){
             e.printStackTrace();
         }
