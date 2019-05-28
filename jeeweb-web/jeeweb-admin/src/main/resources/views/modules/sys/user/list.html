@@ -24,8 +24,13 @@
 			<#grid:toolbar title="sys.user.adduser" function="add"/>
 			<#grid:toolbar title="sys.user.updateuser" function="update"/>
 			<#grid:toolbar title="sys.user.modifypwd" icon="fa-database"  function="updateDialog" url="${adminPath}/sys/user/{id}/changePassword"  />
-			<#grid:toolbar title="导出"   icon="fa-download"  onclick="download()"  />
+			<#grid:toolbar title="导出" icon="fa-download"  onclick="download()"  />
 			<#grid:toolbar function="delete"/>
+			<#grid:toolbar title="冻结" onclick="freezeStatusFn(1)"/>
+			<#grid:toolbar title="解冻" onclick="freezeStatusFn(0)"/>
+			<#grid:toolbar title="允许领取" onclick="updateReceiveTaskStatusFn(1)"/>
+			<#grid:toolbar title="禁止领取" onclick="updateReceiveTaskStatusFn(0)"/>
+
 			<#grid:toolbar function="search"/>
 			<#grid:toolbar function="reset"/>
 		</#grid:grid>
@@ -37,6 +42,81 @@
             function download() {
                 excelExport("${adminPath}/sys/user/export","userGrid");
             }
+
+			/**
+			 * 调整冻结状态
+			 * @param status
+			 */
+			function freezeStatusFn(status){
+				var selectRows = $("#userGrid").jqGrid('getGridParam', 'selarrrow');
+				if(selectRows.length<1){
+					alert("未选择用户信息");
+					return;
+				}
+				var userIds=getSelectUserIdFn(selectRows);
+				var url="${adminPath}/sys/user/updateFreezeStatus";
+				var param={
+					status:status,
+					userId:userIds
+				};
+				$.ajax({
+					type: "POST",
+					url: url,
+					contentType:'application/json;charset=utf-8',
+					data: JSON.stringify(param),
+					dataType: "json",
+					success: function(data){
+						alert(data.msg);
+					},
+					error: function (data) {
+						alert("错误！");
+					}
+				});
+			}
+
+			/**
+			 * 调整接收任务状态
+			 * @param status
+			 */
+			function updateReceiveTaskStatusFn(status){
+				var selectRows = $("#userGrid").jqGrid('getGridParam', 'selarrrow');
+				if(selectRows.length<1){
+					alert("未选择用户信息");
+					return;
+				}
+				var userIds=getSelectUserIdFn(selectRows);
+				var url="${adminPath}/sys/user/updatereceiveTask";
+				var param={
+					status:status,
+					userId:userIds
+				};
+				$.ajax({
+					type: "POST",
+					url: url,
+					contentType:'application/json;charset=utf-8',
+					data: JSON.stringify(param),
+					dataType: "json",
+					success: function(data){
+						alert(data.msg);
+					},
+					error: function (data) {
+						alert("错误！");
+					}
+				});
+			}
+
+			/**
+			 * 获取选中的用户信息
+			 * @param selectRows
+			 * @returns {string}
+			 */
+			function getSelectUserIdFn(selectRows){
+				var userIds="";
+				for(var idx=0;idx<selectRows.length;idx++){
+					userIds+=","+selectRows[idx];
+				}
+				return userIds.substring(1);
+			}
 		</script>
 	</div>
 </div>

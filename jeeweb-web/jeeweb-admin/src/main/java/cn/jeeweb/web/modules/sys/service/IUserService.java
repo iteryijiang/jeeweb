@@ -63,6 +63,6 @@ public interface IUserService extends ICommonService<User> {
 	 * @param userId
 	 * @param status
 	 */
-	void updateForChangeReceiveTaskStatusUser(String userId,int status);
+	void updateForChangeReceiveTaskStatus(String userId,int status);
 
 }

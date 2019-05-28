@@ -11,7 +11,10 @@
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="freeze_status" property="freezeStatus" jdbcType="INTEGER" />
+    <result column="receive_task_status" property="receiveTaskStatus" jdbcType="INTEGER" />
   </resultMap>
+
   
   <sql id="Base_Column_List" >
     DISTINCT
@@ -23,7 +26,9 @@
     t.salt, 
     t.email, 
     t.phone, 
-    t.status
+    t.status,
+    t.freeze_status,
+    t.receive_task_status
   </sql>
   
   <sql id="userOrganizationJoins">
@@ -41,5 +46,23 @@
 		  </where>
 	   </if> 
   </select>
+  <!-- 调整冻结状态 -->
+  <update id="updateUserFreezeStatus" parameterType="HashMap">
+    update
+      sys_user
+    set
+      freeze_status=#{map.status},update_by=#{map.lastRepair},update_date=#{map.lastTime}
+    where
+      id in (${map.userId})
+  </update>
+  <!-- 调整领取特内状态 -->
+  <update id="updateUserReceiveTaskStatus" parameterType="HashMap">
+    update
+      sys_user
+    set
+      receive_task_status=#{map.status},update_by=#{map.lastRepair},update_date=#{map.lastTime}
+    where
+      id in (${map.userId})
+  </update>
 
 </mapper>
