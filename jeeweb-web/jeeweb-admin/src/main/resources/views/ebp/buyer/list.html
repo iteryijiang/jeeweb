@@ -22,7 +22,7 @@
     <#grid:column label="任务状态"  name="state"  width="60" dict="basestate" queryMode="select" width="80" condition="eq" query="true" />
     <#grid:column label="sys.common.opt"  name="opt" formatter="button" width="100"/>
     <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh"  winwidth="100%" winheight="100%"  outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTask/\"+row.id+\"/detail' />
-    <#grid:toolbar title="领取任务" id="taskReceive"  icon="fa-download"  onclick="gettask($(this))"  />
+    <#grid:toolbar title="领取任务"  id="taskReceive"  icon="fa-download"  onclick="gettask($(this))"  />
     <#grid:toolbar  function="search"  />
     <#grid:toolbar  function="reset" />
 </#grid:grid>

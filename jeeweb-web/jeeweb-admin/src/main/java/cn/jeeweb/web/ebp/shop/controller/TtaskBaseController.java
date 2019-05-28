@@ -37,6 +37,7 @@ import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.modules.oss.entity.Attachment;
 import cn.jeeweb.web.modules.oss.helper.AttachmentHelper;
+import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -763,6 +764,10 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public Response myTaskCreate(HttpServletRequest request,HttpServletResponse response) throws Exception {
         synchronized(this) {
             try {
+                User user = UserUtils.getUser();
+                if(user!=null&&(0!=user.getFreezeStatus()||1!=user.getReceiveTaskStatus())){
+                    return Response.ok("您已被限制领取任务，请联系管理员！");
+                }
                 //如果上一任务未完成，则不能领取任务
                 Map map = new HashMap();
                 map.put("userid", UserUtils.getPrincipal().getId());

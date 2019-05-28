@@ -19,7 +19,7 @@ import java.util.Map;
  * @author: iteryi
  * @date: 2019/2/28 16:52
  */
-@Component("shopTask")
+@Component("completTask")
 public class CompletTask {
 
     @Autowired
@@ -35,7 +35,7 @@ public class CompletTask {
             System.out.println("开始自动收货完成："+list.size()+"条");
             long starttime = System.currentTimeMillis();
             for (TmyTaskDetail tmyTaskDetail:list){
-                tmyTaskDetailService.upTaskState("3", tmyTaskDetail,"");
+                tmyTaskDetailService.upTaskState("4", tmyTaskDetail,"");
             }
             long endtime = System.currentTimeMillis();
             long usetime = (endtime - starttime)/1000;

@@ -74,7 +74,7 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
         if(td==null){
             td = selectById(id);
         }
-        if ("3".equals(taskState) || UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())) {
+        if ("3".equals(taskState) || "4".equals(taskState) || UserUtils.getPrincipal().getId().equals(td.getCreateBy().getId())) {
             TmyTask tt = tmyTaskService.selectById(td.getMytaskid());
             if ("2".equals(taskState) && "1".equals(td.getTaskstate())) {
                 td.setOrderdate(new Date());

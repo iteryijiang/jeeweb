@@ -29,6 +29,7 @@ import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.modules.sys.entity.Menu;
 import cn.jeeweb.web.modules.sys.entity.OperationLog;
+import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -72,6 +73,12 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
 //        Map map = sumNumAndPrice(userid,DateUtils.formatDate(date,"yyyy-MM-dd"),DateUtils.formatDate(date2,"yyyy-MM-dd"));
 //        model.addAttribute("map",map);
         ModelAndView mav = displayModelAndView("list");
+        boolean bool = false;
+        User user = UserUtils.getUser();
+        if(user!=null&&0==user.getFreezeStatus()&&1==user.getReceiveTaskStatus()){
+            bool =true;
+        }
+        model.addAttribute("showbut",bool);
         return mav;
     }
     @GetMapping(value = "listFinanceBuyerReportHTML")

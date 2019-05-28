@@ -33,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,8 +108,8 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
     /*
      * 商户余额信息统计
      */
-    @RequestMapping(value = "sumTaskBase", method = { RequestMethod.GET, RequestMethod.POST })
-    public void sumTaskBase(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+    @RequestMapping(value = "sumShopInfo", method = { RequestMethod.GET, RequestMethod.POST })
+    public void sumShopInfo(@RequestBody JSONObject jsonObject, HttpServletRequest request,
                                         HttpServletResponse response) throws IOException {
         Map map = new HashMap();
         try {
@@ -132,8 +133,13 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
             map.put("sumTaskBase",i);
             Map shopInfoM =  tshopInfoService.selectSumOne(m);
             if(shopInfoM!=null) {
-                map.put("sumTotaldeposit",shopInfoM.get("sumTotaldeposit"));
+                map.put("sumAvailabledeposit",shopInfoM.get("sumAvailabledeposit"));
                 map.put("sumTaskdeposit",shopInfoM.get("sumTaskdeposit"));
+                BigDecimal sumTotaldeposit = new BigDecimal(0);
+                if(shopInfoM.get("sumAvailabledeposit")!=null&&shopInfoM.get("sumTaskdeposit")!=null){
+                    sumTotaldeposit = new BigDecimal(shopInfoM.get("sumAvailabledeposit").toString()).add(new BigDecimal(shopInfoM.get("sumTaskdeposit").toString()));
+                }
+                map.put("sumTotaldeposit",sumTotaldeposit);
             }
         }catch (Exception e){
             e.printStackTrace();

@@ -165,11 +165,11 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
         PageResponse<TfinanceRechargeLog> pagejson = new PageResponse<>(tfinanceRechargeLogService.list(queryable,entityWrapper));
         List<TfinanceRechargeLog> new_lsit = new ArrayList<TfinanceRechargeLog>();
         for (TfinanceRechargeLog a:pagejson.getResults()) {
-            String s = "+";
             if(TfinanceRechargeService.rechargetype_2.equals(a.getTradetype())||TfinanceRechargeService.rechargetype_3.equals(a.getTradetype())){
-                s="-";
+                a.setProducedepositPayName("-"+a.getProducedeposit());
+            }else {
+                a.setProducedepositIncomeName("+"+a.getProducedeposit());
             }
-            a.setProducedepositName(s+a.getProducedeposit());
         }
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);

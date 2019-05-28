@@ -38,7 +38,7 @@
     </select>
 
   <select id="selectSumOne" resultType="java.util.Map">
-        SELECT sum(availabledeposit) sumTotaldeposit,sum(taskdeposit) sumTaskdeposit FROM T_shop_Info t where
+        SELECT sum(availabledeposit) sumAvailabledeposit,sum(taskdeposit) sumTaskdeposit FROM T_shop_Info t where
         1=1
       <if test="map.userid != '' and map.userid != null">
         and t.userid=#{map.userid}

@@ -36,7 +36,11 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 	@TableField(exist = false)
 	private String shopname;
 	@TableField(exist = false)
-	private String producedepositName;
+	private String producedepositIncomeName;//收入
+	@TableField(exist = false)
+	private String producedepositPayName;//支出
+	@TableField(exist = false)
+	private String taskno;
 
 
 
@@ -138,12 +142,20 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 		this.shopname = shopname;
 	}
 
-	public String getProducedepositName() {
-		return producedepositName;
+	public String getProducedepositIncomeName() {
+		return producedepositIncomeName;
 	}
 
-	public void setProducedepositName(String producedepositName) {
-		this.producedepositName = producedepositName;
+	public void setProducedepositIncomeName(String producedepositIncomeName) {
+		this.producedepositIncomeName = producedepositIncomeName;
+	}
+
+	public String getProducedepositPayName() {
+		return producedepositPayName;
+	}
+
+	public void setProducedepositPayName(String producedepositPayName) {
+		this.producedepositPayName = producedepositPayName;
 	}
 
 	public String getTaskid() {
@@ -152,5 +164,13 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 
 	public void setTaskid(String taskid) {
 		this.taskid = taskid;
+	}
+
+	public String getTaskno() {
+		return taskno;
+	}
+
+	public void setTaskno(String taskno) {
+		this.taskno = taskno;
 	}
 }

@@ -2,43 +2,12 @@
 <div>
     <table cellpadding="10" style="font-size:18px;padding: 10px">
         <tr>
-            <td colspan="6"><h3 style="color: #000000;">任务发布信息</h3><hr /></td>
-        </tr>
-        <tr>
-            <td><p>实付总价：<span style="color:green;font-weight: bold" id="sumActualprice"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>买手确认下单实付金额：<span style="color:green;font-weight: bold" id="sumOrderPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>商家确认发货实付金额：<span style="color:red;font-weight: bold" id="sumDeliveryPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>完成实付金额：<span style="color:red;font-weight: bold" id="sumFinishPrice"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>任务单数：<span style="color:green;font-weight: bold" id="sumtasknum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-        </tr>
-        <tr>
-            <td><p>已接单数：<span style="color:green;font-weight: bold" id="sumunanswerednum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>未接单数：<span style="color:blue;font-weight: bold" id="sumcanreceivenum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已接单、待下单：<span style="color:blue;font-weight: bold" id="sumreceivingnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已下单、待发货：<span style="color:red;font-weight: bold" id="sumordernum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已发货、待收货	：<span style="color:blue;font-weight: bold" id="sumdeliverynum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <td><p>已收货、完成：<span style="color:blue;font-weight: bold" id="sumfinishnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
-        </tr>
-        <tr>
-            <td style="font-size: 15px">
-                <div class="col-sm-12">
-                    <div class="form-inline">
-                        <div class="form-group">
-                            <label class="control-label">任务状态：</label>
-                            <select id="status" class="form-control"><option value="">请选择</option></select>
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
             <td colspan="6"><h3 style="color: #000000;">商户余额信息</h3><hr /></td>
         </tr>
         <tr>
-            <td><p>账号余额：<span style="color:green;font-weight: bold" id="sumTotaldeposit"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>账户余额：<span style="color:green;font-weight: bold" id="sumTotaldeposit"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>可用余额：<span style="color:green;font-weight: bold" id="sumAvailabledeposit"></span>&nbsp;&nbsp;&nbsp;</p></td>
             <td><p>冻结金额：<span style="color:green;font-weight: bold" id="sumTaskdeposit"></span>&nbsp;&nbsp;&nbsp;</p></td>
-            <!--<td><p>等级：<span style="color:red;font-weight: bold" id="accountlevel"></span>&nbsp;&nbsp;&nbsp;</p></td>-->
-            <td><p>累计发布单数：<span style="color:red;font-weight: bold" id="sumTaskBase"></span>&nbsp;&nbsp;&nbsp;</p></td>
         </tr>
 
     </table>
@@ -46,12 +15,14 @@
 </div>
 
 <#grid:grid id="TfinanceRechargeLogGrid" url="${adminPath}/finance/TfinanceRechargeLog/ajaxList" sortname="createDate" sortorder="desc" sortable="false">
-<#grid:column label="日期" name="createDate"  query="true" width="100" queryMode="date"  condition="between" />
 <#grid:column label="商户号" name="loginname" query="true" condition="like" width="140" />
-<#grid:column label="店铺" name="shopname" query="true"  condition="like" width="140" />
+<#grid:column label="收入金额" name="producedepositIncomeName" width="100"/>
+<#grid:column label="支出金额" name="producedepositPayName" width="100" formatter="currency"/>
+<#grid:column label="账户余额" name="availabledeposit" width="100" formatter="currency"/>
 <#grid:column label="交易类型" name="tradetype" width="80" dict="tradetype" queryMode="select" condition="eq" query="true"/>
-<#grid:column label="发生金额" name="producedepositName" width="100" formatter="currency"/>
-<#grid:column label="余额" name="availabledeposit" width="100" formatter="currency"/>
+<#grid:column label="任务编码" name="taskno" width="100" />
+<#grid:column label="店铺" name="shopname" query="true"  condition="like" width="140" />
+<#grid:column label="日期" name="createDate"  query="true" width="100" queryMode="date"  condition="between" />
 
 <#grid:toolbar  function="search" />
 <#grid:toolbar  function="reset" />
@@ -79,26 +50,14 @@
         data.status =  $("#status").val();
         $.ajax({
             type: "POST",
-            url: "${adminPath}/shop/TtaskBase/showTaskBaseLoadFinance",
+            url: "${adminPath}/shop/TshopInfo/sumShopInfo",
             contentType:'application/json;charset=utf-8',
             data: JSON.stringify(data),
             dataType: "json",
             success: function(data){
-                $("#sumTotaldeposit").html(data.sumTotaldeposit==undefined?"0":data.sumTotaldeposit);
+                $("#sumTotaldeposit").html(data.sumTaskBase==undefined?"0":data.sumTotaldeposit);
+                $("#sumAvailabledeposit").html(data.sumAvailabledeposit==undefined?"0":data.sumAvailabledeposit);
                 $("#sumTaskdeposit").html(data.sumTaskdeposit==undefined?"0":data.sumTaskdeposit);
-                $("#sumTaskBase").html(data.sumTaskBase==undefined?"0":data.sumTaskBase);
-                $("#sumActualprice").html(data.sumActualprice==undefined?"0":data.sumActualprice);
-                $("#sumOrderPrice").html(data.sumOrderPrice==undefined?"0":data.sumOrderPrice);
-                $("#sumDeliveryPrice").html(data.sumDeliveryPrice==undefined?"0":data.sumDeliveryPrice);
-                $("#sumFinishPrice").html(data.sumFinishPrice==undefined?"0":data.sumFinishPrice);
-                $("#sumtasknum").html(data.sumtasknum==undefined?"0":data.sumtasknum);
-
-                $("#sumcanreceivenum").html(data.sumcanreceivenum==undefined?"0":data.sumcanreceivenum);
-                $("#sumunanswerednum").html(data.sumunanswerednum==undefined?"0":data.sumunanswerednum);
-                $("#sumreceivingnum").html(data.sumreceivingnum==undefined?"0":data.sumreceivingnum);
-                $("#sumordernum").html(data.sumordernum==undefined?"0":data.sumordernum);
-                $("#sumdeliverynum").html(data.sumdeliverynum==undefined?"0":data.sumdeliverynum);
-                $("#sumfinishnum").html(data.sumfinishnum==undefined?"0":data.sumfinishnum);
             }
         });
     }
