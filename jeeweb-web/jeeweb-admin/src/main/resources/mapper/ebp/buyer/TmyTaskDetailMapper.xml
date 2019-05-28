@@ -127,7 +127,7 @@
         order by DATE_FORMAT(t.create_date,'%Y-%m-%d')
     </select>
     <select id="listNoSendGood"  resultMap="TmyTaskDetail">
-        SELECT * from t_my_task_detail where taskstate='2' and timestampdiff(hour,orderdate,now()) >= 24;
+        SELECT * from t_my_task_detail where taskstate=#{map.taskstate} and timestampdiff(hour,orderdate,now()) >= 24;
     </select>
 
     <select id="sumTaskBase" resultType="java.lang.Integer">

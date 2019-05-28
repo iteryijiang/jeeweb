@@ -57,8 +57,8 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
         return baseMapper.selectMytaskList(mytaskid);
     }
 
-    public  List<TmyTaskDetail> listNoSendGood(){
-        return baseMapper.listNoSendGood();
+    public  List<TmyTaskDetail> listNoSendGood(Map m){
+        return baseMapper.listNoSendGood(m);
     }
 
     public List<Map> listFinanceBuyerReport(Map map){
