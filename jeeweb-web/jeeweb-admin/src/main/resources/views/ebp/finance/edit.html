@@ -6,9 +6,8 @@
 		<tr>
 			<td  class="width-15 active text-right">	<label><font color="red">*</font>商户号:</label></td>
 			<td  class="width-35" >
-				<#form:select path="shopid" class="form-control"   htmlEscape="false" nullmsg="请选择商户号！"
-				items="${booksQueryList}"
-				itemLabel="loginname" itemValue="userid"/>
+				<#form:combox nested="false" idField="showValue" keyField="showText" effectiveFields="showText" multiWord="true"
+				effectiveFieldsAlias="商户名称[商户登录名]" showHeader="false" path="shopid" dataUrl="${adminPath}/shop/TshopInfo/getShopInfoSuggest" />
 				<label class="Validform_checktip"></label>
 			</td>
 			<td  class="width-15 active text-right">
@@ -49,3 +48,4 @@
 	</table>
 </#form:form>
 <% } %>
+<#html:js name="suggest" />

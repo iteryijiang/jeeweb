@@ -12,6 +12,14 @@ public interface TshopInfoService extends ICommonService<TshopInfo> {
 
     public List<TshopInfo> findshopInfo();
 
+    /**
+     * 关键字查询商户信息
+     *
+     * @param keyWord
+     * @return
+     */
+    List<TshopInfo> findShopInfoByKeyWord(String keyWord);
+
     public TshopInfo  selectOne(String userid);
 
     public Map selectSumOne(Map m);

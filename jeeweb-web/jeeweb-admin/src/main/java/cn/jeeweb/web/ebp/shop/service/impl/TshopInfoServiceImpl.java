@@ -24,6 +24,13 @@ public class TshopInfoServiceImpl extends CommonServiceImpl<TshopInfoMapper, Tsh
         return baseMapper.findshopInfo();
     }
 
+    @Override
+    public List<TshopInfo> findShopInfoByKeyWord(String keyWord){
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("keyWord",keyWord);
+        return baseMapper.findShopInfoByKeyWord(paramMap);
+    }
+
     public TshopInfo  selectOne(String userid){
         return baseMapper.selectOne(userid);
     }
