@@ -26,10 +26,15 @@ import cn.jeeweb.web.ebp.buyer.entity.*;
 import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerHandleService;
 import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
+import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.enums.UnusualTaskHandleMethodEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
 import cn.jeeweb.web.ebp.finance.service.TfinanceBuyerReportService;
+import cn.jeeweb.web.ebp.shop.entity.TshopBase;
+import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
+import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.modules.sys.entity.LoginLog;
@@ -67,6 +72,14 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
     private TapplyTaskBuyerService tapplyTaskBuyerService;
     @Autowired
     private TapplyTaskBuyerHandleService tapplyTaskBuyerHandleService;
+    @Autowired
+    private TtaskBaseService ttaskBaseService;
+    @Autowired
+    private TshopInfoService tshopInfoService;
+    @Autowired
+    private TshopBaseService tshopBaseService;
+    @Autowired
+    private TmyTaskService tmyTaskService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -723,6 +736,66 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
         }finally {
             StringUtils.printJson(response,content);
         }
+    }
+
+
+    /**
+     * 异常订单处理
+     * 初始化取消买手申请
+     *
+     * @param applyId
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("getApplyTaskDetail/{applyId}")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView getApplyTaskDetail(@PathVariable("applyId") String applyId,Model model,HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("showTaskApplyDetail");
+        try {
+            TapplyTaskBuyer obj= tapplyTaskBuyerService.selectById(applyId);
+            TmyTaskDetail tmyTaskDetail=tmyTaskDetailService.selectById(obj.getBuyerTaskId());
+            TtaskBase tb = ttaskBaseService.selectById(tmyTaskDetail.getTaskid());
+            TshopInfo tsi = tshopInfoService.selectOne(tb.getShopid());
+            TshopBase tsb = tshopBaseService.selectById(tb.getStorename());
+            model.addAttribute("tb",tb);
+            model.addAttribute("tsi",tsi);
+            model.addAttribute("tsb",tsb);
+            //进行中，完成数
+            int taskstatus0=0,taskstatus1=0;
+            int taskstate2=0,taskstate4=0;
+
+            List<Map> list = tmyTaskDetailService.groupBytaskstatus(tb.getId());
+            for (int i=0;i<list.size();i++){
+                Map map = list.get(i);
+                if("0".equals(map.get("taskstatus").toString())){
+                    taskstatus0 = Integer.parseInt(map.get("counts").toString());
+                }else if("1".equals(map.get("taskstatus").toString())){
+                    taskstatus1 = Integer.parseInt(map.get("counts").toString());
+                }
+            }
+            List<Map> listState = tmyTaskDetailService.groupBytaskstate(tb.getId());
+            for (int i=0;i<listState.size();i++){
+                Map map = listState.get(i);
+                if("2".equals(map.get("taskstate").toString())){
+                    taskstate2 = Integer.parseInt(map.get("counts").toString());
+                }else if("4".equals(map.get("taskstate").toString())){
+                    taskstate4 = Integer.parseInt(map.get("counts").toString());
+                }
+            }
+            model.addAttribute("taskstatus0",taskstatus0);
+            model.addAttribute("taskstatus1",taskstatus1);
+            model.addAttribute("taskstate2",taskstate2);
+            model.addAttribute("taskstate4",taskstate4);
+            model.addAttribute("createDateFormat",DateUtils.formatDate(tb.getCreateDate(),"yyyy-MM-dd"));
+            model.addAttribute("effectdateFormat",DateUtils.formatDate(tb.getEffectdate(),"yyyy-MM-dd"));
+            model.addAttribute("applyObj",obj);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return mav;
     }
 
     /**
