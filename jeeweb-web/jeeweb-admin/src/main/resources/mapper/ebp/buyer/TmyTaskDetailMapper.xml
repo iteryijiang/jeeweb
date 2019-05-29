@@ -140,7 +140,7 @@
         set
             update_by=#{map.lastRepair},update_date=#{map.lastTime},error_status=#{map.status}
         where
-            id=#{map.taskId} and del_flag=0 and taskstate between 0 and 2
+            id=#{map.taskId} and del_flag=0 and taskstate between 0 and 1
     </update>
 
     <select id="listTfinanceTaskDoubleReport" resultType="java.util.Map">
