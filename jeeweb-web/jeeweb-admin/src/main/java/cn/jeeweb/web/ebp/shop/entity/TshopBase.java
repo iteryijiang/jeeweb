@@ -26,7 +26,6 @@ public class TshopBase extends DataEntity<String> {
 	private String status;//	varchar	32	0	-1	0	0	0	0		0	状态	utf8	utf8_general_ci		0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
 
-
 	@TableField(exist = false)
 	private String realname;
 
