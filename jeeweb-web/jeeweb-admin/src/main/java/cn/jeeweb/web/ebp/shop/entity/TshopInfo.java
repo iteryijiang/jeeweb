@@ -28,7 +28,7 @@ public class TshopInfo extends DataEntity<String> {
 	private BigDecimal availabledeposit;//	double	10	2	-1	0	0	0	0		0	可用押金				0	0
 	private String status;//	varchar	32	0	-1	0	0	0	0		0	状态	utf8	utf8_general_ci		0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
-
+	private int fromInnerOuter;//商户所属来源1内部2外部
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
 	@JSONField(format="yyyy-MM-dd HH:mm")
@@ -136,4 +136,12 @@ public class TshopInfo extends DataEntity<String> {
 	public void setSumTasknum(int sumTasknum) {
 		this.sumTasknum = sumTasknum;
 	}
+	public int getFromInnerOuter() {
+		return fromInnerOuter;
+	}
+
+	public void setFromInnerOuter(int fromInnerOuter) {
+		this.fromInnerOuter = fromInnerOuter;
+	}
+	
 }

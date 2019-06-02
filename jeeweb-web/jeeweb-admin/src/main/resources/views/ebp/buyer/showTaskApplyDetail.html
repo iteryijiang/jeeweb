@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情</title>
+    <link rel="stylesheet" href="${staticPath}/shop/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${staticPath}/shop/css/swiper-3.4.2.min.css">
+    <link rel="stylesheet" href="${staticPath}/shop/css/fileinput.min.css">
+    <link rel="stylesheet" href="${staticPath}/shop/css/ProjectGlobal.css">
+    <link rel="stylesheet" href="${staticPath}/shop/css/global.css">
+    <script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
+    <script src='${staticPath}/shop/js/bootstrap.min.js'></script>
+    <script src='${staticPath}/shop/js/fileinput.min.js'></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+</head>
+<body>
+<!-- 中间主体 -->
+<div class='main_container task_detail'>
+    <div>
+        <div class="get-menu" style="float:left">
+            <a href="#">商家</a>
+            <span>></span>
+            <a class="A1" href="#">任务详情</a>
+        </div>
+        <div style="float:right;height:30px;padding-top: 11px;">
+            <a href="javascript:void(0)" style="font-size:17px;" onclick="cancelApplyTaskForShopFn()">点我撤销商家任务</a>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+    <!-- 任务信息 -->
+    <div class='task_table'>
+        <table>
+            <tr>
+                <td>编号：</td>
+                <td>${tb.taskno}</td>
+                <td>类型：</td>
+                <td>文字好评订单</td>
+                <td>发布时间：</td>
+                <td>${createDateFormat}</td>
+            </tr>
+            <tr>
+                <td>店铺：</td>
+                <td colspan="3" style="text-align:left"> &nbsp;&nbsp;${tsb.shopname}</td>
+                <td>定时发布时间:</td>
+                <td>${effectdateFormat}</td>
+            </tr>
+            <tr>
+                <td>总单数：</td>
+                <td><span><b class='yel'>${tb.tasknum}</b>单</span></td>
+                <td colspan="4" style="text-align:left">
+                    &nbsp;&nbsp;
+                    手机Pad端:<span><b class='yel'>${tb.tasknum}</b>单</span>
+                    &nbsp;&nbsp;
+                    进行中：
+                    <span><b class='yel'>${(taskstatus0==null?0:taskstatus0)}</b>单，未接手<b class='yel'>${tb.tasknum-(taskstatus0==null?0:taskstatus0)-(taskstatus1==null?0:taskstatus1)}</b>单，已完成：<b class='yel'>${(taskstatus1==null?0:taskstatus1)}</b>单</span>
+                </td>
+            </tr>
+            <tr>
+                <td>状态：</td>
+                <td colspan="5" style="text-align:left">
+                    &nbsp;&nbsp;
+                    ${tb.status=="0"?"买手正在接手中":tb.status=="1"?"买手完成接单":"商家撤销"}
+                    &nbsp;&nbsp;
+                    买手已付款，代发货(${(taskstate2==null?0:taskstate2)})
+                    &nbsp;&nbsp;
+                    买手已收货，完成(${(taskstate4==null?0:taskstate4)})
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- 订单详情表格 -->
+    <div class="get-menu">
+        <a href="#">买手</a>
+        <span>></span>
+        <a class="A1" href="#">接单列表</a>
+    </div>
+    <div class=task_table>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>平台编号</th>
+                <th>京东账号</th>
+                <th>接单时间</th>
+                <th>下单时间</th>
+                <th>订单号</th>
+                <th>订单状态</th>
+                <th>实付金额</th>
+            </tr>
+            </thead>
+            <tbody id="tbodyMy"></tbody>
+        </table>
+    </div>
+    <!-- 任务商品-->
+    <div class='task_target'>
+        <h3>任务商品</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>商品</th>
+                <th>搜索关键字</th>
+                <th>品牌</th>
+                <th>二维码</th>
+                <th>颜色</th>
+                <th>规格</th>
+                <th>单价</th>
+                <th>实付价格</th>
+                <th>每单拍*个</th>
+                <th>小计</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <img src="${tb.imgurl}" alt="">
+                    <span><a href="${tb.tUrl}" target="_blank">${tb.tTitle}</a></span>
+                </td>
+                <td>${tb.keyword}</td>
+                <td>${tb.brand}</td>
+                <td><img src="${tb.qrcodeurl}" alt=""></td>
+                <td>${tb.spec1}</td>
+                <td>${tb.spec2}</td>
+                <td>${tb.tPrice}</td>
+                <td>${tb.actualprice}</td>
+                <td>${tb.tNum}</td>
+                <td>${tb.totalprice}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="height:30px;padding-bottom:10px;text-align:right;">
+        <a href="javascript:void(0)" style="font-size:17px;" onclick="cancelApplyTaskForShopFn()">点我撤销商家任务</a>
+    </div>
+</div>
+</body>
+<script>
+    $(function(){
+        $.ajax({
+            type:'POST',
+            url: "${adminPath}/buyer/TmyTask/selBaseIdMyTaskList",
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify({"taskId":"${tb.id}"}),
+            success:function (json) {
+                var tbody = "";
+                for (var i = 0; i < json.length; i++) {
+                    var tr = "<tr>";
+                    tr += "<td>"+(json[i].buyeridName==undefined?"":json[i].buyeridName)+"</td>";
+                    tr += "<td>"+(json[i].buyerjdnick==undefined?"":json[i].buyerjdnick)+"</td>";
+                    tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].createDate)))+"</td>";
+                    tr += "<td>"+(json[i].orderdate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].orderdate)))+"</td>";
+                    tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p></td>";//<p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a>
+                    tr += "<td>"+(json[i].taskstateName==undefined?"":json[i].taskstateName)+(json[i].remarks==undefined?"":"("+json[i].remarks+")")+"</td>";
+                    tr += "<td>"+(json[i].pays==undefined?"":json[i].pays)+".00</td>";
+                    tr +="</tr>";
+                    tbody+=tr;
+                }
+                $("#tbodyMy").html(tbody);
+            }
+        });
+    })
+    function dateFtt(fmt,date){
+        var o = {
+            "M+" : date.getMonth()+1,                 //月份
+            "d+" : date.getDate(),                    //日
+            "h+" : date.getHours(),                   //小时
+            "m+" : date.getMinutes(),                 //分
+            "s+" : date.getSeconds(),                 //秒
+            "q+" : Math.floor((date.getMonth()+3)/3), //季度
+            "S"  : date.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt))
+            fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+        return fmt;
+    }
+    //撤销商户任务
+    function cancelApplyTaskForShopFn(){
+        if(${applyObj.applyStatus}==1){
+            alert("当前申请已经处理！！！");
+            return;
+        }
+        var postUrl="${adminPath}/buyer/TmyTaskDetail/cancelApplyTaskForShop/${applyObj.id}";
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            contentType:'application/json;charset=utf-8',
+            data: null,
+            dataType: "json",
+            success: function(data){
+                alert(data.msg);
+            },
+            error: function(data){
+                console.log(data.msg);
+            }
+        });
+
+
+    }
+</script>
+</html>

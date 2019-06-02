@@ -12,8 +12,7 @@
 <#grid:column label="处理时间" name="handleTime" width="80" align="center"/>
 <#grid:column label="处理人" name="handleMan" width="80" align="center"/>
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/getApplyTaskDetail/1/\"+row.id+\"' />
-<#grid:button title="驳回申请"  groupname="opt" function="rowDialogDetailRefresh" winwidth="500px" winheight="350px" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/initTurnDownApplyTask/\"+row.id+\"' />
+<#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/getApplyTaskDetail/0/\"+row.id+\"' />
 <#grid:toolbar  function="search" />
 <#grid:toolbar  function="reset" />
 </#grid:grid>

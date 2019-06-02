@@ -12,6 +12,7 @@
     <result property="availabledeposit" column="availabledeposit" jdbcType="NUMERIC" />
     <result property="status" column="status" jdbcType="VARCHAR" />
     <result property="userid" column="userid" jdbcType="VARCHAR" />
+     <result property="fromInnerOuter" column="from_inner_outer" jdbcType="INTEGER" />
   </resultMap>
   
   <sql id="Base_Column_List" >
