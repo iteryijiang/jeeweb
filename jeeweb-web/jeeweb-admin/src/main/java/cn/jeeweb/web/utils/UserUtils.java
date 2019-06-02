@@ -1,5 +1,7 @@
 package cn.jeeweb.web.utils;
 
+import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
+import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.modules.sys.entity.Menu;
 import cn.jeeweb.web.modules.sys.entity.Role;
 import cn.jeeweb.web.modules.sys.entity.User;
@@ -41,6 +43,7 @@ public class UserUtils {
 	private static IUserService userService = SpringContextHolder.getBean(IUserService.class);
 	private static IRoleService roleService = SpringContextHolder.getBean(IRoleService.class);
 	private static IMenuService menuService = SpringContextHolder.getBean(IMenuService.class);
+	private static TshopInfoService tshopInfoService = SpringContextHolder.getBean(TshopInfoService.class);
 	public static final String USER_CACHE = "userCache";
 	public static final String USER_CACHE_ID_ = "id_";
 	public static final String USER_CACHE_USER_NAME_ = "username_";
