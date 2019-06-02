@@ -18,7 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
 
 //        registry.addResourceHandler("/**").addResourceLocations("file:/usr/local/jeeweb/img/");
-        registry.addResourceHandler("/**").addResourceLocations("file:/usr/local/outsideWeb/img/");
+        registry.addResourceHandler("/**").addResourceLocations("file:/usr/local/outerWeb/img/");
 
     }
 }

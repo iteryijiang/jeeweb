@@ -233,7 +233,7 @@
 
   <select id="listFinanceShopReport" resultType="java.util.Map">
     select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sb.id basenameid,
-    sum(t.actualprice*(t.tasknum-(case when t.status=2 then canreceivenum else 0 end))) sumActualprice,
+    sum(t.actualprice*(t.tasknum-(case when t.status=2 then canreceivenum else 0 end)-(select count(1) from t_my_task_detail_question tmdq where tmdq.taskid=t.id))) sumActualprice,
     sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=2)) sumOrderPrice,
     sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=3)) sumDeliveryPrice,
     sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=4)) sumFinishPrice,

@@ -35,10 +35,15 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         request.setAttribute("adminPath",ctx + "/admin");
         request.setAttribute("theme", ThemeUtils.getTheme());
         request.setAttribute("staticPath",ctx + "/static");
-        request.setAttribute("platformName", MessageUtils.getMessage("platform.name"));
         request.setAttribute("platformCopyright", MessageUtils.getMessage("platform.copyright"));
         request.setAttribute("platformVersion", MessageUtils.getMessage("platform.version"));
         UserRealm.Principal principal = UserUtils.getPrincipal(); // 如果已经登录，则跳转到管理首页
+        String platformName = MessageUtils.getMessage("platform.name");
+        if(UserUtils.isOuter()){
+            platformName = "飞天平台";
+        }
+        request.setAttribute("platformName",platformName);
+
         if (principal!=null){
             try {
                 Menu currentMenu = UserUtils.getCurrentMenu();

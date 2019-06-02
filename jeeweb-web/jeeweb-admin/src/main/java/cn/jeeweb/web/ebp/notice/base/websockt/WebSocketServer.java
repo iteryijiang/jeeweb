@@ -19,9 +19,9 @@ public class WebSocketServer implements MessageServer {
 
 	private FlashPolicyServer fpServer;
 
-	private int port = 8087;
+	private int port = 8088;
 
-	private int flashPolicyPort = 10843;
+	private int flashPolicyPort = 10844;
 
 	public WebSocketServer() {
 	}

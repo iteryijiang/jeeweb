@@ -331,4 +331,20 @@ public class UserUtils {
 		getSession().removeAttribute(key);
 	}
 
+	/**
+	 * 获取当前用户授权菜单
+	 *
+	 * @return
+	 */
+	public static boolean isOuter() {
+		User user = UserUtils.getUser();
+		if(user!=null){
+			TshopInfo shopInfo = tshopInfoService.selectOne(user.getId());
+			if(shopInfo!=null&&2==shopInfo.getFromInnerOuter()){
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
