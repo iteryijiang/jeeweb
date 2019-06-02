@@ -16,4 +16,13 @@ public enum YesNoEnum {
         this.code=code;
         this.codeName=codeName;
     }
+
+    public final static YesNoEnum valueOfCode(int code) {
+        for (YesNoEnum obj:YesNoEnum.values()){
+            if (obj.code == code){
+                return obj;
+            }
+        }
+        return null;
+    }
 }

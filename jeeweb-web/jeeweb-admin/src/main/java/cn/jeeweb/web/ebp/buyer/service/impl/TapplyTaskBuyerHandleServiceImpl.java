@@ -58,6 +58,7 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
 
     @Override
     public void updateTapplyTaskBuyerForHandle(TapplyTaskBuyerHandle obj) throws Exception{
+        //获取买手申请记录
         TapplyTaskBuyer taskBuyerObj=tapplyTaskBuyerService.selectById(obj.getApplyTaskId());
         //已处理订单不作调整
         if(YesNoEnum.YES.code == taskBuyerObj.getApplyStatus()){
@@ -70,6 +71,8 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
         taskBuyerObj.setHandleTime(Calendar.getInstance().getTime());
         taskBuyerObj.setApplyStatus(YesNoEnum.YES.code);
         taskBuyerObj.setHandleMethod(obj.getHandleMethod());
+        taskBuyerObj.setUpdateBy(obj.getCreateBy());
+        taskBuyerObj.setUpdateDate(Calendar.getInstance().getTime());
         tapplyTaskBuyerService.updateTapplyTaskBuyerStatus(taskBuyerObj);
         //判断处理类型
         if(UnusualTaskHandleMethodEnum.SHOPTASK_CANCEL.code == obj.getHandleMethod()){//撤销商家订单
@@ -103,16 +106,15 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
         //撤销买手订单=>回退申请+买手任务异常申请状态
         TmyTaskDetail buyTaskObj=tmyTaskDetailService.selectById(obj.getBuyerTaskId());
         if(buyTaskObj==null){
-            return ;
-
+            throw new RuntimeException("未获取到买手申请对应的任务记录！") ;
         }
         if(Integer.valueOf(buyTaskObj.getTaskstate())>= BuyerTaskStatusRnum.WAITING_SEND.code){
             throw new RuntimeException("当前买手任务不支持该操作！") ;
         }
-        List<TmyTaskDetail> buyTaskList=new ArrayList<TmyTaskDetail>();
-        buyTaskList.add(buyTaskObj);
         buyTaskObj.setErrorStatus(YesNoEnum.NO.code);
         tmyTaskDetailService.updateById(buyTaskObj);
+        List<TmyTaskDetail> buyTaskList=new ArrayList<TmyTaskDetail>();
+        buyTaskList.add(buyTaskObj);
         pushNoticeForTurnDownTask(taskBuyerObj);
     }
 

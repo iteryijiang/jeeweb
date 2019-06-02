@@ -34,4 +34,12 @@ public interface TapplyTaskBuyerService extends ICommonService<TapplyTaskBuyer> 
    */
   Page<TapplyTaskBuyer> selectApplyPageList(Queryable queryable, Wrapper<TapplyTaskBuyer> wrapper);
 
+  /**
+   * 主键ID查询=>包含有自定义的属性
+   *
+   * @param id
+   * @return
+   */
+  TapplyTaskBuyer selectApplyTaskById(String id);
+
 }

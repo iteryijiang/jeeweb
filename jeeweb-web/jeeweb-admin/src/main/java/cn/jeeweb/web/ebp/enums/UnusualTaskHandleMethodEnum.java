@@ -7,7 +7,7 @@ package cn.jeeweb.web.ebp.enums;
  * @date:2019/5/8
  */
 public enum UnusualTaskHandleMethodEnum {
-    BUYERTASK_CANCEL(1,"撤销买手任务"),
+    BUYERTASK_CANCEL(1,"驳回买手申请"),
     SHOPTASK_CANCEL(2,"撤销商家任务"),
     ;
     /**

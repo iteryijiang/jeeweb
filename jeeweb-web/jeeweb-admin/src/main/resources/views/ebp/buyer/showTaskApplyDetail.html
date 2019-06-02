@@ -12,10 +12,54 @@
     <script src='${staticPath}/shop/js/bootstrap.min.js'></script>
     <script src='${staticPath}/shop/js/fileinput.min.js'></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        .tdTextRight{text-align: right;padding-right: 2px;}
+        .tdTextLeft{text-align: left;padding-left: 2px;}
+    </style>
 </head>
 <body>
 <!-- 中间主体 -->
 <div class='main_container task_detail'>
+    <div>
+        <div class="get-menu" style="float:left">
+            <a href="#">申请</a>
+            <span>></span>
+            <a class="A1" href="#">申请详情</a>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+    <div class='task_table'>
+        <table>
+            <tr>
+                <td class="tdTextRight">申请人：</td>
+                <td class="tdTextLeft">${applyObj.buyerNo}</td>
+                <td class="tdTextRight">申请时间：</td>
+                <td class="tdTextLeft">${applyObj.applyTimeFormat}</td>
+                <td class="tdTextRight">处理状态：</td>
+                <td class="tdTextLeft">${applyObj.applyStatusName}</td>
+            </tr>
+            <tr>
+                <td class="tdTextRight">反馈类型：</td>
+                <td class="tdTextLeft">${applyObj.applyTypeName}</td>
+                <td class="tdTextRight">反馈描述：</td>
+                <td colspan="3" class="tdTextLeft">${applyObj.applyDesc}</td>
+            </tr>
+            <tr>
+                <td class="tdTextRight">处理人：</td>
+                <td class="tdTextLeft">${applyObj.handleMan}</td>
+                <td class="tdTextRight">处理时间：</td>
+                <td class="tdTextLeft">${applyObj.handleTimeFormat}</td>
+                <td class="tdTextRight">处理方式：</td>
+                <td class="tdTextLeft">${applyObj.handleMethodName}</td>
+            </tr>
+            <tr>
+                <td class="tdTextRight">处理说明：</td>
+                <td colspan="5" class="tdTextLeft">
+                    ${applyObj.remarks}
+                </td>
+            </tr>
+        </table>
+    </div>
     <div>
         <div class="get-menu" style="float:left">
             <a href="#">商家</a>

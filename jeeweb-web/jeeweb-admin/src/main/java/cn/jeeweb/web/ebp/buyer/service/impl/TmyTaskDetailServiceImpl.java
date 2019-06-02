@@ -38,6 +38,7 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
     private TmyTaskDetailService tmyTaskDetailService;
     @Autowired
     private TshopInfoService tshopInfoService;
+
     public List<TmyTaskDetail> selBaseIdMyTaskDetailList(String taskId){
         return baseMapper.selBaseIdMyTaskDetailList(taskId);
     }

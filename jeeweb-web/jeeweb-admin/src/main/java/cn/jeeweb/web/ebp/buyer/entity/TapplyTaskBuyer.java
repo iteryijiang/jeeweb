@@ -1,5 +1,8 @@
 package cn.jeeweb.web.ebp.buyer.entity;
+import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.web.common.entity.DataEntity;
+import cn.jeeweb.web.ebp.enums.UnusualTaskHandleMethodEnum;
+import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -21,6 +24,13 @@ public class TapplyTaskBuyer extends DataEntity<String> {
    * 反馈类型
    */
   private String applyType;
+
+  /**
+   * 反馈类型名称
+   *
+   */
+  @TableField(exist = false)
+  private String applyTypeName;
   /**
    * 买手任务ID，具体的单个任务链接
    * 主键
@@ -58,6 +68,13 @@ public class TapplyTaskBuyer extends DataEntity<String> {
    * 申请状态
    */
   private int applyStatus;
+
+  /**
+   * 反馈类型状态
+   *
+   */
+  @TableField(exist = false)
+  private String applyStatusName;
   /**
    * 申请描述
    */
@@ -67,11 +84,17 @@ public class TapplyTaskBuyer extends DataEntity<String> {
    */
   @JSONField(format="yyyy-MM-dd HH:mm:ss")
   private Date applyTime;
+
+  @TableField(exist = false)
+  private String applyTimeFormat;
   /**
    * 处理时间
    */
   @JSONField(format="yyyy-MM-dd HH:mm:ss")
   private Date handleTime;
+
+  @TableField(exist = false)
+  private String handleTimeFormat;
   /**
    * 处理人
    */
@@ -80,6 +103,13 @@ public class TapplyTaskBuyer extends DataEntity<String> {
    * 处理方式
    */
   private int handleMethod;
+
+  /**
+   * 处理方式名称
+   *
+   */
+  @TableField(exist = false)
+  private String handleMethodName;
   /**
    * 商户任务单号
    */
@@ -221,5 +251,53 @@ public class TapplyTaskBuyer extends DataEntity<String> {
 
   public void setShopTaskNo(String shopTaskNo) {
     this.shopTaskNo = shopTaskNo;
+  }
+
+  public String getApplyTimeFormat() {
+    return DateUtils.formatDateTime(applyTime);
+  }
+
+  public void setApplyTimeFormat(String applyTimeFormat) {
+    this.applyTimeFormat = applyTimeFormat;
+  }
+
+  public String getHandleTimeFormat() {
+    if(handleTime != null){
+      return DateUtils.formatDateTime(handleTime);
+    }
+    return handleTimeFormat;
+  }
+
+  public void setHandleTimeFormat(String handleTimeFormat) {
+    this.handleTimeFormat = handleTimeFormat;
+  }
+
+  public String getApplyTypeName() {
+    return applyTypeName;
+  }
+
+  public void setApplyTypeName(String applyTypeName) {
+    this.applyTypeName = applyTypeName;
+  }
+
+  public String getApplyStatusName() {
+    applyStatusName=(YesNoEnum.YES.code == applyStatus)?"已处理":"未处理";
+    return applyStatusName;
+  }
+
+  public void setApplyStatusName(String applyStatusName) {
+    this.applyStatusName = applyStatusName;
+  }
+
+  public String getHandleMethodName() {
+    UnusualTaskHandleMethodEnum obj=UnusualTaskHandleMethodEnum.valueOfCode(handleMethod);
+    if(obj!=null){
+      return obj.codeName;
+    }
+    return handleMethodName;
+  }
+
+  public void setHandleMethodName(String handleMethodName) {
+    this.handleMethodName = handleMethodName;
   }
 }

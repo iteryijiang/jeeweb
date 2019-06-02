@@ -17,6 +17,14 @@ public interface TapplyTaskBuyerMapper extends BaseMapper<TapplyTaskBuyer> {
     List<TapplyTaskBuyer> selectApplyPageList(Pagination page, @Param("ew") Wrapper<TapplyTaskBuyer> wrapper);
 
     /**
+     * 主键ID查询数据
+     *
+     * @param applyId
+     * @return
+     */
+    TapplyTaskBuyer selectApplyTaskById(@Param("applyId") String applyId);
+
+    /**
      * 更改申请状态
      *
      * @param obj

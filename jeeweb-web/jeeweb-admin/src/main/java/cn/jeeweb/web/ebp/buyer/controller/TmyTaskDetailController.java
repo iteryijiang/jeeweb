@@ -744,6 +744,11 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 					queryable.getCondition().remove(buyerTaskNoFilter);
 					entityWrapper.like("buyerTaskNo", buyerTaskNoFilter.getValue().toString());
 				}
+				Condition.Filter shopTaskNoFilter = queryable.getCondition().getFilterFor("shopTaskNo");
+				if (shopTaskNoFilter != null) {
+					queryable.getCondition().remove(shopTaskNoFilter);
+					entityWrapper.like("shopTaskNo", shopTaskNoFilter.getValue().toString());
+				}
 				Condition.Filter buyerNoFilter = queryable.getCondition().getFilterFor("buyerNo");
 				if (buyerNoFilter != null) {
 					queryable.getCondition().remove(buyerNoFilter);
@@ -831,9 +836,12 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 			mav = displayModelAndView("showTaskApplyDetailReport");
 		}
 		try {
-			TapplyTaskBuyer obj = tapplyTaskBuyerService.selectById(applyId);
-			TmyTaskDetail tmyTaskDetail = tmyTaskDetailService.selectById(obj.getBuyerTaskId());
-			TtaskBase tb = ttaskBaseService.selectById(tmyTaskDetail.getTaskid());
+			//获得申请信息
+			TapplyTaskBuyer obj = tapplyTaskBuyerService.selectApplyTaskById(applyId);
+			//买手任务详情
+			//TmyTaskDetail tmyTaskDetail = tmyTaskDetailService.selectById(obj.getBuyerTaskId());
+			//商户任务信息
+			TtaskBase tb = ttaskBaseService.selectById(obj.getShopTaskId());//tmyTaskDetail.getTaskid()
 			TshopInfo tsi = tshopInfoService.selectOne(tb.getShopid());
 			TshopBase tsb = tshopBaseService.selectById(tb.getStorename());
 			model.addAttribute("tb", tb);

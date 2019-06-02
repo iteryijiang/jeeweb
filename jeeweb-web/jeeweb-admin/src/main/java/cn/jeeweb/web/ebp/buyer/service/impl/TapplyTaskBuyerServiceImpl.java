@@ -99,4 +99,9 @@ public class TapplyTaskBuyerServiceImpl extends CommonServiceImpl<TapplyTaskBuye
         page.setRecords(baseMapper.selectApplyPageList(page, wrapper));
         return new PageImpl<TapplyTaskBuyer>(page.getRecords(), queryable.getPageable(), page.getTotal());
     }
+
+    @Override
+    public TapplyTaskBuyer selectApplyTaskById(String id){
+        return baseMapper.selectApplyTaskById(id);
+    }
 }

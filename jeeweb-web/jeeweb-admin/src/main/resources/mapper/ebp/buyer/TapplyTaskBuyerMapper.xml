@@ -3,14 +3,15 @@
 <mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TapplyTaskBuyerMapper" >
   <sql id="Base_Column_List" >
     DISTINCT
-    t.id
+    id
   </sql>
     <!-- 更新状态 -->
     <update id="updateTapplyTaskBuyerStatus" parameterType="cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer">
         update
             t_apply_task_buyer
         set
-            handle_time=#{handleTime},handle_man=#{handleMan},handle_method=#{handleMethod},apply_status=#{applyStatus}
+            handle_time=#{handleTime},handle_man=#{handleMan},handle_method=#{handleMethod},apply_status=#{applyStatus},
+            update_by=#{handleMan},update_date=#{handleTime}
         where
             id=#{id}
     </update>
@@ -18,14 +19,29 @@
   <!-- 分页列表查询-->
   <select id="selectApplyPageList" resultType="cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer">
       SELECT
-            id, apply_type,buyer_task_no,buyer_task_id,buyer_id,buyer_no,shop_id,shop_name,shop_task_id,goods_name,apply_status,apply_desc,apply_time,handle_time,handle_man,handle_method,remarks
-      from
-            t_apply_task_buyer t
-       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
-		  <where>
-		    ${ew.sqlSegment}
-		  </where>
-	   </if>
+          id,apply_type, buyer_task_no,buyer_task_id,buyer_id,buyer_no, shop_id,shop_name,shop_task_id,
+          shop_task_no,goods_name,apply_status,apply_desc,apply_time,handle_time,handle_man,handle_method,
+          remarks
+      FROM
+        t_apply_task_buyer t
+      <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+          <where>
+              ${ew.sqlSegment}
+          </where>
+      </if>
   </select>
 
+    <!-- 单个数据查询查询-->
+    <select id="selectApplyTaskById" resultType="cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer">
+        SELECT
+            t.id,t.apply_type, t.buyer_task_no,t.buyer_task_id,t.buyer_id,t.buyer_no, t.shop_id,t.shop_name,t.shop_task_id,
+            t.shop_task_no,t.goods_name,t.apply_status,t.apply_desc,t.apply_time,t.handle_time,t.handle_man,t.handle_method,
+            t.remarks,dic.label apply_type_name
+        FROM
+          t_apply_task_buyer t
+          INNER JOIN sys_dict dic ON dic.gid='3dfb81d0d80f4623ba999e6926c1903a' and dic.value = t.apply_type
+        where
+          t.id=#{applyId}
+        limit 0,1
+    </select>
 </mapper>

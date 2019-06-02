@@ -92,6 +92,7 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
         try {
             TshopInfo tb = tshopInfoService.selectById(entity.getId());
             tb.setAccountlevel(entity.getAccountlevel());
+            tb.setFromInnerOuter(entity.getFromInnerOuter());
             tshopInfoService.insertOrUpdate(tb);
         }catch (Exception e){
             e.printStackTrace();
