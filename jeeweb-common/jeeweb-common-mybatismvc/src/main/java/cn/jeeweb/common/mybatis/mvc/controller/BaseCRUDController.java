@@ -149,6 +149,27 @@ public abstract class BaseCRUDController<Entity extends AbstractEntity<ID>, ID e
 		return display("edit");
 	}
 
+	/**
+	 * 新增加的添加页面方法与create相同
+	 *
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "add", method = RequestMethod.GET)
+	public String _showCreateView(Model model, HttpServletRequest request, HttpServletResponse response) {
+		preEdit(newModel(), model, request, response);
+		String creteaView = showCreate(newModel(), model, request, response);
+		if (!model.containsAttribute("data")) {
+			model.addAttribute("data", newModel());
+		}
+		if (!StringUtils.isEmpty(creteaView)) {
+			return creteaView;
+		}
+		return display("edit");
+	}
+
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	@ResponseBody
 	public Response create(Model model, @Valid @ModelAttribute("data") Entity entity, BindingResult result,
