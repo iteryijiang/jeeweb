@@ -26,6 +26,8 @@ public class OaNotification extends DataEntity<String> {
 	private String content;
 	/** 发布状态 */
 	private String status;
+	/**发布类型**/
+	private String notificationType;
 
 	/**
 	 * 获取 id
@@ -104,4 +106,11 @@ public class OaNotification extends DataEntity<String> {
 		this.status = status;
 	}
 
+	public String getNotificationType() {
+		return notificationType;
+	}
+
+	public void setNotificationType(String notificationType) {
+		this.notificationType = notificationType;
+	}
 }
