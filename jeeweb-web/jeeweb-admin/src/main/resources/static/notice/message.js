@@ -1,8 +1,8 @@
 	WEB_SOCKET_SWF_LOCATION = "WebSocketMain.swf";
 	WEB_SOCKET_DEBUG = false;
-	try {WebSocket.loadFlashPolicyFile("xmlsocket://" + host + ":10843");} catch (e) {}
+	try {WebSocket.loadFlashPolicyFile("xmlsocket://" + host + ":10844");} catch (e) {}
 	var host = window.location.host.split(":")[0];	
-	var defaultUrl ="ws://"+host+":8087";
+	var defaultUrl ="ws://"+host+":8088";
 	var ws;
 	function websocket(listener,url,shop_id,user_id) {
 		if(url == null || url==""){
