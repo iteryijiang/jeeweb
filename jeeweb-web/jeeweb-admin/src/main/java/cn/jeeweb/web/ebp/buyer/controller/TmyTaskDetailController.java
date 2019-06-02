@@ -799,16 +799,16 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 		if (!roleSet.isEmpty()) {
 			for (String roleId : roleSet) {
 				// 管理员
-				if (BasicRoleEnum.ADMIN.roleId.equals(roleId)) {
+				if (BasicRoleEnum.ADMIN.roleCode.equals(roleId)) {
 					return;
 				}
 				// 商户运营,设置商户的ID
-				if (BasicRoleEnum.SHOP.roleId.equals(roleId)) {
+				if (BasicRoleEnum.SHOP.roleCode.equals(roleId)) {
 					queryWrapper.eq("shop_id", loginUser.getId());
 					return;
 				}
 				// 买手,设置买手的ID
-				if (BasicRoleEnum.BUYER.roleId.equals(roleId)) {
+				if (BasicRoleEnum.BUYER.roleCode.equals(roleId)) {
 					queryWrapper.eq("buyer_id", loginUser.getId());
 					return;
 				}
