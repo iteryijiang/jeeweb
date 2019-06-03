@@ -1,6 +1,5 @@
 package cn.jeeweb.common.mvc.controller;
 
-import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.exception.ValidationException;
 import cn.jeeweb.common.utils.MessageUtils;
 import cn.jeeweb.common.utils.ReflectionUtils;

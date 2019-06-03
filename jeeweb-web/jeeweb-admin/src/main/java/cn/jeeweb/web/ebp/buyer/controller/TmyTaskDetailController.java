@@ -25,7 +25,6 @@ import cn.jeeweb.web.ebp.buyer.entity.*;
 import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerHandleService;
 import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
-import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.enums.BasicRoleEnum;
 import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
@@ -75,8 +74,6 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 	private TshopInfoService tshopInfoService;
 	@Autowired
 	private TshopBaseService tshopBaseService;
-	@Autowired
-	private TmyTaskService tmyTaskService;
 
 	@GetMapping
 	@RequiresMethodPermissions("view")
@@ -838,8 +835,6 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 		try {
 			//获得申请信息
 			TapplyTaskBuyer obj = tapplyTaskBuyerService.selectApplyTaskById(applyId);
-			//买手任务详情
-			//TmyTaskDetail tmyTaskDetail = tmyTaskDetailService.selectById(obj.getBuyerTaskId());
 			//商户任务信息
 			TtaskBase tb = ttaskBaseService.selectById(obj.getShopTaskId());//tmyTaskDetail.getTaskid()
 			TshopInfo tsi = tshopInfoService.selectOne(tb.getShopid());
@@ -850,7 +845,6 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 			// 进行中，完成数
 			int taskstatus0 = 0, taskstatus1 = 0;
 			int taskstate2 = 0, taskstate4 = 0;
-
 			List<Map> list = tmyTaskDetailService.groupBytaskstatus(tb.getId());
 			for (int i = 0; i < list.size(); i++) {
 				Map map = list.get(i);

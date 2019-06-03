@@ -6,7 +6,6 @@ import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mvc.entity.AbstractEntity;
 import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
-import cn.jeeweb.common.query.annotation.PageableDefaults;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;

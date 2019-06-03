@@ -12,6 +12,6 @@ import cn.jeeweb.web.modules.oa.entity.OaNotification;
  *
  */
 public interface IOaNotificationService extends ICommonService<OaNotification> {
-
+	
 }
 

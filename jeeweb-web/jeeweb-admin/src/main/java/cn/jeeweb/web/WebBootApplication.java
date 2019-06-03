@@ -24,7 +24,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication(exclude = {RedisAutoConfiguration.class})
 @ServletComponentScan(basePackages = {"cn.jeeweb.web.ebp.notice.base"})
 @EnableTransactionManagement
-// @SpringBootApplication
 public class WebBootApplication {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(WebBootApplication.class, args);
