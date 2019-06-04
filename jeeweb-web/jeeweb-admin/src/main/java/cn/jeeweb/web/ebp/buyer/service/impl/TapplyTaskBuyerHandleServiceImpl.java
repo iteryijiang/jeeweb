@@ -79,7 +79,9 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
             //获取商家任务
             TtaskBase taskBase=ttaskBaseService.selectById(taskBuyerObj.getShopTaskId());
             //获取商家任务下对应的所有买手未完成的任务
-            List<TmyTaskDetail> buyTaskList=tmyTaskDetailService.selBaseIdMyTaskDetailList(taskBuyerObj.getShopTaskId());
+            TmyTaskDetail buyTaskObj=tmyTaskDetailService.selectById(obj.getBuyerTaskId());
+            List<TmyTaskDetail> buyTaskList=new ArrayList<>();
+            buyTaskList.add(buyTaskObj);
             BigDecimal needBackMoney=BigDecimal.ZERO;
             List<String> receiveBuyerList=new ArrayList<String>();
             //当前存在买手任务

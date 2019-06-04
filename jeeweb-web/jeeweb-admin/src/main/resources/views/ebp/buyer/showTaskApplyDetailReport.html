@@ -31,12 +31,12 @@
     <div class='task_table'>
         <table>
             <tr>
-                <td class="tdTextRight">申请人：</td>
-                <td class="tdTextLeft">${applyObj.buyerNo}</td>
                 <td class="tdTextRight">申请时间：</td>
                 <td class="tdTextLeft">${applyObj.applyTimeFormat}</td>
                 <td class="tdTextRight">处理状态：</td>
                 <td class="tdTextLeft">${applyObj.applyStatusName}</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <td class="tdTextRight">反馈类型：</td>
@@ -125,7 +125,6 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>平台编号</th>
                 <th>京东账号</th>
                 <th>接单时间</th>
                 <th>下单时间</th>
@@ -187,7 +186,6 @@
                 var tbody = "";
                 for (var i = 0; i < json.length; i++) {
                     var tr = "<tr>";
-                    tr += "<td>"+(json[i].buyeridName==undefined?"":json[i].buyeridName)+"</td>";
                     tr += "<td>"+(json[i].buyerjdnick==undefined?"":json[i].buyerjdnick)+"</td>";
                     tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].createDate)))+"</td>";
                     tr += "<td>"+(json[i].orderdate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].orderdate)))+"</td>";

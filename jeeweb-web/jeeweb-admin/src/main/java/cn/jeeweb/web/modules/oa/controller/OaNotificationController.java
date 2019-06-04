@@ -14,6 +14,9 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -93,7 +96,7 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 		EntityWrapper<OaNotification> entityWrapper = new EntityWrapper<>(entityClass);
 		propertyPreFilterable.addQueryProperty("id");
 		//设置检索所属的商户/买手/角色ID
-		setApplyTaskQueryRoleId(entityWrapper);
+		setNotifyQueryRoleId(entityWrapper);
 		// 预处理
 		QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
 		entityWrapper.orderBy("create_date", false);
@@ -102,13 +105,38 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 		String content = JSON.toJSONString(pagejson, filter);
 		StringUtils.printJson(response,content);
 	}
+
+	/**
+	 * 根据页码和每页记录数，以及查询条件动态加载数据
+	 *
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "getLatestNotifyList", method = { RequestMethod.GET, RequestMethod.POST })
+	@PageableDefaults(sort = "id=desc")
+	@Log(logType = LogType.SELECT)
+	@RequiresMethodPermissions("list")
+	public JSONObject getLatestNotifyList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		EntityWrapper<OaNotification> entityWrapper = new EntityWrapper<>(entityClass);
+		propertyPreFilterable.addQueryProperty("id");
+		//设置检索所属的商户/买手/角色ID
+		setNotifyQueryRoleId(entityWrapper);
+		entityWrapper.orderBy("create_date", false);
+		PageResponse<OaNotification> pagejson = new PageResponse<>(oaNotificationService.list(queryable,entityWrapper));
+		List<OaNotification> retList= pagejson.getResults();
+		JSONObject retObj=new JSONObject();
+		retObj.put("retCode",pagejson.getRows()>0?0:-1);
+		retObj.put("retData",retList);
+		return retObj;
+	}
 	
 	/**
 	 * 设置查询申请所属的用户ID
 	 * 
 	 * @param queryWrapper
 	 */
-	private void setApplyTaskQueryRoleId(EntityWrapper<OaNotification> queryWrapper) {
+	private void setNotifyQueryRoleId(EntityWrapper<OaNotification> queryWrapper) {
 		// 当前登录人
 		Set<String> roleSet = UserUtils.getRoleStringList();
 		User loginUser = UserUtils.getUser();
@@ -126,11 +154,13 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 					if(YesNoEnum.NO.code == shopObj.getFromInnerOuter()) {
 						queryWrapper.eq("notificationType", NotificationTypeRangeEnum.SHOP_OUTER.code);
 					}
+					queryWrapper.eq("status",1);
 					return;
 				}
 				// 买手,设置买手的ID
 				if (BasicRoleEnum.BUYER.roleCode.equals(roleId)) {
 					queryWrapper.eq("notificationType", NotificationTypeRangeEnum.BUYER.code);
+					queryWrapper.eq("status",1);
 					return;
 				}
 			}
@@ -233,5 +263,28 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 		List<String> idList = java.util.Arrays.asList(ids);
 		oaNotificationService.deleteBatchIds(idList);
 		return Response.ok("删除成功");
+	}
+
+	/**
+	 * 详情页面
+	 *
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@GetMapping(value = "notifyDetail/{id}")
+	@RequiresMethodPermissions("view")
+	public ModelAndView list(@PathVariable String id,Model model, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = displayModelAndView("notifyShow");
+		try {
+			OaNotification obj = oaNotificationService.selectById(id);
+			model.addAttribute("notifyObj", obj);
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return mav;
 	}
 }

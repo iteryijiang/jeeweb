@@ -1,0 +1,10 @@
+<% layout('/layouts/form.html', {title: '通知公告', formId: 'notifyShowForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput,summernote'}){ %>
+<#form:form id="notifyShowForm" modelAttribute="notifyObj"   method="post" class="form-horizontal">
+	<div>
+		<h2 style="text-align: center">${notifyObj.title}</h2>
+		<div>
+			${notifyObj.content}
+		</div>
+	</div>
+</#form:form>
+<% } %>
