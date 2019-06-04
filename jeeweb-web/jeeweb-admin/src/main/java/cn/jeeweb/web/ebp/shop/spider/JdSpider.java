@@ -31,34 +31,41 @@ import java.util.Map;
 public class JdSpider {
 
     public static void main(String[] args)  {
-        String url = "https://item.jd.com/44947696886.html";
-        try {
-            String goodis = getGoodId_ByURL(url);
-//            String goodsrc = getGoodImgByurl(url);
-//            System.out.println("商品src: " + goodsrc);
-//            System.out.println("商品信息: " + goodis);
-            if(!StringUtils.isEmpty(goodis)){
-                System.out.println("获取商品价格："+getGoodPrice_ByP3(goodis));
-//                getGoodList(url);
-//                System.out.println("获取商品标题："+getGoodTitleByurl(url));//获取商品标题);
-//                System.out.println("获取商品品牌："+getGoodBrandByurl(url));//获取商品标题);
-//                String result = getGoodInfos(goodis);
-//                System.out.println("商品信息: " + result);
-//                String good_price  = getGoodPrice_ByResult(result);
-//                System.out.println("商品价格: " + good_price);
-            }
-//            System.out.println("商品型号："+getGoodSpec1ByTitle(""));
-//            System.out.println("商品规格："+getGoodSpec2ByTitle(""));
 
+         Boolean hidden = Boolean.FALSE;// 是否隐藏列
+        boolean bool = false;
+        System.out.println(hidden.booleanValue());
+        System.out.println(hidden.toString());
 
-//            BigDecimal tprice = new BigDecimal(0.0);
-//            BigDecimal a = new BigDecimal(10.1);
-//            tprice = tprice.add(a);
-//            System.out.println(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
-//            System.out.println(a);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//
+//        String url = "https://item.jd.com/44947696886.html";
+//        try {
+//            String goodis = getGoodId_ByURL(url);
+////            String goodsrc = getGoodImgByurl(url);
+////            System.out.println("商品src: " + goodsrc);
+////            System.out.println("商品信息: " + goodis);
+//            if(!StringUtils.isEmpty(goodis)){
+//                System.out.println("获取商品价格："+getGoodPrice_ByP3(goodis));
+////                getGoodList(url);
+////                System.out.println("获取商品标题："+getGoodTitleByurl(url));//获取商品标题);
+////                System.out.println("获取商品品牌："+getGoodBrandByurl(url));//获取商品标题);
+////                String result = getGoodInfos(goodis);
+////                System.out.println("商品信息: " + result);
+////                String good_price  = getGoodPrice_ByResult(result);
+////                System.out.println("商品价格: " + good_price);
+//            }
+////            System.out.println("商品型号："+getGoodSpec1ByTitle(""));
+////            System.out.println("商品规格："+getGoodSpec2ByTitle(""));
+//
+//
+////            BigDecimal tprice = new BigDecimal(0.0);
+////            BigDecimal a = new BigDecimal(10.1);
+////            tprice = tprice.add(a);
+////            System.out.println(tprice.setScale(2, BigDecimal.ROUND_HALF_UP));
+////            System.out.println(a);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
 
     }
 

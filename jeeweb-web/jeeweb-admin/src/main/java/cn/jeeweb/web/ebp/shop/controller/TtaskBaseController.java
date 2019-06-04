@@ -129,6 +129,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @GetMapping(value = "listFinanceShopReportHTML")
     @RequiresMethodPermissions("listFinanceShopReportHTML")
     public ModelAndView listFinanceShopReportHTML(Model model, HttpServletRequest request, HttpServletResponse response) {
+        boolean bool = false;
+        if (!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
+            bool = true;
+        }
+        model.addAttribute("showHidden",bool);
         ModelAndView mav = displayModelAndView("list_finance_shop_report");
         return mav;
     }
@@ -195,6 +200,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             }
             ttaskBase.setStatus("0");
 //            Double countSum = Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5"));
+            int prices = getPriceGrade(ttaskBase.getActualprice().doubleValue(),userid);
+            if(-100==prices){
+                return Response.error("发布失败，实付金额超出限制！");
+            }
+            ttaskBase.setPresentdeposit(new BigDecimal(prices));
             BigDecimal price = ttaskBase.getTotalprice().add(ttaskBase.getPresentdeposit().multiply(new BigDecimal(ttaskBase.getTasknum())));
             if(si.getAvailabledeposit()==null) {
                 return Response.error("发布失败，您无押金，请充值！");
@@ -327,7 +337,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         PageResponse<TtaskBase> pagejson = new PageResponse<>(ttaskBaseService.list(queryable,entityWrapper));
         for (TtaskBase tb:pagejson.getResults()) {
-            tb.setSkuid("<a href='"+tb.gettUrl()+"' target='_blank'>"+tb.getSkuid()+"</a>");
+            tb.setSkuid("<a href='"+tb.gettUrl()+"' target='_blank' style='color: blue;'>"+tb.getSkuid()+"</a>");
         }
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response,content);
@@ -422,6 +432,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         String shopname = "";
         String basename = "";
         String loginname = "";
+        String fromInnerOuter = "";
         String[] creates = TaskUtils.whereNewDate("","");
         if(queryable.getCondition()!=null){
             Condition.Filter filter = queryable.getCondition().getFilterFor("counteffectdate");
@@ -440,6 +451,10 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             if(loginnameFilter!=null){
                 loginname = "%"+(String)loginnameFilter.getValue()+"%";
             }
+            Condition.Filter fromInnerOuterFilter = queryable.getCondition().getFilterFor("fromInnerOuter");
+            if(fromInnerOuterFilter!=null){
+                fromInnerOuter = (String)fromInnerOuterFilter.getValue();
+            }
         }
         Map par_map = new HashMap();
         par_map.put("createDate1",creates[0]);
@@ -447,6 +462,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         par_map.put("shopname",shopname);
         par_map.put("basename",basename);
         par_map.put("loginname",loginname);
+        par_map.put("fromInnerOuter",fromInnerOuter);
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
             par_map.put("shopid",userid);
@@ -856,9 +872,12 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @GetMapping("{id}/{status}/upStatus")
     @Log(logType = LogType.UPDATE)
     @RequiresMethodPermissions("upStatus")
-    public void upTaskState(@PathVariable("id") String id,@PathVariable("status") String status, HttpServletRequest request,
+    public Response upTaskState(@PathVariable("id") String id,@PathVariable("status") String status, HttpServletRequest request,
                             HttpServletResponse response) {
         TtaskBase tb = ttaskBaseService.selectById(id);
+        if("2".equals(tb.getStatus())){
+            return Response.error("已撤销任务,不能重复撤销!");
+        }
         TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
         tb.setStatus(status);
         BigDecimal price = new BigDecimal(0);
@@ -868,6 +887,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             si.setTaskdeposit(si.getTaskdeposit().subtract(price));
         }
         ttaskBaseService.upTask(tb,si,TfinanceRechargeService.rechargetype_4,price);
+
+        return Response.ok("任务撤销成功!");
     }
 
     @GetMapping(value = "{id}/myAgainList")
@@ -934,6 +955,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             String create1 = jsonObject.getString("create1");
             String create2 = jsonObject.getString("create2");
             String status = jsonObject.getString("status");
+            String fromInnerOuter = jsonObject.getString("fromInnerOuter");
 
             String[] creates = TaskUtils.whereNewDate(create1,create2);
 
@@ -942,6 +964,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             m.put("create1",creates[0]);
             m.put("create2",creates[1]);
             m.put("status",status);
+            m.put("fromInnerOuter",fromInnerOuter);
             map = ttaskBaseService.showTaskBaseLoadFinance(m);
             if(map==null){
                 map = new HashMap();
@@ -967,30 +990,36 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
 
     @PostMapping(value = "getTshopGrade")
     public Response getTshopGrade(@RequestBody JSONObject jsonObject,HttpServletRequest request, HttpServletResponse response) {
-        Double tasknum = Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "3"));
         try {
             String currentUserId = UserUtils.getUser().getId();
+            Double actualprice = jsonObject.getDouble("actualprice");
+            int price = getPriceGrade(actualprice,currentUserId);
+            return Response.ok(price+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.ok("-100");
+        }
+    }
+
+    /**
+     * 佣金计算方法
+     * */
+    public int getPriceGrade(Double actualprice,String currentUserId){
+        try {
             TshopInfo tshopInfo = tshopInfoService.selectOne(currentUserId);
             if(tshopInfo!=null){
                 EntityWrapper<TshopGradeInfo> entityWrapper = new EntityWrapper<TshopGradeInfo>();
                 entityWrapper.eq("shopgrade", tshopInfo.getAccountlevel());
                 TshopGradeInfo tbi =  tshopGradeInfoService.selectOne(entityWrapper);
-                Double actualprice = jsonObject.getDouble("actualprice");
                 int price = TaskUtils.gradePrice(actualprice,tbi);
-//                if(price!=-100){
-//                    int sum = Integer.parseInt(DictUtils.getDictValue("一个任务单店接单数", "tasknum", "2"));
-//                    int sumshop = (int) Math.ceil((price+0.0) / sum);
-//                    return Response.ok(sumshop+"");
-//                }else {
-                    return Response.ok(price+"");
-//                }
+                return price;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.ok(tasknum+"");
+            return -100;
         }
-        return Response.ok(tasknum+"");
+        return -100;
     }
     /**
      * 任务总览页面
@@ -1000,8 +1029,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public ModelAndView listShopTaskPandect(Model model, HttpServletRequest request, HttpServletResponse response) {
         List<Dict> dicList = DictUtils.getDictList("basestate");
         String content = JSON.toJSONString(dicList);
-        List<TshopInfo> lsit = tshopInfoService.selectByMap(new HashMap<>());
         model.addAttribute("dicList", content);
+        model.addAttribute("fromInnerOuterList", JSON.toJSONString(DictUtils.getDictList("shopSource")));
+
         ModelAndView mav = displayModelAndView("listShopTaskPandect");
         return mav;
     }

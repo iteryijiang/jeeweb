@@ -39,10 +39,9 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String taskstatus;//	varchar	32	0	-1	0	0	0	0		0	下单状态（进行中,已完成）	utf8	utf8_general_ci		0	0
 
 	@JSONField(format="yyyy-MM-dd HH:mm")
-	@Excel(name = "领取时间", orderNum = "2",format="yyyy-MM-dd HH:mm",width = 30)
 	private java.util.Date receivingdate;//接受任务时间
 	@JSONField(format="yyyy-MM-dd HH:mm")
-	@Excel(name = "完成时间", orderNum = "3",format="yyyy-MM-dd HH:mm",width = 30)
+	@Excel(name = "完成时间", orderNum = "2",format="yyyy-MM-dd HH:mm",width = 30)
 	private java.util.Date orderdate;//买手下单时间
 	@JSONField(format="yyyy-MM-dd HH:mm")
 	private java.util.Date deliverydate;//商家发货时间
@@ -73,18 +72,18 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String buyeridLogin;
 
 	@TableField(exist = false)
-	@Excel(name = "商家名称", orderNum = "5",width = 20)
+	@Excel(name = "商家名称", orderNum = "4",width = 20)
 	private String shopidName;
 
 	@TableField(exist = false)
-	@Excel(name = "商家号", orderNum = "4",width = 20)
+	@Excel(name = "商家号", orderNum = "3",width = 20)
 	private String shopLoginname;
 
 	@TableField(exist = false)
 	private String taskstateName;
 
 	@TableField(exist = false)
-	@Excel(name = "店铺名", orderNum = "6",width = 20)
+	@Excel(name = "店铺名", orderNum = "5",width = 20)
 	private String shopname;
 
 	@TableField(exist = false)
@@ -125,6 +124,7 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String orderdates;
 
 	@TableField(exist = false)
+	@Excel(name = "SKU", orderNum = "6",width = 20)
 	private String skuid;
 
 	@Override

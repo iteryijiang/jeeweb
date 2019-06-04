@@ -25,10 +25,11 @@
 <#grid:column label="商户号" hidden="${showHidden}" name="loginname" query="true" condition="like" width="120" />
 <#grid:column label="店铺名" name="shopname" query="true" condition="like" width="120" />
 <#grid:column label="品牌" hidden="${showHidden}"  name="brand" width="80"/>
-<#grid:column label="SKU"  name="skuid" width="80" query="true"  condition="like"/>
+<#grid:column label="SKU"  name="skuid" width="80" query="true" condition="like"/>
 <#grid:column label="搜索关键字"  name="keyword" width="100"/>
 <#grid:column label="货号"  name="article" query="true"  condition="like" width="80"/>
 <#grid:column label="商品单价"  name="tPrice" width="70"/>
+<#grid:column label="佣金"  name="presentdeposit" width="60"/>
 <#grid:column label="实付金额"  name="actualprice" width="70"/>
 <#grid:column label="发布时间"  name="createDate" width="100"/>
 <#grid:column label="生效时间"  name="effectdate"  query="true" width="100" queryMode="date"  condition="between"  />

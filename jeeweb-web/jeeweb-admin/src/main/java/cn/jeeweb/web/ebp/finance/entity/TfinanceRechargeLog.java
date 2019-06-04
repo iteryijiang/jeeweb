@@ -41,6 +41,8 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 	private String producedepositPayName;//支出
 	@TableField(exist = false)
 	private String taskno;
+	@TableField(exist = false)
+	private String fromInnerOuter;
 
 
 
@@ -172,5 +174,13 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 
 	public void setTaskno(String taskno) {
 		this.taskno = taskno;
+	}
+
+	public String getFromInnerOuter() {
+		return fromInnerOuter;
+	}
+
+	public void setFromInnerOuter(String fromInnerOuter) {
+		this.fromInnerOuter = fromInnerOuter;
 	}
 }

@@ -12,6 +12,7 @@
 <#grid:column label="日期"  name="counteffectdate" query="true"  queryMode="date" condition="between" />
 <#grid:column label="商家名称" width="140"  name="shopname" query="true" condition="like"/>
 <#grid:column label="商家账号" width="140"  name="loginname" query="true" condition="like"/>
+<#grid:column label="商户来源" name="fromInnerOuter" hidden="${showHidden}"  query="true" dict="shopSource" queryMode="select" condition="eq" />
 <#grid:column label="店铺名称" width="160"  name="basename" query="true" condition="like"/>
 <#grid:column label="实付总价" width="100"  name="sumActualprice"  formatter="currency" />
 <#grid:column label="买手确认下单实付金额" width="120"  name="sumOrderPrice" formatter="currency"/>

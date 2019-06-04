@@ -15,7 +15,7 @@
 					  <div class="form-inline" style="margin-top:10px;">
 					  </#if>
 			 	     <div class="form-group">
-			 	          <#if showQueryLabel??&&showQueryLabel&&queryItem.queryMode!="hidden">
+			 	          <#if showQueryLabel??&&showQueryLabel&&queryItem.queryMode!="hidden" && queryItem.hidden=="false">
 			 	          <label class="control-label">${queryItem.label}：</label>
 			 	          </#if>
 			 	          <#if queryItem.queryMode=='hidden'>
@@ -24,7 +24,7 @@
 			 	          <#if queryItem.queryMode=='input'>
 			 	          <${queryItem.queryMode}  type="text" placeholder="${queryItem.label}"  <#list queryItem?keys as queryItemKey><#if queryItemKey??&&queryItemKey!='label'&&queryItemKey!='queryMode'&&queryItemKey!=''> ${queryItemKey}='${queryItem[queryItemKey]}'</#if></#list>/>
 			 	          </#if>
-			 	          <#if queryItem.queryMode=='select'>
+			 	          <#if queryItem.queryMode=='select' && queryItem.hidden=="false">
 			 	          <${queryItem.queryMode} <#list queryItem?keys as queryItemKey><#if queryItemKey??&&queryItemKey!='label'&&queryItemKey!='queryMode'&&queryItemKey!=''> ${queryItemKey}='${queryItem[queryItemKey]}'</#if></#list>>
 			 	               <option value ="">请选择</option>
 			 	               <#list columnDictMap[queryItem.dict] as dict>

@@ -108,7 +108,7 @@
                     </div>
                     <div>
                         您还可以：
-                        <button class='btn btn-warning' onclick="revokeTask()">撤销未接手任务</button>
+                        <button class='btn btn-warning' onclick="revokeTask($(this))">撤销未接手任务</button>
                     </div>
                 </div>
                 <!--<div class='task_refunds'>-->
@@ -125,7 +125,7 @@
                             <th style="display: ${display};">平台编号</th>
                             <th>京东账号</th>
                             <!--<th>下单终端</th>-->
-                            <th>接单时间</th>
+                            <!--<th>接单时间</th>-->
                             <th>下单时间</th>
                             <th>订单号</th>
                             <th>订单状态
@@ -324,7 +324,7 @@
 
                     tr += "<td>"+(json[i].buyerjdnick==undefined?"":json[i].buyerjdnick)+"</td>";
                     // tr += "<td>"+(json[i].tasktype==undefined?"":json[i].tasktype)+"</td>";
-                    tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].createDate)))+"</td>";
+                    // tr += "<td>"+(json[i].createDate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].createDate)))+"</td>";
                     tr += "<td>"+(json[i].orderdate==undefined?"":dateFtt("yyyy-MM-dd hh:mm",new Date(json[i].orderdate)))+"</td>";
                     tr += "<td><p>"+(json[i].jdorderno==undefined?"":json[i].jdorderno)+"</p></td>";//<p><a href=\"${adminPath}/buyer/TmyTask/"+json[i].id+"/detail\">查看详情</a>
                     tr += "<td>"+(json[i].taskstateName==undefined?"":json[i].taskstateName)+(json[i].remarks==undefined?"":"("+json[i].remarks+")")+"</td>";
@@ -342,12 +342,17 @@
             }
         });
     })
-    function revokeTask(){
+    function revokeTask(obj){
+        obj.attr('disabled',true);//改变提交按钮上的文字并将按钮设置为不可点击
         $.ajax({
             url: "${adminPath}/shop/TtaskBase/${tb.id}/2/upStatus",
             success: function(data){
-                alert("操作成功！");
+                alert(data.msg);
                 location.reload();
+                obj.attr('disabled',false);//改变提交按钮上的文字并将按钮设置为可以点击
+            },
+            error: function(data){
+                obj.attr('disabled',false);//改变提交按钮上的文字并将按钮设置为可以点击
             }
         });
     }

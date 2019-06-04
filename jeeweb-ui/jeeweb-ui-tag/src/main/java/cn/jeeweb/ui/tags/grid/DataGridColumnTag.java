@@ -90,6 +90,7 @@ public class DataGridColumnTag extends AbstractGridHtmlTag {
 			Map<String, Object> queryMap = new HashMap<String, Object>();
 			queryMap.put("name", name);
 			queryMap.put("label", label);
+			queryMap.put("hidden", hidden.toString());
 			if (!StringUtils.isEmpty(dict)) {
 				queryMap.put("dict", dict);
 			}else if(!StringUtils.isEmpty(formatterValue)) {

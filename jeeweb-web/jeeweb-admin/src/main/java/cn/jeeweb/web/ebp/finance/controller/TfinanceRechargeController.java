@@ -121,6 +121,7 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
             return Response.error("删除失败，该商户无充值金额！");
         } else {
             si.setAvailabledeposit(si.getAvailabledeposit().subtract(entity.getRechargedeposit()));
+            si.setTotaldeposit(si.getTotaldeposit().subtract(entity.getRechargedeposit()));
         }
         if(si.getAvailabledeposit().compareTo(BigDecimal.ZERO)<0){
             return Response.error("删除失败，该商金额不够！");
@@ -144,6 +145,7 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
                     return Response.error("删除失败，该商户无充值金额！");
                 } else {
                     si.setAvailabledeposit(si.getAvailabledeposit().subtract(entity.getRechargedeposit()));
+                    si.setTotaldeposit(si.getTotaldeposit().subtract(entity.getRechargedeposit()));
                 }
                 if(si.getAvailabledeposit().compareTo(BigDecimal.ZERO)<0){
                     return Response.error("删除失败，该商金额不够！");

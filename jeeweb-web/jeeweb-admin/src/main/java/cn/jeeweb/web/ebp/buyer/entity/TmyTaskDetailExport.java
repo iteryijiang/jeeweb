@@ -30,25 +30,27 @@ public class TmyTaskDetailExport {
 	@Excel(name = "订单号", orderNum = "7",width = 20)
 	private String jdorderno; //京东订单号
 
-	@Excel(name = "领取时间", orderNum = "0",format="yyyy-MM-dd HH:mm",width = 30)
 	private java.util.Date receivingdate;//接受任务时间
 
-	@Excel(name = "完成时间", orderNum = "1",format="yyyy-MM-dd HH:mm",width = 30)
+	@Excel(name = "完成时间", orderNum = "0",format="yyyy-MM-dd HH:mm",width = 30)
 	private java.util.Date orderdate;//买手下单时间
 
-	@Excel(name = "商家名称", orderNum = "3",width = 20)
+	@Excel(name = "商家名称", orderNum = "2",width = 20)
 	private String shopidName;
 
-	@Excel(name = "商家号", orderNum = "2",width = 20)
+	@Excel(name = "商家号", orderNum = "1",width = 20)
 	private String shopLoginname;
 
 
-	@Excel(name = "店铺名", orderNum = "4",width = 20)
+	@Excel(name = "店铺名", orderNum = "3",width = 20)
 	private String shopname;
 
 
 	@Excel(name = "货号", orderNum = "5",width = 20)
 	private String article;
+
+	@Excel(name = "SKU", orderNum = "4",width = 20)
+	private String skuid;
 
 
 	public String getId() {
@@ -137,5 +139,13 @@ public class TmyTaskDetailExport {
 
 	public void setArticle(String article) {
 		this.article = article;
+	}
+
+	public String getSkuid() {
+		return skuid;
+	}
+
+	public void setSkuid(String skuid) {
+		this.skuid = skuid;
 	}
 }

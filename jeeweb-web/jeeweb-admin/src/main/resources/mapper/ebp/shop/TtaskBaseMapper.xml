@@ -202,6 +202,9 @@
     <if test="map.status != '' and map.status != null">
       and t.status = #{map.status}
     </if>
+    <if test="map.fromInnerOuter != '' and map.fromInnerOuter != null">
+      and si.from_Inner_Outer = #{map.fromInnerOuter}
+    </if>
     <if test="map.loginname != '' and map.loginname != null">
       and si.loginname like #{map.loginname}
     </if>
@@ -232,7 +235,7 @@
   </select>
 
   <select id="listFinanceShopReport" resultType="java.util.Map">
-    select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sb.id basenameid,
+    select DATE_FORMAT(t.effectdate,'%Y-%m-%d') counteffectdate,s.shopname,s.loginname,sb.shopname basename,sb.id basenameid,s.from_Inner_Outer fromInnerOuter,
     sum(t.actualprice*(t.tasknum-(case when t.status=2 then canreceivenum else 0 end)-(select count(1) from t_my_task_detail_question tmdq where tmdq.taskid=t.id))) sumActualprice,
     sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=2)) sumOrderPrice,
     sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=3)) sumDeliveryPrice,
@@ -258,8 +261,11 @@
     <if test="map.shopid != '' and map.shopid != null">
       and t.shopid=#{map.shopid}
     </if>
+    <if test="map.fromInnerOuter != '' and map.fromInnerOuter != null">
+      and s.from_Inner_Outer=#{map.fromInnerOuter}
+    </if>
     and (t.effectdate BETWEEN #{map.createDate1} and #{map.createDate2})
-    group by counteffectdate,sb.shopname,s.shopname
+    group by counteffectdate,sb.shopname,s.shopname,fromInnerOuter
     order by counteffectdate
   </select>
 

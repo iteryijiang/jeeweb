@@ -37,7 +37,7 @@
   </select>
 
     <select id="listDetail" resultMap="TmyTaskDetail">
-        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article from T_my_Task_Detail t
+        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article,tb.skuid from T_my_Task_Detail t
         left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
         left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
         <if test="ew.sqlSegment != '' and ew.sqlSegment != null">

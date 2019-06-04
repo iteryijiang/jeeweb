@@ -40,7 +40,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         UserRealm.Principal principal = UserUtils.getPrincipal(); // 如果已经登录，则跳转到管理首页
         String platformName = MessageUtils.getMessage("platform.name");
         if(UserUtils.isOuter()){
-            platformName = "飞天平台";
+            platformName = "天狗平台";
         }
         request.setAttribute("platformName",platformName);
 

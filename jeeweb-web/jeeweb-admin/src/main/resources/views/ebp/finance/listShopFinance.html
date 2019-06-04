@@ -16,6 +16,7 @@
 
 <#grid:grid id="TfinanceRechargeLogGrid" url="${adminPath}/finance/TfinanceRechargeLog/ajaxList" sortname="createDate" sortorder="desc" sortable="false">
 <#grid:column label="商户号" name="loginname" query="true" condition="like" width="140" />
+<#grid:column label="商户来源" name="fromInnerOuter" hidden="${showHidden}"  query="true" dict="shopSource" queryMode="select" condition="eq" />
 <#grid:column label="收入金额" name="producedepositIncomeName" formatterColor="ALL:green;" width="100"/>
 <#grid:column label="支出金额" name="producedepositPayName" formatterColor="ALL:red;" width="100"/>
 <#grid:column label="账户余额" name="availabledeposit" width="100" formatter="currency"/>
@@ -29,15 +30,18 @@
 </#grid:grid>
 <% } %>
 <script>
-    $(function() {
-        var dicList = ${dicList};
-        for (var i = 0; i < dicList.length; i++) {
-            $("#status").append("<option value='" + dicList[i].value + "'>" + dicList[i].label + "</option>");
-        }
-    })
     function search(gridId){
         var page = $("#"+gridId).getGridParam('page'); // 获取当前页码
         searchByPage(gridId,page);
+        getload();
+    }
+    /*
+     * 搜索重置
+     */
+    function reset(gridId) {
+        $("#" + gridId + "Query").find(":input").val("");
+        //运行搜索
+        searchByPage(gridId,1);
         getload();
     }
     getload();
@@ -47,7 +51,7 @@
         data.create2 = $("#TfinanceRechargeLogGrid_createDate_end").val();
         data.loginname = $("input[name='loginname']").val();
         data.shopname = $("input[name='shopname']").val();
-        data.status =  $("#status").val();
+        data.fromInnerOuter = $("select[name='fromInnerOuter']").val();
         $.ajax({
             type: "POST",
             url: "${adminPath}/shop/TshopInfo/sumShopInfo",
@@ -55,7 +59,7 @@
             data: JSON.stringify(data),
             dataType: "json",
             success: function(data){
-                $("#sumTotaldeposit").html(data.sumTaskBase==undefined?"0":data.sumTotaldeposit);
+                $("#sumTotaldeposit").html(data.sumTotaldeposit==undefined?"0":data.sumTotaldeposit);
                 $("#sumAvailabledeposit").html(data.sumAvailabledeposit==undefined?"0":data.sumAvailabledeposit);
                 $("#sumTaskdeposit").html(data.sumTaskdeposit==undefined?"0":data.sumTaskdeposit);
             }

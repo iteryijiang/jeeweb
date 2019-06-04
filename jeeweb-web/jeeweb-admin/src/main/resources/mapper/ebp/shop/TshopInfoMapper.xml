@@ -57,6 +57,9 @@
       <if test="map.loginname != '' and map.loginname != null">
           and t.loginname like #{map.loginname}
       </if>
+      <if test="map.fromInnerOuter != '' and map.fromInnerOuter != null">
+          and t.from_Inner_Outer=#{map.fromInnerOuter}
+      </if>
    </select>
 
     <update id="updateShopMoney" parameterType="HashMap">

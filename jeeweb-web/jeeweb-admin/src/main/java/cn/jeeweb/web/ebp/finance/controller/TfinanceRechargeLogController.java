@@ -69,6 +69,11 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
         String content = JSON.toJSONString(dicList);
         List<TshopInfo> lsit = tshopInfoService.selectByMap(new HashMap<>());
         model.addAttribute("dicList", content);
+        boolean bool = false;
+        if (!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
+            bool = true;
+        }
+        model.addAttribute("showHidden",bool);
         ModelAndView mav = displayModelAndView("listShopFinance");
         return mav;
     }
@@ -152,6 +157,11 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
             if(Filter_name!=null){
                 queryable.getCondition().remove(Filter_name);
                 entityWrapper.like("b.shopname",Filter_name.getValue().toString());
+            }
+            Condition.Filter fromInnerOuter = queryable.getCondition().getFilterFor("fromInnerOuter");
+            if(fromInnerOuter!=null){
+                queryable.getCondition().remove(fromInnerOuter);
+                entityWrapper.eq("s.from_Inner_Outer",fromInnerOuter.getValue().toString());
             }
         }else {
             if(queryable.getCondition()==null||queryable.getCondition().getFilterFor("createDate")==null) {

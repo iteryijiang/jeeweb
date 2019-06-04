@@ -153,15 +153,20 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
             }
             String create1 = jsonObject.getString("create1");
             String create2 = jsonObject.getString("create2");
-            String status = jsonObject.getString("status");
-
+//            String status = jsonObject.getString("status");
+            String loginname = jsonObject.getString("loginname");
+            String shopname = jsonObject.getString("shopname");
+            String fromInnerOuter = jsonObject.getString("fromInnerOuter");
             String[] creates = TaskUtils.whereNewDate(create1,create2);
 
             Map m = new HashMap();
             m.put("userid",userid);
             m.put("create1",creates[0]);
             m.put("create2",creates[1]);
-            m.put("status",status);
+            m.put("loginname",(StringUtils.isNotEmpty(loginname)?"%"+loginname+"%":null));
+            m.put("shopname",(StringUtils.isNotEmpty(shopname)?"%"+shopname+"%":null));
+//            m.put("status",status);
+            m.put("fromInnerOuter",fromInnerOuter);
             //获取商户余额，冻结金额等信息
             Integer i = ttaskBaseService.sumTtaskBase(m);
             map.put("sumTaskBase",i);
