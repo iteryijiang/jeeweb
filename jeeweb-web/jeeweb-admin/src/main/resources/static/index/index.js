@@ -41,7 +41,7 @@ function showNotifyDetailFn(basePath,notifyId){
 	top.layer.open({
 		type: 2,
 		id:"MytaskId",
-		area: ["500px", "600px"],
+		area: ["900px", "950px"],
 		title: "通知详情",
 		maxmin: true, //开启最大化最小化按钮
 		content: url ,

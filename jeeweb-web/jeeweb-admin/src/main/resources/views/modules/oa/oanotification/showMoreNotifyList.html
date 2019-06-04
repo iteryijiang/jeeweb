@@ -1,0 +1,9 @@
+<% layout('/layouts/list.html', {title: '通知公告列表', libs: ''}){ %>
+<#grid:grid id="oaNotificationGrid" url="${adminPath}/oa/oanotification/ajaxList">
+<#grid:column label="sys.common.key" hidden="true" name="id" width="100"/>
+<#grid:column label="标题"  name="title"  query="true"  queryModel="input" width="100" condition="like" />
+<#grid:column label="内容"  name="content"  />
+<#grid:toolbar  function="search"  />
+<#grid:toolbar  function="reset" />
+</#grid:grid>
+<% } %>
