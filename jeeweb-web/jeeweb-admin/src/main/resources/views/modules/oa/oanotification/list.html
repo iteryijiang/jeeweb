@@ -4,8 +4,8 @@
 	<#grid:column label="sys.common.opt"  name="opt" formatter="button" width="40"/>
 	<#grid:button groupname="opt" function="delete" />
 	<#grid:column label="标题"  name="title"  query="true"  queryModel="input" width="100"   condition="like" />
-	<#grid:column label="通告类型"  name="notificationType"  query="true"  queryModel="select" width="100"   condition="eq" dict="notificationTypeRange" />
-	<#grid:column label="发布状态"  name="status"  query="true" queryMode="select" width="60"  condition="eq"  dict="sf"/>
+	<#grid:column label="类型"  name="notificationType"  query="true"  queryMode="select" width="100"   condition="eq" dict="notificationTypeRange" />
+	<#grid:column label="状态"  name="status"  query="true" queryMode="select" width="60"  condition="eq"  dict="sf"/>
 	<#grid:column label="内容"  name="content"  />
 	<#grid:toolbar function="add" winwidth="800px" winheight="800px"/>
 	<#grid:toolbar function="update"  winwidth="800px" winheight="800px"/>

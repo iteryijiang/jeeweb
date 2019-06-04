@@ -91,7 +91,6 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 	@RequestMapping(value = "ajaxList", method = { RequestMethod.GET, RequestMethod.POST })
 	@PageableDefaults(sort = "id=desc")
 	@Log(logType = LogType.SELECT)
-	@RequiresMethodPermissions("list")
 	public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		EntityWrapper<OaNotification> entityWrapper = new EntityWrapper<>(entityClass);
 		propertyPreFilterable.addQueryProperty("id");
@@ -107,6 +106,19 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 	}
 
 	/**
+	 * 显示更多通知
+	 *
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@GetMapping(value = "showMoreList")
+	public ModelAndView showMoreList(Model model, HttpServletRequest request, HttpServletResponse response) {
+		return displayModelAndView("showMoreNotifyList");
+	}
+
+	/**
 	 * 根据页码和每页记录数，以及查询条件动态加载数据
 	 *
 	 * @param request
@@ -116,7 +128,6 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 	@RequestMapping(value = "getLatestNotifyList", method = { RequestMethod.GET, RequestMethod.POST })
 	@PageableDefaults(sort = "id=desc")
 	@Log(logType = LogType.SELECT)
-	@RequiresMethodPermissions("list")
 	public JSONObject getLatestNotifyList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		EntityWrapper<OaNotification> entityWrapper = new EntityWrapper<>(entityClass);
 		propertyPreFilterable.addQueryProperty("id");
@@ -148,12 +159,8 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 				}
 				// 商户运营,设置商户的ID
 				if (BasicRoleEnum.SHOP.roleCode.equals(roleId)) {
-					//默认内部商家
-					queryWrapper.eq("notificationType", NotificationTypeRangeEnum.SHOP_INNER.code);
 					TshopInfo shopObj=tshopInfoService.selectOne(loginUser.getId());
-					if(YesNoEnum.NO.code == shopObj.getFromInnerOuter()) {
-						queryWrapper.eq("notificationType", NotificationTypeRangeEnum.SHOP_OUTER.code);
-					}
+					queryWrapper.eq("notificationType", shopObj.getFromInnerOuter());
 					queryWrapper.eq("status",1);
 					return;
 				}
@@ -274,7 +281,6 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 	 * @return
 	 */
 	@GetMapping(value = "notifyDetail/{id}")
-	@RequiresMethodPermissions("view")
 	public ModelAndView list(@PathVariable String id,Model model, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = displayModelAndView("notifyShow");
 		try {
