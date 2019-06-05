@@ -28,17 +28,17 @@
 <#grid:column label="SKU"  name="skuid" width="80" query="true" condition="like"/>
 <#grid:column label="搜索关键字"  name="keyword" width="100"/>
 <#grid:column label="货号"  name="article" query="true"  condition="like" width="80"/>
-<#grid:column label="商品单价"  name="tPrice" width="70"/>
-<#grid:column label="佣金"  name="presentdeposit" width="60"/>
-<#grid:column label="实付金额"  name="actualprice" width="70"/>
+<#grid:column label="原价"  name="tPrice" width="70"/>
+<#grid:column label="佣金单价"  name="presentdeposit" width="60"/>
+<#grid:column label="实付"  name="actualprice" width="70"/>
 <#grid:column label="发布时间"  name="createDate" width="100"/>
 <#grid:column label="生效时间"  name="effectdate"  query="true" width="100" queryMode="date"  condition="between"  />
-<#grid:column label="任务单数"  name="tasknum" width="60" />
-<#grid:column label="已接单数"  name="receivingnum"  width="60" sortable="true"/>
-<#grid:column label="已下单"  name="ordernum"  width="60" sortable="true"/>
-<#grid:column label="已发货"  name="deliverynum"  width="60" sortable="false"/>
-<#grid:column label="已完成"  name="confirmnum"  width="60" sortable="false"/>
-<#grid:column label="任务状态"  name="status" width="60" dict="basestate" queryMode="select"  condition="eq" query="true" />
+<#grid:column label="任务数"  name="tasknum" width="60" />
+<#grid:column label="已接"  name="receivingnum"  width="40" sortable="true"/>
+<#grid:column label="已下"  name="ordernum"  width="40" sortable="true"/>
+<#grid:column label="已发"  name="deliverynum"  width="40" sortable="false"/>
+<#grid:column label="完成"  name="confirmnum"  width="40" sortable="false"/>
+<#grid:column label="状态"  name="status" width="40" dict="basestate" queryMode="select"  condition="eq" query="true" />
 <#grid:column label="sys.common.opt"  name="opt" formatter="button" />
 <#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/listPoolGet' />
 <#grid:button title="二维码"  groupname="opt" function="rowDialogDetailRefresh" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/shop/TtaskBase/\"+row.id+\"/uploadQrcode' />
