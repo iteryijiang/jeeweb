@@ -85,19 +85,23 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
             BigDecimal needBackMoney=BigDecimal.ZERO;
             List<String> receiveBuyerList=new ArrayList<String>();
             //当前存在买手任务
+            StringBuffer financeLog=new StringBuffer("撤销商户任务=>");
             if(buyTaskList != null && buyTaskList.size()>0){
                 needBackMoney= updateBuyTaskForHandleUnsualTask(taskBuyerObj,obj,taskBase.getPresentdeposit(),buyTaskList,receiveBuyerList);
+                financeLog.append("买手任务[{id:").append(buyTaskObj.getId()).append(",money:").append(needBackMoney).append("}],");
             }
             //剩余的买手任务
             if(taskBase.getCanreceivenum() > 0 && YesNoEnum.NO.code == Integer.valueOf(taskBase.getStatus())){//剩余接单次数
                 //剩余接单的金额=剩余单数*（每单实付金额+佣金）
                 BigDecimal unreceiveMoney=new BigDecimal(taskBase.getCanreceivenum()).multiply(taskBase.getPresentdeposit().add(taskBase.getActualprice()));
                 needBackMoney=needBackMoney.add(unreceiveMoney);
+                financeLog.append("未领取任务[{num:").append(taskBase.getCanreceivenum()).append(",money:").append(unreceiveMoney).append("}]");
             }
-            tshopInfoService1.updateShopMoney(taskBuyerObj.getShopId(),BigDecimal.ZERO.subtract(needBackMoney),needBackMoney,obj.getCreateBy().getId());
             TshopInfo info = tshopInfoService1.selectOne(taskBuyerObj.getShopId());
-            TfinanceRechargeLog log = new TfinanceRechargeLog(taskBuyerObj.getShopId(),taskBase.getStorename(),taskBuyerObj.getShopTaskId(),TfinanceRechargeService.rechargetype_4,needBackMoney,info.getAvailabledeposit().add(needBackMoney));
+            TfinanceRechargeLog log =new TfinanceRechargeLog(taskBuyerObj.getShopId(),taskBase.getStorename(),taskBuyerObj.getShopTaskId(),TfinanceRechargeService.rechargetype_4,needBackMoney,info.getAvailabledeposit().add(needBackMoney));
+            log.setRemarks(financeLog.toString());
             tfinanceRechargeLogService.insert(log);
+            tshopInfoService1.updateShopMoney(taskBuyerObj.getShopId(),BigDecimal.ZERO.subtract(needBackMoney),needBackMoney,obj.getCreateBy().getId());
             //更改商家任务状态
             taskBase.setStatus("2");
             ttaskBaseService.updateById(taskBase);
