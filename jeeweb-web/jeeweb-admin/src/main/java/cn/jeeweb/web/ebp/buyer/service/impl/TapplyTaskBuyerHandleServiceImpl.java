@@ -89,7 +89,7 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
                 needBackMoney= updateBuyTaskForHandleUnsualTask(taskBuyerObj,obj,taskBase.getPresentdeposit(),buyTaskList,receiveBuyerList);
             }
             //剩余的买手任务
-            if(taskBase.getCanreceivenum() > 0){//剩余接单次数
+            if(taskBase.getCanreceivenum() > 0 && YesNoEnum.NO.code == Integer.valueOf(taskBase.getStatus())){//剩余接单次数
                 //剩余接单的金额=剩余单数*（每单实付金额+佣金）
                 BigDecimal unreceiveMoney=new BigDecimal(taskBase.getCanreceivenum()).multiply(taskBase.getPresentdeposit().add(taskBase.getActualprice()));
                 needBackMoney=needBackMoney.add(unreceiveMoney);
