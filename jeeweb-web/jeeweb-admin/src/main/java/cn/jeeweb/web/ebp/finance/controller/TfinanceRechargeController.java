@@ -80,14 +80,21 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
         // 验证错误
         try {
             this.checkError(entity, result);
+
+            if(StringUtils.isEmpty(entity.getShopid())){
+                return Response.error("商户信息为空，请选择商户！");
+            }
             TshopInfo si = tshopInfoService.selectOne(entity.getShopid());
-            entity.setRechargeno(TsequenceSpider.getRechargeNo());
+            if(si==null){
+                return Response.error("商户不存在，请联系管理员！");
+            }
             if (si.getTotaldeposit() == null) {
                 si.setTotaldeposit(entity.getRechargedeposit());
             } else {
                 si.setTotaldeposit(si.getTotaldeposit().add(entity.getRechargedeposit()));
             }
             si.setAvailabledeposit(si.getAvailabledeposit().add(entity.getRechargedeposit()));
+            entity.setRechargeno(TsequenceSpider.getRechargeNo());
             entity.setTotaldeposit(si.getTotaldeposit());
             tfinanceRechargeService.addTfinanceRecharge(si,entity);
         }catch (Exception e){
