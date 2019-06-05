@@ -14,6 +14,7 @@ import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -165,7 +167,8 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
             }
         }else {
             if(queryable.getCondition()==null||queryable.getCondition().getFilterFor("createDate")==null) {
-                String[] creates = TaskUtils.whereNewDate("", "");
+                Date date1 = DateUtils.dateAddDay(new Date(),-7);
+                String[] creates = TaskUtils.whereNewDate(DateUtils.formatDate(date1), DateUtils.formatDate(new Date()));
                 entityWrapper.between("t.create_date", creates[0], creates[1]);
             }
         }

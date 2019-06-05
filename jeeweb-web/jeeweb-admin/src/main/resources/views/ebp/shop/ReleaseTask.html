@@ -318,7 +318,11 @@
          if(good_detail_info.actualprice==""||good_detail_info.actualprice==undefined){
             alert("请填写实付金额");
             return;
-           }
+         }
+         if(good_detail_info.actualprice<=0){
+           alert("实付金额不能小于等于零");
+           return;
+         }
          if(good_detail_info.effectdate==""||good_detail_info.effectdate==undefined){
             alert("请填写生效时间");
             return;

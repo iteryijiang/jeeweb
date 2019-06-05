@@ -245,7 +245,7 @@
     sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=2)) sumordernum,
     sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=3)) sumdeliverynum,
     sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=4)) sumfinishnum,
-    sum(t.tasknum-(case when t.status=2 then canreceivenum else 0 end)-(select count(1) from t_my_task_detail tmd where tmd.taskid=t.id)) sumquestionnum
+    sum((select count(1) from t_my_task_detail_question tmdq where tmdq.taskid=t.id)) sumquestionnum
     from t_task_base t left join t_shop_info s on t.shopid=s.userid left join t_shop_base sb on t.storename=sb.id
     where
     1=1

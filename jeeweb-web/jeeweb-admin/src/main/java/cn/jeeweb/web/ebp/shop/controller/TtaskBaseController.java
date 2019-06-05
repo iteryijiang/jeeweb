@@ -158,6 +158,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             if(new_date.getTime()>ttaskBase.getEffectdate().getTime()){
                 return Response.error("不能发布生效时间为以前的订单！");
             }
+            if(ttaskBase.getActualprice().compareTo(BigDecimal.ZERO)<=0){
+                return Response.error("实付金额不能小于等于零！");
+            }
             Map map = new HashMap();
             map.put("userid",userid);
             map.put("userkey","1");
@@ -180,8 +183,11 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             Date takeEndTime = DateUtils.parseDate(map_url.get("takeEndTime"));
             double d = DateUtils.getDistanceOfTwoDate(ttaskBase.getEffectdate(),takeEndTime);
 
-            if(ttaskBase.getEffectdate().getTime()<takeBeginTime.getTime()||(d*24<hh)||ttaskBase.getEffectdate().getTime()>takeEndTime.getTime()){
-                return Response.error("二维码失效，不再有效期内！");
+            if(ttaskBase.getEffectdate().getTime()<takeBeginTime.getTime()||ttaskBase.getEffectdate().getTime()>takeEndTime.getTime()){
+                return Response.error("二维码失效，任务生效时间不在优惠券时间内！");
+            }
+            if((d*24<hh)){
+                return Response.error("二维码失效，优惠券结束时间和任务生效时间间隔低于"+hh+"小时！");
             }
             //校验优惠券剩余数是否大于商品任务数据
             int couponnum = Integer.parseInt(DictUtils.getDictValue("任务单优惠奍剩余张数", "tasknum", "400"));
