@@ -164,6 +164,12 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 					queryWrapper.eq("status",1);
 					return;
 				}
+				// 销售当做外部商户处理
+				if (BasicRoleEnum.SELLING.roleCode.equals(roleId)) {
+					queryWrapper.eq("notificationType", NotificationTypeRangeEnum.SHOP_OUTER.code);
+					queryWrapper.eq("status",1);
+					return;
+				}
 				// 买手,设置买手的ID
 				if (BasicRoleEnum.BUYER.roleCode.equals(roleId)) {
 					queryWrapper.eq("notificationType", NotificationTypeRangeEnum.BUYER.code);
