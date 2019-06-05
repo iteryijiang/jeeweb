@@ -1,28 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <option name="USE_RELEASE_OPTION" value="false" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-base" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="jeeweb-admin" />
-        <module name="jeeweb-beetl-tag" />
+        <processorPath useClasspath="true" />
         <module name="jeeweb-common-base" />
-        <module name="jeeweb-common-email" />
-        <module name="jeeweb-common-hibernatemvc" />
-        <module name="jeeweb-common-mybatismvc" />
-        <module name="jeeweb-common-oss" />
-        <module name="jeeweb-common-quartz" />
-        <module name="jeeweb-common-query" />
-        <module name="jeeweb-common-security" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-sms" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="jeeweb-common-sms" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-oss" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-common-oss" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-quartz" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-common-quartz" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-utils" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="jeeweb-common-utils" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-query" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-common-query" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-email" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-common-email" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-hibernatemvc" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-common-hibernatemvc" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-mybatismvc" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-common-mybatismvc" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-common-security" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-common-security" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-admin" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-admin" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-ui-static" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="jeeweb-ui-static" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-beetl-tag" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jeeweb-beetl-tag" />
+      </profile>
+      <profile default="false" name="Annotation profile for jeeweb-ui-tag" enabled="true">
+        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="jeeweb-ui-tag" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="1.8">
+      <module name="jeeweb" target="1.8" />
+      <module name="jeeweb-admin" target="1.8" />
+      <module name="jeeweb-beetl-tag" target="1.8" />
+      <module name="jeeweb-common" target="1.8" />
+      <module name="jeeweb-common-base" target="1.8" />
+      <module name="jeeweb-common-email" target="1.8" />
+      <module name="jeeweb-common-hibernatemvc" target="1.8" />
+      <module name="jeeweb-common-mybatismvc" target="1.8" />
+      <module name="jeeweb-common-oss" target="1.8" />
+      <module name="jeeweb-common-quartz" target="1.8" />
+      <module name="jeeweb-common-query" target="1.8" />
+      <module name="jeeweb-common-security" target="1.8" />
+      <module name="jeeweb-common-sms" target="1.8" />
+      <module name="jeeweb-common-utils" target="1.8" />
+      <module name="jeeweb-ui" target="1.8" />
+      <module name="jeeweb-ui-static" target="1.8" />
+      <module name="jeeweb-ui-tag" target="1.8" />
+      <module name="jeeweb-web" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
