@@ -1,11 +1,8 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 import cn.jeeweb.web.common.entity.DataEntity;
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
-import java.util.Date;
 
 @TableName("t_apply_task_buyer_handle")
 @SuppressWarnings("serial")

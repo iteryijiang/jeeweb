@@ -2,7 +2,6 @@ package cn.jeeweb.web.ebp.finance.task;
 
 import cn.jeeweb.beetl.tags.dict.DictUtils;
 import cn.jeeweb.common.utils.DateUtils;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailQuestionService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
@@ -10,8 +9,6 @@ import cn.jeeweb.web.ebp.finance.service.TfinanceBuyerReportService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 import java.util.*;
 
 /**

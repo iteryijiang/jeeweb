@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.report.mapper.DayReportMapper" >
+  
+  <!-- 获取内部外部的任务单总数 -->
+	<select id="getInnerOuterTaskCount" resultType="java.util.Map">
+		SELECT
+			sum(IF(shop.from_inner_outer=1,1,0)) innerCount,
+			sum(IF(shop.from_inner_outer=1,0,1)) outerCount
+		FROM
+			t_task_base taskTb
+			inner join t_shop_info shop on shop.userid=taskTb.create_by
+		where 
+			taskTb.effectdate BETWEEN #{beginTime} and #{endTime}
+	</select>
+	 <!-- 获取内部外部的任务单总数 -->
+	<select id="getInnerOuterTaskLinkCount" resultType="java.util.Map">
+		SELECT
+			sum(IF(shop.from_inner_outer=1,1,0)) innerLinkCount,
+			sum(IF(shop.from_inner_outer=1,0,1)) outerLinkCount
+		FROM
+			t_task_base taskTb
+			inner join t_shop_info shop on shop.userid=taskTb.create_by
+		  	inner join t_my_task_detail myTask on myTask.taskid=taskTb.id
+		where 
+			myTask.receivingdate BETWEEN #{beginTime} and #{endTime}
+	</select>
+	
+	<!-- 获取0佣金任务单+连接总数 -->
+	<select id="getZeroCommissionTaskCountAndLInkCount" resultType="java.util.Map">
+			select 
+				sum(zereLinkCount) zereLinkCount,sum(zereTaskCount) zereTaskCount 
+			from (
+					SELECT
+						count(*) zereLinkCount,0 zereTaskCount
+					FROM
+						t_my_task_detail myTask
+					  	inner join t_task_base taskTb on myTask.taskid=taskTb.id and taskTb.presentdeposit=0
+					where 
+						myTask.receivingdate BETWEEN #{beginTime} and #{endTime}
+					
+					union all 
+						SELECT
+							0 zereLinkCount ,count(DISTINCT taskTb.id) zereTaskCount
+						FROM
+							t_my_task_detail myTask
+						  inner join t_task_base taskTb on myTask.taskid=taskTb.id and taskTb.presentdeposit=0
+					where 
+						myTask.receivingdate BETWEEN #{beginTime} and #{endTime}
+				)tb
+	</select>
+	<!-- 获取单链接双链接总数总数 -->
+    <select id="getSingleDoubleTaskLinkCount" resultType="java.util.Map">
+ 		select 
+	 		sum(case when isdouble>1 then 1 else 0 end) doubleLinkCount,
+	 		sum(case when isdouble=1 then 1 else 0 end) singleLinkCount
+         from (
+			SELECT count(*) isdouble
+			FROM
+				t_my_task_detail t
+				inner join t_buyer_info i on t.buyerid = i.userid
+			WHERE
+				t.receivingdate BETWEEN #{beginTime} and #{endTime}
+					GROUP BY
+						i.userid,
+						t.storename,
+						t.mytaskid
+			) a
+    </select>
+</mapper>
