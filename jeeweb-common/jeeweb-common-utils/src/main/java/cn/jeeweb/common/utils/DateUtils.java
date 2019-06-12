@@ -44,6 +44,26 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	}
 	
 	/**
+	 * 获取一天的开始时间yyyy-MM-dd 00:00:00
+	 * 
+	 * @param sourceDate
+	 * @return
+	 */
+	public static String getDateBegin(Date sourceDate) {
+		return getDate("yyyy-MM-dd");
+	}
+	
+	/**
+	 * 获取一天的额结束时间yyyy-MM-dd 23:59:59
+	 * 
+	 * @param sourceDate
+	 * @return
+	 */
+	public static String getDateEnd(Date sourceDate) {
+		return getDate("yyyy-MM-dd")+" 23:59:59";
+	}
+	
+	/**
 	 * 获取当前日期
 	 * 
 	 * @return

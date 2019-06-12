@@ -18,7 +18,7 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermission
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
-import cn.jeeweb.web.ebp.report.entity.DayReport;
+import cn.jeeweb.web.ebp.report.entity.TDayReport;
 import cn.jeeweb.web.ebp.report.service.DayReportService;
 
 @RestController
@@ -26,7 +26,7 @@ import cn.jeeweb.web.ebp.report.service.DayReportService;
 @ViewPrefix("ebp/report")
 @RequiresPathPermission("report:reportInfo")
 @Log(title = "报表管理")
-public class ReportController extends BaseBeanController<DayReport> {
+public class ReportController extends BaseBeanController<TDayReport> {
 
 	@Autowired
 	private DayReportService dayReportService;
@@ -67,7 +67,7 @@ public class ReportController extends BaseBeanController<DayReport> {
 	        	Date dateTemp=DateUtils.dateAddDay(null, -1);
 	        	endDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
 	        }
-	        DayReport reportObj=dayReportService.getAvgDayReport(beginDate, endDate);
+	        TDayReport reportObj=dayReportService.getAvgDayReport(beginDate, endDate);
 	        model.addAttribute("reportObj",reportObj);
 	        return mav;
 	    }

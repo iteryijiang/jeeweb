@@ -65,6 +65,65 @@
 						i.userid,
 						t.storename,
 						t.mytaskid
-			) a
+			) tb
+    </select>
+    
+    
+    <!-- 获取总的押金信息-->
+    <select id="getTotalRechargeDeposit" resultType="Bigdecimal">
+ 		select 
+ 			ifnull(sum(rechargedeposit),0)
+ 		from 
+ 			t_finance_recharge 
+ 		where 
+ 			del_flag = 0 and create_date BETWEEN #{beginTime} and #{endTime}
+    </select>
+    
+    
+    <!-- 获根据账期获取唯一的一条日报数据 -->
+    <select id="getTDayReportByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="String">
+ 		SELECT
+			id,atime,dtime,beginingBalance,endingBalance,totalRechargeDeposit,todayFreezing,todayCommission,activePayMoney,
+			taskTotalCount,internalTaskCount,outerTaskCount,internalTaskRatio,outerTaskRatio,internalTaskLinkCount,outerTaskLinkCount,internalTaskLinkRatio,outerTaskLinkRatio,
+			zeroCommissionTaskCount,zeroCommissionTaskLinkCount,totalTaskLinkCount,
+			singleTaskLinkCount,doubleTaskLinkCount,singleTaskLinkRatio,doubleTaskLinkRatio,problemTaskCount,problemTaskLinkCount,shopRevokeTaskCount,
+			create_by,create_date,update_by,update_date,remarks
+		FROM
+			t_day_report
+		WHERE
+			del_flag = 0 and atime=#{queryAtime}
+		limit 0,1
+    </select>
+    
+     <!-- 获取两个日期之间的所有日报数据列表 -->
+    <select id="getTDayReportListByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="Map">
+ 		SELECT
+			id,atime,dtime,beginingBalance,endingBalance,totalRechargeDeposit,todayFreezing,todayCommission,activePayMoney,
+			taskTotalCount,internalTaskCount,outerTaskCount,internalTaskRatio,outerTaskRatio,internalTaskLinkCount,outerTaskLinkCount,internalTaskLinkRatio,outerTaskLinkRatio,
+			zeroCommissionTaskCount,zeroCommissionTaskLinkCount,totalTaskLinkCount,
+			singleTaskLinkCount,doubleTaskLinkCount,singleTaskLinkRatio,doubleTaskLinkRatio,problemTaskCount,problemTaskLinkCount,shopRevokeTaskCount,
+			create_by,create_date,update_by,update_date,remarks
+		FROM
+			t_day_report
+		WHERE
+			del_flag = 0 and atime  #{beginDate} and #{endDate}
+		order by atime desc
+    </select>
+    
+    <!-- 获取两个日期之间的所有日报数据 -->
+    <select id="getTDayReportForSumByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="String">
+ 		SELECT
+			sum(beginingBalance) beginingBalance,sum(endingBalance) endingBalance,sum(totalRechargeDeposit) totalRechargeDeposit,
+			sum(todayFreezing) todayFreezing,sum(todayCommission) todayCommission,sum(activePayMoney) activePayMoney,
+			sum(taskTotalCount) taskTotalCount,sum(internalTaskCount) internalTaskCount,sum(outerTaskCount) outerTaskCount,
+			sum(internalTaskLinkCount) internalTaskLinkCount,sum(outerTaskLinkCount) outerTaskLinkCount,
+			sum(zeroCommissionTaskCount) zeroCommissionTaskCount,sum(zeroCommissionTaskLinkCount) zeroCommissionTaskLinkCount,
+			sum(totalTaskLinkCount) totalTaskLinkCount,sum(singleTaskLinkCount) singleTaskLinkCount,sum(doubleTaskLinkCount) doubleTaskLinkCount,
+			sum(problemTaskCount) problemTaskCount,sum(problemTaskLinkCount) problemTaskLinkCount,sum(shopRevokeTaskCount) shopRevokeTaskCount
+		FROM
+			t_day_report
+		WHERE
+			del_flag = 0 and atime=#{queryAtime}
+		limit 0,1
     </select>
 </mapper>

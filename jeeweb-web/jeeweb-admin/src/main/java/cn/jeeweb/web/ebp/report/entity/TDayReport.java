@@ -15,7 +15,7 @@ import cn.jeeweb.web.common.entity.DataEntity;
  */
 @TableName("t_day_report")
 @SuppressWarnings("serial")
-public class DayReport extends DataEntity<String> {
+public class TDayReport extends DataEntity<String> {
 
 	/**
 	 * 主键ID
@@ -27,6 +27,11 @@ public class DayReport extends DataEntity<String> {
 	 * 所属账期
 	 */
 	private Date atime;
+	
+	/**
+	 * 执行时间
+	 */
+	private Date dtime;
 	/**
 	 * 期初余额
 	 */
@@ -38,7 +43,7 @@ public class DayReport extends DataEntity<String> {
 	/**
 	 * 当天收到充值金额
 	 */
-	private BigDecimal todayReceive=BigDecimal.ZERO;
+	private BigDecimal totalRechargeDeposit=BigDecimal.ZERO;
 	/**
 	 * 当天冻结金额
 	 */
@@ -52,23 +57,54 @@ public class DayReport extends DataEntity<String> {
 	 * 当天支付金额
 	 */
 	private BigDecimal activePayMoney=BigDecimal.ZERO;
+	
+	/**
+	 * 任务总量
+	 * 
+	 */
+	private long taskTotalCount=0;
+	
 	/**
 	 * 内部任务数量
 	 */
 	private long internalTaskCount=0;
 	/**
-	 * 内部链接总数
-	 */
-	private long internalTaskLinkCount=0;
-	/**
 	 * 外部任务数量
 	 */
 	private long outerTaskCount=0;
+	
+	/**
+	 * 内部任务占比
+	 * 
+	 */
+	private BigDecimal internalTaskRatio=BigDecimal.ZERO;
+	
+	/**
+	 * 外部任务占比
+	 * 
+	 */
+	private BigDecimal outerTaskRatio=BigDecimal.ZERO;
+	
+	/**
+	 * 内部链接总数
+	 */
+	private long internalTaskLinkCount=0;
+
 	/**
 	 * 外部任务链接总数
 	 */
 	private long outerTaskLinkCount=0;
+	
+	/**
+	 * 内部链接占比
+	 */
+	private BigDecimal internalTaskLinkRatio=BigDecimal.ZERO;
 
+	/**
+	 * 外部任务链接占比
+	 */
+	private BigDecimal outerTaskLinkRatio=BigDecimal.ZERO;
+	
 	/**
 	 * 0佣金任务数量
 	 */
@@ -89,6 +125,19 @@ public class DayReport extends DataEntity<String> {
 	 * 任务双链接数量
 	 */
 	private long doubleTaskLinkCount=0;
+	
+	/**
+	 * 单链接占比
+	 * 
+	 */
+	private BigDecimal singleTaskLinkRatio;
+	
+	/**
+	 * 双链接占比
+	 * 
+	 */
+	private BigDecimal doubleTaskLinkRatio;
+	
 	/**
 	 * 问题任务数量
 	 */
@@ -119,6 +168,14 @@ public class DayReport extends DataEntity<String> {
 		this.atime = atime;
 	}
 
+	public Date getDtime() {
+		return dtime;
+	}
+
+	public void setDtime(Date dtime) {
+		this.dtime = dtime;
+	}
+
 	public BigDecimal getBeginingBalance() {
 		return beginingBalance;
 	}
@@ -135,12 +192,12 @@ public class DayReport extends DataEntity<String> {
 		this.endingBalance = endingBalance;
 	}
 
-	public BigDecimal getTodayReceive() {
-		return todayReceive;
+	public BigDecimal getTotalRechargeDeposit() {
+		return totalRechargeDeposit;
 	}
 
-	public void setTodayReceive(BigDecimal todayReceive) {
-		this.todayReceive = todayReceive;
+	public void setTotalRechargeDeposit(BigDecimal totalRechargeDeposit) {
+		this.totalRechargeDeposit = totalRechargeDeposit;
 	}
 
 	public BigDecimal getTodayFreezing() {
@@ -261,6 +318,62 @@ public class DayReport extends DataEntity<String> {
 
 	public void setShopRevokeTaskCount(long shopRevokeTaskCount) {
 		this.shopRevokeTaskCount = shopRevokeTaskCount;
+	}
+
+	public BigDecimal getSingleTaskLinkRatio() {
+		return singleTaskLinkRatio;
+	}
+
+	public void setSingleTaskLinkRatio(BigDecimal singleTaskLinkRatio) {
+		this.singleTaskLinkRatio = singleTaskLinkRatio;
+	}
+
+	public BigDecimal getDoubleTaskLinkRatio() {
+		return doubleTaskLinkRatio;
+	}
+
+	public void setDoubleTaskLinkRatio(BigDecimal doubleTaskLinkRatio) {
+		this.doubleTaskLinkRatio = doubleTaskLinkRatio;
+	}
+
+	public long getTaskTotalCount() {
+		return taskTotalCount;
+	}
+
+	public void setTaskTotalCount(long taskTotalCount) {
+		this.taskTotalCount = taskTotalCount;
+	}
+
+	public BigDecimal getInternalTaskRatio() {
+		return internalTaskRatio;
+	}
+
+	public void setInternalTaskRatio(BigDecimal internalTaskRatio) {
+		this.internalTaskRatio = internalTaskRatio;
+	}
+
+	public BigDecimal getOuterTaskRatio() {
+		return outerTaskRatio;
+	}
+
+	public void setOuterTaskRatio(BigDecimal outerTaskRatio) {
+		this.outerTaskRatio = outerTaskRatio;
+	}
+
+	public BigDecimal getInternalTaskLinkRatio() {
+		return internalTaskLinkRatio;
+	}
+
+	public void setInternalTaskLinkRatio(BigDecimal internalTaskLinkRatio) {
+		this.internalTaskLinkRatio = internalTaskLinkRatio;
+	}
+
+	public BigDecimal getOuterTaskLinkRatio() {
+		return outerTaskLinkRatio;
+	}
+
+	public void setOuterTaskLinkRatio(BigDecimal outerTaskLinkRatio) {
+		this.outerTaskLinkRatio = outerTaskLinkRatio;
 	}
 
 }

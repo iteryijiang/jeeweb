@@ -3,7 +3,7 @@ package cn.jeeweb.web.ebp.report.service;
 import java.util.Date;
 import java.util.List;
 
-import cn.jeeweb.web.ebp.report.entity.DayReport;
+import cn.jeeweb.web.ebp.report.entity.TDayReport;
 
 public interface DayReportService {
 
@@ -21,7 +21,7 @@ public interface DayReportService {
 	 * @param endDate
 	 * @return
 	 */
-	List<DayReport> getDayReportList(String beginDate,String endDate);
+	List<TDayReport> getDayReportList(String beginDate,String endDate);
 	
 	/**
 	 * 查询一段时间之内日报平均值数据
@@ -30,7 +30,7 @@ public interface DayReportService {
 	 * @param endDate
 	 * @return
 	 */
-	DayReport getAvgDayReport(String beginDate,String endDate);
+	TDayReport getAvgDayReport(String beginDate,String endDate);
 	
 	/**
 	 * 查询某一天的数据
@@ -38,5 +38,5 @@ public interface DayReportService {
 	 * @param queryDate
 	 * @return
 	 */
-	DayReport getDayReport(String queryDate);
+	TDayReport getDayReport(String queryDate);
 }
