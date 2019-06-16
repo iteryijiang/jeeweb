@@ -1,0 +1,28 @@
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('日报列表',''), libs: 'bootstrap-treeview'}){ %>
+	<#grid:grid id="tDayReportGrid" url="${adminPath}/report/TDayReport/ajaxList" ondblClickRow="ondblClickRow"  sortname="createDate" sortorder="desc">
+        <#grid:column label="账期"  name="atime"  query="true"  queryMode="date"  condition="between"/>
+		<#grid:column label="执行时间"  name="loginname" />
+		<#grid:column label="期初余额"  name="paymentno" />
+		<#grid:column label="期末余额"  name="rechargedeposit" width="120" formatter="currency"/>
+		<#grid:column label="当天收到充值金额"  name="totaldeposit" formatter="currency" />
+		<#grid:column label="当天冻结金额"  name="rechargetype" width="100" />
+		<#grid:column label="任务数量"  name="username" width="120" />
+		<#grid:column label="内部任务数量"  name="username" width="120" />
+		<#grid:column label="内部任务占比"  name="username" width="120" />
+		<#grid:column label="外部任务数量"  name="username" width="120" />
+		<#grid:column label="外部任务占比"  name="username" width="120" />
+		<#grid:column label="内部链接总数"  name="username" width="120" />
+		<#grid:column label="外部任务链接总数"  name="username" width="120" />
+		<#grid:column label="内部链接占比"  name="username" width="120" />
+		<#grid:column label="外部链接占比"  name="username" width="120" />
+		<#grid:toolbar  function="search" />
+		<#grid:toolbar  function="reset" />
+	</#grid:grid>
+	<script>
+		function ondblClickRow(rowid,iRow,iCol,e){
+			alert(rowid+"=="+iRow);
+			console.log(e);
+		}
+
+	</script>
+<% } %>

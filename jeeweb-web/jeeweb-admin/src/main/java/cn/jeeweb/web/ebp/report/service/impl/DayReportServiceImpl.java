@@ -22,6 +22,7 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 	public void addDayReportForCreate(Date sourceDate) {
 		TDayReport insertObj=new TDayReport();
 		insertObj.setAtime(sourceDate);
+		insertObj.setDtime(DateUtils.getCurrentTime());
 		Map<String, Object> queryParam= installDayReportTimeParam(insertObj.getAtime());
 		//期初期末余额
 		setDayReportBeginEndBalance(insertObj,queryParam);
@@ -33,8 +34,9 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 		setDayReportZeroCommissionTaskCountAndLInkCount(insertObj, queryParam);
 		User createBy=new User();
 		createBy.setUsername("sys_schedule");
+		createBy.setId("sys_schedule");
 		insertObj.setCreateBy(createBy);
-		insertObj.setCreateDate(DateUtils.getCurrentTime());
+		insertObj.setCreateDate(insertObj.getDtime());
 		int insertCount=baseMapper.insert(insertObj);
 		if(insertCount!=1) {
 			throw new RuntimeException("保存日报数据失败");

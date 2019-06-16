@@ -19,7 +19,8 @@ public class DayReportScheduleService {
 
 	public void run() {
 		//即将生成日报的日期
-		Date sourceDate=DateUtils.dateAddDay(null, -1);
+		Date currentDate=DateUtils.getCurrentDate();
+		Date sourceDate=DateUtils.dateAddDay(currentDate,-1);
 		try {
 			dayReportService.addDayReportForCreate(sourceDate);
 		} catch (Exception e) {
