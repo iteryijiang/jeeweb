@@ -13,7 +13,7 @@
 		where 
 			taskTb.effectdate BETWEEN #{beginTime} and #{endTime}
 	</select>
-	 <!-- 获取内部外部的任务单总数 -->
+	 <!-- 获取内部外部的任务单链接总数 -->
 	<select id="getInnerOuterTaskLinkCount" resultType="java.util.Map">
 		SELECT
 			sum(IF(shop.from_inner_outer=1,1,0)) innerLinkCount,
@@ -26,7 +26,7 @@
 			myTask.receivingdate BETWEEN #{beginTime} and #{endTime}
 	</select>
 	
-	<!-- 获取0佣金任务单+连接总数 -->
+	<!-- 获取0佣金任务单+0佣金链接总数 -->
 	<select id="getZeroCommissionTaskCountAndLInkCount" resultType="java.util.Map">
 			select 
 				sum(zereLinkCount) zereLinkCount,sum(zereTaskCount) zereTaskCount 
@@ -68,8 +68,7 @@
 			) tb
     </select>
     
-    
-    <!-- 获取总的押金信息-->
+    <!-- 当天的充值押金信息-->
     <select id="getTotalRechargeDeposit" resultType="Bigdecimal">
  		select 
  			ifnull(sum(rechargedeposit),0)
@@ -78,8 +77,47 @@
  		where 
  			del_flag = 0 and create_date BETWEEN #{beginTime} and #{endTime}
     </select>
-    
-    
+	<!-- 当天的冻结+佣金+当天支付金额-->
+	<select id="getTotalForeezeCommissionActPay" resultType="java.util.Map">
+		select
+			'todayFreezing' as dataType,ifnull(sum(totalprice),0)  totalMoney
+		from
+			t_task_base
+		where
+			create_date BETWEEN #{beginTime} and #{endTime}
+		union all
+		SELECT
+			'todayCommission' as dataType,ifnull(sum(tb.presentdeposit),0) totalMoney
+		FROM
+			t_my_task_detail td
+			inner join t_my_task mt on mt.id=td.mytaskid
+			inner join t_task_base tb on tb.id=td.taskid
+		where
+			td.create_date BETWEEN #{beginTime} and #{endTime}
+		union all
+		SELECT
+			'activePayMoney' as dataType, ifnull(sum(pays),0) totalMoney
+		FROM
+			t_my_task_detail td
+		where
+			td.create_date BETWEEN #{beginTime} and #{endTime}
+    </select>
+
+	<!-- 问题单+撤销单以及链接数量-->
+	<select id="getProblemTaskLink" resultType="java.util.Map">
+		SELECT
+			'problemTaskCount' dataType,count(DISTINCT qt.shop_task_id) totalCount
+		FROM
+			t_apply_task_buyer qt
+			where qt.handle_method=2
+		union all
+		SELECT
+			'problemTaskLinkCount' dataType,count(qt.shop_task_id)  totalCount
+		FROM
+			t_apply_task_buyer qt
+			where qt.handle_method=2
+    </select>
+
     <!-- 获根据账期获取唯一的一条日报数据 -->
     <select id="getTDayReportByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="String">
  		SELECT

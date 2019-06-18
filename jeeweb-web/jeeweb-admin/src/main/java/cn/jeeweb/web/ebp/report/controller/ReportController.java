@@ -47,8 +47,8 @@ public class ReportController extends BaseBeanController<TDayReport> {
 		 * @param response
 		 * @return
 		 */
-	 	@GetMapping(value = "view")
-	    @RequiresMethodPermissions("view")
+	 	//@GetMapping(value = "view")
+	    //@RequiresMethodPermissions("view")
 	    public ModelAndView list(Model model, HttpServletRequest request, HttpServletResponse response) {
 	        ModelAndView mav = displayModelAndView("dayReportList");
 	        return mav;
@@ -77,18 +77,20 @@ public class ReportController extends BaseBeanController<TDayReport> {
 
 
 	 	/***
-	     * 获取单条消息通知
+	     * 获取日报详情
 	     *
 	     * @param request
 	     * @param response
-	     * @return
+	     * @return  @RequestBody JSONObject queryObj,
 	     */
-	    @GetMapping("getDayReport")
-	    @RequiresMethodPermissions("detail")
-	    public ModelAndView TaskDetail(@RequestBody JSONObject queryObj,Model model, HttpServletRequest request, HttpServletResponse response) {
+	    @GetMapping("view")
+	    //@RequiresMethodPermissions("detail")
+	    public ModelAndView dayreportDetail(Model model, HttpServletRequest request, HttpServletResponse response) {
 	        ModelAndView mav = displayModelAndView("dayReportDetail");
-	        String beginDate=queryObj.getString("beginDate");
-	        String endDate=queryObj.getString("endDate");
+	        //String beginDate=queryObj.getString("beginDate");
+	        //String endDate=queryObj.getString("endDate");
+			String beginDate="2019-01-19";
+			String endDate="2019-06-18";
 	        if(StringUtils.isBlank(beginDate)) {
 	        	Date dateTemp=DateUtils.dateAddDay(null, -1);
 	        	beginDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
