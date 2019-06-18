@@ -7,7 +7,6 @@ import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.utils.DateUtils;
-import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
 import cn.jeeweb.web.ebp.notice.entity.NoticeInfo;
 import cn.jeeweb.web.ebp.notice.enums.NoticeStatusEnum;
 import cn.jeeweb.web.ebp.notice.mapper.NoticeMapper;
@@ -18,8 +17,6 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

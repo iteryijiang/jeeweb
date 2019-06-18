@@ -204,18 +204,25 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 		paramMap.put("beginDate", beginDate);
 		paramMap.put("endDate",endDate);
 		TDayReport sumObj=baseMapper.getTDayReportForSumByAtime(paramMap);
+		if(sumObj == null) {
+			return new TDayReport();
+		}
 		//计算平均值数据
 		//单链接占比、双链接占比、内部链接占比、外部任务链接占比、内部任务占比、外部任务占比
 		BigDecimal hundred=new BigDecimal(100);
-		BigDecimal singleLinkRatio=hundred.multiply(new BigDecimal(sumObj.getSingleTaskLinkCount())).divide(new BigDecimal(sumObj.getTotalTaskLinkCount()));
-		sumObj.setSingleTaskLinkRatio(singleLinkRatio.setScale(2, BigDecimal.ROUND_UP));
-		sumObj.setDoubleTaskLinkRatio(hundred.subtract(sumObj.getSingleTaskLinkRatio()));
-		BigDecimal internalTaskLinkRatio=hundred.multiply(new BigDecimal(sumObj.getInternalTaskLinkCount())).divide(new BigDecimal(sumObj.getTotalTaskLinkCount()));
-		sumObj.setInternalTaskLinkRatio(internalTaskLinkRatio.setScale(2, BigDecimal.ROUND_UP));
-		sumObj.setOuterTaskLinkRatio(hundred.subtract(sumObj.getInternalTaskLinkRatio()));
-		BigDecimal internalTaskRatio=hundred.multiply(new BigDecimal(sumObj.getInternalTaskCount())).divide(new BigDecimal(sumObj.getTaskTotalCount()));
-		sumObj.setInternalTaskRatio(internalTaskRatio.setScale(2, BigDecimal.ROUND_UP));
-		sumObj.setOuterTaskRatio(hundred.subtract(sumObj.getInternalTaskRatio()));
+		if(sumObj.getTotalTaskLinkCount()>0) {
+			BigDecimal singleLinkRatio=hundred.multiply(new BigDecimal(sumObj.getSingleTaskLinkCount())).divide(new BigDecimal(sumObj.getTotalTaskLinkCount()));
+			sumObj.setSingleTaskLinkRatio(singleLinkRatio.setScale(2, BigDecimal.ROUND_UP));
+			sumObj.setDoubleTaskLinkRatio(hundred.subtract(sumObj.getSingleTaskLinkRatio()));
+			BigDecimal internalTaskLinkRatio=hundred.multiply(new BigDecimal(sumObj.getInternalTaskLinkCount())).divide(new BigDecimal(sumObj.getTotalTaskLinkCount()));
+			sumObj.setInternalTaskLinkRatio(internalTaskLinkRatio.setScale(2, BigDecimal.ROUND_UP));
+			sumObj.setOuterTaskLinkRatio(hundred.subtract(sumObj.getInternalTaskLinkRatio()));
+		}
+		if(sumObj.getTaskTotalCount()>0) {
+			BigDecimal internalTaskRatio=hundred.multiply(new BigDecimal(sumObj.getInternalTaskCount())).divide(new BigDecimal(sumObj.getTaskTotalCount()));
+			sumObj.setInternalTaskRatio(internalTaskRatio.setScale(2, BigDecimal.ROUND_UP));
+			sumObj.setOuterTaskRatio(hundred.subtract(sumObj.getInternalTaskRatio()));
+		}
 		return sumObj;
 	}
 	

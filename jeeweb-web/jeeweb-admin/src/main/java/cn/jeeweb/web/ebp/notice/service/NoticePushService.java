@@ -1,7 +1,5 @@
 package cn.jeeweb.web.ebp.notice.service;
 
-import cn.jeeweb.web.ebp.notice.entity.NoticeInfo;
-
 import java.util.List;
 
 /**

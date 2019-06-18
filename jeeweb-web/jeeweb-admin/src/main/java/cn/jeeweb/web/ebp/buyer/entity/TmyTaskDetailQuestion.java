@@ -1,6 +1,5 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 
-import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.jeeweb.web.common.entity.DataEntity;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -8,7 +7,6 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.IdType;
-
 import java.math.BigDecimal;
 
 @TableName("t_my_task_detail_question")

@@ -151,17 +151,16 @@
     <!-- 获取两个日期之间的所有日报数据 -->
     <select id="getTDayReportForSumByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="String">
  		SELECT
-			sum(beginingBalance) beginingBalance,sum(endingBalance) endingBalance,sum(totalRechargeDeposit) totalRechargeDeposit,
-			sum(todayFreezing) todayFreezing,sum(todayCommission) todayCommission,sum(activePayMoney) activePayMoney,
-			sum(taskTotalCount) taskTotalCount,sum(internalTaskCount) internalTaskCount,sum(outerTaskCount) outerTaskCount,
-			sum(internalTaskLinkCount) internalTaskLinkCount,sum(outerTaskLinkCount) outerTaskLinkCount,
-			sum(zeroCommissionTaskCount) zeroCommissionTaskCount,sum(zeroCommissionTaskLinkCount) zeroCommissionTaskLinkCount,
-			sum(totalTaskLinkCount) totalTaskLinkCount,sum(singleTaskLinkCount) singleTaskLinkCount,sum(doubleTaskLinkCount) doubleTaskLinkCount,
-			sum(problemTaskCount) problemTaskCount,sum(problemTaskLinkCount) problemTaskLinkCount,sum(shopRevokeTaskCount) shopRevokeTaskCount
+				sum(begining_balance) beginingBalance,	sum(ending_balance) endingBalance,sum(total_recharge_deposit) totalRechargeDeposit,
+				sum(today_freezing) todayFreezing,sum(today_commission) todayCommission,sum(active_pay_money) activePayMoney,
+				sum(task_total_count) taskTotalCount,sum(internal_task_count) internalTaskCount,sum(outer_task_count) outerTaskCount,
+				sum(internal_task_link_count) internalTaskLinkCount,sum(outer_task_link_count) outerTaskLinkCount,sum(zero_commission_task_count) zeroCommissionTaskCount,
+				sum(	zero_commission_task_link_count	) zeroCommissionTaskLinkCount,	sum(total_task_link_count) totalTaskLinkCount,	sum(single_task_link_count) singleTaskLinkCount,	sum(double_task_link_count) doubleTaskLinkCount,
+				sum(problem_task_count) problemTaskCount,	sum(problem_task_link_count) problemTaskLinkCount,	sum(shop_revoke_task_count) shopRevokeTaskCount
 		FROM
 			t_day_report
 		WHERE
-			del_flag = 0 and atime=#{queryAtime}
+			del_flag = 0 and atime between #{beginDate} and #{endDate}
 		limit 0,1
     </select>
 </mapper>

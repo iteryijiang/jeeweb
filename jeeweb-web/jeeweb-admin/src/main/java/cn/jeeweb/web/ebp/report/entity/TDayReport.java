@@ -130,13 +130,13 @@ public class TDayReport extends DataEntity<String> {
 	 * 单链接占比
 	 * 
 	 */
-	private BigDecimal singleTaskLinkRatio;
+	private BigDecimal singleTaskLinkRatio=BigDecimal.ZERO;
 	
 	/**
 	 * 双链接占比
 	 * 
 	 */
-	private BigDecimal doubleTaskLinkRatio;
+	private BigDecimal doubleTaskLinkRatio=BigDecimal.ZERO;
 	
 	/**
 	 * 问题任务数量

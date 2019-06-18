@@ -1,25 +1,24 @@
 package cn.jeeweb.web.ebp.report.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import cn.jeeweb.common.http.PageResponse;
+import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.query.annotation.PageableDefaults;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.web.aspectj.enums.LogType;
-import cn.jeeweb.web.ebp.finance.entity.TfinanceRecharge;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import com.alibaba.fastjson.JSONObject;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
@@ -77,20 +76,33 @@ public class ReportController extends BaseBeanController<TDayReport> {
 
 
 	 	/***
-	     * 获取日报详情
+	     * 进入日报详情页
 	     *
 	     * @param request
 	     * @param response
 	     * @return  @RequestBody JSONObject queryObj,
 	     */
 	    @GetMapping("view")
-	    //@RequiresMethodPermissions("detail")
-	    public ModelAndView dayreportDetail(Model model, HttpServletRequest request, HttpServletResponse response) {
+	    @RequiresMethodPermissions("view")
+	    public ModelAndView goToDetailPage(Model model, HttpServletRequest request, HttpServletResponse response) {
 	        ModelAndView mav = displayModelAndView("dayReportDetail");
-	        //String beginDate=queryObj.getString("beginDate");
-	        //String endDate=queryObj.getString("endDate");
-			String beginDate="2019-01-19";
-			String endDate="2019-06-18";
+	        return mav;
+	    }
+	    
+	    /**
+	     * AJAX查询数据信息
+	     * 
+	     * @param jsonObject
+	     * @param request
+	     * @param response
+	     * @return
+	     */
+	    @RequestMapping(value = "getDetail", method = { RequestMethod.GET, RequestMethod.POST })
+		@Log(logType = LogType.SELECT)
+		@RequiresMethodPermissions("view")
+	    public Response dayreportDetail(@RequestBody JSONObject jsonObject, HttpServletRequest request, HttpServletResponse response) {
+			String beginDate=jsonObject.getString("beginDate");
+			String endDate=jsonObject.getString("endDate");
 	        if(StringUtils.isBlank(beginDate)) {
 	        	Date dateTemp=DateUtils.dateAddDay(null, -1);
 	        	beginDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
@@ -100,7 +112,6 @@ public class ReportController extends BaseBeanController<TDayReport> {
 	        	endDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
 	        }
 	        TDayReport reportObj=dayReportService.getAvgDayReport(beginDate, endDate);
-	        model.addAttribute("reportObj",reportObj);
-	        return mav;
+	        return Response.ok(JSONObject.toJSONString(reportObj) );
 	    }
 }

@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.enums.IdType;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 @TableName("t_task_base")
 @SuppressWarnings("serial")
