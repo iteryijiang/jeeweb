@@ -75,43 +75,48 @@ public class ReportController extends BaseBeanController<TDayReport> {
 	}
 
 
-	 	/***
-	     * 进入日报详情页
-	     *
-	     * @param request
-	     * @param response
-	     * @return  @RequestBody JSONObject queryObj,
-	     */
-	    @GetMapping("view")
-	    @RequiresMethodPermissions("view")
-	    public ModelAndView goToDetailPage(Model model, HttpServletRequest request, HttpServletResponse response) {
-	        ModelAndView mav = displayModelAndView("dayReportDetail");
-	        return mav;
-	    }
+	/***
+	 * 进入日报详情页
+	 *
+	 * @param request
+	 * @param response
+	 * @return  @RequestBody JSONObject queryObj,
+	 */
+	@GetMapping("view")
+	@RequiresMethodPermissions("view")
+	public ModelAndView goToDetailPage(Model model, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = displayModelAndView("dayReportDetail");
+		//默认检索时间是前一天
+		Date dateTemp=DateUtils.dateAddDay(null, -1);
+		String beginDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
+		mav.addObject("beginDate",beginDate);
+		mav.addObject("endDate",beginDate);
+		return mav;
+	}
 	    
-	    /**
-	     * AJAX查询数据信息
-	     * 
-	     * @param jsonObject
-	     * @param request
-	     * @param response
-	     * @return
-	     */
-	    @RequestMapping(value = "getDetail", method = { RequestMethod.GET, RequestMethod.POST })
-		@Log(logType = LogType.SELECT)
-		@RequiresMethodPermissions("view")
-	    public Response dayreportDetail(@RequestBody JSONObject jsonObject, HttpServletRequest request, HttpServletResponse response) {
-			String beginDate=jsonObject.getString("beginDate");
-			String endDate=jsonObject.getString("endDate");
-	        if(StringUtils.isBlank(beginDate)) {
-	        	Date dateTemp=DateUtils.dateAddDay(null, -1);
-	        	beginDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
-	        }
-	        if(StringUtils.isBlank(endDate)) {
-	        	Date dateTemp=DateUtils.dateAddDay(null, -1);
-	        	endDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
-	        }
-	        TDayReport reportObj=dayReportService.getAvgDayReport(beginDate, endDate);
-	        return Response.ok(JSONObject.toJSONString(reportObj) );
-	    }
+	/**
+	 * AJAX查询数据信息
+	 *
+	 * @param jsonObject
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "getDetail", method = { RequestMethod.GET, RequestMethod.POST })
+	@Log(logType = LogType.SELECT)
+	@RequiresMethodPermissions("view")
+	public Response dayreportDetail(@RequestBody JSONObject jsonObject, HttpServletRequest request, HttpServletResponse response) {
+		String beginDate=jsonObject.getString("beginDate");
+		String endDate=jsonObject.getString("endDate");
+		if(StringUtils.isBlank(beginDate)) {
+			Date dateTemp=DateUtils.dateAddDay(null, -1);
+			beginDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
+		}
+		if(StringUtils.isBlank(endDate)) {
+			Date dateTemp=DateUtils.dateAddDay(null, -1);
+			endDate=DateUtils.formatDate(dateTemp, "yyyy-MM-dd");
+		}
+		TDayReport reportObj=dayReportService.getAvgDayReport(beginDate, endDate);
+		return Response.ok(JSONObject.toJSONString(reportObj) );
+	}
 }

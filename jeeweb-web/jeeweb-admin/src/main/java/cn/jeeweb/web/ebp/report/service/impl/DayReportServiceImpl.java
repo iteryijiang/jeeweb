@@ -26,17 +26,25 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 		Map<String, Object> queryParam= installDayReportTimeParam(insertObj.getAtime());
 		//期初期末余额
 		setDayReportBeginEndBalance(insertObj,queryParam);
+		//本期充值
 		setDayReportTotalRechargeDeposit(insertObj, queryParam);
-		//任务单数+链接数
+		//内部任务+外部任务
 		setDayReportInnerOuterTaskCount(insertObj, queryParam);
+		//内部链接+外部链接
 		setDayReportInnerOuterTaskLinkCount(insertObj, queryParam);
+		//单链接+双链接
 		setDayReportSingleDoubleLinkCount(insertObj,queryParam);
+		//0佣金任务单+0佣金链接
 		setDayReportZeroCommissionTaskCountAndLInkCount(insertObj, queryParam);
+		//问题单数量+问题单链接数
+		setDayReportProblemTaskCountAndLInkCount(insertObj, queryParam);
+		//冻结金额+佣金+当天实际支付金额
+		getTotalForeezeCommissionActPay(insertObj, queryParam);
 		User createBy=new User();
 		createBy.setUsername("sys_schedule");
 		createBy.setId("sys_schedule");
 		insertObj.setCreateBy(createBy);
-		insertObj.setCreateDate(insertObj.getDtime());
+		insertObj.setCreateDate(DateUtils.getCurrentTime());
 		int insertCount=baseMapper.insert(insertObj);
 		if(insertCount!=1) {
 			throw new RuntimeException("保存日报数据失败");
@@ -53,9 +61,7 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 		BigDecimal totalRechargeDeposit=baseMapper.getTotalRechargeDeposit(queryParam);
 		insertObj.setTotalRechargeDeposit(totalRechargeDeposit);
 	}
-	
-	
-	
+
 	/**
 	 * 获取前一天的日报数据
 	 * 
@@ -70,8 +76,9 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 		if(preDayReport !=null) {
 			insertObj.setBeginingBalance(preDayReport.getEndingBalance());
 		}
-		//期末余额
-		
+		//期末余额(当前商户所有的可用押金汇总)
+		BigDecimal totalAvaiableDeposit=baseMapper.getTotalAvailableDeposit();
+		insertObj.setEndingBalance(totalAvaiableDeposit);
 	}
 	
 	/**
@@ -159,7 +166,7 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 	
 	/**
 	 * 0佣金任务单与连接数
-	 * 
+	 *
 	 * @param insertObj
 	 * @param queryParam
 	 */
@@ -174,10 +181,56 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * 创建生成日报是的时间参数
+	 * 问题单数量
+	 *
+	 * @param insertObj
+	 * @param queryParam
+	 */
+	private void setDayReportProblemTaskCountAndLInkCount(TDayReport insertObj,Map<String, Object> queryParam) {
+		//admin处理的问题单+问题申请链接数量
+		Map<String, Object> linkResultMap=baseMapper.getProblemTaskCountLinkCountByAdminHandle(queryParam);
+		if(linkResultMap !=null && !linkResultMap.isEmpty()) {
+			if(linkResultMap.get("problemTaskCount") !=null) {
+				insertObj.setProblemTaskCount(Long.valueOf(linkResultMap.get("problemTaskCount").toString()));
+			}
+			if(linkResultMap.get("problemTaskLinkCount") !=null) {
+				insertObj.setProblemTaskLinkCount(Long.valueOf(linkResultMap.get("problemTaskLinkCount").toString()));
+			}
+		}
+	}
+
+	/**
+	 * 获取三个数据：冻结金额+当天实际佣金+当天任务实际支付金额
+	 *
+	 * @param insertObj
+	 * @param queryParam
+	 */
+	private void getTotalForeezeCommissionActPay(TDayReport insertObj,Map<String, Object> queryParam) {
+		//admin处理的问题单+问题申请链接数量
+		List<Map<String, Object>> resultMapList=baseMapper.getTotalForeezeCommissionActPay(queryParam);
+		if(resultMapList != null && !resultMapList.isEmpty()){
+			for(Map<String, Object> mapTemp:resultMapList){
+				String dataType=mapTemp.get("dataType").toString();
+				BigDecimal dataTypeValue=new BigDecimal(mapTemp.get("totalMoney").toString());
+				switch (dataType){
+					case "todayFreezing"://冻结金额
+						insertObj.setTodayFreezing(dataTypeValue);
+						break;
+					case "todayCommission"://当天佣金
+						insertObj.setTodayCommission(dataTypeValue);
+						break;
+					case "activePayMoney"://任务实际支付金额
+						insertObj.setActivePayMoney(dataTypeValue);
+						break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * 创建生成日报的查询时间参数
 	 * 
 	 * @param sourceDate
 	 * @return

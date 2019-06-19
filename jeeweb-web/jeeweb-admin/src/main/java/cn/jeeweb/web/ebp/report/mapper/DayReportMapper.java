@@ -55,8 +55,31 @@ public interface DayReportMapper extends BaseMapper<TDayReport> {
 	 * @return
 	 */
 	BigDecimal getTotalRechargeDeposit(Map<String, Object> paramMap);
-	
-	
+
+	/**
+	 * 获取当前所有商户的可用押金汇总
+	 *
+	 * @return
+	 */
+	BigDecimal getTotalAvailableDeposit();
+
+
+	/**
+	 * 管理员撤销的任务单以及连接数
+	 *
+	 * @param paramMap
+	 * @return
+	 */
+	Map<String, Object> getProblemTaskCountLinkCountByAdminHandle(Map<String, Object> paramMap);
+
+	/**
+	 * 获取冻结金额+佣金+实际支付金额
+	 *
+	 * @param paramMap
+	 * @return
+	 */
+	List<Map<String, Object>> getTotalForeezeCommissionActPay(Map<String, Object> paramMap);
+
 
 	/**
 	 * 获根据账期获取唯一的一条日报数据

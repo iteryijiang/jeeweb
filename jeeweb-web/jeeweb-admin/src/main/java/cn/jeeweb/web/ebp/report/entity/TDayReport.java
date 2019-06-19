@@ -152,6 +152,11 @@ public class TDayReport extends DataEntity<String> {
 	 */
 	private long shopRevokeTaskCount=0;
 
+	/**
+	 * 买手任务总酬劳
+	 */
+	private BigDecimal buyerTaskIncome;
+
 	public String getId() {
 		return id;
 	}
@@ -376,4 +381,11 @@ public class TDayReport extends DataEntity<String> {
 		this.outerTaskLinkRatio = outerTaskLinkRatio;
 	}
 
+	public BigDecimal getBuyerTaskIncome() {
+		return buyerTaskIncome;
+	}
+
+	public void setBuyerTaskIncome(BigDecimal buyerTaskIncome) {
+		this.buyerTaskIncome = buyerTaskIncome;
+	}
 }

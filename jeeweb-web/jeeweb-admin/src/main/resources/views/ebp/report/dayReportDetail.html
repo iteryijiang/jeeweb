@@ -1,11 +1,12 @@
-<% layout('/layouts/list.html', {title: '日报详情', libs:
-'bootstrap-treeview'}){ %>
+<% layout('/layouts/list.html', {title: '日报详情', libs:'bootstrap-treeview'}){ %>
 <div class="row">
 	<table id="dayReportDetailTb" class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
 		<tr>
-			<td colspan="6" style="text-align: center">账期：<input type="text" readonly="readonly"
-				id="beginDate" />&nbsp;&nbsp;至&nbsp;&nbsp;<input type="text" readonly="readonly"
-				id="endDate" />
+			<td colspan="6" style="text-align: center">
+				账期：<input type="text" readonly="readonly" value="${beginDate}" id="beginDate" />
+				&nbsp;&nbsp;至&nbsp;&nbsp;
+				<input type="text" readonly="readonly" value="${endDate}" id="endDate" />
+				&nbsp;&nbsp;&nbsp;&nbsp;
 				<button class='btn btn-warning' onclick="getReportDetailFn()">查询</button>
 			</td>
 		</tr>
@@ -13,33 +14,33 @@
 			<td colspan="6" style="text-align: center"><h2>日报详细信息</h2></td>
 		</tr>
 		<tr>
-			<td class="tdTextRight" style="width: 15%">期初余额：</td>
+			<td class="tdTextRight" style="width: 15%">期初余额(元)</td>
 			<td class="tdTextLeft" style="width: 15%" name="beginingBalance"></td>
-			<td class="tdTextRight" style="width: 15%">期末余额：</td>
+			<td class="tdTextRight" style="width: 15%">期末余额(元)</td>
 			<td class="tdTextLeft" style="width: 15%" name="endingBalance"></td>
-			<td class="tdTextLeft" style="width: 15%">当天收到充值金额</td>
+			<td class="tdTextLeft" style="width: 15%">当天收到充值金额(元)</td>
 			<td class="tdTextRight" style="width: 15%" name="totalRechargeDeposit"></td>
 		</tr>
 		<tr>
-			<td class="tdTextRight">当天冻结金额：</td>
+			<td class="tdTextRight">当天冻结金额(元)</td>
 			<td class="tdTextLeft" name="todayFreezing"></td>
-			<td class="tdTextRight">当天佣金总金额：</td>
+			<td class="tdTextRight">当天佣金总金额(元)</td>
 			<td class="tdTextLeft" name="todayCommission"></td>
-			<td class="tdTextLeft">当天支付金额</td>
+			<td class="tdTextLeft">当天支付金额(元)</td>
 			<td class="tdTextRight" name="activePayMoney"></td>
 		</tr>
 		<tr>
-			<td class="tdTextRight" rowspan="2">任务数量：</td>
+			<td class="tdTextRight" rowspan="2">任务数量</td>
 			<td class="tdTextLeft" rowspan="2" name="taskTotalCount"></td>
-			<td class="tdTextRight">内部任务数量：</td>
+			<td class="tdTextRight">内部任务数量</td>
 			<td class="tdTextLeft" name="internalTaskCount"></td>
-			<td class="tdTextRight">内部任务占比(%)：</td>
+			<td class="tdTextRight">内部任务占比(%)</td>
 			<td class="tdTextLeft" name="internalTaskRatio"></td>
 		</tr>
 		<tr>
 			<td class="tdTextLeft">外部任务数量</td>
 			<td class="tdTextRight" name="outerTaskCount"></td>
-			<td class="tdTextRight">外部任务占比(%)：</td>
+			<td class="tdTextRight">外部任务占比(%)</td>
 			<td class="tdTextLeft" name="outerTaskRatio"></td>
 		</tr>
 		<tr>
@@ -47,36 +48,36 @@
 			<td class="tdTextRight" rowspan="5" name="totalTaskLinkCount"></td>
 			<td class="tdTextLeft">内部链接总数</td>
 			<td class="tdTextRight" name="internalTaskLinkCount"></td>
-			<td class="tdTextRight">内部链接占比(%)：</td>
+			<td class="tdTextRight">内部链接占比(%)</td>
 			<td class="tdTextLeft" name="internalTaskLinkRatio"></td>
 		</tr>
 		<tr>
-			<td class="tdTextRight">外部任务链接总数：</td>
+			<td class="tdTextRight">外部任务链接总数</td>
 			<td class="tdTextLeft" name="outerTaskLinkCount"></td>
 			<td class="tdTextLeft">外部链接占比(%):</td>
 			<td class="tdTextRight" name="outerTaskLinkRatio"></td>
 		</tr>
 		<tr>
-			<td class="tdTextRight">单链接数量：</td>
+			<td class="tdTextRight">单链接数量</td>
 			<td class="tdTextLeft" name="singleTaskLinkCount"></td>
 			<td class="tdTextLeft">单链接占比(%)</td>
 			<td class="tdTextRight" name="singleTaskLinkRatio"></td>
 		</tr>
 		<tr>
-			<td class="tdTextRight">双链接数量：</td>
+			<td class="tdTextRight">双链接数量</td>
 			<td class="tdTextLeft" name="doubleTaskLinkCount"></td>
-			<td class="tdTextRight">双链接占比(%)：</td>
+			<td class="tdTextRight">双链接占比(%)</td>
 			<td class="tdTextLeft" name="doubleTaskLinkRatio"></td>
 		</tr>
 
 		<tr>
-			<td class="tdTextRight">0佣金任务数量：</td>
+			<td class="tdTextRight">0佣金任务数量</td>
 			<td class="tdTextLeft" name="zeroCommissionTaskCount"></td>
-			<td class="tdTextRight">0佣金任务链接数量：</td>
+			<td class="tdTextRight">0佣金任务链接数量</td>
 			<td class="tdTextLeft" name="zeroCommissionTaskLinkCount"></td>
 		</tr>
 		<tr>
-			<td class="tdTextRight">问题任务数量：</td>
+			<td class="tdTextRight">问题任务数量</td>
 			<td class="tdTextLeft" name="problemTaskCount"></td>
 			<td class="tdTextLeft">问题任务链接数量</td>
 			<td class="tdTextRight" name="problemTaskLinkCount">&nbsp;</td>
@@ -84,7 +85,7 @@
 			<td class="tdTextRight">&nbsp;</td>
 		</tr>
 		<tr>
-			<td class="tdTextRight">商户撤销任务数量：</td>
+			<td class="tdTextRight">商户撤销任务数量</td>
 			<td class="tdTextLeft" name="shopRevokeTaskCount"></td>
 			<td class="tdTextRight"></td>
 			<td class="tdTextLeft"></td>
@@ -132,6 +133,6 @@
 				}
 			});
 		}
-		</script>
+	</script>
 </div>
 <% } %>
