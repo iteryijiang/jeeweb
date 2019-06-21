@@ -188,7 +188,7 @@
     sum(t.actualprice*t.tasknum) sumActualprice,
     sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=2)) sumOrderPrice,
     sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=3)) sumDeliveryPrice,
-    sum((select count(1) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=4)) sumfinishnum,
+    sum((select count(1) from t_my_task_detail tmd  where tmd.taskid=t.id and tmd.taskstate=4)) sumfinishnum,
     sum((select sum(pays) from t_my_task_detail tmd where tmd.taskid=t.id and tmd.taskstate=4)) sumFinishPrice
     from t_task_base t left join t_shop_info si on t.shopid=si.userid left join t_shop_base sb on t.storename=sb.id
     where

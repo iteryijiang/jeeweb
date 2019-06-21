@@ -21,16 +21,16 @@
 <!--</div>-->
 <!--任务编号、发布时间、生效时间、商户号、店铺名、品牌、SKU、搜索关键字、货号、商品单价、实付金额、任务单数、已接单数、已下单数、已发货单数、已完成单数、已撤销单数、任务状态、操作-->
 <#grid:grid id="ttaskBaseGrid" url="${adminPath}/shop/TtaskBase/ajaxList" sortname="taskno" sortorder="desc" sortable="false">
-<#grid:column label="任务编号" width="100" query="true" condition="like" name="taskno"/>
-<#grid:column label="商户号" hidden="${showHidden}" name="loginname" query="true" condition="like" width="120" />
+<#grid:column label="任务编号" width="110" query="true" condition="like" name="taskno"/>
+<#grid:column label="商户号" hidden="${showHidden}" name="loginname" query="true" condition="like" width="100" />
 <#grid:column label="店铺名" name="shopname" query="true" condition="like" width="120" />
 <#grid:column label="品牌" hidden="${showHidden}"  name="brand" width="80"/>
-<#grid:column label="SKU"  name="skuid" width="80" query="true" condition="like"/>
+<#grid:column label="SKU"  name="skuid" width="90" query="true" condition="like"/>
 <#grid:column label="搜索关键字"  name="keyword" width="100"/>
-<#grid:column label="货号"  name="article" query="true"  condition="like" width="80"/>
-<#grid:column label="原价"  name="tPrice" width="70"/>
+<#grid:column label="货号"  name="article" query="true"  condition="like" width="90"/>
+<#grid:column label="原价"  name="tPrice" width="40"/>
 <#grid:column label="佣金单价"  name="presentdeposit" width="60"/>
-<#grid:column label="实付"  name="actualprice" width="70"/>
+<#grid:column label="实付"  name="actualprice" width="40"/>
 <#grid:column label="发布时间"  name="createDate" width="100"/>
 <#grid:column label="生效时间"  name="effectdate"  query="true" width="100" queryMode="date"  condition="between"  />
 <#grid:column label="任务数"  name="tasknum" width="60" />

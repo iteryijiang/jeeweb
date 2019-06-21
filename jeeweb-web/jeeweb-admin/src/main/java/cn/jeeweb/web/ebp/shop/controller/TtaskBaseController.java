@@ -158,6 +158,12 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             if(new_date.getTime()>ttaskBase.getEffectdate().getTime()){
                 return Response.error("不能发布生效时间为以前的订单！");
             }
+            if(ttaskBase.getTasknum()<=0){
+                return Response.error("任务单数不能小于等于零！");
+            }
+            if(ttaskBase.gettPrice().compareTo(BigDecimal.ZERO)<=0){
+                return Response.error("单品售价不能小于等于零！");
+            }
             if(ttaskBase.getActualprice().compareTo(BigDecimal.ZERO)<=0){
                 return Response.error("实付金额不能小于等于零！");
             }
