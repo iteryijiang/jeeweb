@@ -315,6 +315,14 @@
             alert("请填写任务单数");
             return;
          }
+           if(good_detail_info.tPrice<=0){
+               alert("单品售价不能小于等于零");
+               return;
+           }
+           if(good_detail_info.tasknum<=0){
+               alert("任务单数不能小于等于零");
+               return;
+           }
          if(good_detail_info.actualprice==""||good_detail_info.actualprice==undefined){
             alert("请填写实付金额");
             return;

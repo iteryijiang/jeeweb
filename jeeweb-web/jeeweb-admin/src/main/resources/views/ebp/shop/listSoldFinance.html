@@ -19,6 +19,7 @@
             <td><p>已接单数：<span style="color:green;font-weight: bold" id="sumunanswerednum"></span>&nbsp;&nbsp;&nbsp;</p></td>
             <td><p>未接单数：<span style="color:blue;font-weight: bold" id="sumcanreceivenum"></span>&nbsp;&nbsp;&nbsp;</p></td>
             <td><p>完成单数：<span style="color:blue;font-weight: bold" id="sumfinishnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
+            <td><p>问题单数：<span style="color:blue;font-weight: bold" id="sumquestionnum"></span>&nbsp;&nbsp;&nbsp;</p></td>
         </tr>
     </table>
     <br>
@@ -49,6 +50,8 @@
     function getload(){
         var data={};
         data.loginname = $("input[name='loginname']").val();
+        data.create1 = $("#TshopRoleUserGrid_effectdate_start").val();
+        data.create2 = $("#TshopRoleUserGrid_effectdate_end").val();
         $.ajax({
             type: "POST",
             url: "${adminPath}/shop/TshopRoleUser/sumListSoldFinance",
@@ -63,6 +66,7 @@
                 $("#sumunanswerednum").html(data.sumunanswerednum==undefined?"0":data.sumunanswerednum);
                 $("#sumcanreceivenum").html(data.sumcanreceivenum==undefined?"0":data.sumcanreceivenum);
                 $("#sumfinishnum").html(data.sumfinishnum==undefined?"0":data.sumfinishnum);
+                $("#sumquestionnum").html(data.sumquestionnum==undefined?"0":data.sumquestionnum);
             }
         });
     }

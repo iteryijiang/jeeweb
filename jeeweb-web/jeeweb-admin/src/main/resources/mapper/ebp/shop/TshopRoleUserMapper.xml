@@ -41,15 +41,19 @@
 
     <select id="sumListSoldFinance" resultType="java.util.Map">
         select sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end) sumtasknum,
-        sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end)-sum(finishcount) sumunanswerednum,sum(case when tb.status=2 then 0 else tb.canreceivenum end) sumcanreceivenum,
-        sum(finishcount) sumfinishnum,(sum(tb.tasknum)-sum(case when tb.status=2 then tb.canreceivenum else 0 end)-sum(finishcount))*${map.multiple} sumunansweredPrice,sum(finishcount)*${map.multiple} sumfinishPrice
+        sum((select count(1) from t_my_task_detail tmd where tmd.taskid=tb.id and tmd.taskstate not in ('4'))) sumunanswerednum,
+        sum((select count(1) from t_my_task_detail tmd where tmd.taskid=tb.id and tmd.taskstate=4)) sumfinishnum,
+        sum((select count(1) from t_my_task_detail_question tmdq where tmdq.taskid=tb.id)) sumquestionnum,
+        sum((select count(1) from t_my_task_detail tmd where tmd.taskid=tb.id and tmd.taskstate not in ('4')))*${map.multiple} sumunansweredPrice,
+        sum((select count(1) from t_my_task_detail tmd where tmd.taskid=tb.id and tmd.taskstate=4))*${map.multiple} sumfinishPrice
         from t_shop_role_user t left join t_shop_info s on t.shopid=s.userid left join t_task_base tb on t.shopid=tb.shopid
-        left join (select taskid,sum(case when taskstate='4' then 1 else 0 end) finishcount from t_my_task_detail m,t_task_base b,t_shop_role_user s where
-        m.taskid=b.id and b.shopid=s.shopid and s.userid=#{map.userid} group by taskid) my on tb.id=my.taskid
         where 1=1
         and t.userid=#{map.userid}
         <if test="map.loginname != '' and map.loginname != null">
             and s.loginname like #{map.loginname}
+        </if>
+        <if test="map.create1 != '' and map.create1 != null">
+          and (tb.effectdate BETWEEN #{map.create1} and #{map.create2})
         </if>
     </select>
 </mapper>

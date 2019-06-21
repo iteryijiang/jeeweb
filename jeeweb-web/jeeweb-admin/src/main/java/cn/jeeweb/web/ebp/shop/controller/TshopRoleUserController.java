@@ -293,11 +293,23 @@ public class TshopRoleUserController extends BaseBeanController<TshopRoleUser> {
         }
         String userid = UserUtils.getPrincipal().getId();
         String loginname = jsonObject.getString("loginname");
+        String create1 = jsonObject.getString("create1");
+        String create2 = jsonObject.getString("create2");
+
+        String[] creates = TaskUtils.whereNewDate(create1,create2);
         Map paramMap = new HashMap();
         paramMap.put("userid",userid);
         paramMap.put("multiple",multiple);
+        paramMap.put("create1",creates[0]);
+        paramMap.put("create2",creates[1]);
         paramMap.put("loginname",(StringUtils.isNotEmpty(loginname)?"%"+loginname+"%":null));
         Map map =TshopRoleUserService.sumListSoldFinance(paramMap);
+        int sumcanreceivenum = 0;
+        if(map.get("sumtasknum")!=null&&map.get("sumunanswerednum")!=null&&map.get("sumfinishnum")!=null&&map.get("sumquestionnum")!=null){
+            sumcanreceivenum = Integer.parseInt(map.get("sumtasknum").toString())-Integer.parseInt(map.get("sumunanswerednum").toString())-Integer.parseInt(map.get("sumfinishnum").toString())-
+                    Integer.parseInt(map.get("sumquestionnum").toString());
+        }
+        map.put("sumcanreceivenum",sumcanreceivenum);
         map.put("multiple",multiple);
         String content = JSON.toJSONString(map);
         StringUtils.printJson(response,content);
