@@ -42,6 +42,50 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	public static String getDate() {
 		return getDate("yyyy-MM-dd");
 	}
+	
+	/**
+	 * 获取一天的开始时间yyyy-MM-dd 00:00:00
+	 * 
+	 * @param sourceDate
+	 * @return
+	 */
+	public static String getDateBegin(Date sourceDate) {
+		return getDate("yyyy-MM-dd");
+	}
+	
+	/**
+	 * 获取一天的额结束时间yyyy-MM-dd 23:59:59
+	 * 
+	 * @param sourceDate
+	 * @return
+	 */
+	public static String getDateEnd(Date sourceDate) {
+		return getDate("yyyy-MM-dd")+" 23:59:59";
+	}
+	
+	/**
+	 * 获取当前日期
+	 * 
+	 * @return
+	 */
+	public static Date getCurrentDate() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
+	
+	/**
+	 * 获取当前日期
+	 * 
+	 * @return
+	 */
+	public static Date getCurrentTime() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.getTime();
+	}
 
 	/**
 	 * 得到当前日期字符串 格式（yyyy-MM-dd） pattern可以为："yyyy-MM-dd" "HH:mm:ss" "E"

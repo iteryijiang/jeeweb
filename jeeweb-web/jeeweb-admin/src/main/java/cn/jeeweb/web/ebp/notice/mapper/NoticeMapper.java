@@ -4,7 +4,6 @@ import cn.jeeweb.web.ebp.notice.entity.NoticeInfo;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import java.util.List;
@@ -34,5 +33,5 @@ public interface NoticeMapper extends BaseMapper<NoticeInfo> {
    * @param map
    * @return
    */
-  int updateNoticeStatus(@Param("map") Map map);
+  int updateNoticeStatus(@SuppressWarnings("rawtypes") @Param("map") Map map);
 }

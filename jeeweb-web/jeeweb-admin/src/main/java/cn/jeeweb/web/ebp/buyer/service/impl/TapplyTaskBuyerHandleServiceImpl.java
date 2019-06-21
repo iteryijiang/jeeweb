@@ -25,7 +25,6 @@ import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
-import cn.jeeweb.web.modules.sys.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +52,6 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
     private TtaskBaseService ttaskBaseService;
     @Autowired
     private NoticeService noticeService;
-    @Autowired
-    private IUserService iUserService;
 
     @Override
     public void updateTapplyTaskBuyerForHandle(TapplyTaskBuyerHandle obj) throws Exception{

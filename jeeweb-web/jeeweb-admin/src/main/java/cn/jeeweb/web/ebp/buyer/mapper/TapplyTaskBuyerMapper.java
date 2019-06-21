@@ -2,7 +2,6 @@ package cn.jeeweb.web.ebp.buyer.mapper;
 
 
 import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;

@@ -2,11 +2,9 @@ package cn.jeeweb.web.ebp.notice.service.impl;
 
 import cn.jeeweb.web.ebp.notice.base.Publisher;
 import cn.jeeweb.web.ebp.notice.base.PublisherFactory;
-import cn.jeeweb.web.ebp.notice.entity.NoticeInfo;
 import cn.jeeweb.web.ebp.notice.service.NoticePushService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
@@ -28,7 +26,6 @@ public class NoticePushServiceImpl implements NoticePushService {
 
   @Override
   public void pushNotice(String groupId,List<String> memberList,String noticeContent) {
-    Publisher publisher = PublisherFactory.getInstance();
     for(String memberNo:memberList){
       pushNotice(groupId,memberNo,noticeContent);
     }

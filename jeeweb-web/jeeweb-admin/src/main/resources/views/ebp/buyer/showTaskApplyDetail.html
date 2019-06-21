@@ -67,7 +67,7 @@
             <a class="A1" href="#">任务详情</a>
         </div>
         <div style="float:right;height:30px;padding-top: 11px;">
-            <button class='btn btn-warning' onclick="cancelApplyTaskForShopFn()">撤销商家任务</button>
+            <button class='btn btn-warning'  ${applyObj.applyStatus==1  ? "style='display: none;' ":"style='display: block;' "} onclick="cancelApplyTaskForShopFn()">撤销商家任务</button>
         </div>
         <div style="clear:both;"></div>
     </div>
@@ -172,7 +172,7 @@
         </table>
     </div>
     <div style="height:30px;padding-bottom:10px;text-align:right;">
-        <button class='btn btn-warning' onclick="cancelApplyTaskForShopFn()">撤销商家任务</button>
+        <button class='btn btn-warning'  ${applyObj.applyStatus==1  ? "style='display: none;' ":"style='display: block;' "} onclick="cancelApplyTaskForShopFn()">撤销商家任务</button>
     </div>
 </div>
 </body>

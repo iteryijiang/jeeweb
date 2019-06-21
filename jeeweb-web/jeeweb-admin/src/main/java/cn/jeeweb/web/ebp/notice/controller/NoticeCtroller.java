@@ -1,18 +1,14 @@
 package cn.jeeweb.web.ebp.notice.controller;
 
-import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.web.aspectj.annotation.Log;
-import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.notice.entity.NoticeInfo;
 import cn.jeeweb.web.ebp.notice.service.NoticeService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.report.mapper.DayReportMapper" >
+  
+  <!-- 获取内部外部的任务单总数 -->
+	<select id="getInnerOuterTaskCount" resultType="java.util.Map">
+		SELECT
+			sum(IF(shop.from_inner_outer=1,1,0)) innerCount,
+			sum(IF(shop.from_inner_outer=1,0,1)) outerCount
+		FROM
+			t_task_base taskTb
+			inner join t_shop_info shop on shop.userid=taskTb.create_by  and shop.del_flag=0
+		where 
+			taskTb.effectdate BETWEEN #{beginTime} and #{endTime} and  taskTb.del_flag=0
+	</select>
+	 <!-- 获取内部外部的任务单链接总数 -->
+	<select id="getInnerOuterTaskLinkCount" resultType="java.util.Map">
+		SELECT
+			sum(IF(shop.from_inner_outer=1,1,0)) innerLinkCount,
+			sum(IF(shop.from_inner_outer=1,0,1)) outerLinkCount
+		FROM
+			t_task_base taskTb
+			inner join t_shop_info shop on shop.userid=taskTb.create_by and shop.del_flag=0
+		  	inner join t_my_task_detail myTask on myTask.taskid=taskTb.id
+		where 
+			myTask.receivingdate BETWEEN #{beginTime} and #{endTime} and myTask.del_flag=0 and taskTb.del_flag=0
+	</select>
+	
+	<!-- 获取0佣金任务单+0佣金链接总数 -->
+	<select id="getZeroCommissionTaskCountAndLInkCount" resultType="java.util.Map">
+			select 
+				sum(zereLinkCount) zereLinkCount,sum(zereTaskCount) zereTaskCount 
+			from (
+					SELECT
+						count(*) zereLinkCount,0 zereTaskCount
+					FROM
+						t_my_task_detail myTask
+					  	inner join t_task_base taskTb on myTask.taskid=taskTb.id and taskTb.presentdeposit=0 and taskTb.del_flag=0
+					where 
+						myTask.receivingdate BETWEEN #{beginTime} and #{endTime}
+					 	and myTask.del_flag=0
+					union all 
+						SELECT
+							0 zereLinkCount ,count(DISTINCT taskTb.id) zereTaskCount
+						FROM
+							t_my_task_detail myTask
+						  inner join t_task_base taskTb on myTask.taskid=taskTb.id and taskTb.presentdeposit=0 and taskTb.del_flag=0
+					where 
+						myTask.receivingdate BETWEEN #{beginTime} and #{endTime}  and myTask.del_flag=0
+				)tb
+	</select>
+	<!-- 获取单链接双链接总数总数 -->
+    <select id="getSingleDoubleTaskLinkCount" resultType="java.util.Map">
+ 		select 
+	 		sum(case when isdouble>1 then 1 else 0 end) doubleLinkCount,
+	 		sum(case when isdouble=1 then 1 else 0 end) singleLinkCount
+         from (
+			SELECT count(*) isdouble
+			FROM
+				t_my_task_detail t
+				inner join t_buyer_info i on t.buyerid = i.userid  and i.del_flag=0
+			WHERE
+				t.receivingdate BETWEEN #{beginTime} and #{endTime}  and t.del_flag=0
+			GROUP BY
+				i.userid,
+				t.storename,
+				t.mytaskid
+			) tb
+    </select>
+    
+    <!-- 当天的充值押金信息-->
+    <select id="getTotalRechargeDeposit" resultType="Bigdecimal">
+ 		select 
+ 			ifnull(sum(rechargedeposit),0)
+ 		from 
+ 			t_finance_recharge 
+ 		where 
+ 			del_flag = 0 and create_date BETWEEN #{beginTime} and #{endTime}
+    </select>
+
+	<!-- 获取当前的所有可用押金汇总-->
+	<select id="getTotalAvailableDeposit" resultType="Bigdecimal">
+ 		select
+ 			sum(ifnull(AvailableDeposit,0))
+ 		from
+ 			t_shop_info where del_flag=0
+    </select>
+
+	<!-- 当天的冻结+佣金+当天支付金额-->
+	<select id="getTotalForeezeCommissionActPay" resultType="java.util.Map">
+		select
+			'todayFreezing' as dataType,ifnull(sum(totalprice),0)  totalMoney
+		from
+			t_task_base
+		where
+			create_date BETWEEN #{beginTime} and #{endTime} and del_flag=0
+		union all
+		SELECT
+			'todayCommission' as dataType,ifnull(sum(tb.presentdeposit),0) totalMoney
+		FROM
+			t_my_task_detail td
+			inner join t_my_task mt on mt.id=td.mytaskid and mt.del_flag=0
+			inner join t_task_base tb on tb.id=td.taskid and tb.del_flag=0
+		where
+			td.create_date BETWEEN #{beginTime} and #{endTime} and td.del_flag=0
+		union all
+		SELECT
+			'activePayMoney' as dataType, ifnull(sum(pays),0) totalMoney
+		FROM
+			t_my_task_detail td
+		where
+			td.create_date BETWEEN #{beginTime} and #{endTime} and td.del_flag=0
+    </select>
+
+	<!-- 问题单+撤销单以及链接数量-->
+	<select id="getProblemTaskCountLinkCountByAdminHandle" resultType="java.util.Map">
+		select
+			sum(problemTaskCount) 'problemTaskCount',sum(problemTaskLinkCount) 'problemTaskLinkCount'
+		FROM(
+			SELECT
+				count(DISTINCT qt.shop_task_id) 'problemTaskCount',0 'problemTaskLinkCount'
+			FROM
+				t_apply_task_buyer qt
+			where
+				qt.handle_method=2 and qt.apply_time BETWEEN #{beginTime} and #{endTime} and qt.del_flag=0
+			union all
+			SELECT
+				0 'problemTaskCount',count(qt.shop_task_id)  'problemTaskLinkCount'
+			FROM
+				t_apply_task_buyer qt
+			where qt.handle_method=2 and qt.apply_time BETWEEN #{beginTime} and #{endTime} and qt.del_flag=0
+		)tb
+    </select>
+
+    <!-- 获根据账期获取唯一的一条日报数据 -->
+    <select id="getTDayReportByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="String">
+ 		SELECT
+			id,atime,dtime,begining_balance,ending_balance,total_recharge_deposit,today_freezing,today_commission,active_pay_money,
+			task_total_count,internal_task_count,outer_task_count,nternal_task_ratio,outer_task_ratio,internal_task_link_count,outer_task_link_count,
+			internal_task_link_ratio,outer_task_link_ratio,zero_commission_task_count,zero_commission_task_link_count,total_task_link_count,
+			single_task_link_count,double_task_link_count,single_task_link_ratio,double_task_link_ratio,problem_task_count,problem_task_link_count,
+			shop_revoke_task_count,buyer_task_income,
+			create_by,create_date,update_by,update_date,remarks,del_flag
+		FROM
+			t_day_report
+		WHERE
+			del_flag = 0 and atime=#{queryAtime}
+		limit 0,1
+    </select>
+    
+     <!-- 获取两个日期之间的所有日报数据列表 -->
+    <select id="getTDayReportListByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="Map">
+ 		SELECT
+			id,atime,dtime,begining_balance,ending_balance,total_recharge_deposit,today_freezing,today_commission,active_pay_money,
+			task_total_count,internal_task_count,outer_task_count,nternal_task_ratio,outer_task_ratio,internal_task_link_count,outer_task_link_count,
+			internal_task_link_ratio,outer_task_link_ratio,zero_commission_task_count,zero_commission_task_link_count,total_task_link_count,
+			single_task_link_count,double_task_link_count,single_task_link_ratio,double_task_link_ratio,problem_task_count,problem_task_link_count,
+			shop_revoke_task_count,buyer_task_income,
+			create_by,create_date,update_by,update_date,remarks,del_flag
+		FROM
+			t_day_report
+		WHERE
+			del_flag = 0 and atime  #{beginDate} and #{endDate}
+		order by atime desc
+    </select>
+    
+    <!-- 获取两个日期之间的所有日报数据 -->
+    <select id="getTDayReportForSumByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="String">
+ 		SELECT
+				sum(begining_balance) beginingBalance,	sum(ending_balance) endingBalance,sum(total_recharge_deposit) totalRechargeDeposit,
+				sum(today_freezing) todayFreezing,sum(today_commission) todayCommission,sum(active_pay_money) activePayMoney,
+				sum(task_total_count) taskTotalCount,sum(internal_task_count) internalTaskCount,sum(outer_task_count) outerTaskCount,
+				sum(internal_task_link_count) internalTaskLinkCount,sum(outer_task_link_count) outerTaskLinkCount,sum(zero_commission_task_count) zeroCommissionTaskCount,
+				sum(zero_commission_task_link_count) zeroCommissionTaskLinkCount,sum(total_task_link_count) totalTaskLinkCount,	sum(single_task_link_count) singleTaskLinkCount,sum(double_task_link_count) doubleTaskLinkCount,
+				sum(problem_task_count) problemTaskCount,sum(problem_task_link_count) problemTaskLinkCount,	sum(shop_revoke_task_count) shopRevokeTaskCount
+		FROM
+			t_day_report
+		WHERE
+			del_flag = 0 and atime between #{beginDate} and #{endDate}
+		limit 0,1
+    </select>
+</mapper>

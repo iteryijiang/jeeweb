@@ -4,7 +4,6 @@ import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
 import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.transaction.annotation.Transactional;
 
