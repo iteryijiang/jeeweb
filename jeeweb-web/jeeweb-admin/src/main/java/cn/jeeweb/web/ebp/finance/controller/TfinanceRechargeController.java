@@ -17,6 +17,7 @@ import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceRecharge;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
@@ -110,28 +111,42 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
         return Response.ok("更新成功");
     }
 
+    /**
+     * 撤销充值操作
+     *
+     * @param id
+     * @return
+     */
     @PostMapping("{id}/delete")
     @Log(logType = LogType.DELETE)
     @RequiresMethodPermissions("delete")
     public Response delete(@PathVariable("id") String id) {
-
+        //获取充值记录
         TfinanceRecharge entity = tfinanceRechargeService.selectById(id);
+        if(entity == null){
+            return Response.error("操作失败，获取充值记录失败！");
+        }
+        if(YesNoEnum.YES.code == entity.getRecordStatus()){
+            return Response.error("操作失败，该充值记录已经被撤销！");
+        }
         TshopInfo si = tshopInfoService.selectOne(entity.getShopid());
         if (si.getAvailabledeposit() == null) {
-            return Response.error("删除失败，该商户无充值金额！");
-        } else {
-            si.setAvailabledeposit(si.getAvailabledeposit().subtract(entity.getRechargedeposit()));
-            si.setTotaldeposit(si.getTotaldeposit().subtract(entity.getRechargedeposit()));
+            return Response.error("操作失败，该商户无充值金额！");
         }
+        si.setAvailabledeposit(si.getAvailabledeposit().subtract(entity.getRechargedeposit()));
+        si.setTotaldeposit(si.getTotaldeposit().subtract(entity.getRechargedeposit()));
         if(si.getAvailabledeposit().compareTo(BigDecimal.ZERO)<0){
-            return Response.error("删除失败，该商金额不够！");
+            return Response.error("操作失败，该商金额不够！");
         }
-
+        entity.setUpdateBy(UserUtils.getUser());
+        entity.setUpdateDate(DateUtils.getCurrentTime());
         entity.setTotaldeposit(si.getTotaldeposit());
-        tfinanceRechargeService.delTfinanceRecharge(si,entity);
-        return Response.ok("删除成功");
+        tfinanceRechargeService.updateTfinanceRechargeForRevoke(si,entity);
+        return Response.ok("操作成功");
     }
 
+    /*
+    没有批量操作删除的方法
     @PostMapping("batch/delete")
     @Log(logType = LogType.DELETE)
     @RequiresMethodPermissions("delete")
@@ -157,7 +172,7 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
         }
         return Response.ok("删除成功");
     }
-
+    */
 
     /**
      * 根据页码和每页记录数，以及查询条件动态加载数据
@@ -173,7 +188,8 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
     public void ajaxList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
         EntityWrapper<TfinanceRecharge> entityWrapper = new EntityWrapper<>(entityClass);
-        propertyPreFilterable.addQueryProperty("id");
+        String[] s = { "id", "recordStatus" };
+        propertyPreFilterable.addQueryProperty(s);
         String userid = UserUtils.getPrincipal().getId();
         if (!StringUtils.isEmpty(userid)) {
             entityWrapper.eq("t.create_by", userid);

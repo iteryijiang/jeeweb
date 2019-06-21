@@ -10,6 +10,7 @@
       <result property="shopid" column="shopid" jdbcType="VARCHAR" />
       <result property="totaldeposit" column="totaldeposit" jdbcType="DOUBLE" />
       <result property="rechargefile" column="rechargefile" jdbcType="VARCHAR" />
+      <result property="recordStatus" column="record_status" jdbcType="INTEGER" />
   </resultMap>
   
 
@@ -22,6 +23,16 @@
 		  </where>
 	   </if>
   </select>
+
+    <!-- 更新充值记录的撤销状态 -->
+    <update id="updateTfinanceRechargeForRevoke" parameterType="HashMap">
+        update
+          t_finance_recharge
+        set
+          record_status=1,update_by=#{map.lastRepair},update_date=#{map.lastTime}
+        where
+          id=#{map.id} and record_status=0 and del_flag=0
+    </update>
 
 
 </mapper>

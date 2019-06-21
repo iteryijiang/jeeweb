@@ -26,7 +26,7 @@ public class TfinanceRecharge extends DataEntity<String> {
 	private String shopid;//	varchar	32	0	-1	0	0	0	0		0	商家号	utf8	utf8_general_ci		0	0
 	private BigDecimal totaldeposit;//	bigint	255	0	-1	0	0	0	0		0	总金额				0	0
 	private String rechargefile;//	varchar	255	0	-1	0	0	0	0		0	支付凭证	utf8	utf8_general_ci		0	0
-
+	private int recordStatus=0;//int(4) NULL DEFAULT 0 COMMENT '充值记录状态0正常1已撤销'
 
 
 	/** 创建时间 */
@@ -128,5 +128,13 @@ public class TfinanceRecharge extends DataEntity<String> {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public int getRecordStatus() {
+		return recordStatus;
+	}
+
+	public void setRecordStatus(int recordStatus) {
+		this.recordStatus = recordStatus;
 	}
 }

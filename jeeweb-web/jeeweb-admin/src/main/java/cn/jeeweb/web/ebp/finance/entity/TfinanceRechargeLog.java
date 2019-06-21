@@ -24,7 +24,7 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 	private String tradetype;//	varchar	32	0	-1	0	0	0	0		0	操作类型	utf8	utf8_general_ci		0	0
 	private BigDecimal producedeposit;//	bigint	255	0	-1	0	0	0	0		0	操作金额				0	0
 	private BigDecimal availabledeposit;//	bigint	255	0	-1	0	0	0	0		0	剩余金额				0	0
-
+	private String rechargeId;//	varchar	32	0	-1	0	0	0	0		0	引用表t_finance_recharge主键ID	utf8	utf8_general_ci		0	0
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
@@ -182,5 +182,13 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 
 	public void setFromInnerOuter(String fromInnerOuter) {
 		this.fromInnerOuter = fromInnerOuter;
+	}
+
+	public String getRechargeId() {
+		return rechargeId;
+	}
+
+	public void setRechargeId(String rechargeId) {
+		this.rechargeId = rechargeId;
 	}
 }

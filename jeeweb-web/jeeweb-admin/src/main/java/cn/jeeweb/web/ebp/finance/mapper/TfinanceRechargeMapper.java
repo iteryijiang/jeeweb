@@ -8,9 +8,18 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TfinanceRechargeMapper extends BaseMapper<TfinanceRecharge> {
 	
 	List<TfinanceRecharge> selectUserList(Pagination page, @Param("ew") Wrapper<TfinanceRecharge> wrapper);
+
+	/**
+	 * 撤销充值状态
+	 *
+	 * @param map
+	 * @return
+	 */
+	int updateTfinanceRechargeForRevoke(@Param("map") Map map);
 }

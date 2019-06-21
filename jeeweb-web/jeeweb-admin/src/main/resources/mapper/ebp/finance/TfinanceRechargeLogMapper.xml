@@ -9,6 +9,7 @@
       <result property="shopid" column="shopid" jdbcType="VARCHAR" />
       <result property="producedeposit" column="producedeposit" jdbcType="DOUBLE" />
       <result property="availabledeposit" column="availabledeposit" jdbcType="DOUBLE" />
+      <result property="rechargeId" column="recharge_id" jdbcType="VARCHAR" />
   </resultMap>
   
 

@@ -114,10 +114,12 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
      */
     @RequestMapping(value = "/getShopInfoSuggest")
     @ResponseBody
-    public JSONArray getShopInfoSuggest(HttpServletRequest request, HttpServletResponse response){
+    public List<TshopInfo> getShopInfoSuggest(HttpServletRequest request, HttpServletResponse response){
         try{
             String keyWord = request.getParameter("keyword");
             List<TshopInfo> resultList = tshopInfoService.findShopInfoByKeyWord(keyWord);
+            return resultList;
+            /*
             if(!resultList.isEmpty()){
                 JSONArray retObj=new JSONArray();
                 for(TshopInfo obj:resultList){
@@ -129,6 +131,7 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
                 return retObj;
             }
             return null;
+            */
         }catch (Exception ex){
             ex.printStackTrace();
             return null;

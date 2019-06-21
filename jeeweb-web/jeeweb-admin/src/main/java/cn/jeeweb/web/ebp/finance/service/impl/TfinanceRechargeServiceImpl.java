@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Transactional
 @Service("TfinanceRechargeService")
 public class TfinanceRechargeServiceImpl extends CommonServiceImpl<TfinanceRechargeMapper, TfinanceRecharge> implements TfinanceRechargeService {
@@ -38,10 +41,22 @@ public class TfinanceRechargeServiceImpl extends CommonServiceImpl<TfinanceRecha
         return true;
     }
 
-    public boolean delTfinanceRecharge(TshopInfo si,TfinanceRecharge tr){
+    @Override
+    public boolean updateTfinanceRechargeForRevoke(TshopInfo si,TfinanceRecharge tr){
+        //更改充值记录的撤销状态
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("id",tr.getId());
+        paramMap.put("lastRepair",tr.getUpdateBy().getUsername());
+        paramMap.put("lastTime",tr.getUpdateDate());
+        int updateResult=baseMapper.updateTfinanceRechargeForRevoke(paramMap);
+        if(updateResult != 1){
+            throw  new RuntimeException("操作失败[更新充值记录状态失败]");
+        }
+        //更新商户的可用余额信息
         tshopInfoService.updateById(si);
-        deleteById(tr);
+        //添加重置明细信息
         TfinanceRechargeLog log = new TfinanceRechargeLog(tr.getShopid(),TfinanceRechargeService.rechargetype_3,tr.getRechargedeposit(),si.getAvailabledeposit());
+        log.setRechargeId(tr.getId());
         tfinanceRechargeLogService.insert(log);
         return true;
     }

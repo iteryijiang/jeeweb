@@ -13,5 +13,12 @@ public interface TfinanceRechargeService extends ICommonService<TfinanceRecharge
 
     public boolean addTfinanceRecharge(TshopInfo si, TfinanceRecharge tr);
 
-    public boolean delTfinanceRecharge(TshopInfo si,TfinanceRecharge tr);
+    /**
+     * 撤销充值操作
+     *
+     * @param si：商户对象
+     * @param tr：原始记录的充值对象
+     * @return
+     */
+    public boolean updateTfinanceRechargeForRevoke(TshopInfo si,TfinanceRecharge tr);
 }
