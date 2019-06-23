@@ -136,7 +136,25 @@ public class TshopInfoController extends BaseBeanController<TshopInfo> {
             ex.printStackTrace();
             return null;
         }
+    }
 
+    /**
+     * 使用登录编号获取商户信息
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/getShopInfoByUserId/{userId}")
+    @ResponseBody
+    public TshopInfo getShopInfoByUserId(@PathVariable String userId,HttpServletRequest request, HttpServletResponse response){
+        try{
+            TshopInfo result = tshopInfoService.selectOne(userId);
+            return result;
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     /*

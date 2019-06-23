@@ -9,11 +9,31 @@
 				</td>
 			</tr>
 			<tr>
-				<td  class="width-15 active text-right">	<label><font color="red">*</font>商户号:</label></td>
+				<td  class="width-15 active text-right">	<label><font color="red">*</font>商户名称:</label></td>
 				<td  class="width-85" colspan="3" >
-					<#form:combox nested="false" idField="userid" keyField="shopname" effectiveFields="shopname,loginname,availabledeposit,taskdeposit,totaldeposit" multiWord="true"
-					effectiveFieldsAlias="shopname|商户名称,loginname|商户登录名,availabledeposit|可用押金,taskdeposit|冻结押金,totaldeposit|累计押金" showHeader="true" path="shopid" dataUrl="${adminPath}/shop/TshopInfo/getShopInfoSuggest" />
+					<#form:combox nested="false" idField="userid" keyField="shopname" effectiveFields="shopname,loginname,availabledeposit,taskdeposit,totaldeposit" multiWord="true" setSelectValue="getShopInfoFn"
+					effectiveFieldsAlias="shopname|商户名称,loginname|商户登录号,availabledeposit|可用余额,taskdeposit|冻结金额,totaldeposit|累计充值" showHeader="true" path="shopid" dataUrl="${adminPath}/shop/TshopInfo/getShopInfoSuggest" />
 					<label class="Validform_checktip"></label>
+				</td>
+			</tr>
+			<tr>
+				<td  class="width-15 active text-right">登录号:</label></td>
+				<td  class="width-35" >
+					<label id="shopLoginUserNo">&nbsp;</label>
+				</td>
+				<td  class="width-15 active text-right">累计充值:</label></td>
+				<td  class="width-35" >
+					￥&nbsp;<label id="shoptotaldeposit">0.00</label>&nbsp;元
+				</td>
+			</tr>
+			<tr>
+				<td  class="width-15 active text-right">冻结金额:</label></td>
+				<td  class="width-35" >
+					￥&nbsp;<label id="shoptaskdeposit">0.00</label>&nbsp;元
+				</td>
+				<td  class="width-15 active text-right">可用余额:</label></td>
+				<td  class="width-35" >
+					￥&nbsp;<label id="shopavailabledeposit">0.00</label>&nbsp;元
 				</td>
 			</tr>
 			<tr>
@@ -30,9 +50,7 @@
 				<td  class="width-15 active text-right">
 					<label><font color="red">*</font>充值金额:</label>
 				</td>
-				<td class="width-35" >
-					<#form:input path="rechargedeposit" class="form-control " datatype="/^-?[0-9]+$/" nullmsg="请输入充值金额！" errormsg="请输入数字" htmlEscape="false" />
-					<label class="Validform_checktip"></label>
+				<td class="width-35" ><#form:input path="rechargedeposit" class="form-control " style="width:50%" datatype="/^-?[0-9]+$/" nullmsg="请输入充值金额！" errormsg="请输入数字" htmlEscape="false" /><label class="Validform_checktip"></label>
 				</td>
 			</tr>
 			<tr>
@@ -60,5 +78,24 @@
 		</tbody>
 	</table>
 </#form:form>
+	<script>
+		function getShopInfoFn(e,result){
+			$(function(){
+				$.ajax({
+					type:'POST',
+					url: "${adminPath}/shop/TshopInfo/getShopInfoByUserId/"+result.id,
+					contentType:'application/json;charset=utf-8',
+					data: null,
+					success:function (resultData) {
+						$("#shopLoginUserNo").html(resultData.loginname);
+						$("#shoptotaldeposit").html(resultData.totaldeposit);
+						$("#shoptaskdeposit").html(resultData.taskdeposit);
+						$("#shopavailabledeposit").html(resultData.availabledeposit);
+						console.log(resultData);
+					}
+				});
+			})
+		}
+	</script>
 <% } %>
 <#html:js name="suggest" />

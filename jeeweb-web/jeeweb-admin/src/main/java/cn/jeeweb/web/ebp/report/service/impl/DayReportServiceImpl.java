@@ -1,10 +1,14 @@
 package cn.jeeweb.web.ebp.report.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.jeeweb.web.WebBootApplication;
+import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.jeeweb.common.mybatis.mvc.service.impl.CommonServiceImpl;
@@ -101,8 +105,8 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 		insertObj.setTaskTotalCount(insertObj.getInternalTaskCount()+insertObj.getOuterTaskCount());
 		if(insertObj.getTaskTotalCount()>0) {
 			if(insertObj.getInternalTaskCount()>0) {
-				BigDecimal ratio=new BigDecimal(100).multiply(new BigDecimal(insertObj.getInternalTaskCount())).divide(new BigDecimal(insertObj.getTaskTotalCount()));
-				insertObj.setInternalTaskRatio(ratio.setScale(2, BigDecimal.ROUND_UP));
+				BigDecimal ratio=new BigDecimal(100).multiply(new BigDecimal(insertObj.getInternalTaskCount())).divide(new BigDecimal(insertObj.getTaskTotalCount()),2, RoundingMode.HALF_UP);
+				insertObj.setInternalTaskRatio(ratio);
 			}
 			if(insertObj.getOuterTaskCount()>0) {
 				insertObj.setOuterTaskRatio(new BigDecimal(100).subtract(insertObj.getInternalTaskRatio()));
@@ -129,8 +133,8 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 		insertObj.setTotalTaskLinkCount(insertObj.getInternalTaskLinkCount()+insertObj.getOuterTaskLinkCount());
 		if(insertObj.getTotalTaskLinkCount()>0) {
 			if(insertObj.getInternalTaskCount()>0) {
-				BigDecimal ratio=new BigDecimal(100).multiply(new BigDecimal(insertObj.getInternalTaskLinkCount())).divide(new BigDecimal(insertObj.getTotalTaskLinkCount()));
-				insertObj.setInternalTaskLinkRatio(ratio.setScale(2, BigDecimal.ROUND_UP));
+				BigDecimal ratio=new BigDecimal(100).multiply(new BigDecimal(insertObj.getInternalTaskLinkCount())).divide(new BigDecimal(insertObj.getTotalTaskLinkCount()),2, RoundingMode.HALF_UP);
+				insertObj.setInternalTaskLinkRatio(ratio);
 			}
 			if(insertObj.getOuterTaskLinkCount()>0) {
 				insertObj.setOuterTaskLinkRatio(new BigDecimal(100).subtract(insertObj.getInternalTaskRatio()));
@@ -156,8 +160,8 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 			}
 		}
 		if(insertObj.getSingleTaskLinkCount()>0) {
-			BigDecimal ratio=new BigDecimal(100).multiply(new BigDecimal(insertObj.getSingleTaskLinkCount())).divide(new BigDecimal(insertObj.getTotalTaskLinkCount()));
-			insertObj.setSingleTaskLinkRatio(ratio.setScale(2, BigDecimal.ROUND_UP));
+			BigDecimal ratio=new BigDecimal(100).multiply(new BigDecimal(insertObj.getSingleTaskLinkCount())).divide(new BigDecimal(insertObj.getTotalTaskLinkCount()),2, RoundingMode.HALF_UP);
+			insertObj.setSingleTaskLinkRatio(ratio);
 		}
 		if(insertObj.getDoubleTaskLinkCount()>0) {
 			insertObj.setActivePayMoney(new BigDecimal(100).subtract(insertObj.getSingleTaskLinkRatio()));
@@ -264,16 +268,16 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 		//单链接占比、双链接占比、内部链接占比、外部任务链接占比、内部任务占比、外部任务占比
 		BigDecimal hundred=new BigDecimal(100);
 		if(sumObj.getTotalTaskLinkCount()>0) {
-			BigDecimal singleLinkRatio=hundred.multiply(new BigDecimal(sumObj.getSingleTaskLinkCount())).divide(new BigDecimal(sumObj.getTotalTaskLinkCount()));
-			sumObj.setSingleTaskLinkRatio(singleLinkRatio.setScale(2, BigDecimal.ROUND_UP));
+			BigDecimal singleLinkRatio=hundred.multiply(new BigDecimal(sumObj.getSingleTaskLinkCount())).divide(new BigDecimal(sumObj.getTotalTaskLinkCount()),2, RoundingMode.HALF_UP);
+			sumObj.setSingleTaskLinkRatio(singleLinkRatio);
 			sumObj.setDoubleTaskLinkRatio(hundred.subtract(sumObj.getSingleTaskLinkRatio()));
-			BigDecimal internalTaskLinkRatio=hundred.multiply(new BigDecimal(sumObj.getInternalTaskLinkCount())).divide(new BigDecimal(sumObj.getTotalTaskLinkCount()));
-			sumObj.setInternalTaskLinkRatio(internalTaskLinkRatio.setScale(2, BigDecimal.ROUND_UP));
+			BigDecimal internalTaskLinkRatio=hundred.multiply(new BigDecimal(sumObj.getInternalTaskLinkCount())).divide(new BigDecimal(sumObj.getTotalTaskLinkCount()),2, RoundingMode.HALF_UP);
+			sumObj.setInternalTaskLinkRatio(internalTaskLinkRatio);
 			sumObj.setOuterTaskLinkRatio(hundred.subtract(sumObj.getInternalTaskLinkRatio()));
 		}
 		if(sumObj.getTaskTotalCount()>0) {
-			BigDecimal internalTaskRatio=hundred.multiply(new BigDecimal(sumObj.getInternalTaskCount())).divide(new BigDecimal(sumObj.getTaskTotalCount()));
-			sumObj.setInternalTaskRatio(internalTaskRatio.setScale(2, BigDecimal.ROUND_UP));
+			BigDecimal internalTaskRatio=hundred.multiply(new BigDecimal(sumObj.getInternalTaskCount())).divide(new BigDecimal(sumObj.getTaskTotalCount()),2, RoundingMode.HALF_UP);
+			sumObj.setInternalTaskRatio(internalTaskRatio);
 			sumObj.setOuterTaskRatio(hundred.subtract(sumObj.getInternalTaskRatio()));
 		}
 		return sumObj;
@@ -282,6 +286,12 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 	@Override
 	public TDayReport getDayReport(String queryDate){
 		return baseMapper.getTDayReportByAtime(queryDate);
+	}
+
+	public static void main(String[] args) throws Exception {
+		BigDecimal number1=new BigDecimal(11);
+		BigDecimal number2=new BigDecimal(3);
+		System.out.println(number1.divide(number2,2, RoundingMode.HALF_UP));
 	}
 
 }

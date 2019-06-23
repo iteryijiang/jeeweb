@@ -10,7 +10,7 @@ import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailQuestionService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.comm.Constant;
-import cn.jeeweb.web.ebp.enums.BuyerTaskStatusRnum;
+import cn.jeeweb.web.ebp.enums.BuyerTaskStatusEnum;
 import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
@@ -111,7 +111,7 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
         if(buyTaskObj==null){
             throw new RuntimeException("未获取到买手申请对应的任务记录！") ;
         }
-        if(Integer.valueOf(buyTaskObj.getTaskstate())>= BuyerTaskStatusRnum.WAITING_SEND.code){
+        if(Integer.valueOf(buyTaskObj.getTaskstate())>= BuyerTaskStatusEnum.WAITING_SEND.code){
             throw new RuntimeException("当前买手任务不支持该操作！") ;
         }
         buyTaskObj.setErrorStatus(YesNoEnum.NO.code);
@@ -175,7 +175,7 @@ public class TapplyTaskBuyerHandleServiceImpl extends CommonServiceImpl<TapplyTa
         List<TapplyTaskBuyerHandle> insertLIst=new ArrayList<TapplyTaskBuyerHandle>();
         for(TmyTaskDetail obj:buyTaskList){
             int taskState=Integer.valueOf(obj.getTaskstate());
-            if(taskState >= BuyerTaskStatusRnum.WAITING_SEND.code){//不继续操作
+            if(taskState >= BuyerTaskStatusEnum.WAITING_SEND.code){//不继续操作
                 continue;
             }
             //调用更改任务方法

@@ -136,7 +136,7 @@
     <select id="getTDayReportByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="String">
  		SELECT
 			id,atime,dtime,begining_balance,ending_balance,total_recharge_deposit,today_freezing,today_commission,active_pay_money,
-			task_total_count,internal_task_count,outer_task_count,nternal_task_ratio,outer_task_ratio,internal_task_link_count,outer_task_link_count,
+			task_total_count,internal_task_count,outer_task_count,internal_task_ratio,outer_task_ratio,internal_task_link_count,outer_task_link_count,
 			internal_task_link_ratio,outer_task_link_ratio,zero_commission_task_count,zero_commission_task_link_count,total_task_link_count,
 			single_task_link_count,double_task_link_count,single_task_link_ratio,double_task_link_ratio,problem_task_count,problem_task_link_count,
 			shop_revoke_task_count,buyer_task_income,
@@ -152,7 +152,7 @@
     <select id="getTDayReportListByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="Map">
  		SELECT
 			id,atime,dtime,begining_balance,ending_balance,total_recharge_deposit,today_freezing,today_commission,active_pay_money,
-			task_total_count,internal_task_count,outer_task_count,nternal_task_ratio,outer_task_ratio,internal_task_link_count,outer_task_link_count,
+			task_total_count,internal_task_count,outer_task_count,internal_task_ratio,outer_task_ratio,internal_task_link_count,outer_task_link_count,
 			internal_task_link_ratio,outer_task_link_ratio,zero_commission_task_count,zero_commission_task_link_count,total_task_link_count,
 			single_task_link_count,double_task_link_count,single_task_link_ratio,double_task_link_ratio,problem_task_count,problem_task_link_count,
 			shop_revoke_task_count,buyer_task_income,

@@ -3,8 +3,12 @@ package cn.jeeweb.web.ebp.buyer.controller;
 import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
+import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
+import cn.jeeweb.common.query.data.PropertyPreFilterable;
+import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
@@ -19,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 @RestController
@@ -85,4 +90,43 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
         return Response.ok("删除成功");
     }
 
+
+
+
+
+
+
+/***********买手帐号信息************/
+    /**
+     * 进入买手帐号页面
+     * 暂时未使用
+     *
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "gotoBuyerList")
+    @RequiresMethodPermissions("gotoBuyerList")
+    public ModelAndView gotoBuyerList(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("");
+        return mav;
+    }
+
+    /**
+     * 根据页码和每页记录数，以及查询条件动态加载数据
+     * 暂时未使用
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "ajaxListBuyer", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("ajaxListBuyer")
+    public void ajaxListDetail(@PathVariable("id") String id, Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        EntityWrapper<TbuyerInfo> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+        StringUtils.printJson(response, null);
+    }
 }

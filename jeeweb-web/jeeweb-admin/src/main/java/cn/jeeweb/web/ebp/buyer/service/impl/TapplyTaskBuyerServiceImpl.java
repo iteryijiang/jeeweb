@@ -14,7 +14,7 @@ import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.comm.Constant;
-import cn.jeeweb.web.ebp.enums.BuyerTaskStatusRnum;
+import cn.jeeweb.web.ebp.enums.BuyerTaskStatusEnum;
 import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.notice.entity.NoticeInfo;
 import cn.jeeweb.web.ebp.notice.enums.NoticeBizEnum;
@@ -53,7 +53,7 @@ public class TapplyTaskBuyerServiceImpl extends CommonServiceImpl<TapplyTaskBuye
     public void insertTapplyTaskBuyer(TapplyTaskBuyer obj) {
         //获取买手任务信息
         TmyTaskDetail taskObj=tmyTaskDetailService.selectById(obj.getBuyerTaskId());
-        if (taskObj == null || Integer.valueOf(taskObj.getTaskstate()) >= BuyerTaskStatusRnum.WAITING_SEND.code || taskObj.getErrorStatus() == YesNoEnum.YES.code) {
+        if (taskObj == null || Integer.valueOf(taskObj.getTaskstate()) >= BuyerTaskStatusEnum.WAITING_SEND.code || taskObj.getErrorStatus() == YesNoEnum.YES.code) {
             throw new RuntimeException("未获取到任务信息或是任务当前状态不允许执行该操作");
         }
         TmyTask tmTask=tmyTaskService.selectById(taskObj.getMytaskid());
