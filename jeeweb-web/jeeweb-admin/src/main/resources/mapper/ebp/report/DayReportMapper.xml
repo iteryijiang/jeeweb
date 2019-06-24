@@ -11,7 +11,7 @@
 			t_task_base taskTb
 			inner join t_shop_info shop on shop.userid=taskTb.create_by  and shop.del_flag=0
 		where 
-			taskTb.effectdate BETWEEN #{beginTime} and #{endTime} and  taskTb.del_flag=0
+			taskTb.effectdate BETWEEN #{map.beginTime} and #{map.endTime} and  taskTb.del_flag=0
 	</select>
 	 <!-- 获取内部外部的任务单链接总数 -->
 	<select id="getInnerOuterTaskLinkCount" resultType="java.util.Map">
@@ -23,7 +23,7 @@
 			inner join t_shop_info shop on shop.userid=taskTb.create_by and shop.del_flag=0
 		  	inner join t_my_task_detail myTask on myTask.taskid=taskTb.id
 		where 
-			myTask.receivingdate BETWEEN #{beginTime} and #{endTime} and myTask.del_flag=0 and taskTb.del_flag=0
+			myTask.receivingdate BETWEEN #{map.beginTime} and #{map.endTime} and myTask.del_flag=0 and taskTb.del_flag=0
 	</select>
 	
 	<!-- 获取0佣金任务单+0佣金链接总数 -->
@@ -37,7 +37,7 @@
 						t_my_task_detail myTask
 					  	inner join t_task_base taskTb on myTask.taskid=taskTb.id and taskTb.presentdeposit=0 and taskTb.del_flag=0
 					where 
-						myTask.receivingdate BETWEEN #{beginTime} and #{endTime}
+						myTask.receivingdate BETWEEN #{map.beginTime} and #{map.endTime}
 					 	and myTask.del_flag=0
 					union all 
 						SELECT
@@ -46,7 +46,7 @@
 							t_my_task_detail myTask
 						  inner join t_task_base taskTb on myTask.taskid=taskTb.id and taskTb.presentdeposit=0 and taskTb.del_flag=0
 					where 
-						myTask.receivingdate BETWEEN #{beginTime} and #{endTime}  and myTask.del_flag=0
+						myTask.receivingdate BETWEEN #{map.beginTime} and #{map.endTime} and myTask.del_flag=0
 				)tb
 	</select>
 	<!-- 获取单链接双链接总数总数 -->
@@ -60,7 +60,7 @@
 				t_my_task_detail t
 				inner join t_buyer_info i on t.buyerid = i.userid  and i.del_flag=0
 			WHERE
-				t.receivingdate BETWEEN #{beginTime} and #{endTime}  and t.del_flag=0
+				t.receivingdate BETWEEN #{map.beginTime} and #{map.endTime} and t.del_flag=0
 			GROUP BY
 				i.userid,
 				t.storename,
@@ -75,7 +75,7 @@
  		from 
  			t_finance_recharge 
  		where 
- 			del_flag = 0 and create_date BETWEEN #{beginTime} and #{endTime}
+ 			del_flag = 0 and create_date BETWEEN #{map.beginTime} and #{map.endTime}
     </select>
 
 	<!-- 获取当前的所有可用押金汇总-->
@@ -93,7 +93,7 @@
 		from
 			t_task_base
 		where
-			create_date BETWEEN #{beginTime} and #{endTime} and del_flag=0
+			create_date BETWEEN #{map.beginTime} and #{map.endTime} and del_flag=0
 		union all
 		SELECT
 			'todayCommission' as dataType,ifnull(sum(tb.presentdeposit),0) totalMoney
@@ -102,14 +102,14 @@
 			inner join t_my_task mt on mt.id=td.mytaskid and mt.del_flag=0
 			inner join t_task_base tb on tb.id=td.taskid and tb.del_flag=0
 		where
-			td.create_date BETWEEN #{beginTime} and #{endTime} and td.del_flag=0
+			td.create_date BETWEEN #{map.beginTime} and #{map.endTime} and td.del_flag=0
 		union all
 		SELECT
 			'activePayMoney' as dataType, ifnull(sum(pays),0) totalMoney
 		FROM
 			t_my_task_detail td
 		where
-			td.create_date BETWEEN #{beginTime} and #{endTime} and td.del_flag=0
+			td.create_date BETWEEN #{map.beginTime} and #{map.endTime} and td.del_flag=0
     </select>
 
 	<!-- 问题单+撤销单以及链接数量-->
@@ -122,13 +122,13 @@
 			FROM
 				t_apply_task_buyer qt
 			where
-				qt.handle_method=2 and qt.apply_time BETWEEN #{beginTime} and #{endTime} and qt.del_flag=0
+				qt.handle_method=2 and qt.apply_time BETWEEN #{map.beginTime} and #{map.endTime} and qt.del_flag=0
 			union all
 			SELECT
 				0 'problemTaskCount',count(qt.shop_task_id)  'problemTaskLinkCount'
 			FROM
 				t_apply_task_buyer qt
-			where qt.handle_method=2 and qt.apply_time BETWEEN #{beginTime} and #{endTime} and qt.del_flag=0
+			where qt.handle_method=2 and qt.apply_time BETWEEN #{map.beginTime} and #{map.endTime} and qt.del_flag=0
 		)tb
     </select>
 
@@ -160,12 +160,12 @@
 		FROM
 			t_day_report
 		WHERE
-			del_flag = 0 and atime  #{beginDate} and #{endDate}
+			del_flag = 0 and atime #{map.beginTime} and #{map.endTime}
 		order by atime desc
     </select>
     
     <!-- 获取两个日期之间的所有日报数据 -->
-    <select id="getTDayReportForSumByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="String">
+    <select id="getTDayReportForSumByAtime" resultType="cn.jeeweb.web.ebp.report.entity.TDayReport" parameterType="Map">
  		SELECT
 				sum(begining_balance) beginingBalance,	sum(ending_balance) endingBalance,sum(total_recharge_deposit) totalRechargeDeposit,
 				sum(today_freezing) todayFreezing,sum(today_commission) todayCommission,sum(active_pay_money) activePayMoney,
@@ -176,7 +176,7 @@
 		FROM
 			t_day_report
 		WHERE
-			del_flag = 0 and atime between #{beginDate} and #{endDate}
+			del_flag = 0 and atime between #{map.beginTime} and #{map.endTime}
 		limit 0,1
     </select>
 </mapper>

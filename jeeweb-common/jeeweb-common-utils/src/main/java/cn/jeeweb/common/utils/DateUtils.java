@@ -50,7 +50,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	 * @return
 	 */
 	public static String getDateBegin(Date sourceDate) {
-		return getDate("yyyy-MM-dd");
+		return formatDate(sourceDate,"yyyy-MM-dd");
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	 * @return
 	 */
 	public static String getDateEnd(Date sourceDate) {
-		return getDate("yyyy-MM-dd")+" 23:59:59";
+		return formatDate(sourceDate,"yyyy-MM-dd")+" 23:59:59";
 	}
 	
 	/**
