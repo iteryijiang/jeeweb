@@ -3,22 +3,26 @@
 <mapper namespace="cn.jeeweb.web.ebp.chargeback.mapper.TChargeBackRecordMapper" >
 
 
-	<sql id="Base_Column_rechargeback" >
-    DISTINCT
-    t.id
-    </sql>
 
     <!--  查询允许退单的任务单列表-->
-  <select id="selectUserList" resultType="cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord">
-	  SELECT
-			buytd.id,buy.buyerName,buyt.mytaskNo,buytd.jdorderno,buytd.taskstate
-		FROM
-			t_my_task_detail buytd
-			inner join t_my_task buyt on buytd.mytaskid=buyt.id and buyt.del_flag=0
-			inner join t_task_base sttb on sttb.id=buytd.taskid and sttb.del_flag=0
-			inner join t_buyer_info buy on buy.userid=buytd.buyerid and buy.del_flag=0
-		where
-			buytd.del_flag=0
+  <select id="getCanChargeBackTaskList" resultType="cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask">
+	 SELECT
+		buytd.id buyerTaskId,buytd.buyerid buyerId,buytd.jdorderno ecommerceOrderNo,buytd.taskid shopTaskId,buytd.taskstate buyTaskStatus,
+  		buytd.receivingdate receivingdate,
+		buy.buyerName,buy.loginName buyerNo,buyt.mytaskNo buyerTaskNo,
+		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,
+		shoptb.shopName
+	FROM
+		t_my_task_detail buytd
+		INNER JOIN t_my_task buyt ON buytd.mytaskid = buyt.id
+		INNER JOIN t_task_base sttb ON sttb.id = buytd.taskid
+		INNER JOIN t_buyer_info buy ON buy.userid = buytd.buyerid
+		INNER JOIN t_shop_info shoptb ON shoptb.userid = sttb.shopId
+	  <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+			  ${ew.sqlSegment}
+		  </where>
+	  </if>
   </select>
 
 </mapper>

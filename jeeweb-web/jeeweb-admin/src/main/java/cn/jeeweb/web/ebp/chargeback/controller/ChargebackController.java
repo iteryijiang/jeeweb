@@ -15,6 +15,7 @@ import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
+import cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask;
 import cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord;
 import cn.jeeweb.web.ebp.chargeback.service.TChargeBackRecordService;
 import cn.jeeweb.web.utils.UserUtils;
@@ -65,18 +66,18 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "getCanChargeBackList", method = { RequestMethod.GET, RequestMethod.POST })
-    @PageableDefaults(sort = "id=desc")
+    @RequestMapping(value = "getCanChargeBackTaskList", method = { RequestMethod.GET, RequestMethod.POST })
+    @PageableDefaults(sort = "buytd.id=desc")
     @Log(logType = LogType.SELECT)
     @RequiresMethodPermissions("view")
-    public void getCanChargeBackList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+    public void getCanChargeBackTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
-        EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<TmyTaskDetail>(TmyTaskDetail.class);
-        propertyPreFilterable.addQueryProperty("id");
+        EntityWrapper<CanChargeBackTask> entityWrapper = new EntityWrapper<CanChargeBackTask>(CanChargeBackTask.class);
+        propertyPreFilterable.addQueryProperty("buyerTaskId");
         // 预处理
-        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
-        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageResponse<TmyTaskDetail> pagejson = new PageResponse<TmyTaskDetail>();
+        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, CanChargeBackTask.class);
+        SerializeFilter filter = propertyPreFilterable.constructFilter(CanChargeBackTask.class);
+        PageResponse<CanChargeBackTask> pagejson = new PageResponse<CanChargeBackTask>(tchargeBackRecordService.selectCanChargeBackTaskPageList(queryable,entityWrapper));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response, content);
     }
@@ -166,7 +167,7 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageResponse<TChargeBackRecord> pagejson = new PageResponse<TChargeBackRecord>();
+        PageResponse<TChargeBackRecord> pagejson = new PageResponse<TChargeBackRecord>(tchargeBackRecordService.selectChargeBackRecordPageList(queryable,entityWrapper));
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response, content);
     }

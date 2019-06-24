@@ -1,14 +1,14 @@
-<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('问题反馈',''), libs: ''}){ %>
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('已退任务单',''), libs: ''}){ %>
 
-<#grid:grid id="ttaskBaseGrid" url="${adminPath}/buyer/TmyTaskDetail/ajaxApplyTaskList" sortname="applyNo" sortorder="desc" sortable="false">
+<#grid:grid id="ttaskBaseGrid" url="${adminPath}/chargeback/order/getChargeBackOrderList" sortname="applyNo" sortorder="desc" sortable="false">
 <#grid:column label="任务编号" width="120" query="true" condition="like" name="shopTaskNo" align="center"/>
+<#grid:column label="京东单号" name="goodsName" width="140" />
 <#grid:column label="商品名称" name="goodsName" width="140" />
-<#grid:column label="反馈类型" name="applyType" query="true" queryMode="select" condition="eq"  dict="tasktype" dict="applyType" width="80"/>
-<#grid:column label="问题描述" name="applyDesc" width="120"/>
-<#grid:column label="反馈时间" name="applyTime" query="true" width="80" queryMode="date"  condition="between" align="center" />
-<#grid:column label="处理状态" name="applyStatus" query="true" align="center" queryMode="select" condition="eq" formatterValue="0:待处理;1:已处理" width="70"/>
-<#grid:column label="处理时间" name="handleTime" width="80" align="center"/>
-<#grid:column label="处理人" name="handleMan" width="80" align="center"/>
+<#grid:column label="商户名称" name="goodsName" width="140" />
+<#grid:column label="买手号" name="goodsName" width="140" />
+<#grid:column label="退单时间" name="applyType" query="true" queryMode="select" condition="eq"  dict="tasktype" dict="applyType" width="80"/>
+<#grid:column label="退单金额" name="applyDesc" width="120"/>
+<#grid:column label="退单原因" name="applyTime" query="true" width="80" queryMode="date"  condition="between" align="center" />
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
 <#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/getApplyTaskDetail/0/\"+row.id+\"' />
 <#grid:toolbar  function="search" />

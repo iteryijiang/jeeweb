@@ -1,11 +1,17 @@
 package cn.jeeweb.web.ebp.chargeback.service.impl;
 
+import cn.jeeweb.common.mybatis.mvc.parse.QueryToWrapper;
 import cn.jeeweb.common.mybatis.mvc.service.impl.CommonServiceImpl;
+import cn.jeeweb.common.query.data.Page;
+import cn.jeeweb.common.query.data.PageImpl;
+import cn.jeeweb.common.query.data.Pageable;
+import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
+import cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask;
 import cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord;
 import cn.jeeweb.web.ebp.chargeback.mapper.TChargeBackRecordMapper;
 import cn.jeeweb.web.ebp.chargeback.service.TChargeBackRecordService;
@@ -20,6 +26,7 @@ import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,5 +83,29 @@ public class TChargeBackRecordServiceImpl extends CommonServiceImpl<TChargeBackR
         log.setRemarks(financeLog.toString());
         tfinanceRechargeLogService.insert(log);
         tshopInfoService.updateShopMoney(shopInfo.getUserid(), BigDecimal.ZERO.subtract(obj.getChargeBackMoney()),obj.getChargeBackMoney(),obj.getCreateBy().getId());
+    }
+
+    @Override
+    public Page<CanChargeBackTask> selectCanChargeBackTaskPageList(Queryable queryable, Wrapper<CanChargeBackTask> wrapper){
+        QueryToWrapper<CanChargeBackTask> queryToWrapper = new QueryToWrapper<CanChargeBackTask>();
+        queryToWrapper.parseCondition(wrapper, queryable);
+        queryToWrapper.parseSort(wrapper, queryable);
+        Pageable pageable = queryable.getPageable();
+        com.baomidou.mybatisplus.plugins.Page<CanChargeBackTask> page = new com.baomidou.mybatisplus.plugins.Page<CanChargeBackTask>(pageable.getPageNumber(), pageable.getPageSize());
+        wrapper.eq("1", "1");
+        page.setRecords(baseMapper.getCanChargeBackTaskList(page, wrapper));
+        return new PageImpl<CanChargeBackTask>(page.getRecords(), queryable.getPageable(), page.getTotal());
+    }
+
+    @Override
+    public Page<TChargeBackRecord> selectChargeBackRecordPageList(Queryable queryable, Wrapper<TChargeBackRecord> wrapper){
+        QueryToWrapper<TChargeBackRecord> queryToWrapper = new QueryToWrapper<TChargeBackRecord>();
+        queryToWrapper.parseCondition(wrapper, queryable);
+        queryToWrapper.parseSort(wrapper, queryable);
+        Pageable pageable = queryable.getPageable();
+        com.baomidou.mybatisplus.plugins.Page<TChargeBackRecord> page = new com.baomidou.mybatisplus.plugins.Page<TChargeBackRecord>(pageable.getPageNumber(), pageable.getPageSize());
+        wrapper.eq("1", "1");
+        page.setRecords(baseMapper.getChargeBackRecordList(page, wrapper));
+        return new PageImpl<TChargeBackRecord>(page.getRecords(), queryable.getPageable(), page.getTotal());
     }
 }
