@@ -6,6 +6,7 @@ import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
 import cn.jeeweb.common.query.annotation.PageableDefaults;
+import cn.jeeweb.common.query.data.Condition;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
@@ -14,10 +15,10 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask;
 import cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord;
 import cn.jeeweb.web.ebp.chargeback.service.TChargeBackRecordService;
+import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -67,14 +68,46 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
      * @throws IOException
      */
     @RequestMapping(value = "getCanChargeBackTaskList", method = { RequestMethod.GET, RequestMethod.POST })
-    @PageableDefaults(sort = "buytd.id=desc")
+    @PageableDefaults(sort = "receivingdate=desc")
     @Log(logType = LogType.SELECT)
     @RequiresMethodPermissions("view")
     public void getCanChargeBackTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
                          HttpServletResponse response) throws IOException {
         EntityWrapper<CanChargeBackTask> entityWrapper = new EntityWrapper<CanChargeBackTask>(CanChargeBackTask.class);
-        propertyPreFilterable.addQueryProperty("buyerTaskId");
+        propertyPreFilterable.addQueryProperty("id");
         // 预处理
+ 		if (queryable.getCondition() != null) {
+ 			Condition.Filter filterTaskStatus= queryable.getCondition().getFilterFor("buyTaskStatus");
+ 			if (filterTaskStatus != null) {
+ 				queryable.getCondition().remove(filterTaskStatus);
+ 				entityWrapper.eq("buytd.taskstate", filterTaskStatus.getValue().toString());
+ 			}
+ 			Condition.Filter filterBuyerTaskNo = queryable.getCondition().getFilterFor("buyerTaskNo");
+ 			if (filterBuyerTaskNo != null) {
+ 				queryable.getCondition().remove(filterBuyerTaskNo);
+ 				entityWrapper.like("buyt.mytaskNo", filterBuyerTaskNo.getValue().toString());
+ 			}
+ 			Condition.Filter filterEcommerceOrderNo = queryable.getCondition().getFilterFor("ecommerceOrderNo");
+ 			if (filterEcommerceOrderNo != null) {
+ 				queryable.getCondition().remove(filterEcommerceOrderNo);
+ 				entityWrapper.like("buytd.jdorderno", filterEcommerceOrderNo.getValue().toString());
+ 			}
+ 			Condition.Filter filterShopName = queryable.getCondition().getFilterFor("shopName");
+ 			if (filterShopName != null) {
+ 				queryable.getCondition().remove(filterShopName);
+ 				entityWrapper.like("shoptb.shopName", filterShopName.getValue().toString());
+ 			}
+ 			Condition.Filter filterBuyerNo = queryable.getCondition().getFilterFor("buyerNo");
+ 			if (filterBuyerNo != null) {
+ 				queryable.getCondition().remove(filterBuyerNo);
+ 				entityWrapper.like("buy.loginName", filterBuyerNo.getValue().toString());
+ 			}
+ 			Condition.Filter filterReceivingdate = queryable.getCondition().getFilterFor("receivingdate");
+ 			if (filterReceivingdate != null) {
+ 				queryable.getCondition().remove(filterReceivingdate);
+ 				queryable.getCondition().and(Condition.Operator.between, "buytd.receivingdate",TaskUtils.whereDate(filterReceivingdate));
+ 			}
+ 		}
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, CanChargeBackTask.class);
         SerializeFilter filter = propertyPreFilterable.constructFilter(CanChargeBackTask.class);
         PageResponse<CanChargeBackTask> pagejson = new PageResponse<CanChargeBackTask>(tchargeBackRecordService.selectCanChargeBackTaskPageList(queryable,entityWrapper));
@@ -94,6 +127,8 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
     @RequiresMethodPermissions("view")
     public ModelAndView goToChargeBack(@PathVariable String myTaskDetailId,Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("execChargeBack");
+        CanChargeBackTask obj=tchargeBackRecordService.selectCanChargeBackTaskByTaskId(myTaskDetailId);
+        model.addAttribute("taskObj", obj);
         return mav;
     }
 

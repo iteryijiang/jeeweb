@@ -96,6 +96,11 @@ public class TChargeBackRecordServiceImpl extends CommonServiceImpl<TChargeBackR
         page.setRecords(baseMapper.getCanChargeBackTaskList(page, wrapper));
         return new PageImpl<CanChargeBackTask>(page.getRecords(), queryable.getPageable(), page.getTotal());
     }
+    
+    @Override
+    public CanChargeBackTask selectCanChargeBackTaskByTaskId(String taskId) {
+    	return baseMapper.selectCanChargeBackTaskByTaskId(taskId);
+    }
 
     @Override
     public Page<TChargeBackRecord> selectChargeBackRecordPageList(Queryable queryable, Wrapper<TChargeBackRecord> wrapper){

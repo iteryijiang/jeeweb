@@ -3,7 +3,6 @@ package cn.jeeweb.web.ebp.chargeback.service;
 import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
 import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.Queryable;
-import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
 import cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask;
 import cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -26,6 +25,14 @@ public interface TChargeBackRecordService extends ICommonService<TChargeBackReco
      * @return
      */
     Page<CanChargeBackTask> selectCanChargeBackTaskPageList(Queryable queryable, Wrapper<CanChargeBackTask> wrapper);
+    
+    /**
+     * 根据任务单号获取退单数据
+     * 
+     * @param taskId
+     * @return
+     */
+    CanChargeBackTask selectCanChargeBackTaskByTaskId(String taskId);
 
     /**
      * 列表查询已经退单的任务单数据

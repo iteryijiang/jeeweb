@@ -7,7 +7,7 @@
     <!--  查询允许退单的任务单列表-->
   <select id="getCanChargeBackTaskList" resultType="cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask">
 	 SELECT
-		buytd.id buyerTaskId,buytd.buyerid buyerId,buytd.jdorderno ecommerceOrderNo,buytd.taskid shopTaskId,buytd.taskstate buyTaskStatus,
+		buytd.id,buytd.id buyerTaskId,buytd.buyerid buyerId,buytd.jdorderno ecommerceOrderNo,buytd.taskid shopTaskId,buytd.taskstate buyTaskStatus,
   		buytd.receivingdate receivingdate,
 		buy.buyerName,buy.loginName buyerNo,buyt.mytaskNo buyerTaskNo,
 		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,
@@ -23,6 +23,22 @@
 			  ${ew.sqlSegment}
 		  </where>
 	  </if>
+  </select>
+  
+  <select id="selectCanChargeBackTaskByTaskId" resultType="cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask" parameterType="String">
+	 SELECT
+		buytd.id,buytd.id buyerTaskId,buytd.buyerid buyerId,buytd.jdorderno ecommerceOrderNo,buytd.taskid shopTaskId,buytd.taskstate buyTaskStatus,
+  		buytd.receivingdate receivingdate,
+		buy.buyerName,buy.loginName buyerNo,buyt.mytaskNo buyerTaskNo,
+		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,
+		shoptb.shopName
+	FROM
+		t_my_task_detail buytd
+		INNER JOIN t_my_task buyt ON buytd.mytaskid = buyt.id
+		INNER JOIN t_task_base sttb ON sttb.id = buytd.taskid
+		INNER JOIN t_buyer_info buy ON buy.userid = buytd.buyerid
+		INNER JOIN t_shop_info shoptb ON shoptb.userid = sttb.shopId
+	 where buytd.id=#{taskId}
   </select>
 
 </mapper>

@@ -1,6 +1,5 @@
 package cn.jeeweb.web.ebp.chargeback.mapper;
 
-import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
 import cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask;
 import cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -22,6 +21,14 @@ public interface TChargeBackRecordMapper extends BaseMapper<TChargeBackRecord> {
      * @return
      */
     List<CanChargeBackTask> getCanChargeBackTaskList(Pagination page, @Param("ew") Wrapper<CanChargeBackTask> wrapper);
+    
+    /**
+     * ID 获取单个数据
+     * 
+     * @param taskId
+     * @return
+     */
+    CanChargeBackTask selectCanChargeBackTaskByTaskId(String taskId);
 
     /**
      *获得已经退单的额任务单数据列表

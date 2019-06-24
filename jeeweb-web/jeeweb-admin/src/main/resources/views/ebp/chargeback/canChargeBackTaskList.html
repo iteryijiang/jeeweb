@@ -1,16 +1,14 @@
-<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('退单管理',''), libs: ''}){ %>
-
-<#grid:grid id="tchargeBackTaskGrid" url="${adminPath}/chargeback/order/getCanChargeBackTaskList" sortname="buyerTaskId" sortorder="desc" sortable="false">
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('问题反馈',''), libs: ''}){ %>
+<#grid:grid id="tchargeBackTaskGrid" url="${adminPath}/chargeback/order/getCanChargeBackTaskList" sortname="receivingdate" multiselect="false" sortorder="desc" sortable="false">
 <#grid:column label="任务编号" width="90" query="true" condition="like" name="buyerTaskNo" align="center"/>
 <#grid:column label="京东单号" width="90" query="true" condition="like" name="ecommerceOrderNo" align="center"/>
 <#grid:column label="商品名称" name="goodsName" width="140" />
 <#grid:column label="商家名称" name="shopName" query="true" condition="like" width="100" />
 <#grid:column label="买手名称" name="buyerNo" query="true" condition="like" width="80" align="center"/>
 <#grid:column label="下单时间" name="receivingdate" query="true" width="80" queryMode="date"  condition="between" align="center" />
-<#grid:column label="任务状态" name="buyTaskStatus" query="true" align="center" queryMode="select" condition="eq" formatterValue="0:待处理;1:已处理" width="70"/>
-<#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/chargeback/order/getApplyTaskDetail/\"+row.buyerTaskId+\"' />
-<#grid:button title="退单"  groupname="opt" function="rowDialogDetailRefresh" winwidth="500px" winheight="350px" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/chargeback/order/goToChargeBack/\"+row.buyerTaskId+\"' />
+<#grid:column label="任务状态" name="buyTaskStatus" query="true" align="center" queryMode="select" condition="eq"  dict="taskstate" width="70"/>
+<#grid:column label="sys.common.opt" name="opt"  formatter="button" />
+<#grid:button title="退单" groupname="opt" function="rowDialogDetailRefresh" winwidth="500px" winheight="350px"   outclass="btn-danger" innerclass="fa-search" url='${adminPath}/chargeback/order/goToChargeBack/\"+row.id+\"'  />
 <#grid:toolbar  function="search" />
 <#grid:toolbar  function="reset" />
 </#grid:grid>

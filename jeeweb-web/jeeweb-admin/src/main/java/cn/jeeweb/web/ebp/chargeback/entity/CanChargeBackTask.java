@@ -2,15 +2,23 @@ package cn.jeeweb.web.ebp.chargeback.entity;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
-
-import java.io.Serializable;
+import cn.jeeweb.web.common.entity.DataEntity;
 import java.util.Date;
 
+/**
+ * 能够退单 任务单
+ * 
+ * @author ytj
+ *
+ */
+public class CanChargeBackTask extends DataEntity<String> {
 
-public class CanChargeBackTask implements Serializable {
-
-
-    private String buyerTaskId;
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5831021995282339364L;
+	private String id;
+	private String buyerTaskId;
     /**
      * 买手任务单号
      */
@@ -180,4 +188,13 @@ public class CanChargeBackTask implements Serializable {
     public void setReceivingdate(Date receivingdate) {
         this.receivingdate = receivingdate;
     }
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+    
 }

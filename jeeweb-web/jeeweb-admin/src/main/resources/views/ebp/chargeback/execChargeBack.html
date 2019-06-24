@@ -1,15 +1,13 @@
 <% layout('/layouts/form.html', {title: @MessageUtils.getMessage('问题反馈',''), formId: 'tfinanceRechargeForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
 
-<#form:form id="tfinanceRechargeForm" modelAttribute="ttb" method="post" class="form-horizontal">
+<#form:form id="tfinanceRechargeForm" modelAttribute="taskObj" method="post" class="form-horizontal">
 <#form:hidden path="id"/>
 <table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
     <tbody>
     <tr>
-        <td  class="width-15 active text-right">	<label><font color="red">*</font>反馈类型:</label></td>
+        <td  class="width-15 active text-right">	<label><font color="red">*</font>退款金额:</label></td>
         <td  class="width-35" >
-            <#form:select path="applyType" class="form-control"   htmlEscape="false" nullmsg="请选择反馈类型！"
-            dict="applyType"/>
-            <label class="Validform_checktip"></label>
+            
         </td>
     </tr>
     <tr>
@@ -17,31 +15,32 @@
             <label><font color="red">*</font>原因说明:</label>
         </td>
         <td class="width-35" >
-            <textarea id="applyDesc" cols="40" rows="8" ></textarea>
+            <textarea id="chargeBackDesc" cols="40" rows="8" ></textarea>
             <label class="Validform_checktip"></label>
         </td>
     </tr>
     </tbody>
 </table>
 </#form:form>
-<button class='btn btn-warning' onclick="saveUnusualTaskApplyFn()">保存</button>
+<div style="text-align: right;padding-right: 20px">
+	<button class='btn btn-warning' onclick="saveChargeBackFn()">提交</button>
+</div>
 <% } %>
 
 <script>
     //异常订单申请保存
-    function saveUnusualTaskApplyFn() {
+    function saveChargeBackFn() {
         var data={
-            taskId:"${taskObj.id}",
-            applyType:$("#applyType option:selected").attr('value'),
-            applyDesc:$('#applyDesc').val()
+        		buyTaskId:"${taskObj.id}",
+        		remarks:$('#chargeBackDesc').val()
         };
-        if(data.applyDesc =='' || applyDesc==null){
-            alert("未填写问题描述");
+        if(data.remarks =='' || data.remarks==null){
+            alert("未填写退单原因");
             return false;
         }
         $.ajax({
             type: "POST",
-            url: "${adminPath}/buyer/TmyTaskDetail/addUnusualTaskApply",
+            url: "${adminPath}/chargeback/order/chargeBack",
             contentType:'application/json;charset=utf-8',
             data: JSON.stringify(data),
             dataType: "json",
