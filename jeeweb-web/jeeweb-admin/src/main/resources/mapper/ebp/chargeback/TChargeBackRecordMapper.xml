@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.jeeweb.web.ebp.chargeback.mapper.TChargeBackRecordMapper" >
-
-
-
-    <!--  查询允许退单的任务单列表-->
+  <!--  查询允许退单的任务单列表-->
   <select id="getCanChargeBackTaskList" resultType="cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask">
 	 SELECT
 		buytd.id,buytd.id buyerTaskId,buytd.buyerid buyerId,buytd.jdorderno ecommerceOrderNo,buytd.taskid shopTaskId,buytd.taskstate buyTaskStatus,
-  		buytd.receivingdate receivingdate,
+  		buytd.receivingdate receivingdate,buytd.pays taskPayMoney,
 		buy.buyerName,buy.loginName buyerNo,buyt.mytaskNo buyerTaskNo,
-		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,
-		shoptb.shopName
+		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,sttb.presentdeposit taskCommission,
+		shoptb.shopName,shoptb.userid shopUserId
 	FROM
 		t_my_task_detail buytd
 		INNER JOIN t_my_task buyt ON buytd.mytaskid = buyt.id
@@ -28,10 +25,10 @@
   <select id="selectCanChargeBackTaskByTaskId" resultType="cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask" parameterType="String">
 	 SELECT
 		buytd.id,buytd.id buyerTaskId,buytd.buyerid buyerId,buytd.jdorderno ecommerceOrderNo,buytd.taskid shopTaskId,buytd.taskstate buyTaskStatus,
-  		buytd.receivingdate receivingdate,
+  		buytd.receivingdate receivingdate,buytd.pays taskPayMoney,
 		buy.buyerName,buy.loginName buyerNo,buyt.mytaskNo buyerTaskNo,
-		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,
-		shoptb.shopName
+		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,sttb.presentdeposit taskCommission,
+		shoptb.shopName,shoptb.userid shopUserId
 	FROM
 		t_my_task_detail buytd
 		INNER JOIN t_my_task buyt ON buytd.mytaskid = buyt.id
@@ -40,5 +37,30 @@
 		INNER JOIN t_shop_info shoptb ON shoptb.userid = sttb.shopId
 	 where buytd.id=#{taskId}
   </select>
-
+  
+  
+  <!-- 分页列表查询-->
+  <select id="getChargeBackRecordList" resultType="cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord">
+      SELECT
+         	 id, dtime, charge_back_reason, charge_back_money, buyer_task_no, buyer_task_id,receivingdate, buyer_id, buyer_no, shop_id, shop_name, shop_task_id,
+  			shop_task_no, ecommerce_type, ecommerce_order_no, goods_name, remarks
+      FROM
+        t_charge_back_record t
+      <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+          <where>
+              ${ew.sqlSegment}
+          </where>
+      </if>
+  </select>
+  
+  <!-- 分页列表查询-->
+  <select id="getChargeBackRecordById" resultType="cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord" parameterType="String">
+      SELECT
+         	 id, dtime, charge_back_reason, charge_back_money, buyer_task_no, buyer_task_id,receivingdate, buyer_id, buyer_no, shop_id, shop_name, shop_task_id,
+  			shop_task_no, ecommerce_type, ecommerce_order_no, goods_name, remarks
+      FROM
+        t_charge_back_record t
+      where 
+      	t.id=#{id}
+     </select>
 </mapper>

@@ -48,4 +48,12 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 	 * @return
 	 */
 	int upTaskErrorStatus(@Param("map") Map<String,Object> paramMap);
+	
+	/**
+	 * 更改任务单状态用于退单操作
+	 * 
+	 * @param paramMap
+	 * @return
+	 */
+	int updateTaskStatusForChargeBack(@Param("map") Map<String,Object> paramMap);
 }

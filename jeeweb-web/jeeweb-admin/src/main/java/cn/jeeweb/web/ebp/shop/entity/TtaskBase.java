@@ -59,7 +59,7 @@ public class TtaskBase extends DataEntity<String> {
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	private Date lasttakingdate;//	datetime	0	0	-1	0	0	0	0		0					0	0
 	private BigDecimal taskdeposit;//	decimal	10	0	-1	0	0	0	0		0	冻结金额				0	0
-	private BigDecimal presentdeposit;//	decimal	10	0	-1	0	0	0	0		0	当前佣金额				0	0
+	private BigDecimal presentdeposit=BigDecimal.ZERO;//	decimal	10	0	-1	0	0	0	0		0	当前佣金额				0	0
 	private String couponurl;
 	private String skuid;
 	private String pattern;//任务模式

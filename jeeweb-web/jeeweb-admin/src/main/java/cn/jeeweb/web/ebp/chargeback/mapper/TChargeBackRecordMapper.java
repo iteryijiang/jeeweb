@@ -38,6 +38,15 @@ public interface TChargeBackRecordMapper extends BaseMapper<TChargeBackRecord> {
      * @return
      */
     List<TChargeBackRecord> getChargeBackRecordList(Pagination page, @Param("ew") Wrapper<TChargeBackRecord> wrapper);
+    
+    /**
+     *主键ID获取数据
+     * 
+     * @param id
+     * @return
+     */
+    TChargeBackRecord getChargeBackRecordById(String id);
+    
 
 }
 

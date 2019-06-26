@@ -176,7 +176,7 @@
 		FROM
 			t_day_report
 		WHERE
-			del_flag = 0 and atime between #{map.beginTime} and #{map.endTime}
+			del_flag = 0 and atime between #{map.beginDate} and #{map.endDate}
 		limit 0,1
     </select>
 </mapper>

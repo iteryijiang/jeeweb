@@ -11,6 +11,7 @@ import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.mapper.TmyTaskDetailMapper;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
+import cn.jeeweb.web.ebp.enums.BuyerTaskStatusEnum;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
@@ -164,6 +165,19 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
         page.setRecords(baseMapper.listDetail(page, wrapper));
         return new PageImpl<TmyTaskDetail>(page.getRecords(), queryable.getPageable(), page.getTotal());
 //        return page;
+    }
+    
+    @Override
+    public void updateTaskStatusForChargeBack(String id,String lastRepair) {
+    	Map<String,Object> paramMap=new HashMap<String,Object>();
+        paramMap.put("taskId",id);
+        paramMap.put("status",BuyerTaskStatusEnum.CHARGEBACK.code);
+        paramMap.put("lastTime", Calendar.getInstance().getTime());
+        paramMap.put("lastRepair",lastRepair);
+    	int num=baseMapper.updateTaskStatusForChargeBack(paramMap);
+    	if(num !=1) {
+    		throw new RuntimeException("更改任务单状态失败");
+    	}
     }
 
     public Page<TmyTaskDetail> listDetailGroup(Queryable queryable, Wrapper<TmyTaskDetail> wrapper) {

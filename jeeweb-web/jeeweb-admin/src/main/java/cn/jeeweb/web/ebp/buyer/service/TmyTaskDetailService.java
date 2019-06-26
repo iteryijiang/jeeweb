@@ -22,6 +22,14 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
     public List<TmyTaskDetail> listNoSendGood(Map map);
     @Transactional
     public void upTaskState(String taskState,TmyTaskDetail td,String id);
+    /***
+     * 更改任务单状态
+     * 退单操作
+     * 
+     * @param id
+     * @param lastRepair
+     */
+    void updateTaskStatusForChargeBack(String id,String lastRepair);
 
 
     Page<TmyTaskDetail> listDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);

@@ -42,4 +42,12 @@ public interface TChargeBackRecordService extends ICommonService<TChargeBackReco
      * @return
      */
     Page<TChargeBackRecord> selectChargeBackRecordPageList(Queryable queryable, Wrapper<TChargeBackRecord> wrapper);
+    
+    /**
+     * 获得详情
+     * 
+     * @param id
+     * @return
+     */
+    TChargeBackRecord getChargeBackRecordById(String id);
 }

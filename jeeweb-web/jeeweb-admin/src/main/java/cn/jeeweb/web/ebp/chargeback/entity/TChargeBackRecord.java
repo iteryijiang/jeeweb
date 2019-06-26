@@ -1,6 +1,8 @@
 package cn.jeeweb.web.ebp.chargeback.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -17,6 +19,7 @@ public class TChargeBackRecord extends DataEntity<String> {
     /**
      * 执行时间
      */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date dtime;
     /**
      * 退单原因
@@ -34,6 +37,12 @@ public class TChargeBackRecord extends DataEntity<String> {
      * 买手任务 ID
      */
     private String buyerTaskId;
+    /**
+     * 接受任务时间
+     *
+     */
+    @JSONField(format="yyyy-MM-dd HH:mm")
+    private java.util.Date receivingdate;
     /**
      * 买手 ID
      */
@@ -192,4 +201,13 @@ public class TChargeBackRecord extends DataEntity<String> {
     public void setEcommerceOrderNo(String ecommerceOrderNo) {
         this.ecommerceOrderNo = ecommerceOrderNo;
     }
+
+	public java.util.Date getReceivingdate() {
+		return receivingdate;
+	}
+
+	public void setReceivingdate(java.util.Date receivingdate) {
+		this.receivingdate = receivingdate;
+	}
+    
 }

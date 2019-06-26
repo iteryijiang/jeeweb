@@ -3,6 +3,8 @@ package cn.jeeweb.web.ebp.chargeback.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import cn.jeeweb.web.common.entity.DataEntity;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -40,6 +42,11 @@ public class CanChargeBackTask extends DataEntity<String> {
      */
     private String shopId;
     /**
+     * 商户关联用户表的ID
+     * 
+     */
+    private String shopUserId;
+    /**
      * 商家名称
      */
     private String shopName;
@@ -70,6 +77,18 @@ public class CanChargeBackTask extends DataEntity<String> {
      */
     private String buyTaskStatus;
 
+    /**
+     * 任务实际支付金额
+     */
+    private BigDecimal taskPayMoney=BigDecimal.ZERO;
+    
+    /**
+     * 任务佣金
+     * 平台扣除的佣金
+     * 
+     */
+    private BigDecimal taskCommission=BigDecimal.ZERO; 
+    
     /**
      * 接受任务时间
      *
@@ -195,6 +214,30 @@ public class CanChargeBackTask extends DataEntity<String> {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public BigDecimal getTaskPayMoney() {
+		return taskPayMoney;
+	}
+
+	public void setTaskPayMoney(BigDecimal taskPayMoney) {
+		this.taskPayMoney = taskPayMoney;
+	}
+
+	public BigDecimal getTaskCommission() {
+		return taskCommission;
+	}
+
+	public void setTaskCommission(BigDecimal taskCommission) {
+		this.taskCommission = taskCommission;
+	}
+
+	public String getShopUserId() {
+		return shopUserId;
+	}
+
+	public void setShopUserId(String shopUserId) {
+		this.shopUserId = shopUserId;
 	}
     
 }

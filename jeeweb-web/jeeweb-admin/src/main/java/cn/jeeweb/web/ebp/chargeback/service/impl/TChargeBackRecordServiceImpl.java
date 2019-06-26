@@ -7,10 +7,7 @@ import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.utils.DateUtils;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
-import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
-import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask;
 import cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord;
 import cn.jeeweb.web.ebp.chargeback.mapper.TChargeBackRecordMapper;
@@ -20,12 +17,8 @@ import cn.jeeweb.web.ebp.enums.EcommerceEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
-import cn.jeeweb.web.ebp.shop.entity.TshopBase;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
-import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
-import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
-import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,48 +31,39 @@ import java.math.BigDecimal;
 public class TChargeBackRecordServiceImpl extends CommonServiceImpl<TChargeBackRecordMapper, TChargeBackRecord> implements TChargeBackRecordService {
 
     @Autowired
-    private TmyTaskDetailService tmyTaskDetailService;
-    @Autowired
-    private TmyTaskService tmyTaskService;
-    @Autowired
     private TshopInfoService tshopInfoService;
     @Autowired
-    private TshopBaseService tshopBaseService;
-    @Autowired
-    private TtaskBaseService ttaskBaseService;
-    @Autowired
     private TfinanceRechargeLogService tfinanceRechargeLogService;
+    @Autowired
+    private TmyTaskDetailService tmyTaskDetailService;
 
     @Override
     public void addTChargeBackRecord(TChargeBackRecord obj)throws RuntimeException{
-        //获取任务单记录
-        TmyTaskDetail buyerTaskObj=tmyTaskDetailService.selectById(obj.getBuyerTaskId());
-        if(buyerTaskObj == null){
+    	CanChargeBackTask chargeBackTaskObj=baseMapper.selectCanChargeBackTaskByTaskId(obj.getBuyerTaskId());
+        if(chargeBackTaskObj == null){
             throw  new RuntimeException("未获取到原任务单数据");
         }
-        if(BuyerTaskStatusEnum.CHARGEBACK.code == Integer.valueOf(buyerTaskObj.getTaskstate())){
+        if(BuyerTaskStatusEnum.CHARGEBACK.code == Integer.valueOf(chargeBackTaskObj.getBuyTaskStatus())){
             throw  new RuntimeException("当前任务单状态不支持退单操作");
         }
-        TmyTask tmTask=tmyTaskService.selectById(buyerTaskObj.getMytaskid());
-        //更改任务单状态//更改商户余额//添加记录
-        TtaskBase taskBaseObj=ttaskBaseService.selectById(buyerTaskObj.getTaskid());
-        TshopBase shopbaseObj=tshopBaseService.selectById(buyerTaskObj.getStorename());
-        obj.setShopId(taskBaseObj.getShopid());
-        obj.setShopName(shopbaseObj.getShopname());
-        obj.setGoodsName(taskBaseObj.gettTitle());
-        obj.setShopTaskNo(taskBaseObj.getTaskno());
-        obj.setShopTaskId(buyerTaskObj.getTaskid());
+        obj.setShopId(chargeBackTaskObj.getShopId());
+        obj.setShopName(chargeBackTaskObj.getShopName());
+        obj.setGoodsName(chargeBackTaskObj.getGoodsName());
+        obj.setShopTaskNo(chargeBackTaskObj.getShopTaskNo());
+        obj.setShopTaskId(chargeBackTaskObj.getShopTaskId());
+        obj.setReceivingdate(chargeBackTaskObj.getReceivingdate());
         obj.setDtime(DateUtils.getCurrentTime());
-        obj.setChargeBackMoney(buyerTaskObj.getPays().add(taskBaseObj.getPresentdeposit()));
-        obj.setBuyerTaskNo(tmTask.getMytaskno());
-        obj.setBuyerId(buyerTaskObj.getBuyerid());
-        obj.setBuyerNo(buyerTaskObj.getBuyeridLogin());
+        obj.setChargeBackMoney(chargeBackTaskObj.getTaskPayMoney().add(chargeBackTaskObj.getTaskCommission()));
+        obj.setBuyerTaskNo(chargeBackTaskObj.getBuyerTaskNo());
+        obj.setBuyerId(chargeBackTaskObj.getBuyerId());
+        obj.setBuyerNo(chargeBackTaskObj.getBuyerNo());
         obj.setEcommerceType(EcommerceEnum.JD.code);
-        obj.setEcommerceOrderNo(buyerTaskObj.getJdorderno());
+        obj.setEcommerceOrderNo(chargeBackTaskObj.getEcommerceOrderNo());
         baseMapper.insert(obj);
-        TshopInfo shopInfo = tshopInfoService.selectOne(buyerTaskObj.getStorename());
-        TfinanceRechargeLog log =new TfinanceRechargeLog(shopInfo.getUserid(),taskBaseObj.getStorename(),obj.getShopTaskId(), TfinanceRechargeService.rechargetype_4,obj.getChargeBackMoney(),shopInfo.getAvailabledeposit().add(obj.getChargeBackMoney()));
-        StringBuffer financeLog=new StringBuffer("退单=>{总金额:").append(obj.getChargeBackMoney()).append(",佣金:").append(taskBaseObj.getPresentdeposit()).append(",实际支付:").append(buyerTaskObj.getPays()).append("}");
+        tmyTaskDetailService.updateTaskStatusForChargeBack(chargeBackTaskObj.getBuyerTaskId(), obj.getCreateBy().getId());
+        TshopInfo shopInfo = tshopInfoService.selectOne(chargeBackTaskObj.getShopUserId());
+        TfinanceRechargeLog log =new TfinanceRechargeLog(shopInfo.getUserid(),chargeBackTaskObj.getShopName(),obj.getShopTaskId(), TfinanceRechargeService.rechargetype_4,obj.getChargeBackMoney(),shopInfo.getAvailabledeposit().add(obj.getChargeBackMoney()));
+        StringBuffer financeLog=new StringBuffer("退单=>{总金额:").append(obj.getChargeBackMoney()).append(",佣金:").append(chargeBackTaskObj.getTaskCommission()).append(",实际支付:").append(chargeBackTaskObj.getTaskPayMoney()).append("}");
         log.setRemarks(financeLog.toString());
         tfinanceRechargeLogService.insert(log);
         tshopInfoService.updateShopMoney(shopInfo.getUserid(), BigDecimal.ZERO.subtract(obj.getChargeBackMoney()),obj.getChargeBackMoney(),obj.getCreateBy().getId());
@@ -113,4 +97,10 @@ public class TChargeBackRecordServiceImpl extends CommonServiceImpl<TChargeBackR
         page.setRecords(baseMapper.getChargeBackRecordList(page, wrapper));
         return new PageImpl<TChargeBackRecord>(page.getRecords(), queryable.getPageable(), page.getTotal());
     }
+    
+    @Override
+    public TChargeBackRecord getChargeBackRecordById(String id) {
+    	return baseMapper.getChargeBackRecordById(id);
+    }
+    
 }

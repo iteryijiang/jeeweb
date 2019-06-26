@@ -12,13 +12,16 @@ import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask;
 import cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord;
 import cn.jeeweb.web.ebp.chargeback.service.TChargeBackRecordService;
+import cn.jeeweb.web.ebp.enums.BasicRoleEnum;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
+import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -30,6 +33,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Set;
 
 /**
  *
@@ -75,8 +80,13 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
                          HttpServletResponse response) throws IOException {
         EntityWrapper<CanChargeBackTask> entityWrapper = new EntityWrapper<CanChargeBackTask>(CanChargeBackTask.class);
         propertyPreFilterable.addQueryProperty("id");
-        // 预处理
- 		if (queryable.getCondition() != null) {
+        entityWrapper.between("buytd.taskstate", "0", "4");
+        if (queryable.getCondition() == null) {
+	        Date currentDate= DateUtils.getCurrentDate();
+	        String defaultEndTime=DateUtils.getDateEnd(currentDate);
+	        String defaultBeginTime=DateUtils.getDateBegin(DateUtils.dateAddDay(currentDate,-3));
+	        entityWrapper.between("buytd.receivingdate", defaultBeginTime, defaultEndTime);
+        }else {
  			Condition.Filter filterTaskStatus= queryable.getCondition().getFilterFor("buyTaskStatus");
  			if (filterTaskStatus != null) {
  				queryable.getCondition().remove(filterTaskStatus);
@@ -105,7 +115,8 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
  			Condition.Filter filterReceivingdate = queryable.getCondition().getFilterFor("receivingdate");
  			if (filterReceivingdate != null) {
  				queryable.getCondition().remove(filterReceivingdate);
- 				queryable.getCondition().and(Condition.Operator.between, "buytd.receivingdate",TaskUtils.whereDate(filterReceivingdate));
+ 				String[] timeArray=TaskUtils.whereDate(filterReceivingdate);
+ 				queryable.getCondition().and(Condition.Operator.between, "buytd.receivingdate ",timeArray);
  			}
  		}
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, CanChargeBackTask.class);
@@ -152,6 +163,8 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
             TChargeBackRecord obj=new TChargeBackRecord();
             obj.setBuyerTaskId(jsonObject.getString("buyTaskId"));
             obj.setChargeBackReason(jsonObject.getString("remarks"));
+            obj.setCreateBy(UserUtils.getUser());
+            tchargeBackRecordService.addTChargeBackRecord(obj);
             return Response.ok("操作成功！");
         } catch (RuntimeException ex) {
             ex.printStackTrace();
@@ -195,10 +208,6 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
                          HttpServletResponse response) throws IOException {
         EntityWrapper<TChargeBackRecord> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
-        String userid = UserUtils.getPrincipal().getId();
-        if (!StringUtils.isEmpty(userid)) {
-            entityWrapper.eq("create_by", userid);
-        }
         // 预处理
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
