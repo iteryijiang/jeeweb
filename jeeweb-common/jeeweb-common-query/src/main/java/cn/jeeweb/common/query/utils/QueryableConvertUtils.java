@@ -6,7 +6,6 @@ import cn.jeeweb.common.query.data.Condition.Filter;
 import cn.jeeweb.common.query.data.Condition.Operator;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.exception.QueryException;
-import cn.jeeweb.common.utils.SpringContextHolder;
 import cn.jeeweb.common.utils.convert.DateConvertEditor;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanWrapperImpl;
@@ -14,7 +13,6 @@ import org.springframework.beans.InvalidPropertyException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.util.CollectionUtils;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;

@@ -19,9 +19,7 @@ import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.chargeback.entity.CanChargeBackTask;
 import cn.jeeweb.web.ebp.chargeback.entity.TChargeBackRecord;
 import cn.jeeweb.web.ebp.chargeback.service.TChargeBackRecordService;
-import cn.jeeweb.web.ebp.enums.BasicRoleEnum;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
-import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -34,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Set;
 
 /**
  *
@@ -116,7 +113,7 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
  			if (filterReceivingdate != null) {
  				queryable.getCondition().remove(filterReceivingdate);
  				String[] timeArray=TaskUtils.whereDate(filterReceivingdate);
- 				queryable.getCondition().and(Condition.Operator.between, "buytd.receivingdate ",timeArray);
+ 				entityWrapper.between("buytd.receivingdate ", timeArray[0], timeArray[1]);
  			}
  		}
         QueryableConvertUtils.convertQueryValueToEntityValue(queryable, CanChargeBackTask.class);
