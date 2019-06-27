@@ -77,7 +77,7 @@ public class ChargebackController extends BaseBeanController<TChargeBackRecord> 
                          HttpServletResponse response) throws IOException {
         EntityWrapper<CanChargeBackTask> entityWrapper = new EntityWrapper<CanChargeBackTask>(CanChargeBackTask.class);
         propertyPreFilterable.addQueryProperty("id");
-        entityWrapper.between("buytd.taskstate", "0", "4");
+        entityWrapper.between("buytd.taskstate", "2", "4");
         if (queryable.getCondition() == null) {
 	        Date currentDate= DateUtils.getCurrentDate();
 	        String defaultEndTime=DateUtils.getDateEnd(currentDate);
