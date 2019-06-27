@@ -21,6 +21,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -99,7 +101,6 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
 /***********买手帐号信息************/
     /**
      * 进入买手帐号页面
-     * 暂时未使用
      *
      * @param model
      * @param request
@@ -113,14 +114,16 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
         return mav;
     }
 
-    /**
-     * 根据页码和每页记录数，以及查询条件动态加载数据
-     * 暂时未使用
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     */
+   /**
+    * 查询买手列表
+    * 
+    * @param id
+    * @param queryable
+    * @param propertyPreFilterable
+    * @param request
+    * @param response
+    * @throws IOException
+    */
     @RequestMapping(value = "ajaxListBuyer", method = { RequestMethod.GET, RequestMethod.POST })
     @RequiresMethodPermissions("ajaxListBuyer")
     public void ajaxListDetail(@PathVariable("id") String id, Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response)
@@ -128,5 +131,35 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
         EntityWrapper<TbuyerInfo> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         StringUtils.printJson(response, null);
+    }
+    
+    /**
+     * 编辑买手信息
+     * 
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "initBuyerInfo")
+    @RequiresMethodPermissions("gotoBuyerList")
+    public ModelAndView initBuyer(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("");
+        return mav;
+    }
+
+    /**
+     * 保存买手信息
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "saveBuyerInfo", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("ajaxListBuyer")
+    public Response saveBuyerInfo( @RequestBody JSONObject jsonObject, HttpServletRequest request,	HttpServletResponse response)
+            throws IOException {
+    	
+    	return Response.ok("操作成功！");
     }
 }

@@ -1,5 +1,7 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 
+import java.math.BigDecimal;
+
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -17,7 +19,28 @@ import cn.jeeweb.web.common.entity.DataEntity;
 public class TBuyerLevel extends DataEntity<Long> {
 
 	@TableId(value = "id", type = IdType.AUTO)
-	private long id;
+	private Long id;
+	/**
+	 * 等级编码
+	 */
+	private String levelCode;
+	
+	/**
+	 * 等级名称
+	 */
+	private String levelName;
+	/**
+	 * 上一个等级
+	 */
+	private String preLevelCode;
+	/**
+	 * 下一个等级
+	 */
+	private String nextLevelCode;
+	/**
+	 * 任务链接佣金系数
+	 */
+	private BigDecimal commissionRatio;
 
 	public Long getId() {
 		return id;
@@ -28,6 +51,44 @@ public class TBuyerLevel extends DataEntity<Long> {
 		this.id = id;
 	}
 
-	
-	
+	public String getLevelCode() {
+		return levelCode;
+	}
+
+	public void setLevelCode(String levelCode) {
+		this.levelCode = levelCode;
+	}
+
+	public String getLevelName() {
+		return levelName;
+	}
+
+	public void setLevelName(String levelName) {
+		this.levelName = levelName;
+	}
+
+	public String getPreLevelCode() {
+		return preLevelCode;
+	}
+
+	public void setPreLevelCode(String preLevelCode) {
+		this.preLevelCode = preLevelCode;
+	}
+
+	public String getNextLevelCode() {
+		return nextLevelCode;
+	}
+
+	public void setNextLevelCode(String nextLevelCode) {
+		this.nextLevelCode = nextLevelCode;
+	}
+
+	public BigDecimal getCommissionRatio() {
+		return commissionRatio;
+	}
+
+	public void setCommissionRatio(BigDecimal commissionRatio) {
+		this.commissionRatio = commissionRatio;
+	}
+
 }
