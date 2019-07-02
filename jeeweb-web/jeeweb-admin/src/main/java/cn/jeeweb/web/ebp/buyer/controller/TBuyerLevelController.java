@@ -1,6 +1,8 @@
 package cn.jeeweb.web.ebp.buyer.controller;
 
 import java.io.IOException;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.ui.Model;
@@ -29,6 +31,7 @@ import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
+import cn.jeeweb.web.ebp.buyer.service.TBuyerLevelService;
 
 @RestController
 @RequestMapping("${jeeweb.admin.url.prefix}/buyer/buyerInfo")
@@ -37,6 +40,8 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 @Log(title = "买手等级")
 public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	
+	@Resource(name ="buyerLevelService")
+	private TBuyerLevelService TBuyerLevelService;
 	/**
 	 * 买手等级列表页面
 	 * 
@@ -48,7 +53,7 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	@GetMapping(value = "buyerLevelList")
 	@RequiresMethodPermissions("view")
 	public ModelAndView goToBuyerLevelListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("");
+		ModelAndView mav = displayModelAndView("l_buyerLevelList");
 		return mav;
 	}
 	
@@ -96,7 +101,7 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	@GetMapping("initBuyerLevel/{id}")
 	@Log(logType = LogType.SELECT)
 	public ModelAndView initBuyerLevel(@PathVariable("id") String applyId, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("initBuyerLevel");
+		ModelAndView mav = displayModelAndView("l_initBuyerLevel");
 		try {
 			
 			model.addAttribute("buyerLevelObj", null);

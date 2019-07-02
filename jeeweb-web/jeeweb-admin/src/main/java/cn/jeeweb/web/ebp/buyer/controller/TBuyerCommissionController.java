@@ -45,7 +45,7 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 	@GetMapping(value = "buyerCommissionList")
 	@RequiresMethodPermissions("view")
 	public ModelAndView goToBuyerCommissionListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("");
+		ModelAndView mav = displayModelAndView("c_buyerCommissionGroupList");
 		return mav;
 	}
 	
@@ -94,7 +94,7 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 	@GetMapping("getBuyerCommissionDetail/{id}")
 	@Log(logType = LogType.SELECT)
 	public ModelAndView getBuyerCommissionDetail(@PathVariable("id") String applyId, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("buyerCommissionDetail");
+		ModelAndView mav = displayModelAndView("c_buyerCommissionDetail");
 		try {
 			
 			model.addAttribute("buyerCommissionObj", null);

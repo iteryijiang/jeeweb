@@ -73,6 +73,12 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 	 * 生成佣金记录时间
 	 */
 	private Date dtime;
+	
+	/**
+	 * 买手所属组的组长信息
+	 * 
+	 */
+	private String buyerGroupLeader;
 
 	public Long getId() {
 		return id;
@@ -162,4 +168,14 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 	public void setDtime(Date dtime) {
 		this.dtime = dtime;
 	}
+
+	public String getBuyerGroupLeader() {
+		return buyerGroupLeader;
+	}
+
+	public void setBuyerGroupLeader(String buyerGroupLeader) {
+		this.buyerGroupLeader = buyerGroupLeader;
+	}
+	
+	
 }

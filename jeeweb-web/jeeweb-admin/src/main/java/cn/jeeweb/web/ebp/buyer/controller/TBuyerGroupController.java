@@ -51,7 +51,7 @@ public class TBuyerGroupController  extends BaseBeanController<TBuyerGroup> {
 	@GetMapping(value = "buyerGroupList")
 	@RequiresMethodPermissions("view")
 	public ModelAndView goToBuyerGroupListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("");
+		ModelAndView mav = displayModelAndView("g_buyerGroupList");
 		return mav;
 	}
 	
@@ -99,7 +99,7 @@ public class TBuyerGroupController  extends BaseBeanController<TBuyerGroup> {
 	@GetMapping("getBuyerGroup/{id}")
 	@Log(logType = LogType.SELECT)
 	public ModelAndView getBuyerGroup(@PathVariable("id") String applyId, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("buyerGroup");
+		ModelAndView mav = displayModelAndView("g_buyerGroup_show");
 		try {
 			
 			model.addAttribute("buyerGroupObj", null);
@@ -124,7 +124,7 @@ public class TBuyerGroupController  extends BaseBeanController<TBuyerGroup> {
 	@GetMapping("editBuyerGroup/{id}")
 	@Log(logType = LogType.SELECT)
 	public ModelAndView editBuyerGroup(@PathVariable("id") String applyId, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("buyerGroup");
+		ModelAndView mav = displayModelAndView("g_buyerGroup_edit");
 		try {
 			
 			model.addAttribute("buyerGroupObj", null);
@@ -172,7 +172,7 @@ public class TBuyerGroupController  extends BaseBeanController<TBuyerGroup> {
 	@GetMapping("editBuyerGroupLeader/{id}")
 	@Log(logType = LogType.SELECT)
 	public ModelAndView editBuyerGroupLeader(@PathVariable("id") String applyId, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("buyerGroup");
+		ModelAndView mav = displayModelAndView("g_buyerGroup_leader");
 		try {
 			
 			model.addAttribute("buyerGroupObj", null);
@@ -220,7 +220,7 @@ public class TBuyerGroupController  extends BaseBeanController<TBuyerGroup> {
 	@GetMapping("editBuyerGroupMember/{id}")
 	@Log(logType = LogType.SELECT)
 	public ModelAndView editBuyerGroupMember(@PathVariable("id") String applyId, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = displayModelAndView("buyerGroup");
+		ModelAndView mav = displayModelAndView("g_buyerGroup_member");
 		try {
 			
 			model.addAttribute("buyerGroupObj", null);

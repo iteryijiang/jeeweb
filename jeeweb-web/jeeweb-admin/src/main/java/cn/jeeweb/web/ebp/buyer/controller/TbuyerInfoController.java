@@ -110,7 +110,7 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
     @GetMapping(value = "gotoBuyerList")
     @RequiresMethodPermissions("gotoBuyerList")
     public ModelAndView gotoBuyerList(Model model, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView mav = displayModelAndView("");
+        ModelAndView mav = displayModelAndView("b_buyerInfoList");
         return mav;
     }
 
@@ -144,7 +144,7 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
     @GetMapping(value = "initBuyerInfo")
     @RequiresMethodPermissions("gotoBuyerList")
     public ModelAndView initBuyer(Model model, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView mav = displayModelAndView("");
+        ModelAndView mav = displayModelAndView("b_buyerInfo_edit");
         return mav;
     }
 
