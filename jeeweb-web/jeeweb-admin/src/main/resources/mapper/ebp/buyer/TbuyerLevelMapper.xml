@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TBuyerLevelMapper" >
+
+  <resultMap id="TbuyerLevel" type="cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="levelCode" column="level_code" jdbcType="VARCHAR" />
+    <result property="levelName" column="level_name" jdbcType="VARCHAR" />
+    <result property="preLevelCode" column="pre_level_code" jdbcType="VARCHAR" />
+    <result property="nextLevelCode" column="next_level_code" jdbcType="VARCHAR" />
+    <result property="commissionRatio" column="commission_ratio" jdbcType="VARCHAR" />
+  </resultMap>
+
+  
+  <select id="selectBuyerLevelPageList" resultMap="TbuyerLevel">
+      SELECT
+          bl.id,bl.level_code,bl.level_name,bl.pre_level_code,bl.next_level_code,bl.commission_ratio,bl.create_by,
+          bl.create_date,bl.update_by,bl.update_date,bl.remarks,bl.del_flag
+      FROM
+      t_buyer_level bl
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+    <select id="getBuyerLevelByName" parameterType="HashMap" resultType="int">
+        SELECT
+          count(*)
+        FROM
+          t_buyer_group_member
+        where
+          group_id=#{groupId} and del_flag=0
+    </select>
+    <select id="getBuyerLevelByCode" parameterType="HashMap" resultType="int">
+        SELECT
+          count(*)
+        FROM
+          t_buyer_group_member
+        where
+          group_id=#{groupId} and del_flag=0
+    </select>
+    
+   <update id="updateBuyerLevel" parameterType="cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel">
+      update
+        t_buyer_group
+      set
+        group_leader=#{groupLeader},group_leader_name=#{groupLeaderName},update_date=#{updateDate},update_by=#{updateBy.id}
+      where
+        id=#{id}
+  </update>
+
+</mapper>

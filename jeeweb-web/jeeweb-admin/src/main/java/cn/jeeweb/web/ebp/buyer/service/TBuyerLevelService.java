@@ -1,7 +1,11 @@
 package cn.jeeweb.web.ebp.buyer.service;
 
 import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
+import cn.jeeweb.common.query.data.Page;
+import cn.jeeweb.common.query.data.Queryable;
+import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 
 /**
  * 买手分组
@@ -10,7 +14,10 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
  *
  */
 public interface TBuyerLevelService extends ICommonService<TBuyerLevel> {
-	
+
+
+	Page<TBuyerLevel> selectBuyerLevelPageList(Queryable queryable, Wrapper<TBuyerLevel> wrapper);
+
 	/**
 	 * 新增买手等级信息
 	 * 

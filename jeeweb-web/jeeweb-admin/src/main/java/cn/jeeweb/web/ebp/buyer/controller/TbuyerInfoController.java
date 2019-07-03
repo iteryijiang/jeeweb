@@ -108,7 +108,7 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
      * @return
      */
     @GetMapping(value = "gotoBuyerList")
-    @RequiresMethodPermissions("gotoBuyerList")
+    @RequiresMethodPermissions("view")
     public ModelAndView gotoBuyerList(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("b_buyerInfoList");
         return mav;
@@ -125,7 +125,7 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
     * @throws IOException
     */
     @RequestMapping(value = "ajaxListBuyer", method = { RequestMethod.GET, RequestMethod.POST })
-    @RequiresMethodPermissions("ajaxListBuyer")
+    @RequiresMethodPermissions("view")
     public void ajaxListDetail(@PathVariable("id") String id, Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         EntityWrapper<TbuyerInfo> entityWrapper = new EntityWrapper<>(entityClass);
@@ -142,7 +142,7 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
      * @return
      */
     @GetMapping(value = "initBuyerInfo")
-    @RequiresMethodPermissions("gotoBuyerList")
+    @RequiresMethodPermissions("view")
     public ModelAndView initBuyer(Model model, HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav = displayModelAndView("b_buyerInfo_edit");
         return mav;
@@ -156,7 +156,7 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
      * @throws IOException
      */
     @RequestMapping(value = "saveBuyerInfo", method = { RequestMethod.GET, RequestMethod.POST })
-    @RequiresMethodPermissions("ajaxListBuyer")
+    @RequiresMethodPermissions("view")
     public Response saveBuyerInfo( @RequestBody JSONObject jsonObject, HttpServletRequest request,	HttpServletResponse response)
             throws IOException {
     	

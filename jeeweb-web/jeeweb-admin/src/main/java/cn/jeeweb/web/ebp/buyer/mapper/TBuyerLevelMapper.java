@@ -1,7 +1,11 @@
 package cn.jeeweb.web.ebp.buyer.mapper;
 
+import java.util.List;
 import java.util.Map;
 
+import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,7 +20,9 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
  */
 @Mapper
 public interface TBuyerLevelMapper extends BaseMapper<TBuyerLevel> {
-	
+
+	List<TBuyerLevel> selectBuyerLevelPageList(Pagination page, @Param("ew") Wrapper<TBuyerLevel> wrapper);
+
 	int getBuyerLevelByName(@Param("map") Map map);
 	
 	int getBuyerLevelByCode(@Param("map") Map map);

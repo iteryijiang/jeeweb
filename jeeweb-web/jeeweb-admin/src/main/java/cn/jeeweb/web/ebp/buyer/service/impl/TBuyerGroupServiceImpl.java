@@ -3,6 +3,10 @@ package cn.jeeweb.web.ebp.buyer.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jeeweb.common.mybatis.mvc.parse.QueryToWrapper;
+import cn.jeeweb.common.query.data.PageImpl;
+import cn.jeeweb.common.query.data.Pageable;
+import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +28,21 @@ import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupService;
  *
  */
 @Transactional
-@Service("BuyerGroupService")
+@Service("buyerGroupService")
 public class TBuyerGroupServiceImpl extends CommonServiceImpl<TBuyerGroupMapper,TBuyerGroup> implements TBuyerGroupService{
+
+
+	@Override
+	public Page<TBuyerGroup> selectBuyerGroupPageList(Queryable queryable, Wrapper<TBuyerGroup> wrapper){
+		QueryToWrapper<TBuyerGroup> queryToWrapper = new QueryToWrapper<TBuyerGroup>();
+		queryToWrapper.parseCondition(wrapper, queryable);
+		queryToWrapper.parseSort(wrapper, queryable);
+		Pageable pageable = queryable.getPageable();
+		com.baomidou.mybatisplus.plugins.Page<TBuyerGroup> page = new com.baomidou.mybatisplus.plugins.Page<TBuyerGroup>(pageable.getPageNumber(), pageable.getPageSize());
+		wrapper.eq("1", "1");
+		page.setRecords(baseMapper.selectBuyerGroupPageList(page, wrapper));
+		return new PageImpl<TBuyerGroup>(page.getRecords(), queryable.getPageable(), page.getTotal());
+	}
 
 	@Override
 	public void addBuyerGroup(TBuyerGroup obj) {

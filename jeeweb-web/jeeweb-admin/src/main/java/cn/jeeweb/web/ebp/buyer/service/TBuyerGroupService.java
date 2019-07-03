@@ -2,6 +2,7 @@ package cn.jeeweb.web.ebp.buyer.service;
 
 import java.util.List;
 
+import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 
 import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
@@ -17,6 +18,15 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroupMember;
  *
  */
 public interface TBuyerGroupService extends ICommonService<TBuyerGroup> {
+
+	/***
+	 * 分页查询分组数据
+	 *
+	 * @param queryable
+	 * @param wrapper
+	 * @return
+	 */
+	Page<TBuyerGroup> selectBuyerGroupPageList(Queryable queryable, Wrapper<TBuyerGroup> wrapper);
 	
 	/**
 	 * 新增买手分组信息

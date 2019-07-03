@@ -28,9 +28,9 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerCommissionRecord;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 
 @RestController
-@RequestMapping("${jeeweb.admin.url.prefix}/buyer/buyerInfo")
-@ViewPrefix("ebp/buyergroup")
-@RequiresPathPermission("buyer:buyerInfo")
+@RequestMapping("${jeeweb.admin.url.prefix}/buyer/buyerCommission")
+@ViewPrefix("ebp/buyer")
+@RequiresPathPermission("buyer:buyerCommission")
 @Log(title = "买手佣金")
 public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommissionRecord> {
 
@@ -42,7 +42,7 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 	 * @param response
 	 * @return
 	 */
-	@GetMapping(value = "buyerCommissionList")
+	@GetMapping(value = "view")
 	@RequiresMethodPermissions("view")
 	public ModelAndView goToBuyerCommissionListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = displayModelAndView("c_buyerCommissionGroupList");

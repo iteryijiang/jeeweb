@@ -34,14 +34,14 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 import cn.jeeweb.web.ebp.buyer.service.TBuyerLevelService;
 
 @RestController
-@RequestMapping("${jeeweb.admin.url.prefix}/buyer/buyerInfo")
-@ViewPrefix("ebp/buyerlevel")
-@RequiresPathPermission("buyer:buyerInfo")
+@RequestMapping("${jeeweb.admin.url.prefix}/buyer/buyerlevel")
+@ViewPrefix("ebp/buyer")
+@RequiresPathPermission("buyer:buyerlevel")
 @Log(title = "买手等级")
 public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	
 	@Resource(name ="buyerLevelService")
-	private TBuyerLevelService TBuyerLevelService;
+	private TBuyerLevelService buyerLevelService;
 	/**
 	 * 买手等级列表页面
 	 * 
@@ -50,7 +50,7 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	 * @param response
 	 * @return
 	 */
-	@GetMapping(value = "buyerLevelList")
+	@GetMapping(value = "view")
 	@RequiresMethodPermissions("view")
 	public ModelAndView goToBuyerLevelListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = displayModelAndView("l_buyerLevelList");
@@ -76,11 +76,10 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 		try {
 			EntityWrapper<TBuyerLevel> entityWrapper = new EntityWrapper<TBuyerLevel>(entityClass);
 			propertyPreFilterable.addQueryProperty("id");
-			
 			// 预处理
 			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TBuyerLevel.class);
 			SerializeFilter filter = propertyPreFilterable.constructFilter(TBuyerLevel.class);
-			PageResponse<TBuyerLevel> pagejson = new PageResponse<TBuyerLevel>();
+			PageResponse<TBuyerLevel> pagejson = new PageResponse<TBuyerLevel>(buyerLevelService.selectBuyerLevelPageList(queryable,entityWrapper));
 			content = JSON.toJSONString(pagejson, filter);
 		} catch (Exception ex) {
 			ex.printStackTrace();

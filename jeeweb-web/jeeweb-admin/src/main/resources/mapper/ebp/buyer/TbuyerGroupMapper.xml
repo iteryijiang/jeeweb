@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TBuyerGroupMapper" >
+
+  <resultMap id="TbuyerGroup" type="cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="groupCode" column="group_code" jdbcType="VARCHAR" />
+    <result property="groupName" column="group_name" jdbcType="VARCHAR" />
+    <result property="groupLeader" column="group_leader" jdbcType="VARCHAR" />
+    <result property="groupLeaderName" column="group_leader_name" jdbcType="VARCHAR" />
+    <result property="initGroupLeader" column="init_group_leader" jdbcType="VARCHAR" />
+    <result property="initGroupLeaderName" column="init_group_leader_name" jdbcType="VARCHAR" />
+  </resultMap>
+
+  
+  <select id="selectBuyerGroupPageList" resultMap="TbuyerGroup">
+      SELECT
+        bg.id,bg.group_name,bg.init_group_leader,bg.init_group_leader_name,bg.group_leader,bg.group_leader_name,
+        bg.create_by,bg.create_date,bg.update_by,bg.update_date,bg.remarks,bg.del_flag
+      FROM
+      t_buyer_group bg
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
+
+    <select id="getBuyerGroupMemberCountByGroupId" parameterType="Long" resultType="int">
+        SELECT
+          count(*)
+        FROM
+          t_buyer_group_member
+        where
+          group_id=#{groupId} and del_flag=0
+    </select>
+    
+   <update id="updateBuyerGroupForUpdateLeader" parameterType="cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup">
+      update
+        t_buyer_group
+      set
+        group_leader=#{groupLeader},group_leader_name=#{groupLeaderName},update_date=#{updateDate},update_by=#{updateBy.id}
+      where
+        id=#{id}
+  </update>
+
+</mapper>

@@ -9,17 +9,17 @@ import com.baomidou.mybatisplus.enums.IdType;
 import cn.jeeweb.web.common.entity.DataEntity;
 
 /**
- * 买手分组
+ * 买手等级表
  * 
  * @author ytj
  *
  */
 @TableName("t_buyer_level")
 @SuppressWarnings("serial")
-public class TBuyerLevel extends DataEntity<Long> {
+public class TBuyerLevel extends DataEntity<String> {
 
-	@TableId(value = "id", type = IdType.AUTO)
-	private Long id;
+	@TableId(value = "id", type = IdType.UUID)
+	private String id;
 	/**
 	 * 等级编码
 	 */
@@ -42,12 +42,12 @@ public class TBuyerLevel extends DataEntity<Long> {
 	 */
 	private BigDecimal commissionRatio;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
 	@Override
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

@@ -2,9 +2,11 @@ package cn.jeeweb.web.ebp.buyer.controller;
 
 import java.io.IOException;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,11 +36,14 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 
 @RestController
-@RequestMapping("${jeeweb.admin.url.prefix}/buyer/buyerInfo")
-@ViewPrefix("ebp/buyergroup")
-@RequiresPathPermission("buyer:buyerInfo")
+@RequestMapping("${jeeweb.admin.url.prefix}/buyer/buyergroup")
+@ViewPrefix("ebp/buyer")
+@RequiresPathPermission("buyer:buyergroup")
 @Log(title = "买手分组")
 public class TBuyerGroupController  extends BaseBeanController<TBuyerGroup> {
+
+	@Resource(name = "buyerGroupService")
+	private TBuyerGroupService buyerGroupService;
 
 	/**
 	 * 买手分组列表页面
@@ -48,7 +53,7 @@ public class TBuyerGroupController  extends BaseBeanController<TBuyerGroup> {
 	 * @param response
 	 * @return
 	 */
-	@GetMapping(value = "buyerGroupList")
+	@GetMapping(value = "view")
 	@RequiresMethodPermissions("view")
 	public ModelAndView goToBuyerGroupListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = displayModelAndView("g_buyerGroupList");
@@ -74,11 +79,10 @@ public class TBuyerGroupController  extends BaseBeanController<TBuyerGroup> {
 		try {
 			EntityWrapper<TBuyerGroup> entityWrapper = new EntityWrapper<TBuyerGroup>(entityClass);
 			propertyPreFilterable.addQueryProperty("id");
-			
 			// 预处理
 			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TBuyerLevel.class);
 			SerializeFilter filter = propertyPreFilterable.constructFilter(TBuyerLevel.class);
-			PageResponse<TBuyerGroup> pagejson = new PageResponse<TBuyerGroup>();
+			PageResponse<TBuyerGroup> pagejson = new PageResponse<TBuyerGroup>(buyerGroupService.selectBuyerGroupPageList(queryable, entityWrapper));
 			content = JSON.toJSONString(pagejson, filter);
 		} catch (Exception ex) {
 			ex.printStackTrace();
