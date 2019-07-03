@@ -1,7 +1,7 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手佣金',''), libs: ''}){ %>
 
-<#grid:grid id="buyerCommissionGrid" url="${adminPath}/buyer/buyerCommission/ajaxBuyerCommissionlList" sortname="applyNo" sortorder="desc" sortable="false">
-<#grid:column label="月份" width="90" query="true" condition="like" name="buyerTaskNo" align="center"/>
+<#grid:grid id="buyerCommissionGroupGrid" url="${adminPath}/buyer/buyerCommission/ajaxBuyerCommissionGrouplList"  multiselect="false" sortname="applyNo" sortorder="desc" sortable="false">
+<#grid:column label="月份" width="90" query="true" queryMode="date"  condition="between"  name="buyerTaskNo" align="center"/>
 <#grid:column label="买手名称" name="goodsName" query="true" condition="like" width="140" />
 <#grid:column label="任务佣金" name="shopName"  width="100" />
 <#grid:column label="小组提成" name="buyerNo" width="80" align="center"/>

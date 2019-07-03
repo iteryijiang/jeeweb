@@ -1,17 +1,21 @@
 package cn.jeeweb.web.ebp.buyer.controller;
 
+import cn.jeeweb.common.http.PageResponse;
 import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
 import cn.jeeweb.common.query.data.Queryable;
+import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
+import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import org.springframework.beans.BeanUtils;
@@ -20,9 +24,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
+import com.alibaba.fastjson.serializer.SerializeFilter;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,6 +42,8 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
 
     @Autowired
     private TtaskBaseService ttaskBaseService;
+    @Resource(name = "tbuyerInfoService")
+    private TbuyerInfoService tbuyerInfoService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -126,40 +133,64 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
     */
     @RequestMapping(value = "ajaxListBuyer", method = { RequestMethod.GET, RequestMethod.POST })
     @RequiresMethodPermissions("view")
-    public void ajaxListDetail(@PathVariable("id") String id, Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response)
+    public void ajaxListBuyer(Queryable queryable, PropertyPreFilterable propertyPreFilterable,HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        EntityWrapper<TbuyerInfo> entityWrapper = new EntityWrapper<>(entityClass);
-        propertyPreFilterable.addQueryProperty("id");
-        StringUtils.printJson(response, null);
+        String content = null;
+		try {
+			EntityWrapper<TbuyerInfo> entityWrapper = new EntityWrapper<TbuyerInfo>(entityClass);
+			propertyPreFilterable.addQueryProperty("id");
+			// 预处理
+			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TbuyerInfo.class);
+			SerializeFilter filter = propertyPreFilterable.constructFilter(TbuyerInfo.class);
+			PageResponse<TbuyerInfo> pagejson = new PageResponse<TbuyerInfo>(tbuyerInfoService.selectBuyerInfoPageList(queryable, entityWrapper));
+			content = JSON.toJSONString(pagejson, filter);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			StringUtils.printJson(response, content);
+		}
+        
     }
     
+    
     /**
-     * 编辑买手信息
-     * 
-     * @param model
-     * @param request
-     * @param response
-     * @return
-     */
-    @GetMapping(value = "initBuyerInfo")
-    @RequiresMethodPermissions("view")
-    public ModelAndView initBuyer(Model model, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView mav = displayModelAndView("b_buyerInfo_edit");
-        return mav;
-    }
-
-    /**
-     * 保存买手信息
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(value = "saveBuyerInfo", method = { RequestMethod.GET, RequestMethod.POST })
-    @RequiresMethodPermissions("view")
-    public Response saveBuyerInfo( @RequestBody JSONObject jsonObject, HttpServletRequest request,	HttpServletResponse response)
-            throws IOException {
-    	
-    	return Response.ok("操作成功！");
-    }
+	 * 初始化编辑
+	 * 
+	 * @param id
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@GetMapping(value = "{id}/update")
+	public ModelAndView update(@PathVariable("id") String id, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		TbuyerInfo retObj = tbuyerInfoService.getTbuyerInfoById(id);
+		model.addAttribute("data", retObj);
+		return displayModelAndView("b_buyerInfo_edit");
+	}
+    
+	
+	/**
+	 * 编辑保存
+	 * 
+	 * @param entity
+	 * @param result
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@PostMapping("{id}/update")
+	@Log(logType = LogType.UPDATE)
+	@RequiresMethodPermissions("update")
+	public Response update(TbuyerInfo entity, BindingResult result, HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			tbuyerInfoService.updateTbuyerInfoById(entity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Response.ok("更新成功");
+	}
+	
 }

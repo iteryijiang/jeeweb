@@ -1,31 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TbuyerInfoMapper" >
-  <resultMap id="TbuyerInfo" type="cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result property="buyerName" column="buyerName" jdbcType="VARCHAR" />
-    <result property="loginName" column="loginName" jdbcType="VARCHAR" />
-    <result property="accountLevel" column="accountLevel" jdbcType="VARCHAR" />
-    <result property="phoneNum" column="phoneNum" jdbcType="NUMERIC" />
-    <result property="totalMoney" column="totalMoney" jdbcType="NUMERIC" />
-    <result property="withdrawalMoney" column="withdrawalMoney" jdbcType="VARCHAR" />
-      <result property="userid" column="userid" jdbcType="VARCHAR" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
-    DISTINCT
-    t.id
-  </sql>
-  
-  <select id="selectUserList" resultMap="TbuyerInfo">
-	  select
-   	    <include refid="Base_Column_List" />
-      from T_shop_Info t
-       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
-		  <where>
-		    ${ew.sqlSegment}
-		  </where>
-	   </if>
-  </select>
+<mapper
+	namespace="cn.jeeweb.web.ebp.buyer.mapper.TbuyerInfoMapper">
+	<resultMap id="TbuyerInfo" type="cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result property="buyername" column="buyerName" jdbcType="VARCHAR" />
+		<result property="loginname" column="loginName" jdbcType="VARCHAR" />
+		<result property="accountlevel" column="accountLevel" jdbcType="VARCHAR" />
+		<result property="phonenum" column="phoneNum" jdbcType="NUMERIC" />
+		<result property="totalmoney" column="totalMoney" jdbcType="NUMERIC" />
+		<result property="withdrawalmoney" column="withdrawalMoney" jdbcType="VARCHAR" />
+		<result property="userid" column="userid" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		DISTINCT
+		t.id
+	</sql>
+
+	<select id="selectBuyerInfoList" resultMap="TbuyerInfo">
+		SELECT
+		tbuy.id, tbuy.buyerName buyername,tbuy.loginName loginname,
+		tbuy.accountLevel accountlevel,tbuy.phoneNum phonenum,tbuy.totalMoney totalmoney,tbuy.withdrawalMoney withdrawalmoney,tbuy.remarks,tbuy.userid,
+		utb.email, utb.freeze_status, utb.phone,
+		tl.level_code, tl.level_name
+		FROM
+		t_buyer_info tbuy
+		INNER JOIN sys_user utb ON tbuy.userid = utb.id
+		INNER JOIN t_buyer_level tl ON tl.id = tbuy.accountLevel
+		<if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+			<where>
+				${ew.sqlSegment}
+			</where>
+		</if>
+	</select>
+
+	<select id="selectBuyerInfoById" resultMap="TbuyerInfo"
+		parameterType="String">
+		SELECT
+		tbuy.id, tbuy.buyerName,tbuy.loginName,
+		tbuy.accountLevel,tbuy.phoneNum,tbuy.totalMoney,tbuy.withdrawalMoney,tbuy.remarks,tbuy.userid,
+		utb.email, utb.freeze_status, utb.phone,
+		tl.level_code, tl.level_name
+		FROM
+		t_buyer_info tbuy
+		INNER JOIN sys_user utb ON tbuy.userid = utb.id
+		INNER JOIN t_buyer_level tl ON tl.id = tbuy.accountLevel
+		where tbuy.id=#{id}
+	</select>
 
 </mapper>

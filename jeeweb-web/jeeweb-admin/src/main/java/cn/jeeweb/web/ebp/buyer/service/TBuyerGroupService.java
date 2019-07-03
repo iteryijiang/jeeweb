@@ -28,6 +28,14 @@ public interface TBuyerGroupService extends ICommonService<TBuyerGroup> {
 	 */
 	Page<TBuyerGroup> selectBuyerGroupPageList(Queryable queryable, Wrapper<TBuyerGroup> wrapper);
 	
+	/***
+	 * 关键字检索买手分组
+	 * 
+	 * @param keyWord
+	 * @return
+	 */
+	List<TBuyerGroup> findBuyerGroupByKeyWord(String keyWord);
+	
 	/**
 	 * 新增买手分组信息
 	 * 

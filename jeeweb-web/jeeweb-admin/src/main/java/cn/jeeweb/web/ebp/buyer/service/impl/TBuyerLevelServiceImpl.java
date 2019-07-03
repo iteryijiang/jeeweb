@@ -2,17 +2,14 @@ package cn.jeeweb.web.ebp.buyer.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import cn.jeeweb.common.mybatis.mvc.parse.QueryToWrapper;
 import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
-import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import cn.jeeweb.common.mybatis.mvc.service.impl.CommonServiceImpl;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 import cn.jeeweb.web.ebp.buyer.mapper.TBuyerLevelMapper;
@@ -88,7 +85,7 @@ public class TBuyerLevelServiceImpl extends CommonServiceImpl<TBuyerLevelMapper,
 	}
 
 	@Override
-	public TBuyerLevel getBuyerLevelById(long id) {
+	public TBuyerLevel getBuyerLevelById(String id) {
 		return baseMapper.selectById(id);
 	}
 	

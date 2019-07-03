@@ -23,7 +23,7 @@ public interface TbuyerInfoService extends ICommonService<TbuyerInfo> {
 	 * @param wrapper
 	 * @return
 	 */
-	 Page<TbuyerInfo> selectApplyPageList(Queryable queryable, Wrapper<TbuyerInfo> wrapper);
+	 Page<TbuyerInfo> selectBuyerInfoPageList(Queryable queryable, Wrapper<TbuyerInfo> wrapper);
 
 	/**
 	 * 编辑买手信息

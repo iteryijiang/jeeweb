@@ -1,6 +1,8 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -22,6 +24,36 @@ public class TbuyerInfo extends DataEntity<String> {
 	private BigDecimal totalmoney;//	double	10	4	-1	0	0	0	0		0					0	0
 	private String withdrawalmoney;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
+	/**
+	 * 买手等级
+	 * 
+	 */
+	@TableField(exist = false)
+	private String groupName;
+	/**
+	 * 买手等级
+	 * 
+	 */
+	@TableField(exist = false)
+	private String levelName;
+	@TableField(exist = false)
+	private String levelCode;
+	/**
+	 * 用户邮箱
+	 */
+	@TableField(exist = false)
+	private String email;
+	/**
+	 * 冻结状态
+	 */
+	@TableField(exist = false)
+	private String freezeStatus;
+	/**
+	 * 手机号码
+	 */
+	@TableField(exist = false)
+	private String phone;
+	
 	@Override
 	public String getId() {
 		return id;
@@ -87,4 +119,54 @@ public class TbuyerInfo extends DataEntity<String> {
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}
+
+	public String getLevelName() {
+		return levelName;
+	}
+
+	public void setLevelName(String levelName) {
+		this.levelName = levelName;
+	}
+
+	public String getLevelCode() {
+		return levelCode;
+	}
+
+	public void setLevelCode(String levelCode) {
+		this.levelCode = levelCode;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getFreezeStatus() {
+		return freezeStatus;
+	}
+
+	public void setFreezeStatus(String freezeStatus) {
+		this.freezeStatus = freezeStatus;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	
+	
 }

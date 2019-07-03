@@ -1,20 +1,63 @@
-<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('问题反馈',''), libs: ''}){ %>
-
-<#grid:grid id="ttaskBaseGrid" url="${adminPath}/buyer/TmyTaskDetail/ajaxApplyTaskList" sortname="applyNo" sortorder="desc" sortable="false">
-<#grid:column label="任务编号" width="90" query="true" condition="like" name="buyerTaskNo" align="center"/>
-<#grid:column label="商品名称" name="goodsName" width="140" />
-<#grid:column label="商家名称" name="shopName" query="true" condition="like" width="100" />
-<#grid:column label="买手名称" name="buyerNo" query="true" condition="like" width="80" align="center"/>
-<#grid:column label="反馈类型" name="applyType" query="true" queryMode="select" condition="eq"  dict="tasktype" dict="applyType" width="80"/>
-<#grid:column label="问题描述" name="applyDesc" width="120"/>
-<#grid:column label="反馈时间" name="applyTime" query="true" width="80" queryMode="date"  condition="between" align="center" />
-<#grid:column label="处理状态" name="applyStatus" query="true" align="center" queryMode="select" condition="eq" formatterValue="0:待处理;1:已处理" width="70"/>
-<#grid:column label="处理时间" name="handleTime" width="80" align="center"/>
-<#grid:column label="处理人" name="handleMan" width="80" align="center"/>
-<#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/getApplyTaskDetail/1/\"+row.id+\"' />
-<#grid:button title="驳回申请"  groupname="opt" function="rowDialogDetailRefresh" winwidth="500px" winheight="350px" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/initTurnDownApplyTask/\"+row.id+\"' />
-<#grid:toolbar  function="search" />
-<#grid:toolbar  function="reset" />
-</#grid:grid>
+<% layout('/layouts/form.html', {title: '买手信息', formId: 'tbuyerInfoForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+<#form:form id="tbuyerInfoForm" modelAttribute="data" method="post" class="form-horizontal">
+	<#form:hidden path="id"/>
+	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+		<tbody>
+			<tr>
+				<td  class="width-15 active text-right"><label><font color="red">*</font>买手编号:</label></td>
+				<td  class="width-35" >
+					<#form:input path="loginname" class="form-control"   htmlEscape="false"  datatype="*"  nullmsg="买手编号！"/>
+					<label class="Validform_checktip"></label>
+				</td>
+				<td  class="width-15 active text-right"><label><font color="red">*</font>买手名称:</label></td>
+				<td  class="width-35" >
+					<#form:input path="buyername" class="form-control"   htmlEscape="false"  datatype="*"  nullmsg="买手名称！"/>
+					<label class="Validform_checktip"></label>
+				</td>
+			</tr>
+			<tr>
+				<td  class="width-15 active text-right">
+					<label><font color="red">*</font>联系电话:</label>
+				</td>
+				<td class="width-35" >
+					<#form:input path="phone" class="form-control"   datatype="*" nullmsg="请输入联系电话！"  htmlEscape="false" />
+					<label class="Validform_checktip"></label>
+				</td>
+				<td  class="width-15 active text-right">
+					<label><font color="red">*</font>冻结状态:</label>
+				</td>
+				<td class="width-35" >
+					<#form:input path="freezeStatus" class="form-control"   datatype="*" nullmsg="请输入冻结状态！"  htmlEscape="false" />
+					<label class="Validform_checktip"></label>
+				</td>
+			</tr>
+			<tr>
+				<td  class="width-15 active text-right">
+					<label><font color="red">*</font>买手等级:</label>
+				</td>
+				<td class="width-35" >
+					<#form:input path="accountlevel" class="form-control"   datatype="*" nullmsg="请输入买手等级！"  htmlEscape="false" />
+					<label class="Validform_checktip"></label>
+				</td>
+				<td  class="width-15 active text-right">
+					<label>每单佣金:</label>
+				</td>
+				<td class="width-35" >
+					<label>￥</label>
+				</td>
+			</tr>
+			<tr>
+				<td  class="width-15 active text-right">
+					<label><font color="red">*</font>所属分组:</label>
+				</td>
+				<td class="width-35"  colspan="3">
+					<#form:combox nested="false" idField="id" keyField="groupName" effectiveFields="groupName,groupCode,groupLeaderName" multiWord="true" 
+					effectiveFieldsAlias="groupCode|分组编号,groupName|分组名称,groupLeaderName|组长" showHeader="true" path="shopid" dataUrl="${adminPath}/buyer/buyergroup/getBuyerGroupSuggest" />
+					<label class="Validform_checktip"></label>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</#form:form>
 <% } %>
+<#html:js name="suggest" />

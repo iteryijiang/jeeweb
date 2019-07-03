@@ -1,12 +1,11 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手等级',''), libs: ''}){ %>
 
-<#grid:grid id="tbuyerLevelGrid" url="${adminPath}/buyer/buyerlevel/ajaxBuyerLevelList" sortname="levelCode" sortorder="desc" sortable="false">
+<#grid:grid id="tbuyerLevelGrid" url="${adminPath}/buyer/buyerlevel/ajaxBuyerLevelList" multiselect="false"  sortname="levelCode" sortorder="desc" sortable="false">
 <#grid:column label="等级编号" width="90" name="levelCode" align="center"/>
 <#grid:column label="等级名称" name="levelName" width="140" />
 <#grid:column label="上一个等级" name="preLevelCode"  width="100" />
 <#grid:column label="下一个等级" name="nextLevelCode" width="80" align="center"/>
 <#grid:column label="每单佣金" name="commissionRatio" width="80"/>
-<#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="编辑" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/buyerlevel/initBuyerLevel/\"+row.id+\"' />
+<#grid:toolbar function="update" winwidth="500px" winheight="450px"  />
 </#grid:grid>
 <% } %>

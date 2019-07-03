@@ -1,13 +1,13 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手佣金',''), libs: ''}){ %>
 
-<#grid:grid id="buyerCommissionGrid" url="${adminPath}/buyer/buyerCommission/ajaxBuyerCommissionlList" sortname="applyNo" sortorder="desc" sortable="false">
-<#grid:column label="账期" width="90" query="true" condition="like" name="buyerTaskNo" align="center"/>
-<#grid:column label="买手名称" name="goodsName" width="140" />
-<#grid:column label="任务佣金" name="shopName" query="true" condition="like" width="100" />
-<#grid:column label="小组提成" name="buyerNo" query="true" condition="like" width="80" align="center"/>
-<#grid:column label="佣金总额" name="applyType" query="true" queryMode="select" condition="eq"  dict="tasktype" dict="applyType" width="80"/>
-<#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/getApplyTaskDetail/1/\"+row.id+\"' />
+<#grid:grid id="buyerCommissionGrid" url="${adminPath}/buyer/buyerCommission/ajaxBuyerCommissionlList"  multiselect="false" sortname="applyNo" sortorder="desc" sortable="false">
+<#grid:column label="账期" width="90" query="true" queryMode="date"  condition="between"  name="atime" align="center"/>
+<#grid:column label="买手名称" name="buyerName" query="true" condition="like" width="140" />
+<#grid:column label="任务数量" name="taskNum"  width="100" />
+<#grid:column label="任务链接" name="taskLinkNum"  width="100" />
+<#grid:column label="任务佣金" name="taskMoney"  width="100" />
+<#grid:column label="小组提成" name="groupMoney"  width="80" align="center"/>
+<#grid:column label="佣金总额" name="commissionMoney" width="80"/>
 <#grid:toolbar  function="search" />
 <#grid:toolbar  function="reset" />
 </#grid:grid>

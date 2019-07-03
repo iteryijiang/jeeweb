@@ -25,6 +25,16 @@
 		  </where>
 	   </if>
   </select>
+  
+  <select id="findBuyerGroupByKeyWord" resultMap="TbuyerGroup" parameterType="HashMap">
+      SELECT
+	        bg.id,bg.group_name,bg.init_group_leader,bg.init_group_leader_name,bg.group_leader,bg.group_leader_name,
+	        bg.create_by,bg.create_date,bg.update_by,bg.update_date,bg.remarks,bg.del_flag
+      FROM
+      	t_buyer_group bg
+      where
+      	bg.del_flag=0 and bg.group_name like '%${map.keyWord}%'
+  </select>
 
 
     <select id="getBuyerGroupMemberCountByGroupId" parameterType="Long" resultType="int">

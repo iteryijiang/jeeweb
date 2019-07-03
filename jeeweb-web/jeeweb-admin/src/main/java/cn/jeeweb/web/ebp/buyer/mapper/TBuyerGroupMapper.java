@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.buyer.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -21,6 +22,8 @@ import org.apache.ibatis.annotations.Param;
 public interface TBuyerGroupMapper extends BaseMapper<TBuyerGroup> {
 
 	List<TBuyerGroup> selectBuyerGroupPageList(Pagination page, @Param("ew") Wrapper<TBuyerGroup> wrapper);
+	
+	List<TBuyerGroup> findBuyerGroupByKeyWord(@Param("map") Map<String,Object> map);
 
 	int updateBuyerGroupForUpdateLeader(TBuyerGroup obj);
 	

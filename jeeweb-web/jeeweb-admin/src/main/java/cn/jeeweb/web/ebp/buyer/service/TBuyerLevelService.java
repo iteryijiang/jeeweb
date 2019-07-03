@@ -3,7 +3,6 @@ package cn.jeeweb.web.ebp.buyer.service;
 import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
 import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.Queryable;
-import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 
@@ -38,5 +37,5 @@ public interface TBuyerLevelService extends ICommonService<TBuyerLevel> {
 	 * @param id
 	 * @return
 	 */
-	TBuyerLevel getBuyerLevelById(long id);
+	TBuyerLevel getBuyerLevelById(String id);
 }

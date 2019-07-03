@@ -12,5 +12,9 @@ import java.util.List;
 @Mapper
 public interface TbuyerInfoMapper extends BaseMapper<TbuyerInfo> {
 	
-	List<TbuyerInfo> selectUserList(Pagination page, @Param("ew") Wrapper<TbuyerInfo> wrapper);
+	List<TbuyerInfo> selectBuyerInfoList(Pagination page, @Param("ew") Wrapper<TbuyerInfo> wrapper);
+	
+	TbuyerInfo selectBuyerInfoById(String id);
+	
+	
 }

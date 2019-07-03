@@ -1,14 +1,14 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手分组',''), libs: ''}){ %>
 
-<#grid:grid id="tbuyerGroupGrid" url="${adminPath}/buyer/buyergroup/ajaxBuyerGrouplList" sortname="id" sortorder="desc" sortable="false">
+<#grid:grid id="tbuyerGroupGrid" url="${adminPath}/buyer/buyergroup/ajaxBuyerGrouplList" multiselect="false" sortname="id" sortorder="desc" sortable="false">
 <#grid:column label="分组编号" width="90" name="groupCode" align="center"/>
 <#grid:column label="分组名称" name="groupName" width="140" />
 <#grid:column label="组长" name="groupLeaderName"  width="100" />
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="编辑" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/buyergroup/editBuyerGroup/\"+row.id+\"' />
 <#grid:button title="组长调整" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/buyergroup/editBuyerGroupLeader/\"+row.id+\"' />
 <#grid:button title="组员调整" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/buyergroup/editBuyerGroupMember/\"+row.id+\"' />
 <#grid:button title="删除" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/buyergroup/initBuyerLevel/\"+row.id+\"' />
-<#grid:toolbar function="add" />
+<#grid:toolbar function="add" winwidth="500px" winheight="350px"  />
+<#grid:toolbar function="update" winwidth="500px" winheight="350px"   />
 </#grid:grid>
 <% } %>

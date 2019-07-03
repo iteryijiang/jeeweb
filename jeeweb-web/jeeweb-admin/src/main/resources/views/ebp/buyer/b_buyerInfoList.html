@@ -1,14 +1,17 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手信息',''), libs: ''}){ %>
 
-<#grid:grid id="ttaskBaseGrid" url="${adminPath}/buyer/TbuyerInfo/ajaxListBuyer" sortname="applyNo" sortorder="desc" sortable="false">
-<#grid:column label="买手编号" width="90" query="true" condition="like" name="buyerTaskNo" align="center"/>
+<#grid:grid id="ttaskBaseGrid" url="${adminPath}/buyer/TbuyerInfo/ajaxListBuyer" multiselect="false" sortname="applyNo" sortorder="desc" sortable="false">
+<#grid:column label="买手编号" width="90" query="true" condition="like" name="loginname" align="center"/>
 <#grid:column label="买手名称" name="buyername" width="140" />
-<#grid:column label="买手等级" name="accountLevelName" query="true" condition="like" width="100" />
-<#grid:column label="所属分组" name="buyerGroupName" query="true" condition="like" width="80" align="center"/>
+<#grid:column label="买手等级" name="levelName" query="true" condition="like" width="100" />
+<#grid:column label="所属分组" name="groupName" query="true" condition="like" width="80" align="center"/>
+<#grid:column label="联系电话" name="phone"  width="80" align="center"/>
+<#grid:column label="冻结状态" name="freezeStatus"  width="80" align="center"/>
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
 <#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/getApplyTaskDetail/1/\"+row.id+\"' />
-<#grid:button title="编辑"  groupname="opt" function="rowDialogDetailRefresh" winwidth="500px" winheight="350px" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/initTurnDownApplyTask/\"+row.id+\"' />
-<#grid:button title="删除"  groupname="opt" function="rowDialogDetailRefresh" winwidth="500px" winheight="350px" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/initTurnDownApplyTask/\"+row.id+\"' />
+<#grid:toolbar function="update" winwidth="650px" winheight="550px"  />
+<#grid:toolbar function="delete"  />
+
 <#grid:toolbar  function="search" />
 <#grid:toolbar  function="reset" />
 </#grid:grid>

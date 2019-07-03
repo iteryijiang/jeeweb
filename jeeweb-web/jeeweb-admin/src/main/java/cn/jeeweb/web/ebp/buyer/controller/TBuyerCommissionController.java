@@ -44,7 +44,7 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 	 */
 	@GetMapping(value = "view")
 	@RequiresMethodPermissions("view")
-	public ModelAndView goToBuyerCommissionListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView goToBuyerCommissionGroupListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = displayModelAndView("c_buyerCommissionGroupList");
 		return mav;
 	}
@@ -59,10 +59,10 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "ajaxBuyerCommissionlList", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "ajaxBuyerCommissionGrouplList", method = { RequestMethod.GET, RequestMethod.POST })
 	@Log(logType = LogType.SELECT)
 	@RequiresMethodPermissions("view")
-	public void getBuyerCommissionList(Queryable queryable, PropertyPreFilterable propertyPreFilterable,
+	public void getBuyerCommissionGroupList(Queryable queryable, PropertyPreFilterable propertyPreFilterable,
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String content = null;
 		try {
@@ -105,4 +105,53 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 		}
 		return mav;
 	}
+	
+	/**
+	 * 买手佣金列表页面
+	 * 
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@GetMapping(value = "buyerCommissIonList")
+	@RequiresMethodPermissions("view")
+	public ModelAndView goToBuyerCommissionListPage(Model model, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = displayModelAndView("c_buyerCommissionList");
+		return mav;
+	}
+	
+
+	/***
+	 * AJAX查询买手佣金列表
+	 *
+	 * @param queryable
+	 * @param propertyPreFilterable
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "ajaxBuyerCommissionlList", method = { RequestMethod.GET, RequestMethod.POST })
+	@Log(logType = LogType.SELECT)
+	@RequiresMethodPermissions("view")
+	public void getBuyerCommissionList(Queryable queryable, PropertyPreFilterable propertyPreFilterable,
+			HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String content = null;
+		try {
+			EntityWrapper<TBuyerCommissionRecord> entityWrapper = new EntityWrapper<TBuyerCommissionRecord>(entityClass);
+			propertyPreFilterable.addQueryProperty("id");
+			
+			// 预处理
+			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TBuyerLevel.class);
+			SerializeFilter filter = propertyPreFilterable.constructFilter(TBuyerLevel.class);
+			PageResponse<TBuyerCommissionRecord> pagejson = new PageResponse<TBuyerCommissionRecord>();
+			content = JSON.toJSONString(pagejson, filter);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			StringUtils.printJson(response, content);
+		}
+	}
+	
+	
 }
