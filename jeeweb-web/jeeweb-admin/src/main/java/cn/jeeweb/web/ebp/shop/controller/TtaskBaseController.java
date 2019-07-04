@@ -199,6 +199,10 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             ttaskBase.setShopid(userid);
             ttaskBase.setSkuid(JdSpider.getGoodId_ByURL(ttaskBase.gettUrl()));
             TshopInfo si = tshopInfoService.selectOne(ttaskBase.getShopid());
+            Map mapSi = new HashMap();//修改商户金额
+            mapSi.put("id",si.getId());
+            mapSi.put("oldtaskDeposit",si.getTaskdeposit());//原商户冻结金额
+            mapSi.put("oldAvailableDeposit",si.getAvailabledeposit());//原商户可用金额
             //      ttaskBase.setTaskno((new Date().getTime())+""+(new Random().nextInt(9999)+1));
             ttaskBase.setTaskno(TsequenceSpider.getShopNo());
             ttaskBase.setCanreceivenum(ttaskBase.getTasknum());
@@ -224,9 +228,14 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             }else {
                 si.setTaskdeposit(si.getTaskdeposit().add(price));
             }
+
+            mapSi.put("taskDeposit",si.getTaskdeposit());//新商户冻结金额
+            mapSi.put("availableDeposit",si.getAvailabledeposit());//新商户可用金额
+            mapSi.put("lastRepair",userid);//修改人
+            mapSi.put("lastTime",Calendar.getInstance().getTime());//修改时间
             ttaskBase.setTaskdeposit(price);
 //            ttaskBase.setPresentdeposit(new BigDecimal(countSum));
-            ttaskBaseService.addTask(ttaskBase,si);
+            ttaskBaseService.addTask(ttaskBase,mapSi);
         }catch (Exception e){
             e.printStackTrace();
             return Response.error("发布失败！");
@@ -880,20 +889,27 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     @Log(logType = LogType.UPDATE)
     @RequiresMethodPermissions("upStatus")
     public Response upTaskState(@PathVariable("id") String id,@PathVariable("status") String status, HttpServletRequest request,
-                            HttpServletResponse response) {
+                                HttpServletResponse response) {
         TtaskBase tb = ttaskBaseService.selectById(id);
+        Map<String,Object> mapTb = new HashMap<String,Object>();
+        mapTb.put("id",tb.getId());
+        mapTb.put("oldstatus",tb.getStatus());
         if("2".equals(tb.getStatus())){
             return Response.error("已撤销任务,不能重复撤销!");
         }
-        TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
         tb.setStatus(status);
+        mapTb.put("status",tb.getStatus());
+        TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
         BigDecimal price = new BigDecimal(0);
         if(tb.getPresentdeposit()!=null){
             price = tb.getPresentdeposit().multiply(new BigDecimal(tb.getCanreceivenum())).add(tb.getActualprice().multiply(new BigDecimal(tb.getCanreceivenum())));
             si.setAvailabledeposit(si.getAvailabledeposit().add(price));
             si.setTaskdeposit(si.getTaskdeposit().subtract(price));
         }
-        ttaskBaseService.upTask(tb,si,TfinanceRechargeService.rechargetype_4,price);
+
+        mapTb.put("lastRepair",UserUtils.getUser().getId());//修改人
+        mapTb.put("lastTime",Calendar.getInstance().getTime());//修改时间
+        ttaskBaseService.upTask(tb,si,TfinanceRechargeService.rechargetype_4,price,mapTb);
 
         return Response.ok("任务撤销成功!");
     }

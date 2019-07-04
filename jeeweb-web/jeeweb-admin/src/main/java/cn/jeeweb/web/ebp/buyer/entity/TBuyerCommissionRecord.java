@@ -27,6 +27,12 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 	 * 佣金账期
 	 */
 	private Date atime;
+
+	/**
+	 * 所属月份
+	 */
+	private int dataMonth;
+
 	/**
 	 * 任务佣金
 	 */
@@ -94,7 +100,7 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 	/**
 	 * 生成佣金记录时买手等级id
 	 */
-	private long buyerLevel;
+	private String buyerLevel;
 	
 	/**
 	 * 生成佣金记录时买手等级名称
@@ -111,6 +117,18 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 	 * 
 	 */
 	private String buyerGroupLeader;
+
+	/**
+	 * 所属分组
+	 *
+	 */
+	private String buyerGroup;
+
+	/**
+	 * 组长每单佣金
+	 *
+	 */
+	private BigDecimal buyerGroupLeaderCommissionValue=BigDecimal.ZERO;
 
 	public Long getId() {
 		return id;
@@ -177,11 +195,11 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 		this.buyerName = buyerName;
 	}
 
-	public long getBuyerLevel() {
+	public String getBuyerLevel() {
 		return buyerLevel;
 	}
 
-	public void setBuyerLevel(long buyerLevel) {
+	public void setBuyerLevel(String buyerLevel) {
 		this.buyerLevel = buyerLevel;
 	}
 
@@ -256,6 +274,28 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 	public void setTaskNumInit(long taskNumInit) {
 		this.taskNumInit = taskNumInit;
 	}
-	
-	
+
+	public int getDataMonth() {
+		return dataMonth;
+	}
+
+	public void setDataMonth(int dataMonth) {
+		this.dataMonth = dataMonth;
+	}
+
+	public BigDecimal getBuyerGroupLeaderCommissionValue() {
+		return buyerGroupLeaderCommissionValue;
+	}
+
+	public void setBuyerGroupLeaderCommissionValue(BigDecimal buyerGroupLeaderCommissionValue) {
+		this.buyerGroupLeaderCommissionValue = buyerGroupLeaderCommissionValue;
+	}
+
+	public String getBuyerGroup() {
+		return buyerGroup;
+	}
+
+	public void setBuyerGroup(String buyerGroup) {
+		this.buyerGroup = buyerGroup;
+	}
 }

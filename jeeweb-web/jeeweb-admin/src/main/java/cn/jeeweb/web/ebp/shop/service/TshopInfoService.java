@@ -33,4 +33,6 @@ public interface TshopInfoService extends ICommonService<TshopInfo> {
      */
     @Transactional
     void updateShopMoney(String shopId, BigDecimal taskDeposit, BigDecimal AvailableDeposit, String lastRepair);
+    @Transactional
+    int updateTaskdeposit(Map<String,Object> paramMap);
 }

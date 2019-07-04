@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TBuyerCommissionRecordMapper" >
+
+  <resultMap id="TBuyerCommissionRecord" type="cn.jeeweb.web.ebp.buyer.entity.TBuyerCommissionRecord" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="groupCode" column="group_code" jdbcType="VARCHAR" />
+    <result property="groupName" column="group_name" jdbcType="VARCHAR" />
+    <result property="groupLeader" column="group_leader" jdbcType="VARCHAR" />
+    <result property="groupLeaderName" column="group_leader_name" jdbcType="VARCHAR" />
+    <result property="initGroupLeader" column="init_group_leader" jdbcType="VARCHAR" />
+    <result property="initGroupLeaderName" column="init_group_leader_name" jdbcType="VARCHAR" />
+  </resultMap>
+
+    <select id="getTBuyerCommissionRecordByBuyerIdAtime" parameterType="HashMap">
+      select
+        *
+      from
+        t_buyer_commission_record tb
+      where
+        tb.atime=#{atime} and tb.buyer_id=#{buyerId}
+    </select>
+
+    <!-- 清空临时表数据 -->
+   <update id="updateBuyerCommissionForTruncateTemp">
+      TRUNCATE TABLE t_buyer_commission_record_task_temp;
+      TRUNCATE TABLE t_buyer_commission_record_group_temp;
+    </update>
+  <!-- 添加买手佣金信息,每天执行一次 -->
+  <insert id="insertBuyerCommissionInfo" parameterType="HashMap">
+    INSERT INT t_buyer_commission_record
+    (
+        id,data_month,atime,commission_money,commission_money_init,task_money,task_money_init,group_money,group_money_init,
+        task_link_num,task_link_num_init,buyer_id,buyer_name,buyer_level,buyer_level_name,dtime,buyer_group_leader,buyer_group,
+        create_by,create_date,update_by,update_date,remarks,del_flag
+    )
+  SELECT
+        REPLACE(UUID(),'-','') as id,
+        #{map.dataMonth} AS data_month,
+        #{map.atime} AS atime,
+       case
+            when leveltb.commission_type=1 then if(sum(ifnull(taskTb.commision, 0))>0,leveltb.commission_value,0)
+            else
+                CASE
+                  when sum(ifnull(taskTb.commision, 0))>0 then if(sum(ifnull(taskTb.commision, 0))>leveltb.commission_min,sum(ifnull(taskTb.commision, 0)),leveltb.commission_min)
+                  else 0
+                end
+        end  commission_money,
+        case
+			when leveltb.commission_type=1 then if(sum(ifnull(taskTb.commision, 0))>0,leveltb.commission_value,0)
+			else
+				CASE when sum(ifnull(taskTb.commision, 0))>0 then if(sum(ifnull(taskTb.commision, 0))>leveltb.commission_min,sum(ifnull(taskTb.commision, 0)),leveltb.commission_min)
+					 else 0
+				end
+        end   commission_money_init,
+        0 AS task_money,
+        0 AS task_money_init,
+        0 AS group_money,
+        0 AS group_money_init,
+        sum(IF(taskTb.id IS NULL, 0, 1)) task_link_num,
+        sum(IF(taskTb.id IS NULL, 0, 1)) task_link_num_init,
+        bitb.userid AS buyer_id,
+        bitb.buyerName,
+        bitb.accountLevel AS buyer_level,
+        leveltb.level_name AS buyer_level_name,
+        NOW() AS dtime,
+        grouptb.group_leader AS buyer_group_leader,
+        #{map.createBy} create_by,
+        grouptb.id AS buyer_group,
+        NOW() AS create_date,
+         #{map.createBy} update_by,
+        NOW() AS update_date,
+        '' remarks,
+        0 del_flag
+    FROM
+        t_buyer_info bitb
+    INNER JOIN t_buyer_group grouptb ON grouptb.id = bitb.group_id
+    INNER JOIN t_buyer_group_member membertb ON membertb.id = bitb.id AND membertb.del_flag = 0
+    INNER JOIN t_buyer_level leveltb ON leveltb.id = bitb.accountLevel
+    LEFT JOIN t_my_task_detail taskTb ON taskTb.buyerid = bitb.userid AND taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime}
+    WHERE
+        bitb.del_flag = 0
+    GROUP BY
+        taskTb.buyerid
+  </insert>
+    <!-- 添加买手任务金 -->
+   <insert id="insertBuyerCommissionTaskNumTemp" parameterType="HashMap">
+    insert into t_buyer_commission_record_task_temp
+      (buyer_id,atime,task_num)
+    SELECT
+        taskTb.buyerid buyer_id,#{map.atime} as atime,count(DISTINCT(taskTb.taskid)) as task_num
+    FROM
+        t_buyer_info bitb
+        inner join t_my_task_detail taskTb on taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and taskTb.buyerid = bitb.userid
+    GROUP BY
+        bitb.id
+  </insert>
+
+<!-- 添加分组提成佣金 -->
+   <insert id="insertBuyerCommissionGroupTemp" parameterType="HashMap">
+        insert into t_buyer_commission_record_group_temp
+          (buyer_id,atime,commission_group_money)
+        SELECT
+          bitb.userid buyer_id,#{map.atime} as atime,sum(ifnull(taskTb.commision, 0)) commission_group_money
+        FROM
+          t_buyer_info bitb
+          INNER JOIN t_buyer_group grouptb ON grouptb.group_leader =bitb.id
+          INNER JOIN t_buyer_group_member membertb ON membertb.group_id = grouptb.id AND membertb.del_flag = 0 and membertb.mem_type=0
+          inner JOIN t_my_task_detail taskTb ON taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and membertb.buyer_id=taskTb.buyerid
+        WHERE
+          bitb.del_flag = 0
+        GROUP BY
+          taskTb.buyerid
+  </insert>
+
+    <!-- 更改佣金表分组数据 -->
+    <update id="updateBuyerGroupMoney" parameterType="HashMap">
+        update
+        t_buyer_commission_record tb
+        inner join t_buyer_commission_record_group_temp temp on tb.buyer_id=temp.buyer_id and tb.atime=temp.atime
+        set
+        tb.group_money=temp.commission_group_money,tb.group_money_init=temp.commission_group_money
+        where tb.atime BETWEEN #{map.beginTime} AND  #{map.endTime}
+    </update>
+
+    <!-- 更改佣金表任务数据 -->
+    <update id="updateBuyerTaskNum" parameterType="HashMap">
+       update
+        t_buyer_commission_record tb
+       inner join t_buyer_commission_record_task_temp temp on tb.buyer_id=temp.buyer_id and tb.atime=temp.atime
+        set
+        tb.task_num=temp.task_num,tb.task_num_init=temp.task_num
+       where tb.atime BETWEEN #{map.beginTime} AND  #{map.endTime}
+    </update>
+
+    <!-- 更改佣金表任务数据 -->
+    <update id="updateBuyCommissionForBack" parameterType="cn.jeeweb.web.ebp.buyer.entity.TBuyerCommissionRecord">
+       update
+        t_buyer_commission_record tb
+        set
+        tb.task_money=tb.task_money-#{taskMoney},tb.task_num=tb.task_num-#{taskNum},
+        tb.group_money=tb.group_money-#{groupMoney},tb.task_link_num=tb.task_link_num-#{taskLinkNum}
+       where tb.atime= #{atime} and tb.buyer_id=#{buyerId}
+    </update>
+
+
+</mapper>

@@ -70,4 +70,12 @@
         where
             userid=#{map.shopId}
     </update>
+
+    <update id="updateTaskdeposit" parameterType="HashMap">
+        update
+            T_shop_Info
+        set
+            taskDeposit=${map.taskDeposit},AvailableDeposit=${map.availableDeposit},update_by=#{map.lastRepair},update_date=#{map.lastTime}
+        where id=#{map.id} and taskDeposit=#{map.oldtaskDeposit} and AvailableDeposit=#{map.oldAvailableDeposit}
+    </update>
 </mapper>

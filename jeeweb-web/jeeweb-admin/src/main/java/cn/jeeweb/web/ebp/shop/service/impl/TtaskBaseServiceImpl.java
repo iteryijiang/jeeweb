@@ -64,16 +64,24 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
         return baseMapper.sumTtaskBase(m);
     }
 
-    public boolean addTask(TtaskBase ttaskBase, TshopInfo si){
-        tshopInfoService.updateById(si);
+    public boolean addTask(TtaskBase ttaskBase, Map<String,Object> paramMap){
+
+        int num = tshopInfoService.updateTaskdeposit(paramMap);
+        if(num!=1){
+            throw  new RuntimeException("更改商户余额失败!");
+        }
+        BigDecimal availableDeposit = new BigDecimal(paramMap.get("availableDeposit").toString());
         insert(ttaskBase);
-        TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),ttaskBase.getId(),TfinanceRechargeService.rechargetype_2,ttaskBase.getTaskdeposit(),si.getAvailabledeposit());
+        TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),ttaskBase.getId(),TfinanceRechargeService.rechargetype_2,ttaskBase.getTaskdeposit(),availableDeposit);
         tfinanceRechargeLogService.insert(log);
         return true;
     }
-    public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype,BigDecimal price){
+    public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype,BigDecimal price,Map<String,Object> paramMap){
+        int num =  baseMapper.updateTaskBaseStatus(paramMap);
+        if(num!=1){
+            throw  new RuntimeException("任务撤销失败!");
+        }
         tshopInfoService.updateById(si);
-        updateById(ttaskBase);
         TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),ttaskBase.getId(),rechargetype,price,si.getAvailabledeposit());
         tfinanceRechargeLogService.insert(log);
         return true;

@@ -35,4 +35,7 @@ public interface TtaskBaseMapper extends BaseMapper<TtaskBase> {
 	List<Map> selectWithdrawalMoneyList(@Param("map") Map map);
 
 	List<Map> listFinanceShopReport(@Param("map") Map map);
+
+
+	int updateTaskBaseStatus(@Param("map") Map map);
 }

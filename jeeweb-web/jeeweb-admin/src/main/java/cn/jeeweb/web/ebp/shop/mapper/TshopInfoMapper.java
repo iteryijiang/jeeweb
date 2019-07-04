@@ -31,4 +31,11 @@ public interface TshopInfoMapper extends BaseMapper<TshopInfo> {
 	 * @return
 	 */
 	List<TshopInfo> findShopInfoByKeyWord(@Param("map") Map map);
+
+	/**任务发布修改商户金额
+	 *
+	 * @param map
+	 * @return
+	 */
+	int updateTaskdeposit(@Param("map") Map map);
 }

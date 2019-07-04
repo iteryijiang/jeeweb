@@ -202,8 +202,7 @@
                             </div>
                             <div class='make-sure'>
                                 <input type="hidden" id="presentdepositID">
-                                <button class='btn btn-warning' onclick="TaskConfirm(0)">确认提交信息</button>
-                            </div>
+                                <button class='btn btn-warning' onclick="TaskConfirm(0,$(this))">确认提交信息</button>                            </div>
                         </div>
                     </div>
                   </div>
@@ -246,7 +245,7 @@
        //商品具体信息
         //默认现实手机端
         $('#task_accordin .item_area').show();
-       function TaskConfirm(index){
+        function TaskConfirm(index,obj){
          $('.good_basic_info').find('input').each(function(index,ele){
             if($(this).hasClass('must-fill') && $(this).val()==''){
                 $(this).addClass('red').focus()
@@ -352,6 +351,7 @@
         //填充任务信息
         // TaskAreaInfo()
            console.log(good_detail_info);
+            obj.attr('disabled',true);//改变提交按钮上的文字并将按钮设置为不可点击
            good_detail_info.tType="jd";//先暂时默认jd，后续改为字典获取。
            $.ajax({
                type: "POST",
@@ -360,6 +360,7 @@
                data: JSON.stringify(good_detail_info),
                dataType: "json",
                success: function(data){
+                   obj.attr('disabled',false);//改变提交按钮上的文字并将按钮设置为可以点击
                    alert(data.msg);
                    if("0"==data.code){
                        //刷新表单
@@ -371,6 +372,7 @@
                    }
                },
                error: function(data){
+                   obj.attr('disabled',false);//改变提交按钮上的文字并将按钮设置为可以点击
                }
            });
        }

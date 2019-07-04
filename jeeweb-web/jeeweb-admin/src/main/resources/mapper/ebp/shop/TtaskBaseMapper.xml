@@ -284,4 +284,12 @@
       and sb.shopname like #{map.shopname}
     </if>
   </select>
+
+  <update id="updateTaskBaseStatus" parameterType="HashMap">
+        update
+            t_task_base
+        set
+            status=${map.status},update_by=#{map.lastRepair},update_date=#{map.lastTime}
+        where id=#{map.id} and status=#{map.oldstatus}
+    </update>
 </mapper>

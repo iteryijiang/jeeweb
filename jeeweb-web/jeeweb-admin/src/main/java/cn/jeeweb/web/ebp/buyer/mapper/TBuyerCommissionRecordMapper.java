@@ -46,4 +46,62 @@ public interface TBuyerCommissionRecordMapper extends BaseMapper<TBuyerCommissio
 	 * @return
 	 */
 	TBuyerCommissionRecord getTBuyerCommissionRecordByBuyerIdAtime(@Param("map") Map<String, Object> map);
+
+	/**
+	 * 添加买手佣金信息
+	 *
+	 * @param map
+	 * @return
+	 */
+	int insertBuyerCommissionInfo(@Param("map") Map<String, Object> map);
+
+	/**
+	 * 添加买手任务金
+	 *
+	 * @param map
+	 * @return
+	 */
+	int insertBuyerCommissionTaskNumTemp(@Param("map") Map<String, Object> map);
+
+	/**
+	 * 添加分组提成佣金
+	 *
+	 * @param map
+	 * @return
+	 */
+	int insertBuyerCommissionGroupTemp(@Param("map") Map<String, Object> map);
+
+	/**
+	 *
+	 * 更改佣金表分组数据
+	 *
+	 * @param map
+	 * @return
+	 */
+	int updateBuyerGroupMoney(@Param("map") Map<String, Object> map);
+
+	/**
+	 * 更改佣金表任务数据
+	 *
+	 * @param map
+	 * @return
+	 */
+	int updateBuyerTaskNum(@Param("map") Map<String, Object> map);
+
+	/**
+	 * 清空临时表数据
+	 *
+	 * @return
+	 */
+	int updateBuyerCommissionForTruncateTemp();
+
+	/**
+	 * 更改佣金信息
+	 * 退单操作
+	 *
+	 * @param obj
+	 * @return
+	 */
+	int updateBuyCommissionForBack(TBuyerCommissionRecord obj);
+
 }

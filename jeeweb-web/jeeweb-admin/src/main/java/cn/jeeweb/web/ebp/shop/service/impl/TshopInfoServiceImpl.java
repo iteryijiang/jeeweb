@@ -59,4 +59,9 @@ public class TshopInfoServiceImpl extends CommonServiceImpl<TshopInfoMapper, Tsh
         page.setRecords(baseMapper.selectUserList(page, wrapper));
         return page;
     }
+
+    @Override
+    public int updateTaskdeposit(Map<String,Object> paramMap){
+        return baseMapper.updateTaskdeposit(paramMap);
+    }
 }

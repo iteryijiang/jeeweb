@@ -38,11 +38,11 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
     /**
      * 任务发布
      * */
-    public boolean addTask(TtaskBase ttaskBase, TshopInfo si);
+    public boolean addTask(TtaskBase ttaskBase, Map<String,Object> paramMap);
 
     /**
      * 任务状态修改
      * */
-    public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype,BigDecimal price);
+    public boolean upTask(TtaskBase ttaskBase, TshopInfo si,String rechargetype,BigDecimal price,Map<String,Object> paramMap);
 
 }

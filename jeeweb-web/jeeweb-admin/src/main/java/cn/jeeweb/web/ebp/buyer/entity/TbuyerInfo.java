@@ -25,7 +25,11 @@ public class TbuyerInfo extends DataEntity<String> {
 	private String withdrawalmoney;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0	用户ID	utf8	utf8_general_ci		0	0
 	/**
-	 * 买手等级
+	 * 买手分组
+	 */
+	private String groupId;
+	/**
+	 * 买手分组
 	 * 
 	 */
 	@TableField(exist = false)

@@ -1,5 +1,6 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -50,6 +51,12 @@ public class TBuyerGroup extends DataEntity<String> {
 	 * 分组组长名称
 	 */
 	private String groupLeaderName;
+
+	/**
+	 * 组长每单佣金提成
+	 *
+	 */
+	private BigDecimal leaderCommission;
 	
 	/**
 	 * 买手成员
@@ -123,6 +130,11 @@ public class TBuyerGroup extends DataEntity<String> {
 		this.buyerMemberList = buyerMemberList;
 	}
 
-	
-	
+	public BigDecimal getLeaderCommission() {
+		return leaderCommission;
+	}
+
+	public void setLeaderCommission(BigDecimal leaderCommission) {
+		this.leaderCommission = leaderCommission;
+	}
 }

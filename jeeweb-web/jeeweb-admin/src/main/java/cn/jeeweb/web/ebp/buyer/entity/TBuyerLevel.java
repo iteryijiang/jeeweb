@@ -37,10 +37,22 @@ public class TBuyerLevel extends DataEntity<String> {
 	 * 下一个等级
 	 */
 	private String nextLevelCode;
+
+	/**
+	 * 佣金类型
+	 *
+	 */
+	private int commissionType;
 	/**
 	 * 任务链接佣金系数
 	 */
 	private BigDecimal commissionRatio;
+
+	/**
+	 * 固定佣金金额
+	 *
+	 */
+	private BigDecimal commissionValue;
 
 	public String getId() {
 		return id;
@@ -91,4 +103,19 @@ public class TBuyerLevel extends DataEntity<String> {
 		this.commissionRatio = commissionRatio;
 	}
 
+	public int getCommissionType() {
+		return commissionType;
+	}
+
+	public void setCommissionType(int commissionType) {
+		this.commissionType = commissionType;
+	}
+
+	public BigDecimal getCommissionValue() {
+		return commissionValue;
+	}
+
+	public void setCommissionValue(BigDecimal commissionValue) {
+		this.commissionValue = commissionValue;
+	}
 }

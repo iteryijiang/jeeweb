@@ -44,6 +44,7 @@ public interface TBuyerCommissionRecordService extends ICommonService<TBuyerComm
 	
 	/**
 	 * 退单更改买手佣金信息
+	 * 三个字段：atime、taskMoney、buyerId
 	 * 
 	 * @param obj
 	 */
