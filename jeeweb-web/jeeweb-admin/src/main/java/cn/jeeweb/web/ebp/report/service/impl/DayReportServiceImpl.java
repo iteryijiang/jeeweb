@@ -161,7 +161,7 @@ public class DayReportServiceImpl extends CommonServiceImpl<DayReportMapper, TDa
 			insertObj.setSingleTaskLinkRatio(ratio);
 		}
 		if(insertObj.getDoubleTaskLinkCount()>0) {
-			insertObj.setActivePayMoney(new BigDecimal(100).subtract(insertObj.getSingleTaskLinkRatio()));
+			insertObj.setDoubleTaskLinkRatio(new BigDecimal(100).subtract(insertObj.getSingleTaskLinkRatio()));
 		}
 	}
 	

@@ -2,8 +2,6 @@ package cn.jeeweb.web.ebp.buyer.mapper;
 
 import java.util.List;
 import java.util.Map;
-
-import cn.jeeweb.web.ebp.buyer.entity.TapplyTaskBuyer;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.apache.ibatis.annotations.Mapper;

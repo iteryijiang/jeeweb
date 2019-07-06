@@ -2,13 +2,10 @@ package cn.jeeweb.web.ebp.buyer.mapper;
 
 import java.util.List;
 import java.util.Map;
-
-import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 

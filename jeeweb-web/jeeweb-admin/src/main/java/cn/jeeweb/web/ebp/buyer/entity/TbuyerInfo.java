@@ -171,6 +171,14 @@ public class TbuyerInfo extends DataEntity<String> {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
+
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
 	
 	
 }

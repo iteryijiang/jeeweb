@@ -2,13 +2,10 @@ package cn.jeeweb.web.ebp.buyer.controller;
 
 import java.io.IOException;
 import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupService;
-import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
-
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
