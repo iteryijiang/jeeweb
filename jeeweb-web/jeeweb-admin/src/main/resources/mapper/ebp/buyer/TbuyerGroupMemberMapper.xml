@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TBuyerGroupMemberMapper">
+
+    <resultMap id="TBuyerGroupMember" type="cn.jeeweb.web.ebp.buyer.entity.TBuyerGroupMember">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result property="groupCode" column="group_code" jdbcType="VARCHAR"/>
+        <result property="groupName" column="group_name" jdbcType="VARCHAR"/>
+        <result property="groupLeader" column="group_leader" jdbcType="VARCHAR"/>
+        <result property="groupLeaderName" column="group_leader_name" jdbcType="VARCHAR"/>
+        <result property="initGroupLeader" column="init_group_leader" jdbcType="VARCHAR"/>
+        <result property="initGroupLeaderName" column="init_group_leader_name" jdbcType="VARCHAR"/>
+        <result property="leaderCommission" column="leader_commission" jdbcType="DECIMAL"/>
+    </resultMap>
+
+
+    <select id="getMemberCountByGroupId" resultType="long" parameterType="String">
+       SELECT
+          count(*)
+        FROM
+          t_buyer_group_member
+        where
+          group_id=#{groupId} and del_flag=0
+    </select>
+
+    <select id="getMemberByBuyerIdGroupId" resultMap="TBuyerGroupMember" parameterType="HashMap">
+       SELECT
+          *
+        FROM
+          t_buyer_group_member
+        where
+          group_id=#{map.groupId} and buyer_id=#{map.buyerId} and del_flag=0
+    </select>
+
+    <update id="deleteBuyerGroupMemberByBuyerIdGroupId" parameterType="cn.jeeweb.web.ebp.buyer.entity.TBuyerGroupMember">
+        update
+          t_buyer_group_member
+        set
+          quit_time=#{quitTime},buyer_level_on_quit=#{buyerLevelOnQuit},buyer_level_name_on_quit=#{buyerLevelNameOnQuit},
+          quit_create_by=#{quitCreateBy},quit_create_name=#{quitCreateName},
+          update_by=#{updateBy.id},update_date=#{updateDate},del_flag=1
+        where
+            group_id=#{groupId} and buyer_id=#{buyerId} and del_flag=0
+    </update>
+
+    <update id="updateMemberPosition" parameterType="HashMap">
+        update
+          t_buyer_group_member
+        set
+          mem_type=#{map.memType},update_by=#{map.updateBy},update_date=#{map.updateDate}
+        where
+            group_id=#{map.groupId}
+            <if test="map.buyerId != null and map.buyerId != '' ">
+                and buyer_id=#{map.buyerId}
+            </if>
+             and mem_type=#{map.oldMemType} and del_flag=0
+    </update>
+
+</mapper>

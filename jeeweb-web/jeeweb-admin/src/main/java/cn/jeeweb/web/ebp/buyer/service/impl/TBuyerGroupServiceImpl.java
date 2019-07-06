@@ -8,7 +8,11 @@ import java.util.Map;
 import cn.jeeweb.common.mybatis.mvc.parse.QueryToWrapper;
 import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
+import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
+import cn.jeeweb.web.ebp.buyer.mapper.TbuyerInfoMapper;
+import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupMemberService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -20,6 +24,8 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroupMember;
 import cn.jeeweb.web.ebp.buyer.mapper.TBuyerGroupMapper;
 import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupService;
 
+import javax.annotation.Resource;
+
 /**
  * 买手分组
  * 
@@ -28,8 +34,12 @@ import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupService;
  */
 @Transactional
 @Service("buyerGroupService")
-public class TBuyerGroupServiceImpl extends CommonServiceImpl<TBuyerGroupMapper, TBuyerGroup>
-		implements TBuyerGroupService {
+public class TBuyerGroupServiceImpl extends CommonServiceImpl<TBuyerGroupMapper, TBuyerGroup>implements TBuyerGroupService {
+
+	@Resource(name = "buyerGroupMemberService")
+	TBuyerGroupMemberService buyerGroupMemberService;
+	@Autowired
+	TbuyerInfoMapper buyerInfoMapper;
 
 	@Override
 	public Page<TBuyerGroup> selectBuyerGroupPageList(Queryable queryable, Wrapper<TBuyerGroup> wrapper) {
@@ -60,7 +70,7 @@ public class TBuyerGroupServiceImpl extends CommonServiceImpl<TBuyerGroupMapper,
 	}
 
 	@Override
-	public void deleteBuyerGroup(long id, String lastRepair) {
+	public void deleteBuyerGroup(String id) {
 		// 判断买手分组下手否含有成员
 		int count = getBuyerGroupMemberCountByGroupId(id);
 		if (count > 0) {
@@ -69,50 +79,44 @@ public class TBuyerGroupServiceImpl extends CommonServiceImpl<TBuyerGroupMapper,
 		baseMapper.deleteById(id);
 	}
 
-	private int getBuyerGroupMemberCountByGroupId(long buyerGroupId) {
+	private int getBuyerGroupMemberCountByGroupId(String buyerGroupId) {
 		return getBuyerGroupMemberCountByGroupId(buyerGroupId);
 	}
 
 	@Override
 	public void updateBuyerGroupForUpdateLeader(TBuyerGroup obj) {
+		TbuyerInfo buyerObj=buyerInfoMapper.selectBuyerInfoById(obj.getGroupLeader());
+		if(buyerObj == null){
+			throw new RuntimeException("保存数据失败[为获取到买手信息]");
+		}
+		obj.setGroupLeader(buyerObj.getUserid());
+		obj.setGroupLeaderName(buyerObj.getBuyername());
 		int retObj = baseMapper.updateBuyerGroupForUpdateLeader(obj);
 		if (retObj != 1) {
 			throw new RuntimeException("保存数据失败");
 		}
+		//调整组员中间表数据
+		buyerGroupMemberService.updateMemberPositionForLeader(obj.getGroupLeader(),obj.getId());
 	}
 
 	@Override
 	public void updateBuyerGroup(TBuyerGroup obj) {
-		int retObj = baseMapper.updateById(obj);
+		TbuyerInfo buyerObj=buyerInfoMapper.selectBuyerInfoByUserId(obj.getGroupLeader());
+		obj.setGroupLeaderName(buyerObj.getBuyername());
+		int retObj = baseMapper.updateBuyerGroupById(obj);
 		if (retObj != 1) {
 			throw new RuntimeException("保存数据失败");
 		}
 	}
 
 	@Override
-	public TBuyerGroup getBuyerGroupById(long id) {
+	public TBuyerGroup getBuyerGroupById(String id) {
 		TBuyerGroup retObj = baseMapper.selectById(id);
 		return retObj;
 	}
 
 	@Override
-	public void deleteBuyerGroupMember(String buyerMemberIds) {
-		List<Long> ids = new ArrayList<Long>();
-		for (String id : buyerMemberIds.split(",")) {
-			if (StringUtils.isNoneBlank(id)) {
-				ids.add(Long.valueOf(id));
-			}
-		}
-		baseMapper.deleteBatchIds(ids);
-	}
-
-	@Override
-	public void addBuyerGroupMember(List<TBuyerGroupMember> objList) {
-		baseMapper.addBuyerGroupMember(objList);
-	}
-
-	@Override
-	public Page<TBuyerGroupMember> selectApplyPageList(Queryable queryable, Wrapper<TBuyerGroupMember> wrapper) {
+	public Page<TBuyerGroupMember> selectBuyerMemberPageList(Queryable queryable, Wrapper<TBuyerGroupMember> wrapper) {
 		// TODO Auto-generated method stub
 		return null;
 	}

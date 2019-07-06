@@ -1,12 +1,10 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
-
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
 import java.math.BigDecimal;
 
 @TableName("t_buyer_info")
@@ -34,6 +32,8 @@ public class TbuyerInfo extends DataEntity<String> {
 	 */
 	@TableField(exist = false)
 	private String groupName;
+	@TableField(exist = false)
+	private String groupCode;
 	/**
 	 * 买手等级
 	 * 
@@ -179,6 +179,12 @@ public class TbuyerInfo extends DataEntity<String> {
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
-	
-	
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
 }

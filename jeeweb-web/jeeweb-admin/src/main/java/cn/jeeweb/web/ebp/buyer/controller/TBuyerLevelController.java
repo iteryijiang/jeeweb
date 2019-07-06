@@ -68,8 +68,7 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	@RequestMapping(value = "ajaxBuyerLevelList", method = { RequestMethod.GET, RequestMethod.POST })
 	@Log(logType = LogType.SELECT)
 	@RequiresMethodPermissions("view")
-	public void getBuyerLevelList(Queryable queryable, PropertyPreFilterable propertyPreFilterable,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void getBuyerLevelList(Queryable queryable, PropertyPreFilterable propertyPreFilterable,HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String content = null;
 		try {
 			EntityWrapper<TBuyerLevel> entityWrapper = new EntityWrapper<TBuyerLevel>(entityClass);
@@ -97,8 +96,7 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	 * @return
 	 */
 	@GetMapping(value = "{id}/update")
-	public ModelAndView update(@PathVariable("id") String id, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView update(@PathVariable("id") String id, Model model, HttpServletRequest request,HttpServletResponse response) {
 		TBuyerLevel retObj = buyerLevelService.getBuyerLevelById(id);
 		model.addAttribute("data", retObj);
 		return displayModelAndView("l_initBuyerLevel");
@@ -116,8 +114,7 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	@PostMapping("{id}/update")
 	@Log(logType = LogType.UPDATE)
 	@RequiresMethodPermissions("update")
-	public Response update(TBuyerLevel entity, BindingResult result, HttpServletRequest request,
-			HttpServletResponse response) {
+	public Response update(TBuyerLevel entity, BindingResult result, HttpServletRequest request,HttpServletResponse response) {
 		try {
 			buyerLevelService.updateBuyerLevel(entity);
 		} catch (Exception e) {
@@ -125,5 +122,4 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 		}
 		return Response.ok("更新成功");
 	}
-	
 }

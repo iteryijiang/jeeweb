@@ -24,7 +24,7 @@ public class TBuyerGroupMember extends DataEntity<String> {
 	/**
 	 * 所属分组
 	 */
-	private long groupId;
+	private String groupId;
 	
 	/**
 	 * 组员买手ID
@@ -44,7 +44,7 @@ public class TBuyerGroupMember extends DataEntity<String> {
 	/**
 	 * 加入分组时买手等级
 	 */
-	private long buyerLevelOnJoin;
+	private String buyerLevelOnJoin;
 	
 	/**
 	 * 加入分组时买手等级名称
@@ -67,7 +67,7 @@ public class TBuyerGroupMember extends DataEntity<String> {
 	/**
 	 * 买手退出分组时等级ID
 	 */
-	private long buyerLevelOnQuit;
+	private String buyerLevelOnQuit;
 	/**
 	 * 买手退出分组时等级名称
 	 */
@@ -92,11 +92,11 @@ public class TBuyerGroupMember extends DataEntity<String> {
 		this.id = id;
 	}
 
-	public long getGroupId() {
+	public String getGroupId() {
 		return groupId;
 	}
 
-	public void setGroupId(long groupId) {
+	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
 
@@ -124,11 +124,11 @@ public class TBuyerGroupMember extends DataEntity<String> {
 		this.joinTime = joinTime;
 	}
 
-	public long getBuyerLevelOnJoin() {
+	public String getBuyerLevelOnJoin() {
 		return buyerLevelOnJoin;
 	}
 
-	public void setBuyerLevelOnJoin(long buyerLevelOnJoin) {
+	public void setBuyerLevelOnJoin(String buyerLevelOnJoin) {
 		this.buyerLevelOnJoin = buyerLevelOnJoin;
 	}
 
@@ -164,11 +164,11 @@ public class TBuyerGroupMember extends DataEntity<String> {
 		this.quitTime = quitTime;
 	}
 
-	public long getBuyerLevelOnQuit() {
+	public String getBuyerLevelOnQuit() {
 		return buyerLevelOnQuit;
 	}
 
-	public void setBuyerLevelOnQuit(long buyerLevelOnQuit) {
+	public void setBuyerLevelOnQuit(String buyerLevelOnQuit) {
 		this.buyerLevelOnQuit = buyerLevelOnQuit;
 	}
 

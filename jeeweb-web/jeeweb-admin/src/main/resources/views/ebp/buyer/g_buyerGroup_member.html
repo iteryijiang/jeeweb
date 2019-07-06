@@ -1,20 +1,81 @@
-<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('问题反馈',''), libs: ''}){ %>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <% include("/themes/uadmin/include/header.html"){}%>
+    <!-- list新增 -->
+    <#html:css name="datepicker,jqgrid,sweetalert,layer"/>
+    <style>
+        .uadmin-grid-margin {
+            margin-top: 8px;
+        }
+    </style>
+</head>
 
-<#grid:grid id="ttaskBaseGrid" url="${adminPath}/buyer/TmyTaskDetail/ajaxApplyTaskList" sortname="applyNo" sortorder="desc" sortable="false">
-<#grid:column label="任务编号" width="90" query="true" condition="like" name="buyerTaskNo" align="center"/>
-<#grid:column label="商品名称" name="goodsName" width="140" />
-<#grid:column label="商家名称" name="shopName" query="true" condition="like" width="100" />
-<#grid:column label="买手名称" name="buyerNo" query="true" condition="like" width="80" align="center"/>
-<#grid:column label="反馈类型" name="applyType" query="true" queryMode="select" condition="eq"  dict="tasktype" dict="applyType" width="80"/>
-<#grid:column label="问题描述" name="applyDesc" width="120"/>
-<#grid:column label="反馈时间" name="applyTime" query="true" width="80" queryMode="date"  condition="between" align="center" />
-<#grid:column label="处理状态" name="applyStatus" query="true" align="center" queryMode="select" condition="eq" formatterValue="0:待处理;1:已处理" width="70"/>
-<#grid:column label="处理时间" name="handleTime" width="80" align="center"/>
-<#grid:column label="处理人" name="handleMan" width="80" align="center"/>
-<#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/getApplyTaskDetail/1/\"+row.id+\"' />
-<#grid:button title="驳回申请"  groupname="opt" function="rowDialogDetailRefresh" winwidth="500px" winheight="350px" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/initTurnDownApplyTask/\"+row.id+\"' />
-<#grid:toolbar  function="search" />
-<#grid:toolbar  function="reset" />
+<body>
+<div style="text-align: center">
+    <span style="text-align: center;font-size: 15px;border-bottom: 1px solid gray;height: 30px;padding-left: 80px;padding-right: 80px;">
+        小组编号：${buyerGroupObj.groupCode}
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        小组名称：${buyerGroupObj.groupName}
+    </span>
+</div>
+<div class="page-content">
+    <#grid:grid id="buyerSelectLeaderGrid" url="${adminPath}/buyer/TbuyerInfo/ajaxListBuyer" sortname="loginname" sortorder="desc" sortable="false">
+    <#grid:column label="买手编号" width="90" query="true" condition="like" name="loginname" align="center"/>
+    <#grid:column label="买手名称" name="buyername" width="140" query="true" condition="like" />
+    <#grid:column label="买手等级" name="levelName" width="100" />
+    <#grid:column label="所属分组" name="groupName" width="80" align="center"/>
+    <#grid:column label="联系电话" name="phone" width="80" align="center"/>
+    <#grid:column label="冻结状态" name="freezeStatus" width="80" align="center"/>
+    <#grid:toolbar title="加入小组" onclick="setGroupMemberFn(1)"  />
+    <#grid:toolbar title="退出小组" onclick="setGroupMemberFn(0)"  />
+    <#grid:toolbar function="search" />
+    <#grid:toolbar function="reset" />
 </#grid:grid>
-<% } %>
+</div>
+<#html:js name="iCheck,jqGrid,jqGrid_curdtools,layer,sweetalert"/>
+<script>
+    function setGroupMemberFn(isJoin){
+        var selectRows = $("#buyerSelectLeaderGrid").jqGrid('getGridParam', 'selarrrow');
+        if(selectRows.length<1){
+            alert("未选择用户信息");
+            return;
+        }
+        var userIds=getSelectUserIdFn(selectRows);
+        var url="${adminPath}/buyer/TbuyerInfo/saveBuyerGroupMember";
+        var param={
+            isJoin:isJoin,
+            groupId:'${buyerGroupObj.id}',
+            buyerIds:userIds
+        };
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify(param),
+            dataType: "json",
+            success: function(data){
+                alert(data.msg);
+                if(data.code == 0){
+                    //刷新表单
+                    window.parent.location.reload();//刷新父页面
+                    var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
+                    parent.layer.close(index)
+                }
+            },
+            error: function (data) {
+                alert("错误！");
+            }
+        });
+    }
+
+    function getSelectUserIdFn(selectRows){
+        var userIds="";
+        for(var idx=0;idx<selectRows.length;idx++){
+            userIds+=","+selectRows[idx];
+        }
+        return userIds.substring(1);
+    }
+</script>
+</body>
+</html>

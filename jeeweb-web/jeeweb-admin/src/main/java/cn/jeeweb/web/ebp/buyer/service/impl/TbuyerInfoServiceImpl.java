@@ -6,20 +6,38 @@ import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
+import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.buyer.mapper.TbuyerInfoMapper;
+import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupMemberService;
 import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
+import cn.jeeweb.web.ebp.exception.MyProcessException;
+import cn.jeeweb.web.utils.UserUtils;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service("tbuyerInfoService")
 public class TbuyerInfoServiceImpl extends CommonServiceImpl<TbuyerInfoMapper, TbuyerInfo> implements TbuyerInfoService {
 
+	@Resource(name = "buyerGroupMemberService")
+	TBuyerGroupMemberService buyerGroupMemberService;
+
 	@Override
 	public TbuyerInfo getTbuyerInfoById(String id) {
 		return baseMapper.selectBuyerInfoById(id);
+	}
+
+	@Override
+	public TbuyerInfo selectBuyerInfoByUserId(String userId){
+		return baseMapper.selectBuyerInfoByUserId(userId);
 	}
 
 	@Override
@@ -35,9 +53,74 @@ public class TbuyerInfoServiceImpl extends CommonServiceImpl<TbuyerInfoMapper, T
 	}
 
 	@Override
+	public List<TbuyerInfo> selectBuyerInfoListByUserIdGroupId(String buyerIds,String groupId){
+		Map<String,Object> paramMap=new HashMap<>();
+		paramMap.put("userId",buyerIds);
+		paramMap.put("groupId",groupId);
+		return baseMapper.selectBuyerInfoListByUserIdGroupId(paramMap);
+	}
+
+	@Override
 	public void updateTbuyerInfoById(TbuyerInfo obj) {
 		// TODO Auto-generated method stub
 		
 	}
 
+	@Override
+	public void updateTbuyerInfoForJoinGroup(String buyerId,String groupId){
+		TbuyerInfo buyerObj=getTbuyerInfoById(buyerId);
+		if(groupId.equals(buyerObj.getGroupId())){
+			throw  new MyProcessException("当前买手所属分组未发生变化");
+		}
+		buyerGroupMemberService.updateBuyerInfoForChangeGroup(buyerObj.getUserid(),groupId);
+	}
+
+	@Override
+	public void deleteBuyerGroupMember(List<String> buyerIdList, String groupId) {
+		buyerGroupMemberService.updateBuyerInfoForQuitGroup(buyerIdList,groupId);
+	}
+
+	@Override
+	public void addBuyerGroupMember(List<String> buyerIdList,String groupId) {
+		buyerGroupMemberService.updateBuyerInfoForJoinGroup(buyerIdList,groupId);
+	}
+
+	@Override
+	public void updateForSetBuyerGroupId(String buyerUserId,String newGroupId){
+		Map<String,Object> paramMap=new HashMap<>();
+		paramMap.put("userId",buyerUserId);
+		paramMap.put("groupId",newGroupId);
+		paramMap.put("updateBy", UserUtils.getUser().getId());
+		paramMap.put("updateDate", DateUtils.getCurrentTime());
+		int num=baseMapper.updateForSetBuyerGroupId(paramMap);
+		if(num != 1){
+			throw  new MyProcessException("更新买手分组信息失败");
+		}
+	}
+
+	@Override
+	public void updateForBatchSetBuyerGroupId(String buyerUserIds,String newGroupId){
+		Map<String,Object> paramMap=new HashMap<>();
+		paramMap.put("userId",buyerUserIds);
+		paramMap.put("groupId",newGroupId);
+		paramMap.put("updateBy",UserUtils.getUser().getId());
+		paramMap.put("updateDate",DateUtils.getCurrentTime());
+		int num=baseMapper.updateForBatchSetBuyerGroupId(paramMap);
+		if(num != buyerUserIds.split(",").length){
+			throw new MyProcessException("变更员工所属分组失败");
+		}
+	}
+
+	@Override
+	public void updateForDeleteBuyerGroupId(String buyerUserId,String groupId){
+		Map<String,Object> updateParamMap=new HashMap<>();
+		updateParamMap.put("userId",buyerUserId);
+		updateParamMap.put("groupId",groupId);
+		updateParamMap.put("updateBy",UserUtils.getUser().getId());
+		updateParamMap.put("updateDate",DateUtils.getCurrentTime());
+		int num=baseMapper.updateForDeleteBuyerGroupId(updateParamMap);
+		if(num != 1){
+			throw  new MyProcessException("更新买手分组信息失败[删除关联数据失败]");
+		}
+	}
 }

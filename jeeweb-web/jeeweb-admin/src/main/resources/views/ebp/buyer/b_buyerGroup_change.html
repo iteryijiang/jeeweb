@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <% include("/themes/uadmin/include/header.html"){}%>
+    <!-- list新增 -->
+    <#html:css name="iCheck,datepicker,jqgrid,sweetalert,layer"/>
+    <style>
+        .uadmin-grid-margin {
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <#grid:grid id="buyerSelectLeaderGrid" url="${adminPath}/buyer/buyergroup/ajaxBuyerGrouplList" multiselect="false" sortname="loginname" sortorder="desc" sortable="false">
+            <#grid:column label="分组编号" query="true" condition="like"  width="90" name="groupCode" align="center"/>
+            <#grid:column label="分组名称" query="true" condition="like"  name="groupName" width="140" />
+            <#grid:column label="组长" name="groupLeaderName"  width="100" />
+            <#grid:column label="sys.common.opt" name="opt" formatter="button" />
+            <#grid:button title="加入小组" groupname="opt" function="joinBuyerGroupFn" url='${adminPath}/buyer/TbuyerInfo/saveChangeBuyerGroup/${buyerObj.id}/\"+row.id+\"' outclass="btn-danger" />
+            <#grid:toolbar function="search" />
+            <#grid:toolbar function="reset" />
+        </#grid:grid>
+    </div>
+<#html:js name="iCheck,jqGrid,jqGrid_curdtools,layer,sweetalert"/>
+<script>
+    function joinBuyerGroupFn(title,postUrl){
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            contentType:'application/json;charset=utf-8',
+            data: null,
+            dataType: "json",
+            success: function(data){
+                alert(data.msg);
+                if(data.code == 0){
+                    //刷新表单
+                    window.parent.location.reload();//刷新父页面
+                    var index = parent.layer.getFrameIndex(window.name)//获取窗口索引
+                    parent.layer.close(index)
+                }
+            },
+            error: function (data) {
+                alert("错误！");
+            }
+        });
+    }
+</script>
+</body>
+</html>

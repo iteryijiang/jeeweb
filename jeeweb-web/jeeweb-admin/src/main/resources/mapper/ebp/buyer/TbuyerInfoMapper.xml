@@ -11,6 +11,9 @@
 		<result property="totalmoney" column="totalMoney" jdbcType="NUMERIC" />
 		<result property="withdrawalmoney" column="withdrawalMoney" jdbcType="VARCHAR" />
 		<result property="userid" column="userid" jdbcType="VARCHAR" />
+		<result property="groupId" column="group_id" jdbcType="VARCHAR" />
+		<result property="groupCode" column="group_code" jdbcType="VARCHAR" />
+		<result property="groupName" column="group_name" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -20,14 +23,16 @@
 
 	<select id="selectBuyerInfoList" resultMap="TbuyerInfo">
 		SELECT
-		tbuy.id, tbuy.buyerName buyername,tbuy.loginName loginname,
+		tbuy.id, tbuy.buyerName buyername,tbuy.loginName loginname,tbuy.group_id,
 		tbuy.accountLevel accountlevel,tbuy.phoneNum phonenum,tbuy.totalMoney totalmoney,tbuy.withdrawalMoney withdrawalmoney,tbuy.remarks,tbuy.userid,
 		utb.email, utb.freeze_status, utb.phone,
-		tl.level_code, tl.level_name
+		tl.level_code, tl.level_name,
+		tb.group_code,tb.group_name
 		FROM
 		t_buyer_info tbuy
 		INNER JOIN sys_user utb ON tbuy.userid = utb.id
 		INNER JOIN t_buyer_level tl ON tl.id = tbuy.accountLevel
+		left join t_buyer_group tb on tbuy.group_id=tb.id
 		<if test="ew.sqlSegment != '' and ew.sqlSegment != null">
 			<where>
 				${ew.sqlSegment}
@@ -35,18 +40,83 @@
 		</if>
 	</select>
 
-	<select id="selectBuyerInfoById" resultMap="TbuyerInfo"
-		parameterType="String">
+	<select id="selectBuyerInfoById" resultMap="TbuyerInfo" parameterType="String">
 		SELECT
-		tbuy.id, tbuy.buyerName,tbuy.loginName,
+		tbuy.id, tbuy.buyerName,tbuy.loginName,tbuy.group_id,
 		tbuy.accountLevel,tbuy.phoneNum,tbuy.totalMoney,tbuy.withdrawalMoney,tbuy.remarks,tbuy.userid,
 		utb.email, utb.freeze_status, utb.phone,
-		tl.level_code, tl.level_name
+		tl.level_code, tl.level_name,
+		tb.group_code,tb.group_name
 		FROM
 		t_buyer_info tbuy
 		INNER JOIN sys_user utb ON tbuy.userid = utb.id
 		INNER JOIN t_buyer_level tl ON tl.id = tbuy.accountLevel
+		left join t_buyer_group tb on tbuy.group_id=tb.id
 		where tbuy.id=#{id}
 	</select>
+
+	<select id="selectBuyerInfoByUserId" resultMap="TbuyerInfo" parameterType="String">
+		SELECT
+		tbuy.id, tbuy.buyerName,tbuy.loginName,tbuy.group_id,
+		tbuy.accountLevel,tbuy.phoneNum,tbuy.totalMoney,tbuy.withdrawalMoney,tbuy.remarks,tbuy.userid,
+		utb.email, utb.freeze_status, utb.phone,
+		tl.level_code, tl.level_name,
+		tb.group_code,tb.group_name
+		FROM
+		t_buyer_info tbuy
+		INNER JOIN sys_user utb ON tbuy.userid = utb.id
+		INNER JOIN t_buyer_level tl ON tl.id = tbuy.accountLevel
+		left join t_buyer_group tb on tbuy.group_id=tb.id
+		where tbuy.userid=#{userId}
+	</select>
+
+	<select id="selectBuyerInfoListByUserIdGroupId" resultMap="TbuyerInfo" parameterType="HashMap">
+		SELECT
+		tbuy.id, tbuy.buyerName,tbuy.loginName,tbuy.group_id,
+		tbuy.accountLevel,tbuy.phoneNum,tbuy.totalMoney,tbuy.withdrawalMoney,tbuy.remarks,tbuy.userid,
+		utb.email, utb.freeze_status, utb.phone,
+		tl.level_code, tl.level_name,
+		tb.group_code,tb.group_name
+		FROM
+		t_buyer_info tbuy
+		INNER JOIN sys_user utb ON tbuy.userid = utb.id
+		INNER JOIN t_buyer_level tl ON tl.id = tbuy.accountLevel
+		left join t_buyer_group tb on tbuy.group_id=tb.id
+		where tbuy.userid=#{map.userId} and tbuy.group_id=#{map.groupId}
+	</select>
+
+
+	<update id="updateForSetBuyerGroupId" parameterType="HashMap">
+		update
+			t_buyer_info
+		set
+			group_id=#{map.groupId},update_by=#{map.updateBy},update_date=#{map.updateDate}
+		where
+			userid=#{map.userId}
+  	</update>
+	<update id="updateForBatchSetBuyerGroupId" parameterType="HashMap">
+		update
+			t_buyer_info
+		set
+			group_id=#{map.groupId},update_by=#{map.updateBy},update_date=#{map.updateDate}
+		where
+			userid in (${map.userId})
+	</update>
+	<update id="updateForBatchDeleteBuyerGroupId" parameterType="HashMap">
+		update
+			t_buyer_info
+		set
+			group_id=null,update_by=#{map.updateBy},update_date=#{map.updateDate}
+		where
+			userid in (${map.userId}) and group_id=#{map.groupId}
+	</update>
+	<update id="updateForDeleteBuyerGroupId" parameterType="HashMap">
+		update
+			t_buyer_info
+		set
+			group_id=null,update_by=#{map.updateBy},update_date=#{map.updateDate}
+		where
+			userid = #{map.userId} and group_id=#{map.groupId}
+	</update>
 
 </mapper>

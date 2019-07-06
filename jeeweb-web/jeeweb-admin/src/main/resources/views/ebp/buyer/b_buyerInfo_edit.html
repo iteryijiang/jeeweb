@@ -4,9 +4,9 @@
 	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
 		<tbody>
 			<tr>
-				<td  class="width-15 active text-right"><label><font color="red">*</font>买手编号:</label></td>
+				<td  class="width-15 active text-right"><label>买手编号:</label></td>
 				<td  class="width-35" >
-					<#form:input path="loginname" class="form-control"   htmlEscape="false"  datatype="*"  nullmsg="买手编号！"/>
+					<#form:input path="loginname" class="form-control"   htmlEscape="false"  datatype="*" disabled="disabled" nullmsg="买手编号！"/>
 					<label class="Validform_checktip"></label>
 				</td>
 				<td  class="width-15 active text-right"><label><font color="red">*</font>买手名称:</label></td>
@@ -44,16 +44,6 @@
 				</td>
 				<td class="width-35" >
 					<label>￥</label>
-				</td>
-			</tr>
-			<tr>
-				<td  class="width-15 active text-right">
-					<label><font color="red">*</font>所属分组:</label>
-				</td>
-				<td class="width-35"  colspan="3">
-					<#form:combox nested="false" idField="id" keyField="groupName" effectiveFields="groupName,groupCode,groupLeaderName" multiWord="true" 
-					effectiveFieldsAlias="groupCode|分组编号,groupName|分组名称,groupLeaderName|组长" showHeader="true" path="shopid" dataUrl="${adminPath}/buyer/buyergroup/getBuyerGroupSuggest" />
-					<label class="Validform_checktip"></label>
 				</td>
 			</tr>
 		</tbody>

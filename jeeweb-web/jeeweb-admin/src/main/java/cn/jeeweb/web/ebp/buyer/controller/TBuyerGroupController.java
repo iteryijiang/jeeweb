@@ -1,11 +1,15 @@
 package cn.jeeweb.web.ebp.buyer.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupService;
+import cn.jeeweb.web.ebp.exception.MyProcessException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,11 +83,10 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 		try {
 			EntityWrapper<TBuyerGroup> entityWrapper = new EntityWrapper<TBuyerGroup>(entityClass);
 			propertyPreFilterable.addQueryProperty("id");
-			// 预处理
 			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TBuyerLevel.class);
 			SerializeFilter filter = propertyPreFilterable.constructFilter(TBuyerLevel.class);
-			PageResponse<TBuyerGroup> pagejson = new PageResponse<TBuyerGroup>(
-					buyerGroupService.selectBuyerGroupPageList(queryable, entityWrapper));
+			Page<TBuyerGroup> pageObj=buyerGroupService.selectBuyerGroupPageList(queryable, entityWrapper);
+			PageResponse<TBuyerGroup> pagejson = new PageResponse<TBuyerGroup>(pageObj);
 			content = JSON.toJSONString(pagejson, filter);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -117,7 +120,7 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 	/***
 	 * 查看分组详情
 	 * 
-	 * @param applyId
+	 * @param id
 	 * @param model
 	 * @param request
 	 * @param response
@@ -125,12 +128,12 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 	 */
 	@GetMapping("getBuyerGroup/{id}")
 	@Log(logType = LogType.SELECT)
-	public ModelAndView getBuyerGroup(@PathVariable("id") String applyId, Model model, HttpServletRequest request,
+	public ModelAndView getBuyerGroup(@PathVariable("id") String id, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		ModelAndView mav = displayModelAndView("g_buyerGroup_show");
 		try {
-
-			model.addAttribute("buyerGroupObj", null);
+			TBuyerGroup buyerGroupObj = buyerGroupService.getBuyerGroupById(id);
+			model.addAttribute("buyerGroupObj", buyerGroupObj);
 		} catch (RuntimeException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {
@@ -164,11 +167,35 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 	 */
 	@PostMapping("add")
 	@Log(logType = LogType.INSERT)
+	@ResponseBody
 	public Response add(TBuyerGroup entity, BindingResult result, HttpServletRequest request,
 			HttpServletResponse response) {
 		// 验证错误
 		buyerGroupService.addBuyerGroup(entity);
 		return Response.ok("添加成功");
+	}
+
+	/***
+	 * 删除
+	 *
+	 * @param id
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@PostMapping("delete/{id}")
+	@Log(logType = LogType.INSERT)
+	@ResponseBody
+	public Response delete(@PathVariable("id") String id, HttpServletRequest request,HttpServletResponse response) {
+		try {
+			buyerGroupService.deleteBuyerGroup(id);
+			return Response.ok("添加成功");
+		}catch (MyProcessException ex){
+			return Response.error(ex.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.error("系统异常");
+		}
 	}
 
 	/**
@@ -200,6 +227,7 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 	@PostMapping("{id}/update")
 	@Log(logType = LogType.UPDATE)
 	@RequiresMethodPermissions("update")
+	@ResponseBody
 	public Response update(TBuyerGroup entity, BindingResult result, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
@@ -213,7 +241,7 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 	/***
 	 * 查编辑分组组长
 	 * 
-	 * @param applyId
+	 * @param id
 	 * @param model
 	 * @param request
 	 * @param response
@@ -221,12 +249,11 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 	 */
 	@GetMapping("editBuyerGroupLeader/{id}")
 	@Log(logType = LogType.SELECT)
-	public ModelAndView editBuyerGroupLeader(@PathVariable("id") String applyId, Model model,
-			HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView editBuyerGroupLeader(@PathVariable("id") String id, Model model,HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = displayModelAndView("g_buyerGroup_leader");
 		try {
-
-			model.addAttribute("buyerGroupObj", null);
+			TBuyerGroup retObj = buyerGroupService.selectById(id);
+			model.addAttribute("buyerGroupObj", retObj);
 		} catch (RuntimeException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {
@@ -235,22 +262,26 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 		return mav;
 	}
 
-	/***
+	/**
 	 * 保存分组组长
-	 * 
-	 * @param jsonObject
+	 *
+	 * @param buyerId
+	 * @param groupId
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@PostMapping("saveBuyerLeader")
+	@PostMapping("saveBuyerLeader/{buyerId}/{groupId}")
 	@Log(logType = LogType.UPDATE)
-	public Response saveBuyerMLeader(@RequestBody JSONObject jsonObject, HttpServletRequest request,
-			HttpServletResponse response) {
+	@ResponseBody
+	public Response saveBuyerLeader(@PathVariable("buyerId") String buyerId,@PathVariable("groupId") String groupId, HttpServletRequest request,HttpServletResponse response) {
 		try {
-
+			TBuyerGroup obj=new TBuyerGroup();
+			obj.setGroupLeader(buyerId);
+			obj.setId(groupId);
+			buyerGroupService.updateBuyerGroupForUpdateLeader(obj);
 			return Response.ok("操作成功！");
-		} catch (RuntimeException ex) {
+		} catch (MyProcessException ex) {
 			ex.printStackTrace();
 			return Response.error("操作失败[" + ex.getMessage() + "]！");
 		} catch (Exception ex) {
@@ -262,7 +293,7 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 	/***
 	 * 编辑分组成员
 	 * 
-	 * @param applyId
+	 * @param id
 	 * @param model
 	 * @param request
 	 * @param response
@@ -270,12 +301,12 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 	 */
 	@GetMapping("editBuyerGroupMember/{id}")
 	@Log(logType = LogType.SELECT)
-	public ModelAndView editBuyerGroupMember(@PathVariable("id") String applyId, Model model,
+	public ModelAndView editBuyerGroupMember(@PathVariable("id") String id, Model model,
 			HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = displayModelAndView("g_buyerGroup_member");
 		try {
-
-			model.addAttribute("buyerGroupObj", null);
+			TBuyerGroup retObj = buyerGroupService.selectById(id);
+			model.addAttribute("buyerGroupObj", retObj);
 		} catch (RuntimeException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {
@@ -284,27 +315,4 @@ public class TBuyerGroupController extends BaseBeanController<TBuyerGroup> {
 		return mav;
 	}
 
-	/***
-	 * 保存编辑分组成员
-	 * 
-	 * @param jsonObject
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@PostMapping("saveBuyerMember")
-	@Log(logType = LogType.UPDATE)
-	public Response saveBuyerMember(@RequestBody JSONObject jsonObject, HttpServletRequest request,
-			HttpServletResponse response) {
-		try {
-
-			return Response.ok("操作成功！");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			return Response.error("操作失败[" + ex.getMessage() + "]！");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return Response.error("操作失败[系统异常]！");
-		}
-	}
 }

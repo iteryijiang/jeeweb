@@ -13,10 +13,13 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
+import cn.jeeweb.web.ebp.exception.MyProcessException;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -29,6 +32,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -119,16 +125,15 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
         return mav;
     }
 
-   /**
-    * 查询买手列表
-    * 
-    * @param id
-    * @param queryable
-    * @param propertyPreFilterable
-    * @param request
-    * @param response
-    * @throws IOException
-    */
+    /***
+     * 查询买手列表
+     *
+     * @param queryable
+     * @param propertyPreFilterable
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     @RequestMapping(value = "ajaxListBuyer", method = { RequestMethod.GET, RequestMethod.POST })
     @RequiresMethodPermissions("view")
     public void ajaxListBuyer(Queryable queryable, PropertyPreFilterable propertyPreFilterable,HttpServletRequest request, HttpServletResponse response)
@@ -185,10 +190,94 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
 			HttpServletResponse response) {
 		try {
 			tbuyerInfoService.updateTbuyerInfoById(entity);
-		} catch (Exception e) {
+            return Response.ok("更新成功");
+		}catch (MyProcessException ex){
+            return Response.error(ex.getMessage());
+        } catch (Exception e) {
 			e.printStackTrace();
+            return Response.error("系统异常");
 		}
-		return Response.ok("更新成功");
 	}
+
+    /***
+     * 小组成员换组
+     *
+     * @param id
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("changeBuyerGroup/{id}")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView changeBuyerGroup(@PathVariable("id") String id, Model model,HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("b_buyerGroup_change");
+        try {
+            TbuyerInfo retObj = tbuyerInfoService.getTbuyerInfoById(id);
+            model.addAttribute("buyerObj", retObj);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return mav;
+    }
+
+    /***
+     * 买手加入某个小组
+     *
+     * @param buyerId
+     * @param groupId
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("saveChangeBuyerGroup/{buyerId}/{groupId}")
+    @Log(logType = LogType.UPDATE)
+    @ResponseBody
+    public Response saveChangeBuyerGroup(@PathVariable("buyerId") String buyerId,@PathVariable("groupId") String groupId,HttpServletRequest request, HttpServletResponse response) {
+        try {
+            tbuyerInfoService.updateTbuyerInfoForJoinGroup(buyerId,groupId);
+            return Response.ok("操作成功");
+        } catch (MyProcessException ex){
+            return Response.error(ex.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.error("系统异常");
+        }
+    }
+
+    /**
+     * 加入/退出分组
+     *
+     * @param jsonObject
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("saveBuyerGroupMember")
+    @Log(logType = LogType.UPDATE)
+    @ResponseBody
+    public Response saveBuyerGroupMember(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                                         HttpServletResponse response) {
+        try {
+            int isJoin=jsonObject.getIntValue("isJoin");
+            String groupId=jsonObject.getString("groupId");
+            String buyerIds=jsonObject.getString("buyerIds");
+            List<String> buyerIdArray = Arrays.asList(buyerIds.split(",")).stream().map(s -> s.trim()).collect(Collectors.toList());
+            if(isJoin == 1){
+                tbuyerInfoService.addBuyerGroupMember(buyerIdArray,groupId);
+            }else{
+                tbuyerInfoService.deleteBuyerGroupMember(buyerIdArray,groupId);
+            }
+            return Response.ok("操作成功！");
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            return Response.error("操作失败[" + ex.getMessage() + "]！");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Response.error("操作失败[系统异常]！");
+        }
+    }
 	
 }
