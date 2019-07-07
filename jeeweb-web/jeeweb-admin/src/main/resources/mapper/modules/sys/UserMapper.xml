@@ -65,4 +65,13 @@
       id in (${map.userId})
   </update>
 
+  <update id="updateUserInfoByUserId" parameterType="cn.jeeweb.web.modules.sys.entity.User">
+    update
+      sys_user
+    set
+      realname=#{realname},phone=#{phone},update_by=#{updateBy.id},update_date=#{updateDate}
+    where
+      id = #{id}
+  </update>
+
 </mapper>

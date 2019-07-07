@@ -7,6 +7,7 @@ import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
+import cn.jeeweb.web.ebp.exception.MyProcessException;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,15 +42,15 @@ public class TBuyerLevelServiceImpl extends CommonServiceImpl<TBuyerLevelMapper,
 	public void addBuyerLevel(TBuyerLevel obj) {
 		int sameBuyerLevelNameCount=getBuyerLevelByName(obj.getId(),obj.getLevelName());
 		if(sameBuyerLevelNameCount>0) {
-			throw new RuntimeException("保存数据失败[买手等级名称已经存在]");
+			throw new MyProcessException("保存数据失败[买手等级名称已经存在]");
 		}
 		int sameBuyerLevelCodeCount=getBuyerLevelByCode(obj.getId(),obj.getLevelCode());
 		if(sameBuyerLevelCodeCount>0) {
-			throw new RuntimeException("保存数据失败[买手等级编号已经存在]");
+			throw new MyProcessException("保存数据失败[买手等级编号已经存在]");
 		}
 		int num=baseMapper.insert(obj);
 		if(num!=1) {
-			throw new RuntimeException("保存数据失败");
+			throw new MyProcessException("保存数据失败");
 		}
 	}
 	
@@ -71,22 +72,22 @@ public class TBuyerLevelServiceImpl extends CommonServiceImpl<TBuyerLevelMapper,
 	public void updateBuyerLevel(TBuyerLevel obj) {
 		int sameBuyerLevelNameCount=getBuyerLevelByName(obj.getId(),obj.getLevelName());
 		if(sameBuyerLevelNameCount>0) {
-			throw new RuntimeException("保存数据失败[买手等级名称已经存在]");
+			throw new MyProcessException("保存数据失败[买手等级名称已经存在]");
 		}
 		int sameBuyerLevelCodeCount=getBuyerLevelByCode(obj.getId(),obj.getLevelCode());
 		if(sameBuyerLevelCodeCount>0) {
-			throw new RuntimeException("保存数据失败[买手等级编号已经存在]");
+			throw new MyProcessException("保存数据失败[买手等级编号已经存在]");
 		}
 		int num=baseMapper.updateBuyerLevel(obj);
 		if(num!=1) {
-			throw new RuntimeException("保存数据失败");
+			throw new MyProcessException("保存数据失败");
 		}
 		
 	}
 
 	@Override
 	public TBuyerLevel getBuyerLevelById(String id) {
-		return baseMapper.selectById(id);
+		return baseMapper.selectBuyerLevelById(id);
 	}
 	
 	

@@ -33,6 +33,14 @@ public interface TBuyerGroupMemberMapper extends BaseMapper<TBuyerGroupMember> {
 	TBuyerGroupMember getMemberByBuyerIdGroupId(@Param("map") Map<String,Object> map);
 
 	/**
+	 * 获得分组下的组长成员信息
+	 *
+	 * @param map
+	 * @return
+	 */
+	long getGroupMemTypeCountByGroupId(@Param("map") Map<String,Object> map);
+
+	/**
 	 * 根据买手编号+分组编号删除买手与分组的额关系数据
 	 *
 	 * @param delObj

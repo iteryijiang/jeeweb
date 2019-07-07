@@ -5,6 +5,7 @@ import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
+import cn.jeeweb.common.query.data.Condition;
 import cn.jeeweb.common.query.data.PropertyPreFilterable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
@@ -142,7 +143,13 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
 		try {
 			EntityWrapper<TbuyerInfo> entityWrapper = new EntityWrapper<TbuyerInfo>(entityClass);
 			propertyPreFilterable.addQueryProperty("id");
-			// 预处理
+            if (queryable.getCondition() != null) {
+                Condition.Filter filter_groupName= queryable.getCondition().getFilterFor("groupName");
+                if (filter_groupName != null) {
+                    queryable.getCondition().remove(filter_groupName);
+                    entityWrapper.like("tb.group_name", filter_groupName.getValue().toString());
+                }
+            }
 			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TbuyerInfo.class);
 			SerializeFilter filter = propertyPreFilterable.constructFilter(TbuyerInfo.class);
 			PageResponse<TbuyerInfo> pagejson = new PageResponse<TbuyerInfo>(tbuyerInfoService.selectBuyerInfoPageList(queryable, entityWrapper));
@@ -154,7 +161,22 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
 		}
         
     }
-    
+
+    /**
+     * 买手详情
+     *
+     * @param id
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "showBuyerInfo/{id}")
+    public ModelAndView showBuyerInfo(@PathVariable("id") String id, Model model, HttpServletRequest request, HttpServletResponse response) {
+        TbuyerInfo retObj = tbuyerInfoService.getTbuyerInfoById(id);
+        model.addAttribute("data", retObj);
+        return displayModelAndView("b_buyerInfo_show");
+    }
     
     /**
 	 * 初始化编辑
@@ -185,7 +207,6 @@ public class TbuyerInfoController extends BaseBeanController<TbuyerInfo> {
 	 */
 	@PostMapping("{id}/update")
 	@Log(logType = LogType.UPDATE)
-	@RequiresMethodPermissions("update")
 	public Response update(TbuyerInfo entity, BindingResult result, HttpServletRequest request,
 			HttpServletResponse response) {
 		try {

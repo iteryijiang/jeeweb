@@ -3,6 +3,7 @@ package cn.jeeweb.web.ebp.buyer.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -18,14 +19,15 @@ import cn.jeeweb.web.common.entity.DataEntity;
  */
 @TableName("t_buyer_commission_record")
 @SuppressWarnings("serial")
-public class TBuyerCommissionRecord extends DataEntity<Long> {
+public class TBuyerCommissionRecord extends DataEntity<String> {
 
-	@TableId(value = "id", type = IdType.AUTO)
-	private Long id;
+	@TableId(value = "id", type = IdType.UUID)
+	private String id;
 	
 	/**
 	 * 佣金账期
 	 */
+	@JSONField(format="yyyy-MM-dd")
 	private Date atime;
 
 	/**
@@ -110,6 +112,7 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 	/**
 	 * 生成佣金记录时间
 	 */
+	@JSONField(format="yyyy-MM-dd HH:mm")
 	private Date dtime;
 	
 	/**
@@ -130,12 +133,12 @@ public class TBuyerCommissionRecord extends DataEntity<Long> {
 	 */
 	private BigDecimal buyerGroupLeaderCommissionValue=BigDecimal.ZERO;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
 	@Override
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

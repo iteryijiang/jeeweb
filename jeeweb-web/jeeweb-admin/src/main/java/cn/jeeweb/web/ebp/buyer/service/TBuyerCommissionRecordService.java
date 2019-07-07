@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.buyer.service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
@@ -25,6 +26,15 @@ public interface TBuyerCommissionRecordService extends ICommonService<TBuyerComm
 	 * @return
 	 */
 	Page<TBuyerCommissionRecord> selectPageList(Queryable queryable, Wrapper<TBuyerCommissionRecord> wrapper);
+
+	/***
+	 * 获得某个月的明细数据
+	 *
+	 * @param month
+	 * @param buyerId
+	 * @return
+	 */
+	List<TBuyerCommissionRecord> selectListByBuyerIdMonth(int month, String buyerId);
 	
 	/***
 	 * 查询汇总数据(按照买手编号汇总某一段时间之内的数据)

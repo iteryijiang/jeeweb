@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.buyer.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -52,6 +53,8 @@ public class TbuyerInfo extends DataEntity<String> {
 	 */
 	@TableField(exist = false)
 	private String freezeStatus;
+	@TableField(exist = false)
+	private String freezeStatusName;
 	/**
 	 * 手机号码
 	 */
@@ -186,5 +189,14 @@ public class TbuyerInfo extends DataEntity<String> {
 
 	public void setGroupCode(String groupCode) {
 		this.groupCode = groupCode;
+	}
+
+	public String getFreezeStatusName() {
+		freezeStatusName= (YesNoEnum.YES.code==Integer.valueOf(getFreezeStatus()))?"已冻结":"未冻结";
+		return freezeStatusName;
+	}
+
+	public void setFreezeStatusName(String freezeStatusName) {
+		this.freezeStatusName = freezeStatusName;
 	}
 }

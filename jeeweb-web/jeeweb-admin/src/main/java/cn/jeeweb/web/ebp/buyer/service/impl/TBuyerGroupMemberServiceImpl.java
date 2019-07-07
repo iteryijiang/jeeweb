@@ -51,7 +51,7 @@ public class TBuyerGroupMemberServiceImpl extends CommonServiceImpl<TBuyerGroupM
 		}
 		//添加新的分组
 		buyObj.setGroupId(newGroupId);
-		TBuyerGroupMember insertObj=initBuyerGroupMember(buyObj);
+		TBuyerGroupMember insertObj=initBuyerGroupMember(buyObj,newGroupId);
 		int num=baseMapper.insert(insertObj);
 		if(num != 1){
 			throw  new MyProcessException("更新买手分组信息失败");
@@ -86,17 +86,18 @@ public class TBuyerGroupMemberServiceImpl extends CommonServiceImpl<TBuyerGroupM
 	/**
 	 * 初始化买手分组关系信息
 	 *
-	 * @param buyObj
+	 * @param sourceBuyerObj
+	 * @param groupId
 	 * @return
 	 */
-	private TBuyerGroupMember initBuyerGroupMember(TbuyerInfo buyObj){
+	private TBuyerGroupMember initBuyerGroupMember(TbuyerInfo sourceBuyerObj,String groupId){
 		TBuyerGroupMember insertObj=new TBuyerGroupMember();
-		insertObj.setBuyerId(buyObj.getUserid());
-		insertObj.setGroupId(buyObj.getGroupId());
+		insertObj.setBuyerId(sourceBuyerObj.getUserid());
+		insertObj.setGroupId(groupId);
 		insertObj.setMemType(BuyerMemberPositionEnum.MEMBER.code);
 		insertObj.setJoinTime(DateUtils.getCurrentTime());
-		insertObj.setBuyerLevelOnJoin(buyObj.getAccountlevel());
-		insertObj.setBuyerLevelNameOnJoin(buyObj.getLevelName());
+		insertObj.setBuyerLevelOnJoin(sourceBuyerObj.getAccountlevel());
+		insertObj.setBuyerLevelNameOnJoin(sourceBuyerObj.getLevelName());
 		insertObj.setJoinCreateBy(UserUtils.getUser().getId());
 		insertObj.setJoinCreateName(UserUtils.getUser().getUsername());
 		return insertObj;
@@ -114,8 +115,7 @@ public class TBuyerGroupMemberServiceImpl extends CommonServiceImpl<TBuyerGroupM
 				if(StringUtils.isNotBlank(buyObj.getGroupId())){
 					batchDelBuyerList.add(buyObj);
 				}
-				buyObj.setGroupId(newGroupId);
-				insertList.add(initBuyerGroupMember(buyObj));
+				insertList.add(initBuyerGroupMember(buyObj,newGroupId));
 				buyerIds.append(",'").append(buyObj.getUserid()).append("'");
 			}
 		}
@@ -155,22 +155,29 @@ public class TBuyerGroupMemberServiceImpl extends CommonServiceImpl<TBuyerGroupM
 		paramMap.put("updateDate",DateUtils.getCurrentTime());
 		//不是当前组成员
 		if(objDb != null && BuyerMemberPositionEnum.GROUP_LEADER.code == objDb.getMemType()){
-			throw  new MyProcessException("d当前成员已经是组长,不需要更改！");
+			throw  new MyProcessException("当前成员已经是组长,不需要更改！");
 		}
-		//组长职位人选变更
-		paramMap.put("buyerId",null);
-		paramMap.put("memType",BuyerMemberPositionEnum.MEMBER.code);
-		paramMap.put("oldMemType",BuyerMemberPositionEnum.GROUP_LEADER.code);
-		int num=baseMapper.updateMemberPosition(paramMap);
-		if(num != 1){
-			throw  new MyProcessException("组长人选变更失败");
-		}
-		paramMap.put("buyerId",buyerId);
+		//判断当前分组是否存在组长
 		paramMap.put("memType",BuyerMemberPositionEnum.GROUP_LEADER.code);
-		paramMap.put("oldMemType",BuyerMemberPositionEnum.MEMBER.code);
-		num=baseMapper.updateMemberPosition(paramMap);
-		if(num != 1){
-			throw  new MyProcessException("组长人选变更失败");
+		long leaderCount=baseMapper.getGroupMemTypeCountByGroupId(paramMap);
+		if(leaderCount > 0){
+			//组长职位人选变更
+			paramMap.put("buyerId",null);
+			paramMap.put("memType",BuyerMemberPositionEnum.MEMBER.code);
+			paramMap.put("oldMemType",BuyerMemberPositionEnum.GROUP_LEADER.code);
+			int updateNum=baseMapper.updateMemberPosition(paramMap);
+			if(updateNum != leaderCount){
+				throw  new MyProcessException("操作失败[变更分组组长信息失败]");
+			}
+		}
+		if(objDb != null){
+			paramMap.put("buyerId",buyerId);
+			paramMap.put("memType",BuyerMemberPositionEnum.GROUP_LEADER.code);
+			paramMap.put("oldMemType",BuyerMemberPositionEnum.MEMBER.code);
+			int num=baseMapper.updateMemberPosition(paramMap);
+			if(num != 1){
+				throw  new MyProcessException("组长人选变更失败");
+			}
 		}
 	}
 }

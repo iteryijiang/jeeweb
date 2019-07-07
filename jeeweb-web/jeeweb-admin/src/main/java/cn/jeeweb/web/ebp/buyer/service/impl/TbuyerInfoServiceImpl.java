@@ -12,6 +12,8 @@ import cn.jeeweb.web.ebp.buyer.mapper.TbuyerInfoMapper;
 import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupMemberService;
 import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
 import cn.jeeweb.web.ebp.exception.MyProcessException;
+import cn.jeeweb.web.modules.sys.entity.User;
+import cn.jeeweb.web.modules.sys.service.IUserService;
 import cn.jeeweb.web.utils.UserUtils;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class TbuyerInfoServiceImpl extends CommonServiceImpl<TbuyerInfoMapper, T
 
 	@Resource(name = "buyerGroupMemberService")
 	TBuyerGroupMemberService buyerGroupMemberService;
+	@Resource(name = "userService")
+	IUserService userService;
 
 	@Override
 	public TbuyerInfo getTbuyerInfoById(String id) {
@@ -62,8 +66,22 @@ public class TbuyerInfoServiceImpl extends CommonServiceImpl<TbuyerInfoMapper, T
 
 	@Override
 	public void updateTbuyerInfoById(TbuyerInfo obj) {
-		// TODO Auto-generated method stub
-		
+		TbuyerInfo objDb=getTbuyerInfoById(obj.getId());
+		if(objDb == null){
+			throw  new MyProcessException("操作失败[更新买手信息异常]");
+		}
+		//编辑买手的相关信息
+		int num=baseMapper.updateBuyerInfoById(obj);
+		if(num != 1){
+			throw  new MyProcessException("操作失败[更新买手信息异常]");
+		}
+		User userObj=new User();
+		userObj.setRealname(obj.getBuyername());
+		userObj.setPhone(obj.getPhone());
+		userObj.setId(objDb.getUserid());
+		userObj.setUpdateBy(UserUtils.getUser());
+		userObj.setUpdateDate(DateUtils.getCurrentTime());
+		userService.updateUserInfoByUserId(userObj);
 	}
 
 	@Override

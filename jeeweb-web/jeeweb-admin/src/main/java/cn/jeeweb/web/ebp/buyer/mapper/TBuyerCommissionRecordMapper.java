@@ -48,6 +48,14 @@ public interface TBuyerCommissionRecordMapper extends BaseMapper<TBuyerCommissio
 	TBuyerCommissionRecord getTBuyerCommissionRecordByBuyerIdAtime(@Param("map") Map<String, Object> map);
 
 	/**
+	 * 获得某个月份的额明细数据
+	 *
+	 * @param map
+	 * @return
+	 */
+	List<TBuyerCommissionRecord> getTBuyerCommissionRecordByBuyerIdMonth(@Param("map") Map<String, Object> map);
+
+	/**
 	 * 添加买手佣金信息
 	 *
 	 * @param map
@@ -90,10 +98,19 @@ public interface TBuyerCommissionRecordMapper extends BaseMapper<TBuyerCommissio
 
 	/**
 	 * 清空临时表数据
+	 * 任务数据
 	 *
 	 * @return
 	 */
-	int updateBuyerCommissionForTruncateTemp();
+	int updateBuyerCommissionTaskForTruncateTemp();
+
+	/**
+	 * 清空临时表
+	 * 分组数据
+	 *
+	 * @return
+	 */
+	int updateBuyerCommissionGroupForTruncateTemp();
 
 	/**
 	 * 更改佣金信息

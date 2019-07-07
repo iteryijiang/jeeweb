@@ -20,6 +20,8 @@ public interface TBuyerLevelMapper extends BaseMapper<TBuyerLevel> {
 
 	List<TBuyerLevel> selectBuyerLevelPageList(Pagination page, @Param("ew") Wrapper<TBuyerLevel> wrapper);
 
+	TBuyerLevel selectBuyerLevelById(String id);
+
 	int getBuyerLevelByName(@Param("map") Map map);
 	
 	int getBuyerLevelByCode(@Param("map") Map map);

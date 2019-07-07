@@ -37,13 +37,16 @@
       	bg.del_flag=0 and bg.group_name like '%${map.keyWord}%'
   </select>
 
-    <update id="updateBuyerGroupForUpdateLeader" parameterType="cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup">
+    <update id="updateBuyerGroupForUpdateLeader" parameterType="HashMap">
       update
         t_buyer_group
       set
-        group_leader=#{groupLeader},group_leader_name=#{groupLeaderName},leader_commission=#{leaderCommission},update_date=#{updateDate},update_by=#{updateBy.id}
+        group_leader=#{map.groupLeader},group_leader_name=#{map.groupLeaderName},update_date=#{map.updateDate},update_by=#{map.updateBy}
+        <if test="map.initGroupLeader != null and initGroupLeader!='' ">
+          ,init_group_leader=#{map.initGroupLeader},init_group_leader_name=#{map.initGroupLeaderName}
+        </if>
       where
-        id=#{id}
+        id=#{map.id}
   </update>
 
     <update id="updateBuyerGroupById" parameterType="cn.jeeweb.web.ebp.buyer.entity.TBuyerGroup">

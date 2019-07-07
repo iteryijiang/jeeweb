@@ -135,4 +135,9 @@ public class UserServiceImpl extends CommonServiceImpl<UserMapper, User> impleme
 		}
 	}
 
+	@Override
+	public void updateUserInfoByUserId(User obj){
+		baseMapper.updateUserInfoByUserId(obj);
+	}
+
 }

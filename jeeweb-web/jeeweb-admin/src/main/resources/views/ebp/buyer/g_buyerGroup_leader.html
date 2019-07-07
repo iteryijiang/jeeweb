@@ -25,9 +25,9 @@
             <#grid:column label="买手等级" name="levelName" width="100" />
             <#grid:column label="所属分组" name="groupName" width="80" align="center"/>
             <#grid:column label="联系电话" name="phone" width="80" align="center"/>
-            <#grid:column label="冻结状态" name="freezeStatus" width="80" align="center"/>
+            <#grid:column label="冻结状态" name="freezeStatus" width="80" align="center" formatterValue="0:未冻结;1:已冻结"/>
             <#grid:column label="sys.common.opt" name="opt" formatter="button" />
-            <#grid:button title="设为组长" groupname="opt" function="setBuyerGroupLeaderFn()" url='${adminPath}/buyer/buyergroup/saveBuyerLeader/\"+row.id+\"/${buyerGroupObj.id}' outclass="btn-danger" />
+            <#grid:button title="设为组长" groupname="opt" function="setBuyerGroupLeaderFn" url='${adminPath}/buyer/buyergroup/saveBuyerLeader/\"+row.id+\"/${buyerGroupObj.id}' outclass="btn-danger" />
             <#grid:toolbar function="search" />
             <#grid:toolbar function="reset" />
         </#grid:grid>

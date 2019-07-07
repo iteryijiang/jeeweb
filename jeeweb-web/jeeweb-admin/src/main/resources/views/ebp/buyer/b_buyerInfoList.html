@@ -3,15 +3,14 @@
 <#grid:grid id="ttaskBaseGrid" url="${adminPath}/buyer/TbuyerInfo/ajaxListBuyer" multiselect="false" sortname="loginname" sortorder="desc" sortable="false">
 <#grid:column label="买手编号" width="90" query="true" condition="like" name="loginname" align="center"/>
 <#grid:column label="买手名称" name="buyername" width="140" />
-<#grid:column label="买手等级" name="levelName" query="true" condition="like" width="100" />
+<#grid:column label="买手等级" name="levelName" width="100" />
 <#grid:column label="所属分组" name="groupName" query="true" condition="like" width="80" align="center"/>
 <#grid:column label="联系电话" name="phone"  width="80" align="center"/>
-<#grid:column label="冻结状态" name="freezeStatus"  width="80" align="center"/>
+<#grid:column label="冻结状态" name="freezeStatus"  width="80" align="center" formatterValue="0:未冻结;1:已冻结"/>
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TbuyerInfo/getApplyTaskDetail/1/\"+row.id+\"' />
+<#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TbuyerInfo/showBuyerInfo/\"+row.id+\"' />
 <#grid:button title="小组调整" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/TbuyerInfo/changeBuyerGroup/\"+row.id+\"' />
 <#grid:toolbar function="update" winwidth="650px" winheight="550px"  />
-<#grid:toolbar function="delete"  />
 
 <#grid:toolbar  function="search" />
 <#grid:toolbar  function="reset" />

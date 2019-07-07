@@ -4,6 +4,8 @@ import java.io.IOException;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import cn.jeeweb.web.ebp.exception.MyProcessException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,13 +115,15 @@ public class TBuyerLevelController  extends BaseBeanController<TBuyerLevel> {
 	 */
 	@PostMapping("{id}/update")
 	@Log(logType = LogType.UPDATE)
-	@RequiresMethodPermissions("update")
 	public Response update(TBuyerLevel entity, BindingResult result, HttpServletRequest request,HttpServletResponse response) {
 		try {
 			buyerLevelService.updateBuyerLevel(entity);
+			return Response.ok("更新成功");
+		}catch (MyProcessException ex){
+			return Response.error(ex.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+			return Response.error("系统异常");
 		}
-		return Response.ok("更新成功");
 	}
 }

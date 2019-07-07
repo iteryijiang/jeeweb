@@ -8,9 +8,12 @@ import java.util.Map;
 import cn.jeeweb.common.mybatis.mvc.parse.QueryToWrapper;
 import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
+import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.buyer.mapper.TbuyerInfoMapper;
 import cn.jeeweb.web.ebp.buyer.service.TBuyerGroupMemberService;
+import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
+import cn.jeeweb.web.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +42,7 @@ public class TBuyerGroupServiceImpl extends CommonServiceImpl<TBuyerGroupMapper,
 	@Resource(name = "buyerGroupMemberService")
 	TBuyerGroupMemberService buyerGroupMemberService;
 	@Autowired
-	TbuyerInfoMapper buyerInfoMapper;
+	TbuyerInfoService tbuyerInfoService;
 
 	@Override
 	public Page<TBuyerGroup> selectBuyerGroupPageList(Queryable queryable, Wrapper<TBuyerGroup> wrapper) {
@@ -79,19 +82,34 @@ public class TBuyerGroupServiceImpl extends CommonServiceImpl<TBuyerGroupMapper,
 		baseMapper.deleteById(id);
 	}
 
+	/***
+	 * 根据分组ID获取分组下的成员数量
+	 *
+	 * @param buyerGroupId
+	 * @return
+	 */
 	private int getBuyerGroupMemberCountByGroupId(String buyerGroupId) {
 		return getBuyerGroupMemberCountByGroupId(buyerGroupId);
 	}
 
 	@Override
 	public void updateBuyerGroupForUpdateLeader(TBuyerGroup obj) {
-		TbuyerInfo buyerObj=buyerInfoMapper.selectBuyerInfoById(obj.getGroupLeader());
+		TbuyerInfo buyerObj=tbuyerInfoService.getTbuyerInfoById(obj.getGroupLeader());
 		if(buyerObj == null){
 			throw new RuntimeException("保存数据失败[为获取到买手信息]");
 		}
-		obj.setGroupLeader(buyerObj.getUserid());
-		obj.setGroupLeaderName(buyerObj.getBuyername());
-		int retObj = baseMapper.updateBuyerGroupForUpdateLeader(obj);
+		Map<String,Object> updateMap=new HashMap<>();
+		updateMap.put("groupLeader",buyerObj.getUserid());
+		updateMap.put("groupLeaderName",buyerObj.getBuyername());
+		updateMap.put("updateDate",DateUtils.getCurrentTime());
+		updateMap.put("updateBy", UserUtils.getUser().getId());
+		updateMap.put("id",obj.getId());
+		TBuyerGroup buyerGroupDb=getBuyerGroupById(obj.getId());
+		if(StringUtils.isBlank(buyerGroupDb.getInitGroupLeader())){
+			updateMap.put("initGroupLeader",buyerObj.getUserid());
+			updateMap.put("initGroupLeaderName", buyerObj.getBuyername());
+		}
+		int retObj = baseMapper.updateBuyerGroupForUpdateLeader(updateMap);
 		if (retObj != 1) {
 			throw new RuntimeException("保存数据失败");
 		}
@@ -101,8 +119,6 @@ public class TBuyerGroupServiceImpl extends CommonServiceImpl<TBuyerGroupMapper,
 
 	@Override
 	public void updateBuyerGroup(TBuyerGroup obj) {
-		TbuyerInfo buyerObj=buyerInfoMapper.selectBuyerInfoByUserId(obj.getGroupLeader());
-		obj.setGroupLeaderName(buyerObj.getBuyername());
 		int retObj = baseMapper.updateBuyerGroupById(obj);
 		if (retObj != 1) {
 			throw new RuntimeException("保存数据失败");

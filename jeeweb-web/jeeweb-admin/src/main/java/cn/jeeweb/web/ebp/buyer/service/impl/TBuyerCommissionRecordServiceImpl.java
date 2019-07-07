@@ -3,6 +3,7 @@ package cn.jeeweb.web.ebp.buyer.service.impl;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.jeeweb.common.mybatis.mvc.parse.QueryToWrapper;
@@ -22,6 +23,7 @@ import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerCommissionRecord;
 import cn.jeeweb.web.ebp.buyer.mapper.TBuyerCommissionRecordMapper;
 import cn.jeeweb.web.ebp.buyer.service.TBuyerCommissionRecordService;
+import org.springframework.web.bind.annotation.Mapping;
 
 /**
  * 买手佣金记录
@@ -47,6 +49,14 @@ public class TBuyerCommissionRecordServiceImpl extends CommonServiceImpl<TBuyerC
 	}
 
 	@Override
+	public List<TBuyerCommissionRecord> selectListByBuyerIdMonth(int month, String buyerId){
+		Map<String,Object> paramMap=new HashMap<>();
+		paramMap.put("dataMonth",month);
+		paramMap.put("buyerId",buyerId);
+		return baseMapper.getTBuyerCommissionRecordByBuyerIdMonth(paramMap);
+	}
+
+	@Override
 	public Page<TBuyerCommissionRecord> selectGroupPageList(Queryable queryable,Wrapper<TBuyerCommissionRecord> wrapper) {
 		QueryToWrapper<TBuyerCommissionRecord> queryToWrapper = new QueryToWrapper<TBuyerCommissionRecord>();
 		queryToWrapper.parseCondition(wrapper, queryable);
@@ -67,7 +77,8 @@ public class TBuyerCommissionRecordServiceImpl extends CommonServiceImpl<TBuyerC
 		paramMap.put("createBy","schule");
 		paramMap.put("beginTime",beginDate);
 		paramMap.put("endTime",DateUtils.getDateEnd(sourceDate));
-		baseMapper.updateBuyerCommissionForTruncateTemp();
+		baseMapper.updateBuyerCommissionGroupForTruncateTemp();
+		baseMapper.updateBuyerCommissionTaskForTruncateTemp();
 		//生成所有买手的佣金信息
 		baseMapper.insertBuyerCommissionInfo(paramMap);
 		//生成所有组长的佣金提成
@@ -77,8 +88,6 @@ public class TBuyerCommissionRecordServiceImpl extends CommonServiceImpl<TBuyerC
 		baseMapper.updateBuyerGroupMoney(paramMap);
 		baseMapper.updateBuyerTaskNum(paramMap);
 	}
-
-
 
 	@Override
 	public void updateBuyerCommissionRecordForBack(TBuyerCommissionRecord obj) {

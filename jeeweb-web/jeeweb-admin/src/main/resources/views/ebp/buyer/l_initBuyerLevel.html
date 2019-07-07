@@ -4,13 +4,10 @@
 	<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
 		<tbody>
 			<tr>
-				<td  class="width-15 active text-right"><label><font color="red">*</font>等级编号:</label></td>
+				<td  class="width-15 active text-right"><label>等级编号:</label></td>
 				<td  class="width-35" >
-					<#form:input path="levelCode" class="form-control"   htmlEscape="false"  datatype="*"  />
-					<label class="Validform_checktip"></label>
+					${data.levelCode}
 				</td>
-			</tr>
-			<tr>
 				<td  class="width-15 active text-right">
 					<label><font color="red">*</font>等级名称:</label>
 				</td>
@@ -21,28 +18,49 @@
 			</tr>
 			<tr>
 				<td  class="width-15 active text-right">
-					<label><font color="red">*</font>上一等级:</label>
+					<label>上一等级:</label>
 				</td>
 				<td class="width-35" >
-					<#form:input path="preLevelCode" class="form-control"   datatype="*"  htmlEscape="false" />
+					${data.preLevelName}
+				</td>
+				<td  class="width-15 active text-right">
+					<label>下一等级:</label>
+				</td>
+				<td class="width-35" >
+					${data.nextLevelName}
+				</td>
+			</tr>
+			<tr>
+				<td  class="width-15 active text-right">
+					<label><font color="red">*</font>佣金类型:</label>
+				</td>
+				<td class="width-35"  colspan="3">
+					<#form:select path="commissionType" class="form-control" dict="buyerCommissionType" htmlEscape="false" />
 					<label class="Validform_checktip"></label>
 				</td>
 			</tr>
 			<tr>
 				<td  class="width-15 active text-right">
-					<label><font color="red">*</font>下一等级:</label>
+					<label><font color="red">*</font>固定佣金:</label>
 				</td>
 				<td class="width-35" >
-					<#form:input path="nextLevelCode" class="form-control"   datatype="*"   htmlEscape="false" />
+					<#form:input path="commissionValue" class="form-control"  datatype="*" nullmsg="请输入固定佣金！"  htmlEscape="false" />
 					<label class="Validform_checktip"></label>
 				</td>
-			</tr>
-			<tr>
 				<td  class="width-15 active text-right">
 					<label><font color="red">*</font>每单佣金:</label>
 				</td>
 				<td class="width-35" >
 					<#form:input path="commissionRatio" class="form-control"   datatype="*" nullmsg="请输每单佣金！"  htmlEscape="false" />
+					<label class="Validform_checktip"></label>
+				</td>
+			</tr>
+			<tr>
+				<td  class="width-15 active text-right">
+					<label><font color="red">*</font>保底金额:</label>
+				</td>
+				<td class="width-35"  colspan="3">
+					<#form:input path="minimumWage" class="form-control"   datatype="*" nullmsg="保底金额！"  htmlEscape="false" />
 					<label class="Validform_checktip"></label>
 				</td>
 			</tr>

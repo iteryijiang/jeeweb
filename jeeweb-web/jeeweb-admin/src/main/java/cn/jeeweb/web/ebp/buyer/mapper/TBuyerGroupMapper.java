@@ -23,7 +23,7 @@ public interface TBuyerGroupMapper extends BaseMapper<TBuyerGroup> {
 	
 	List<TBuyerGroup> findBuyerGroupByKeyWord(@Param("map") Map<String,Object> map);
 
-	int updateBuyerGroupForUpdateLeader(TBuyerGroup obj);
+	int updateBuyerGroupForUpdateLeader(@Param("map") Map<String,Object> map);
 
 	int updateBuyerGroupById(TBuyerGroup obj);
 

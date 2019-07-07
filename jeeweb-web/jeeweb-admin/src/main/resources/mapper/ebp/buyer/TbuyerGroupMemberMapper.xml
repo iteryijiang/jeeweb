@@ -23,6 +23,15 @@
           group_id=#{groupId} and del_flag=0
     </select>
 
+    <select id="getGroupMemTypeCountByGroupId" resultType="long" parameterType="HashMap">
+       SELECT
+          count(*)
+        FROM
+          t_buyer_group_member
+        where
+          group_id=#{map.groupId} and del_flag=0 and mem_type=#{map.memType}
+    </select>
+
     <select id="getMemberByBuyerIdGroupId" resultMap="TBuyerGroupMember" parameterType="HashMap">
        SELECT
           *

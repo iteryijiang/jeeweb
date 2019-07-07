@@ -119,4 +119,13 @@
 			userid = #{map.userId} and group_id=#{map.groupId}
 	</update>
 
+	<update id="updateBuyerInfoById" parameterType="cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo">
+		update
+			t_buyer_info
+		set
+			buyerName=#{buyername},phoneNum=#{phone},accountLevel=#{accountlevel},update_by=#{updateBy.id},update_date=#{updateDate}
+		where
+			id = #{id}
+	</update>
+
 </mapper>

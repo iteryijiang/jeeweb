@@ -1,8 +1,12 @@
 package cn.jeeweb.web.ebp.buyer.controller;
 
 import java.io.IOException;
+import java.util.List;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import cn.jeeweb.web.ebp.buyer.service.TBuyerCommissionRecordService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +38,8 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 @Log(title = "买手佣金")
 public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommissionRecord> {
 
+	@Resource(name = "buyerCommissionRecordService")
+	private TBuyerCommissionRecordService buyerCommissionRecordService;
 	/**
 	 * 买手佣金列表页面
 	 * 
@@ -67,12 +73,12 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 		String content = null;
 		try {
 			EntityWrapper<TBuyerCommissionRecord> entityWrapper = new EntityWrapper<TBuyerCommissionRecord>(entityClass);
-			propertyPreFilterable.addQueryProperty("id");
-			
+			String[] queryPro = { "id", "dataMonth","buyerId" };
+			propertyPreFilterable.addQueryProperty(queryPro);
 			// 预处理
-			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TBuyerLevel.class);
-			SerializeFilter filter = propertyPreFilterable.constructFilter(TBuyerLevel.class);
-			PageResponse<TBuyerCommissionRecord> pagejson = new PageResponse<TBuyerCommissionRecord>();
+			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TBuyerCommissionRecord.class);
+			SerializeFilter filter = propertyPreFilterable.constructFilter(TBuyerCommissionRecord.class);
+			PageResponse<TBuyerCommissionRecord> pagejson = new PageResponse<TBuyerCommissionRecord>(buyerCommissionRecordService.selectGroupPageList(queryable, entityWrapper));
 			content = JSON.toJSONString(pagejson, filter);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -80,7 +86,26 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 			StringUtils.printJson(response, content);
 		}
 	}
-	
+
+
+	/**
+	 * 买手佣金月明细列表页面
+	 *
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@GetMapping(value = "monthDetailView/{dataMonth}/{buyerId}")
+	@RequiresMethodPermissions("view")
+	public ModelAndView monthDetailView(@PathVariable int dataMonth,@PathVariable String buyerId,Model model, HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = displayModelAndView("c_buyerCommissionGroupDetailList");
+		//获得月份数据
+		List<TBuyerCommissionRecord> list= buyerCommissionRecordService.selectListByBuyerIdMonth(dataMonth,buyerId);
+		model.addAttribute("sourceList",list);
+		return mav;
+	}
+
 	/***
 	 * 查看佣金详情
 	 * 一条佣金对应的任务链接明细详情
@@ -140,11 +165,10 @@ public class TBuyerCommissionController  extends BaseBeanController<TBuyerCommis
 		try {
 			EntityWrapper<TBuyerCommissionRecord> entityWrapper = new EntityWrapper<TBuyerCommissionRecord>(entityClass);
 			propertyPreFilterable.addQueryProperty("id");
-			
 			// 预处理
-			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TBuyerLevel.class);
-			SerializeFilter filter = propertyPreFilterable.constructFilter(TBuyerLevel.class);
-			PageResponse<TBuyerCommissionRecord> pagejson = new PageResponse<TBuyerCommissionRecord>();
+			QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TBuyerCommissionRecord.class);
+			SerializeFilter filter = propertyPreFilterable.constructFilter(TBuyerCommissionRecord.class);
+			PageResponse<TBuyerCommissionRecord> pagejson = new PageResponse<TBuyerCommissionRecord>(buyerCommissionRecordService.selectPageList(queryable, entityWrapper));
 			content = JSON.toJSONString(pagejson, filter);
 		} catch (Exception ex) {
 			ex.printStackTrace();

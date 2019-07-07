@@ -8,19 +8,17 @@
 				<td  class="width-35" >
 					${data.loginname}
 				</td>
-				<td  class="width-15 active text-right"><label><font color="red">*</font>买手名称:</label></td>
+				<td  class="width-15 active text-right">买手名称:</label></td>
 				<td  class="width-35" >
-					<#form:input path="buyername" class="form-control"   htmlEscape="false"  datatype="*"  nullmsg="买手名称！"/>
-					<label class="Validform_checktip"></label>
+					${data.buyername}
 				</td>
 			</tr>
 			<tr>
 				<td  class="width-15 active text-right">
-					<label><font color="red">*</font>联系电话:</label>
+					<label>联系电话:</label>
 				</td>
 				<td class="width-35" >
-					<#form:input path="phone" class="form-control"   datatype="*" nullmsg="请输入联系电话！"  htmlEscape="false" />
-					<label class="Validform_checktip"></label>
+					${data.phone}
 				</td>
 				<td  class="width-15 active text-right">
 					<label>冻结状态:</label>
@@ -31,11 +29,10 @@
 			</tr>
 			<tr>
 				<td  class="width-15 active text-right">
-					<label><font color="red">*</font>买手等级:</label>
+					<label>买手等级:</label>
 				</td>
 				<td class="width-35" >
-					<#form:select path="accountlevel" class="form-control" dict="buyerLevel" nullmsg="请输入买手等级！"  htmlEscape="false" />
-					<label class="Validform_checktip"></label>
+					${data.levelName}
 				</td>
 			</tr>
 		</tbody>

@@ -40,6 +40,14 @@ public interface TbuyerInfoMapper extends BaseMapper<TbuyerInfo> {
 	List<TbuyerInfo> selectBuyerInfoListByUserIdGroupId(@Param("map") Map<String,Object> map);
 
 	/**
+	 * 编辑买手信息
+	 *
+	 * @param obj
+	 * @return
+	 */
+	int updateBuyerInfoById(TbuyerInfo obj);
+
+	/**
 	 * 更改买手对应的分组信息
 	 *
 	 * @param map

@@ -40,4 +40,12 @@ public interface UserMapper extends BaseMapper<User> {
 	 * @return
 	 */
 	int updateUserReceiveTaskStatus(@Param("map") Map map);
+
+	/***
+	 * 更新用户信息
+	 *
+	 * @param obj
+	 * @return
+	 */
+	int updateUserInfoByUserId(User obj);
 }
