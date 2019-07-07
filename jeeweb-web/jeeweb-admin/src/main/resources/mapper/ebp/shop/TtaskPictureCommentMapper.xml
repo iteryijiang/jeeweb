@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TtaskPictureCommentMapper" >
+  <resultMap id="TtaskPictureComment" type="cn.jeeweb.web.ebp.shop.entity.TtaskPictureComment" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="shopname" column="shopname" jdbcType="VARCHAR" />
+    <result property="mainurl" column="mainurl" jdbcType="VARCHAR" />
+    <result property="jdshopid" column="jdshopid" jdbcType="VARCHAR" />
+    <result property="platform" column="platform" jdbcType="VARCHAR" />
+    <result property="address" column="address" jdbcType="VARCHAR" />
+    <result property="sendname" column="sendname" jdbcType="VARCHAR" />
+    <result property="mobile" column="mobile" jdbcType="VARCHAR" />
+    <result property="classical1" column="classical1" jdbcType="VARCHAR" />
+    <result property="classical2" column="classical2" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectTaskPictureCommentList" resultMap="TtaskPictureComment">
+    select t.* from t_task_picture_comment t
+    <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+      <where>
+        ${ew.sqlSegment}
+      </where>
+    </if>
+  </select>
+
+  <select id="selectPictureList" resultMap="TtaskPictureComment">
+    select t.* from t_task_picture_comment t
+    where 1=1
+    <if test="map.taskid != '' and map.taskid != null">
+      and t.taskid=#{map.taskid}
+    </if>
+    <if test="map.taskpicturenum != '' and map.taskpicturenum != null">
+      and t.taskpicturenum=#{map.taskpicturenum}
+    </if>
+  </select>
+
+    <select id="listMytaskPic" resultMap="TtaskPictureComment">
+        select pc.*,td.id tdid from t_task_base t,t_task_picture_comment pc,t_my_task_detail td where t.id=pc.taskid and t.id=td.taskid
+         and td.buyerno=#{map.buyerno} and td.ispicture='1' and td.buyerproid=pc.taskpicturenum
+    </select>
+</mapper>

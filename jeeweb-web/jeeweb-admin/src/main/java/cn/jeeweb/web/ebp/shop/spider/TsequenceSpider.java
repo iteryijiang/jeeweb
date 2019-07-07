@@ -44,4 +44,12 @@ public class TsequenceSpider {
         long st =  tsequenceService.nextNum(bhkey);
         return  bhkey+String.format("%04d", st);
     }
+    /**
+     * 任务详情流水号
+     * */
+    public static String getTaskDetailNo()throws Exception{
+        String bhkey = "D"+DateUtils.formatDate(new Date(),"yyyyMMdd");
+        long st =  tsequenceService.nextNum(bhkey);
+        return  bhkey+String.format("%05d", st);
+    }
 }

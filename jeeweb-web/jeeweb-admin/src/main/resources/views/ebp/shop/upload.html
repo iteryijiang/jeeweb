@@ -1,0 +1,15 @@
+<% layout('/layouts/form.html', {title: @MessageUtils.getMessage('shop.shopbase.addshop',''), formId: 'shopBaseForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+	<#form:form id="avatarForm" modelAttribute="data"  method="post" class="form-horizontal">
+	<#form:hidden path="id" />
+		<#form:fileinput basePath="/hellows/test" nested="false" showType="file" extend="jpg,jpeg,png,JPG,JPEG,PNG" fileInputWidth="100px"  fileInputHeight="100px"  path="pourl"/>
+	</#form:form>
+
+	<script type="text/javascript">
+		var callbackdata = function () {
+			var data = {
+                pourl: $("#pourl").val()
+			};
+			return data;
+		}
+	</script>
+<% } %>

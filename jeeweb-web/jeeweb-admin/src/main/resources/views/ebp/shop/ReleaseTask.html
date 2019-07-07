@@ -14,6 +14,8 @@
 <script src='${staticPath}/shop/js/fileinput.min.js'></script>
 <script src="${staticPath}/shop/laydate/laydate.js" charset="UTF-8"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <#html:css name="bootstrap-fileinput,iCheck,Validform" />
+    <#html:js name="bootstrap-fileinput,iCheck,Validform" />
 </head>
 <body>
 <!-- 用户信息栏 -->
@@ -59,12 +61,29 @@
                             <label class="col-sm-2 control-label">任务模式:</label>
                             <div class="col-sm-6">
                                 <input type="radio" name="inputpattern" value="1" ${tb.pattern=="1"||tb.pattern==""||tb.pattern==null?"checked":""}><span style="font-size: 18px">模式1</span>
-                                <input type="radio" name="inputpattern" value="2" ${tb.pattern=="2"?"checked":""}><font style="size: 16px;"><span style="font-size: 18px">模式2</span>
+                                <input type="radio" name="inputpattern" value="2" ${tb.pattern=="2"?"checked":""}><font style="size: 16px;"><span style="font-size: 18px">模式2</span></font>
                             </div>
                             <label class="col-sm-1 control-label red_font">必填</label>
                         </div>
                     </form>
                 </div>
+
+                <div id="ispictureDiv" style="display: ${ispictureDisplay};">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">是否带图评论:</label>
+                            <div class="col-sm-6">
+                                <input type="radio" name="inputispicture" value="0" ${tb.ispicture=="0"||tb.ispicture==""||tb.ispicture==null?"checked":""}><span style="font-size: 18px">否</span>
+                                <input type="radio" name="inputispicture" value="1" ${tb.ispicture=="1"?"checked":""}><font style="size: 16px;"><span style="font-size: 18px">是</span></font>
+                            </div>
+                            <label class="col-sm-1 control-label red_font">必填</label>
+                            <div id="pictureUrlDiv" style="display: none;">
+                                <button type="button" onclick="getPictureUrl()" class="btn btn-default">图片上传</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <div>
                     <form class="form-horizontal">
                         <div class="form-group">
@@ -164,7 +183,7 @@
                         </div>
                         <div class="form-group">
                             <label for="effectdate">生效时间:</label>
-                            <input id="effectdate" style="width: 180px" class="form-control"  type="text" readonly="readonly" onclick="laydate()" >
+                            <input id="effectdate" style="width: 180px" class="form-control"  type="text" readonly="readonly" onclick="laydate()" />
                         </div>
                      </form>
                     <form class="form-inline">
@@ -188,12 +207,12 @@
                         <div class='good_keyword' id='keyword1'>
                             <div class='item' id=1>
                                 <p>关键字来源：</p>
-                                <label for="">让买手打开<b class='red-font'>京东APP</b>搜索关键字进入“搜索列表”</label>
+                                <label for="keyword">让买手打开<b class='red-font'>京东APP</b>搜索关键字进入“搜索列表”</label>
                                 <input type="text" id="keyword" class='must-fill' value="${tb.keyword}" style="width: 220px">
                                 <span class='red_font'>必填</span>
                                 <div class='good_cond'>
                                     <p>
-                                        <label for="">规格：</label>
+                                        <label for="spec1">规格：</label>
                                         <input type="text" placeholder="如：颜色" id="spec1" class='spec0' value="${tb.spec1}">
                                         <input type="text" placeholder="如：尺寸" id="spec2" class='spec1' value="${tb.spec2}">
                                         <span class='color_0'>非必填</span>
@@ -202,7 +221,8 @@
                             </div>
                             <div class='make-sure'>
                                 <input type="hidden" id="presentdepositID">
-                                <button class='btn btn-warning' onclick="TaskConfirm(0,$(this))">确认提交信息</button>                            </div>
+                                <button class='btn btn-warning' onclick="TaskConfirm(0,$(this))">确认提交信息</button>
+                            </div>
                         </div>
                     </div>
                   </div>
@@ -210,11 +230,12 @@
 
         </div>
     </div>
-
+    </div>
 </body>
 <script src='${staticPath}/shop/js/swiper-3.4.2.min.js'></script>
 
 <script>
+    var projectFile = ${retuList};
         var mySwiper = new Swiper('.swiper-container', {
             autoplay: 2000,//可选选项，自动滑动
         })
@@ -255,37 +276,37 @@
                     case 0:
                         good_detail_info.tUrl=$(ele).val()
                         break;
-                    case 3:
+                    case 5:
                         good_detail_info.couponurl=$(ele).val()
                         break;
-                    case 4:
+                    case 6:
                         good_detail_info.renovationurl=$(ele).val()
                         break;
-                    case 5:
+                    case 7:
                         good_detail_info.tTitle=$(ele).val()
                         break;
-                    case 6:
+                    case 8:
                         good_detail_info.brand = $(ele).val()
                         break;
-                    case 7:
+                    case 9:
                         good_detail_info.tasknum=$(ele).val()
                         break;
-                    case 8:
+                    case 10:
                         good_detail_info.tPrice=$(ele).val()
                         break;
-                    case 9:
+                    case 11:
                         good_detail_info.actualprice=$(ele).val()
                         break;
-                    case 10:
+                    case 12:
                         good_detail_info.tNum=$(ele).val()
                         break;
-                    case 11:
+                    case 13:
                         good_detail_info.searchprice=$(ele).val()
                         break;
-                    case 12:
+                    case 14:
                         good_detail_info.article=$(ele).val()
                         break;
-                    case 13:
+                    case 15:
                         good_detail_info.effectdate=$(ele).val()
                 }
             }
@@ -297,6 +318,7 @@
             $('#task_accordin').removeClass('red')
           }
           good_detail_info.pattern=$("input[name='inputpattern']:checked").val();
+          good_detail_info.ispicture=$("input[name='inputispicture']:checked").val();
           good_detail_info.storename = $("#storename").val();
           good_detail_info.qrcodeurl = $("#qrcodeurl")[0].src;
           good_detail_info.keyword = $("#keyword").val();
@@ -344,10 +366,17 @@
             alert("请填写关键字");
             return;
          }
-           if(good_detail_info.presentdeposit==-100){
-               alert("实付金额超出限制！");
-               return;
-           }
+         if(good_detail_info.presentdeposit==-100){
+             alert("实付金额超出限制！");
+             return;
+         }
+         if(good_detail_info.ispicture=="1"){
+             if(projectFile==undefined||projectFile==null) {
+                 alert("带评论任务，请上传评论图片！");
+                 return;
+             }
+             good_detail_info.pictureurl = JSON.stringify(projectFile);
+         }
         //填充任务信息
         // TaskAreaInfo()
            console.log(good_detail_info);
@@ -482,11 +511,19 @@
                 }
             });
             patternDivDisplay("${tb.pattern}");
+            ispictureDivDisplay("${tb.ispicture}");
         }
         // if("${tb.effectdate}"!=null&&"${tb.effectdate}"!=""){
         //     $("#effectdate").val(dateFtt("yyyy-MM-dd",new Date("${tb.effectdate}")));
         // }
         function sum(tasknum,actualprice){
+            if(tasknum==""){
+                return;
+            }
+            if(actualprice==""){
+                return;
+            }
+            var ispicture = $("input[name='inputispicture']:checked").val();
             var data={};
             data.actualprice = actualprice;
             $.ajax({
@@ -503,7 +540,13 @@
                     }
                     $('#presentdeposit').html(data.msg);
                     if(tasknum!=undefined&&actualprice!=undefined&&tasknum!=""&&actualprice!=""){
-                        $('#presentdepositsum').html(tasknum*actualprice+(data.msg*tasknum));
+                        var presentdepositsum = tasknum*actualprice+(data.msg*tasknum);
+                        if(ispicture=="1"){
+                            presentdepositsum += tasknum*${pictureAmount};
+                            var amount = parseFloat(data.msg)+${pictureAmount};
+                            $('#presentdeposit').html(amount+"(任务佣金："+data.msg+",图片评论佣金${pictureAmount})");
+                        }
+                        $('#presentdepositsum').html(presentdepositsum);
                     }
                 }
             });
@@ -518,6 +561,19 @@
                 $('#patternDiv').css('display','block');
             }else {
                 $('#patternDiv').css('display','none');
+            }
+        }
+        $("input[name=inputispicture]").click(function(){
+            var ispicture = $(this).val();
+            ispictureDivDisplay(ispicture);
+            sum($('#tasknum').val(),$('#actualprice').val());
+        });
+        function ispictureDivDisplay(ispicture){
+            if(ispicture=="1"){
+                // id="patternDiv" style="display: block;"
+                $('#pictureUrlDiv').css('display','block');
+            }else {
+                $('#pictureUrlDiv').css('display','none');
             }
         }
         function dateFtt(fmt,date)
@@ -537,6 +593,45 @@
                 if(new RegExp("("+ k +")").test(fmt))
                     fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
             return fmt;
+        }
+
+        //图片上传
+        function getPictureUrl(){
+            var tasknum = $('#tasknum').val();
+            if(tasknum==""||tasknum<=0){
+                alert("请填写任务单数后上传评论图片");
+                return;
+            }
+            var url='${adminPath}/shop/TtaskBase/${tb.id==""?"NA":tb.id}/'+tasknum+'/taskPicture';
+            openDialogTaskApply("图片上传",url,"","100%","100%");
+        }
+        //打开对话框(查看)
+        function openDialogTaskApply(title,url,gridId,width,height){
+            if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
+                width='auto';
+                height='auto';
+            }else{//如果是PC端，根据用户设置的width和height显示。
+
+            }
+            top.layer.open({
+                type: 2,
+                id:"MytaskId",
+                area: [width, height],
+                title: title,
+                maxmin: true, //开启最大化最小化按钮
+                content: url ,
+                btn: ['确定','关闭'],
+                success: function (layero, index){
+                    var iframeWin = layero.find('iframe')[0]; // 得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    iframeWin.contentWindow.openFileShow(projectFile);
+                },
+                yes : function(index, layero) {
+                    var iframeWin = layero.find('iframe')[0]; // 得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    projectFile = iframeWin.contentWindow.retudata();
+                    //最后关闭弹出层
+                    top.layer.close(index); //再执行关闭
+                }
+            });
         }
 </script>
 <script>

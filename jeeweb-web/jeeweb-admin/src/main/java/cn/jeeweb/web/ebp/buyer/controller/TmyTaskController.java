@@ -18,16 +18,21 @@ import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailPicture;
+import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailPictureService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.entity.TtaskPictureComment;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -53,6 +58,8 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
     private TtaskBaseService ttaskBaseService;
     @Autowired
     private TmyTaskDetailService tmyTaskDetailService;
+    @Autowired
+    private TmyTaskDetailPictureService tmyTaskDetailPictureService;
 
 
     @GetMapping
@@ -176,11 +183,15 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         List<TmyTaskDetail> list = tmyTaskDetailService.selectMytaskList(tmyTask.getId());
         List namelist = new ArrayList();
         List<TmyTaskDetail> newlist = new ArrayList<TmyTaskDetail>();
+        String yesPicture = "";
         StringBuffer sb = new StringBuffer();
         for (TmyTaskDetail t :list){
             if(sb.indexOf(","+t.getShopname()+",")==-1){
                 namelist.add(t.getShopname());
                 sb.append(","+t.getShopname()+",");
+            }
+            if("1".equals(t.getIspicture())||yesPicture.indexOf(""+t.getBuyerno()+"")!=-1){
+                yesPicture += ","+t.getBuyerno()+",";
             }
             t.setTasktype(DictUtils.getDictLabel(t.getTasktype(),"tasktype",t.getTasktype()));
             t.setTaskstateName(DictUtils.getDictLabel(t.getTaskstate(),"taskstate",t.getTaskstate()));
@@ -189,6 +200,7 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
 
         model.addAttribute("list",JSON.toJSONString(newlist));
         model.addAttribute("namelist",JSON.toJSONString(namelist));
+        model.addAttribute("yesPicture",yesPicture);
         return displayModelAndView("MyTask");
     }
 
@@ -271,6 +283,54 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         }
         return Response.ok("修改成功！");
     }
+    /**
+     * 任务单完成，修改发布任务和我的任务状态
+     * 发布任务状态：TtaskBase中status:0进行中，1完成
+     * 我的任务状态：TmyTask中state:0进行中，1完成
+     * 任务单状态：TmyTaskDetail中taskstatust:0进行中，1完成
+     * */
+    @GetMapping("{id}/{taskState}/upTaskState")
+    @Log(logType = LogType.UPDATE)
+    @RequiresMethodPermissions("upTaskState")
+    public void upTaskState(@PathVariable("id") String id,@PathVariable("taskState") String taskState, HttpServletRequest request,
+                            HttpServletResponse response) {
+        TmyTaskDetail td = tmyTaskDetailService.selectById(id);
+        tmyTaskDetailService.upTaskState(taskState,td,id);
+
+    }
+    /**
+     * 任务单完成，修改发布任务和我的任务状态
+     * 发布任务状态：TtaskBase中status:0进行中，1完成
+     * 我的任务状态：TmyTask中state:0进行中，1完成
+     * 任务单状态：TmyTaskDetail中taskstatust:0进行中，1完成
+     * */
+    @RequestMapping(value = "upTaskStatePicture", method = { RequestMethod.GET, RequestMethod.POST })
+    @Log(logType = LogType.UPDATE)
+    public Response upTaskStatePicture(@RequestBody JSONObject jsonObject, HttpServletRequest request,
+                                HttpServletResponse response) {
+        try {
+            String id = jsonObject.getString("id");
+            String picUrl = jsonObject.getString("picUrl");
+
+            JSONArray jsonArray = JSON.parseArray(id);
+            List<TmyTaskDetailPicture> busLineList = JSON.parseObject(picUrl,new TypeReference<List<TmyTaskDetailPicture>>(){});
+
+            if(jsonArray!=null&&!jsonArray.isEmpty()){
+                for (int i=0;i<jsonArray.size();i++) {
+                    TmyTaskDetail ttd = tmyTaskDetailService.selectById(jsonArray.getString(i));
+                    if(YesNoEnum.YES.code != ttd.getErrorStatus()){
+                        tmyTaskDetailService.upTaskState("4",ttd,id);
+                    }
+                }
+            }
+            tmyTaskDetailPictureService.insertBatch(busLineList);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Response.ok("修改失败！");
+        }
+        return Response.ok("修改成功！");
+    }
+
     @RequestMapping(value = "ajaxTreeList")
     @Log(logType = LogType.SELECT)
     @RequiresMethodPermissions("list")

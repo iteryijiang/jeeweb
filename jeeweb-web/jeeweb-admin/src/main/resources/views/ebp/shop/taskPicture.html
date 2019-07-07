@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>图片上传</title>
+	<link rel="stylesheet" href="${staticPath}/shop/css/bootstrap.min.css">
+	<link rel="stylesheet" href="${staticPath}/shop/css/swiper-3.4.2.min.css">
+	<link rel="stylesheet" href="${staticPath}/shop/css/fileinput.min.css">
+	<link rel="stylesheet" href="${staticPath}/shop/css/ProjectGlobal.css">
+	<link rel="stylesheet" href="${staticPath}/shop/css/global.css">
+	<script src='${staticPath}/shop/js/jquery-3.3.1.min.js'></script>
+	<script src='${staticPath}/shop/js/bootstrap.min.js'></script>
+	<script src='${staticPath}/shop/js/fileinput.min.js'></script>
+	<script src='${staticPath}/shop/js/ajaxfileupload.js'></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<style>
+		.tdTextRight{text-align: right;padding-right: 2px;}
+		.tdTextLeft{text-align: left;padding-left: 2px;}
+
+		/*文件下载按钮样式*/
+		.projectUpload{
+			margin-right: 10px;
+			border: 1px solid #e4e4e4;
+			padding: 5px 10px;
+			border-radius: 2px;
+			float:left;
+		}
+		.projectUpload a:first-child{
+			color: #666;
+		}
+		.projectUpload:hover a:first-child{
+			text-decoration: underline;
+			font-weight: bold;
+		}
+		.projectUpload a:last-child{
+			color: red;
+			font-weight: bold;
+			font-size: 20px;
+		}
+	</style>
+</head>
+<body>
+<!-- 中间主体 -->
+<div class='main_container task_detail'>
+	<div id="div_update">
+	</div>
+</div>
+</body>
+<script>
+    // var id = "${taskId}";
+    // $(function(){
+    //     var result = "";
+    //     for (var i =1; i<=${tasknum}; i++) {
+    //         result += "<div class='task_target'><table><tr>\n" +
+    //             "<td class=\"tdTextRight\">评论图片" + i + "：</td>\n" +
+    //             "<td class=\"tdTextLeft\" id=\"tdstakeName" + i + "\">\n" +
+    //             "<a id=\"uploadbutton" + i + "\" class=\"btn btn-primary btn-small\" onclick=\"filePort({title:'图片',tdname:'tdstakeName" + i + "',dataType:'" + i + "',uploadBtnId:'uploadbutton" + i + "'})\">上传</a>\n" +
+    //             "</td>\n" +
+    //             "</tr></table></div>";
+    //     }
+    //     $("#div_update").html(result);
+    //
+    // })
+	function openFileShow(files){
+        var result = "";
+        for (var i =1; i<=${tasknum}; i++) {
+            result += "<div class='task_target'><table><tr>\n" +
+                "<td class=\"tdTextRight\">评论图片" + i + "：</td>\n" +
+                "<td class=\"tdTextLeft\" id=\"tdstakeName" + i + "\">\n" +
+                "<a id=\"uploadbutton" + i + "\" class=\"btn btn-primary btn-small\" onclick=\"filePort({title:'图片',tdname:'tdstakeName" + i + "',dataType:'" + i + "',uploadBtnId:'uploadbutton" + i + "'})\">上传</a>\n" +
+                "</td>\n" +
+                "</tr></table></div>";
+        }
+        $("#div_update").html(result);
+
+        if(files!=undefined&&files!=null) {
+            $(files).each(function(i,n){
+                if(n.taskpicturenum<=${tasknum}){
+                    addFileShow("tdstakeName"+n.taskpicturenum,n.taskpicturenum,n.taskpictureurl,"uploadbutton"+n.taskpicturenum);
+                }
+            });
+        }
+	}
+    /**
+     * 导入
+     * @param conf
+     */
+    var projectFile = [];
+    function filePort(conf){
+        if(!conf) conf={};
+        var url= "${adminPath}/shop/TtaskBase/taskupload";
+        top.layer.open({
+            type: 2,
+            id:"MytaskId",
+            area: ["80%", "80%"],
+            title: "图片上传",
+            maxmin: true, //开启最大化最小化按钮
+            content: url ,
+            btn: ['确定','关闭'],
+            yes : function(index, layero) {
+                var iframeWin = layero.find('iframe')[0]; // 得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                var res = iframeWin.contentWindow.callbackdata();
+                if(res.pourl!=undefined&&res.pourl!=""){
+                    addFileShow(conf.tdname,conf.dataType,res.pourl,conf.uploadBtnId);
+				}
+                //最后关闭弹出层
+                top.layer.close(index); //再执行关闭
+            }
+        });
+    }
+    function addFileShow(tdname,dataType,data, uploadBtnId){
+		var pourls = data.split(",");
+
+		for(var i=0;i<pourls.length;i++){
+            projectFile.push({taskpicturenum:dataType,taskpictureurl: pourls[i]});
+			var td = document.getElementById(tdname);
+			var span = document.createElement("span");
+			span.className = "projectUpload";
+			var imgName = document.createElement("img");
+			imgName.src = pourls[i];
+			imgName.width = "100px";
+			imgName.height = "100px";
+			var a = document.createElement("a");
+			a.innerText = "×";
+			a.href = "javaScript:void(0);";
+			a.onclick = function(){
+				span.remove();
+				var index = 0;
+				$.each(projectFile, function (m, pf) {
+					if (pf.pourl == pourls[i]) index = m;
+				});
+				projectFile.splice(index,1);
+			};
+			span.appendChild(imgName);
+			span.append("  ");
+			span.appendChild(a);
+			// td.appendChild(span);
+			// 要插入的a标签 上传按钮 的id 内容填充在此id之前
+            td.insertBefore(span, document.getElementById(uploadBtnId))
+		}
+    }
+
+    var retudata = function () {
+        return projectFile;
+    }
+</script>
+</html>

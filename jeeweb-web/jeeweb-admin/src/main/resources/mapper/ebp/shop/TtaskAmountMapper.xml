@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TtaskAmountMapper" >
+  <resultMap id="TtaskAmount" type="cn.jeeweb.web.ebp.shop.entity.TtaskAmount" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result property="shopname" column="shopname" jdbcType="VARCHAR" />
+    <result property="mainurl" column="mainurl" jdbcType="VARCHAR" />
+    <result property="jdshopid" column="jdshopid" jdbcType="VARCHAR" />
+    <result property="platform" column="platform" jdbcType="VARCHAR" />
+    <result property="address" column="address" jdbcType="VARCHAR" />
+    <result property="sendname" column="sendname" jdbcType="VARCHAR" />
+    <result property="mobile" column="mobile" jdbcType="VARCHAR" />
+    <result property="classical1" column="classical1" jdbcType="VARCHAR" />
+    <result property="classical2" column="classical2" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selecTtaskAmountList" resultMap="TtaskAmount">
+    select t.* from t_task_amount t
+    <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+      <where>
+        ${ew.sqlSegment}
+      </where>
+    </if>
+  </select>
+
+  <select id="selectPictureList" resultMap="TtaskAmount">
+    select t.* from t_task_amount t
+    where 1=1
+    <if test="map.taskid != '' and map.taskid != null">
+      and s.taskid=#{map.taskid}
+    </if>
+  </select>
+
+</mapper>

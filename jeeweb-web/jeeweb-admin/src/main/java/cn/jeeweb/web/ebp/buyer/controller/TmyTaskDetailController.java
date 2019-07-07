@@ -32,9 +32,11 @@ import cn.jeeweb.web.ebp.finance.service.TfinanceBuyerReportService;
 import cn.jeeweb.web.ebp.shop.entity.TshopBase;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.entity.TtaskPictureComment;
 import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
 import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
 import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.ebp.shop.service.TtaskPictureCommentService;
 import cn.jeeweb.web.ebp.shop.util.TaskUtils;
 import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
@@ -74,6 +76,8 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 	private TshopInfoService tshopInfoService;
 	@Autowired
 	private TshopBaseService tshopBaseService;
+	@Autowired
+	private TtaskPictureCommentService ttaskPictureCommentService;
 
 	@GetMapping
 	@RequiresMethodPermissions("view")
@@ -118,6 +122,29 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 		return mav;
 	}
 
+	@GetMapping(value = "{mytaskId}/{state}/myTaskPicture")
+	public ModelAndView taskPicture(@PathVariable("mytaskId") String mytaskId,@PathVariable("state") String state,Model model, HttpServletRequest request, HttpServletResponse response) {
+		TmyTaskDetail td = tmyTaskDetailService.selectById(mytaskId);
+		Map map = new HashMap();
+		map.put("buyerno",td.getBuyerno());
+		List<TtaskPictureComment> list = ttaskPictureCommentService.listMytaskPic(map);
+		List idlist = new ArrayList();
+		if(list!=null){
+			for (TtaskPictureComment tpc:list) {
+				if(!idlist.contains(tpc.getTdid())){
+					idlist.add(tpc.getTdid());
+				}
+
+			}
+		}
+
+		model.addAttribute("state", state);
+		model.addAttribute("data",td);
+		model.addAttribute("idlist",JSON.toJSONString(idlist));
+		model.addAttribute("list",JSON.toJSONString(list));
+		ModelAndView mav = displayModelAndView("MyTaskPicture");
+		return mav;
+	}
 	@PostMapping("add")
 	@Log(logType = LogType.INSERT)
 	@RequiresMethodPermissions("add")

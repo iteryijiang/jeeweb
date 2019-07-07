@@ -2,7 +2,9 @@ package cn.jeeweb.web.ebp.shop.service;
 
 import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
+import cn.jeeweb.web.ebp.shop.entity.TtaskAmount;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.entity.TtaskPictureComment;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,7 +40,7 @@ public interface TtaskBaseService extends ICommonService<TtaskBase> {
     /**
      * 任务发布
      * */
-    public boolean addTask(TtaskBase ttaskBase, Map<String,Object> paramMap);
+    public boolean addTask(TtaskBase ttaskBase, Map<String,Object> paramMap, List<TtaskAmount> list, List<TtaskPictureComment> busLineList);
 
     /**
      * 任务状态修改

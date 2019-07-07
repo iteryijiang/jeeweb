@@ -64,7 +64,7 @@ public class TtaskBase extends DataEntity<String> {
 	private String skuid;
 	private String pattern;//任务模式
 	private String renovationurl;//装修页面链接地址
-
+	private String ispicture;// varchar(20) DEFAULT NULL COMMENT '是否需要评论',
 
 
 
@@ -88,6 +88,9 @@ public class TtaskBase extends DataEntity<String> {
 
 	@TableField(exist = false)
 	private String loginname;//商户号
+
+	@TableField(exist = false)
+	private String pictureurl;//评论图片信息
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
@@ -496,5 +499,21 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setRenovationurl(String renovationurl) {
 		this.renovationurl = renovationurl;
+	}
+
+	public String getIspicture() {
+		return ispicture;
+	}
+
+	public void setIspicture(String ispicture) {
+		this.ispicture = ispicture;
+	}
+
+	public String getPictureurl() {
+		return pictureurl;
+	}
+
+	public void setPictureurl(String pictureurl) {
+		this.pictureurl = pictureurl;
 	}
 }

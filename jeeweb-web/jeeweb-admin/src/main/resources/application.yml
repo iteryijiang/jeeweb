@@ -1,5 +1,5 @@
 server:
-    port: 8081
+    port: 8083
 
 #spring
 spring:
@@ -50,8 +50,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: 你的密码
-    url: jdbc:mysql://localhost:3306/jeeweb_test?useUnicode=true&characterEncoding=UTF-8
+    password: Root@2019
+    url: jdbc:mysql://39.108.219.171:3306/jeeweb_test?useUnicode=true&characterEncoding=UTF-8
     type: com.alibaba.druid.pool.DruidDataSource   #这里是配置druid连接池，以下都是druid的配置信息
     filters: stat,wall,log4j
     maxActive: 20

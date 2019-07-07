@@ -3,20 +3,25 @@ package cn.jeeweb.web.ebp.shop.service.impl;
 import cn.jeeweb.beetl.tags.dict.DictUtils;
 import cn.jeeweb.common.mybatis.mvc.parse.QueryToWrapper;
 import cn.jeeweb.common.mybatis.mvc.service.impl.CommonServiceImpl;
+import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
 import cn.jeeweb.common.utils.StringUtils;
+import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
+import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTask;
 import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
+import cn.jeeweb.web.ebp.buyer.service.TBuyerLevelService;
+import cn.jeeweb.web.ebp.buyer.service.TbuyerInfoService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
+import cn.jeeweb.web.ebp.shop.entity.TtaskAmount;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.entity.TtaskPictureComment;
 import cn.jeeweb.web.ebp.shop.mapper.TtaskBaseMapper;
-import cn.jeeweb.web.ebp.shop.service.TshopBaseService;
-import cn.jeeweb.web.ebp.shop.service.TshopInfoService;
-import cn.jeeweb.web.ebp.shop.service.TtaskBaseService;
+import cn.jeeweb.web.ebp.shop.service.*;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
 import cn.jeeweb.web.ebp.shop.spider.TsequenceSpider;
 import cn.jeeweb.web.utils.UserUtils;
@@ -46,6 +51,15 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
     private TshopBaseService tshopBaseService;
     @Autowired
     private TfinanceRechargeLogService tfinanceRechargeLogService;
+    @Autowired
+    private TbuyerInfoService tbuyerInfoService;
+    @Autowired
+    private TBuyerLevelService tBuyerLevelService;
+    @Autowired
+    private TtaskPictureCommentService ttaskPictureCommentService;
+    @Autowired
+    private TtaskAmountService ttaskAmountService;
+
     public List<TtaskBase> selectShopTask(String shopid,int count,String user,int minute){
         return baseMapper.selectShopTask(shopid,count,user,minute);
     }
@@ -64,14 +78,17 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
         return baseMapper.sumTtaskBase(m);
     }
 
-    public boolean addTask(TtaskBase ttaskBase, Map<String,Object> paramMap){
-
+    public boolean addTask(TtaskBase ttaskBase, Map<String,Object> paramMap,List<TtaskAmount> list,List<TtaskPictureComment> busLineList){
         int num = tshopInfoService.updateTaskdeposit(paramMap);
         if(num!=1){
             throw  new RuntimeException("更改商户余额失败!");
         }
         BigDecimal availableDeposit = new BigDecimal(paramMap.get("availableDeposit").toString());
         insert(ttaskBase);
+        ttaskAmountService.insertBatch(list);
+        if(busLineList!=null&&!busLineList.isEmpty()){
+            ttaskPictureCommentService.insertBatch(busLineList);
+        }
         TfinanceRechargeLog log = new TfinanceRechargeLog(ttaskBase.getShopid(),ttaskBase.getStorename(),ttaskBase.getId(),TfinanceRechargeService.rechargetype_2,ttaskBase.getTaskdeposit(),availableDeposit);
         tfinanceRechargeLogService.insert(log);
         return true;
@@ -157,18 +174,23 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
     public boolean createMyTask() throws Exception{
         long starttime = System.currentTimeMillis();//开始领取任务
         synchronized(this) {
-            String user = UserUtils.getPrincipal().getId();
-
+            EntityWrapper<TbuyerInfo> entityWrapper = new EntityWrapper<TbuyerInfo>();
+            entityWrapper.eq("userid", UserUtils.getUser().getId());
+            TbuyerInfo tbi =  tbuyerInfoService.selectOne(entityWrapper);
+            TBuyerLevel tbl = tBuyerLevelService.selectById(tbi.getAccountlevel());
             int count = 3;
             int countSum = 7;
             int minute = 10;
             int canreceivenum = 400;
+            Double buyerAmount = 1.5;
             try {
                 String sum = DictUtils.getDictValue("一个任务单店接单数", "tasknum", count + "");
                 count = Integer.parseInt(sum);
                 countSum = Integer.parseInt(DictUtils.getDictValue("一个任务总连接数", "tasknum", countSum + ""));
                 minute = Integer.parseInt(DictUtils.getDictValue("一个任务领取间隔时长", "tasknum", minute + ""));
                 canreceivenum = Integer.parseInt(DictUtils.getDictValue("解除领取间隔时间限制阈值", "tasknum", canreceivenum + ""));
+
+                buyerAmount = Double.parseDouble(DictUtils.getDictValue("买手评论金额", "tasknum", buyerAmount + ""));
                 int sumCanreceivenum =  baseMapper.sumCanreceivenum(minute);
                 if(canreceivenum>=sumCanreceivenum){
                     minute = 0;
@@ -228,12 +250,15 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                     long endtime1 = System.currentTimeMillis();
                     usetime1 = (endtime1 - starttime);//得到具体多组任务时间
 
+                    //多任务保存
                     Iterator<Map.Entry<String, Map<Integer, List<TtaskBase>>>> entries = newDoubleShopMap.entrySet().iterator();
                     while (entries.hasNext()) {
                         Map.Entry<String, Map<Integer, List<TtaskBase>>> entry = entries.next();
                         Map<Integer, List<TtaskBase>> a = entry.getValue();
                         List<TtaskBase> tbs = RandomDoubleTask(a,1);
+                        String buyerNo = TsequenceSpider.getTaskDetailNo();
                         for (TtaskBase tb : tbs) {
+                            Long buyerproid = tb.getCanreceivenum();
                             TmyTaskDetail my = new TmyTaskDetail();
                             Map Mytask = new HashMap();
                             Mytask.put("taskid",tb.getId());
@@ -255,6 +280,16 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                             my.setIsdouble(count+"");
                             my.setStorename(tb.getStorename());
                             my.setTaskshopurl(tb.gettUrl()+"_"+tb.getStorename());
+                            //
+                            my.setBuyerrank(tbi.getAccountlevel());//	varchar	32	0	-1	0	0	0	0		0	买手等级	utf8	utf8_general_ci		0	0
+                            my.setBuyerratio(tbl.getCommissionRatio());//	varchar	32	0	-1	0	0	0	0		0	买手任务系数	utf8	utf8_general_ci		0	0
+                            my.setBuyerno(buyerNo);//	varchar	32	0	-1	0	0	0	0		0	买手任务编号	utf8	utf8_general_ci		0	0
+                            my.setIspicture(tb.getIspicture());//	varchar	32	0	-1	0	0	0	0		0	是否需要图片	utf8	utf8_general_ci		0	0
+                            my.setBuyerorg(tbi.getGroupId());//	varchar	32	0	-1	0	0	0	0		0	买手小组	utf8	utf8_general_ci		0	0
+                            my.setBuyerproid(buyerproid);//	varchar	32	0	-1	0	0	0	0		0	买手评论图片模板	utf8	utf8_general_ci		0	0
+                            if("1".equals(tb.getIspicture())){
+                                my.setBuyeramount(new BigDecimal(buyerAmount.toString()));//	decimal	10	2	-1	0	0	0	0		0	买手评论金额				0	0
+                            }
                             new_list.add(my);
                             tprice = tprice.add(tb.getActualprice());
                             createCount++;
@@ -277,7 +312,9 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                         Random rand = new Random();
                         int randInt = rand.nextInt(a.size()) + 1;
                         List<TtaskBase> tbs = a.get(randInt);
+                        String buyerNo = TsequenceSpider.getTaskDetailNo();
                         for (TtaskBase tb : tbs) {
+                            Long buyerproid = tb.getCanreceivenum();
                             TmyTaskDetail my = new TmyTaskDetail();
                             Map Mytask = new HashMap();
                             Mytask.put("taskid",tb.getId());
@@ -299,6 +336,17 @@ public class TtaskBaseServiceImpl extends CommonServiceImpl<TtaskBaseMapper, Tta
                             my.setIsdouble("1");
                             my.setStorename(tb.getStorename());
                             my.setTaskshopurl(tb.gettUrl()+"_"+tb.getStorename());
+
+                            //
+                            my.setBuyerrank(tbi.getAccountlevel());//	varchar	32	0	-1	0	0	0	0		0	买手等级	utf8	utf8_general_ci		0	0
+                            my.setBuyerratio(tbl.getCommissionRatio());//	varchar	32	0	-1	0	0	0	0		0	买手任务系数	utf8	utf8_general_ci		0	0
+                            my.setBuyerno(buyerNo);//	varchar	32	0	-1	0	0	0	0		0	买手任务编号	utf8	utf8_general_ci		0	0
+                            my.setBuyerorg(tbi.getGroupId());//	varchar	32	0	-1	0	0	0	0		0	买手小组	utf8	utf8_general_ci		0	0
+                            my.setIspicture(tb.getIspicture());//	varchar	32	0	-1	0	0	0	0		0	是否需要图片	utf8	utf8_general_ci		0	0
+                            my.setBuyerproid(buyerproid);//	varchar	32	0	-1	0	0	0	0		0	买手评论图片模板	utf8	utf8_general_ci		0	0
+                            if("1".equals(tb.getIspicture())){
+                                my.setBuyeramount(new BigDecimal(buyerAmount.toString()));//	decimal	10	2	-1	0	0	0	0		0	买手评论金额				0	0
+                            }
                             new_list.add(my);
                             tprice = tprice.add(tb.getActualprice());
                             createCount++;

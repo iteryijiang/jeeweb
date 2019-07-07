@@ -24,6 +24,14 @@ public interface TshopInfoMapper extends BaseMapper<TshopInfo> {
 	 */
 	int updateShopMoney(@Param("map") Map map);
 
+	/**任务发布修改商户金额
+	 *
+	 * @param map
+	 * @return
+	 */
+	int updateTaskdeposit(@Param("map") Map map);
+
+
 	/**
 	 * 关键字查询商户信息
 	 *
@@ -32,10 +40,4 @@ public interface TshopInfoMapper extends BaseMapper<TshopInfo> {
 	 */
 	List<TshopInfo> findShopInfoByKeyWord(@Param("map") Map map);
 
-	/**任务发布修改商户金额
-	 *
-	 * @param map
-	 * @return
-	 */
-	int updateTaskdeposit(@Param("map") Map map);
 }

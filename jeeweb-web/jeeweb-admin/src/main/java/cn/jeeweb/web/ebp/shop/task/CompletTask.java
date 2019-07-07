@@ -5,6 +5,7 @@ import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,13 @@ public class CompletTask {
             List<TmyTaskDetail> list = tmyTaskDetailService.listNoSendGood(map);
             System.out.println("开始自动收货完成："+list.size()+"条");
             long starttime = System.currentTimeMillis();
+            Map dmap = new HashMap();
+            List yesPictureList = new ArrayList();
             for (TmyTaskDetail tmyTaskDetail:list){
+                if("1".equals(tmyTaskDetail.getIspicture())||yesPictureList.contains(tmyTaskDetail.getBuyerno())){
+                    yesPictureList.add(tmyTaskDetail.getBuyerno());
+                    continue;
+                }
                 tmyTaskDetailService.upTaskState("4", tmyTaskDetail,"");
             }
             long endtime = System.currentTimeMillis();

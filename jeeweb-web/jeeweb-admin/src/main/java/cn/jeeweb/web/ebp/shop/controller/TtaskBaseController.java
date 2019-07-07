@@ -22,10 +22,7 @@ import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
-import cn.jeeweb.web.ebp.shop.entity.TshopBase;
-import cn.jeeweb.web.ebp.shop.entity.TshopGradeInfo;
-import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
-import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
+import cn.jeeweb.web.ebp.shop.entity.*;
 import cn.jeeweb.web.ebp.shop.service.*;
 import cn.jeeweb.web.ebp.shop.spider.JDUnionApi;
 import cn.jeeweb.web.ebp.shop.spider.JdSpider;
@@ -37,7 +34,9 @@ import cn.jeeweb.web.modules.oss.helper.AttachmentHelper;
 import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.apache.commons.io.IOUtils;
 import org.jsoup.nodes.Document;
@@ -81,6 +80,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     private TshopGradeInfoService tshopGradeInfoService;
     @Autowired
     private AttachmentHelper attachmentHelper;
+    @Autowired
+    private TtaskPictureCommentService ttaskPictureCommentService;
 
     @GetMapping
     @RequiresMethodPermissions("view")
@@ -93,6 +94,13 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         model.addAttribute("tb",tb);
         model.addAttribute("si",si);
         model.addAttribute("presentdeposit",Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5")));
+        model.addAttribute("pictureAmount",Double.parseDouble(DictUtils.getDictValue("一个任务单评论金额", "tasknum", "4")));
+        String sf = DictUtils.getDictValue("是否开启评论任务", "tasknum", "false");
+        String ispictureDisplay = "block";
+        if(UserUtils.isOuter()&&"false".equals(sf)){
+            ispictureDisplay="none";
+        }
+        model.addAttribute("ispictureDisplay",ispictureDisplay);
         return displayModelAndView("ReleaseTask");
     }
 
@@ -107,7 +115,24 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         ModelAndView mav = displayModelAndView("couponInfo");
         return mav;
     }
+    @GetMapping(value = "{taskId}/{tasknum}/taskPicture")
+    public ModelAndView taskPicture(@PathVariable("taskId") String taskId,@PathVariable("tasknum") String tasknum, Model model, HttpServletRequest request, HttpServletResponse response) {
+        model.addAttribute("taskId", taskId);
+        model.addAttribute("tasknum", tasknum);
+        TtaskBase tb = new TtaskBase();
+        model.addAttribute("data",tb);
 
+        ModelAndView mav = displayModelAndView("TaskPicture");
+        return mav;
+    }
+
+    @GetMapping(value = "taskupload")
+    public ModelAndView taskupload(Model model, HttpServletRequest request, HttpServletResponse response) {
+        TtaskBase tb = new TtaskBase();
+        model.addAttribute("data",tb);
+        ModelAndView mav = displayModelAndView("upload");
+        return mav;
+    }
     @GetMapping(value = "listFinance")
     @RequiresMethodPermissions("listFinance")
     public ModelAndView listFinance(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -141,7 +166,8 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
     public Response add(@RequestBody TtaskBase ttaskBase,HttpServletRequest request, HttpServletResponse response) {
 
         try {
-            String userid = UserUtils.getUser().getId();
+            String userid =  UserUtils.getUser().getId();
+            ttaskBase.setId(StringUtils.randomUUID());
             if(StringUtils.isEmpty(ttaskBase.gettUrl())||StringUtils.isEmpty(ttaskBase.getQrcodeurl())){
                 return Response.error("订单地址或二维码为空！");
             }
@@ -212,10 +238,32 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             ttaskBase.setStatus("0");
 //            Double countSum = Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5"));
             int prices = getPriceGrade(ttaskBase.getActualprice().doubleValue(),userid);
+            //图片评论价格
+            Double pictureAmount = Double.parseDouble(DictUtils.getDictValue("一个任务单评论金额", "tasknum", "4"));
+            List<TtaskPictureComment> busLineList = new ArrayList<TtaskPictureComment>();
+            if(!"1".equals(ttaskBase.getIspicture())){//不带图评论
+                pictureAmount = 0.0;
+            }else {//带图评论，处理图片
+                if(ttaskBase.getPictureurl()!=null&&StringUtils.isNotEmpty(ttaskBase.getPictureurl())){
+                    busLineList = JSON.parseObject(ttaskBase.getPictureurl(),new TypeReference<List<TtaskPictureComment>>(){});
+                    int maxtasknum = 0;
+                    if(busLineList!=null&&!busLineList.isEmpty()){
+                        for (TtaskPictureComment tpc:busLineList) {
+                            tpc.setTaskid(ttaskBase.getId());
+                            if(maxtasknum<tpc.getTaskpicturenum()){
+                                maxtasknum = tpc.getTaskpicturenum();
+                            }
+                        }
+                    }
+                    if(maxtasknum<ttaskBase.getTasknum()){
+                        return Response.error("带图评论不全，请上传完整！");
+                    }
+                }
+            }
             if(-100==prices){
                 return Response.error("发布失败，实付金额超出限制！");
             }
-            ttaskBase.setPresentdeposit(new BigDecimal(prices));
+            ttaskBase.setPresentdeposit(new BigDecimal(prices+pictureAmount));
             BigDecimal price = ttaskBase.getTotalprice().add(ttaskBase.getPresentdeposit().multiply(new BigDecimal(ttaskBase.getTasknum())));
             if(si.getAvailabledeposit()==null) {
                 return Response.error("发布失败，您无押金，请充值！");
@@ -228,6 +276,14 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             }else {
                 si.setTaskdeposit(si.getTaskdeposit().add(price));
             }
+            //保存任务金额明细数据
+
+            List<TtaskAmount> list = new ArrayList<TtaskAmount>();
+            list.add(new TtaskAmount(ttaskBase.getId(),ttaskBase.getActualprice(),"1",ttaskBase.getTasknum().intValue(),ttaskBase.getTotalprice()));
+            list.add(new TtaskAmount(ttaskBase.getId(),new BigDecimal(prices),"2",ttaskBase.getTasknum().intValue(),new BigDecimal(prices*ttaskBase.getTasknum())));
+            if("1".equals(ttaskBase.getIspicture())){
+                list.add(new TtaskAmount(ttaskBase.getId(),new BigDecimal(pictureAmount),"3",ttaskBase.getTasknum().intValue(),new BigDecimal(pictureAmount*ttaskBase.getTasknum())));
+            }
 
             mapSi.put("taskDeposit",si.getTaskdeposit());//新商户冻结金额
             mapSi.put("availableDeposit",si.getAvailabledeposit());//新商户可用金额
@@ -235,7 +291,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             mapSi.put("lastTime",Calendar.getInstance().getTime());//修改时间
             ttaskBase.setTaskdeposit(price);
 //            ttaskBase.setPresentdeposit(new BigDecimal(countSum));
-            ttaskBaseService.addTask(ttaskBase,mapSi);
+            ttaskBaseService.addTask(ttaskBase,mapSi,list,busLineList);
         }catch (Exception e){
             e.printStackTrace();
             return Response.error("发布失败！");
@@ -919,12 +975,30 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
                                     HttpServletResponse response) throws IOException {
         TtaskBase tb = ttaskBaseService.selectById(id);
         TshopInfo si = tshopInfoService.selectOne(UserUtils.getPrincipal().getId());
+        Map map = new HashMap();
+        map.put("taskid",tb.getId());
+        List<TtaskPictureComment> list = ttaskPictureCommentService.selectPictureList(map);
+        List retuList = new ArrayList();
+        for (TtaskPictureComment tpc:list) {
+            Map retuMap = new HashMap();
+            retuMap.put("taskpicturenum",tpc.getTaskpicturenum());
+            retuMap.put("taskpictureurl",tpc.getTaskpictureurl());
+            retuList.add(retuMap);
+        }
         if(si==null){
             si = new TshopInfo();
         }
+        model.addAttribute("retuList",JSON.toJSONString(retuList));
         model.addAttribute("tb",tb);
         model.addAttribute("si",si);
         model.addAttribute("presentdeposit",Double.parseDouble(DictUtils.getDictValue("一个任务单发布佣金", "tasknum", "2.5")));
+        model.addAttribute("pictureAmount",Double.parseDouble(DictUtils.getDictValue("一个任务单评论金额", "tasknum", "4")));
+        String sf = DictUtils.getDictValue("是否开启评论任务", "tasknum", "false");
+        String ispictureDisplay = "block";
+        if(UserUtils.isOuter()&&"false".equals(sf)){
+            ispictureDisplay="none";
+        }
+        model.addAttribute("ispictureDisplay",ispictureDisplay);
         ModelAndView mav = displayModelAndView("ReleaseTask");
         return mav;
     }
@@ -1058,4 +1132,34 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         ModelAndView mav = displayModelAndView("listShopTaskPandect");
         return mav;
     }
+
+    @GetMapping("upload")
+    @Log(logType = LogType.UPDATE)
+    @RequiresMethodPermissions("upload")
+    public Response upload(@PathVariable("id") String id,@PathVariable("status") String status, HttpServletRequest request,
+                                HttpServletResponse response) {
+        TtaskBase tb = ttaskBaseService.selectById(id);
+        Map<String,Object> mapTb = new HashMap<String,Object>();
+        mapTb.put("id",tb.getId());
+        mapTb.put("oldstatus",tb.getStatus());
+        if("2".equals(tb.getStatus())){
+            return Response.error("已撤销任务,不能重复撤销!");
+        }
+        tb.setStatus(status);
+        mapTb.put("status",tb.getStatus());
+        TshopInfo si = tshopInfoService.selectOne(tb.getShopid());
+        BigDecimal price = new BigDecimal(0);
+        if(tb.getPresentdeposit()!=null){
+            price = tb.getPresentdeposit().multiply(new BigDecimal(tb.getCanreceivenum())).add(tb.getActualprice().multiply(new BigDecimal(tb.getCanreceivenum())));
+            si.setAvailabledeposit(si.getAvailabledeposit().add(price));
+            si.setTaskdeposit(si.getTaskdeposit().subtract(price));
+        }
+
+        mapTb.put("lastRepair",UserUtils.getUser().getId());//修改人
+        mapTb.put("lastTime",Calendar.getInstance().getTime());//修改时间
+        ttaskBaseService.upTask(tb,si,TfinanceRechargeService.rechargetype_4,price,mapTb);
+
+        return Response.ok("任务撤销成功!");
+    }
+
 }

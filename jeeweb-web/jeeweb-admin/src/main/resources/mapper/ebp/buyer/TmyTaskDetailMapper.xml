@@ -166,4 +166,6 @@
         group by b.userid,i.shopName,i.loginname,t.storename,t.mytaskid,countCreateDate
         ) a group by userid,username,loginname order by usertype
     </select>
+
+
 </mapper>

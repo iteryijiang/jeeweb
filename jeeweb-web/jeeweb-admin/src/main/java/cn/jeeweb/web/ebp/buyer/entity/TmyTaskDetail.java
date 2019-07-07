@@ -50,6 +50,16 @@ public class TmyTaskDetail extends DataEntity<String> {
 	private String isdouble;//	varchar	32	0	-1	0	0	0	0		0	是否多单	utf8	utf8_general_ci		0	0
 	private String storename;//	varchar	32	0	-1	0	0	0	0		0	店铺	utf8	utf8_general_ci		0	0
 	private BigDecimal bankamount;//银行抵扣金额
+
+	private String buyerrank;//	varchar	32	0	-1	0	0	0	0		0	买手等级	utf8	utf8_general_ci		0	0
+	private BigDecimal buyerratio;//	varchar	32	0	-1	0	0	0	0		0	买手任务系数	utf8	utf8_general_ci		0	0
+	private String buyerno;//	varchar	32	0	-1	0	0	0	0		0	买手任务编号	utf8	utf8_general_ci		0	0
+	private String buyerorg;//	varchar	32	0	-1	0	0	0	0		0	买手小组	utf8	utf8_general_ci		0	0
+	private String ispicture;// varchar(20) DEFAULT NULL COMMENT '是否需要评论',
+	private Long buyerproid;//	varchar	32	0	-1	0	0	0	0		0	买手评论图片模板	utf8	utf8_general_ci		0	0
+	private String buyerprourl;//	varchar	200	0	-1	0	0	0	0		0	买手评论图片	utf8	utf8_general_ci		0	0
+	private BigDecimal buyeramount;//	decimal	10	2	-1	0	0	0	0		0	买手评论金额				0	0
+
 	/**
 	 * 标记为异常任务状态
 	 * 0正常1标记为异常
@@ -480,5 +490,69 @@ public class TmyTaskDetail extends DataEntity<String> {
 
 	public void setSkuid(String skuid) {
 		this.skuid = skuid;
+	}
+
+	public String getBuyerrank() {
+		return buyerrank;
+	}
+
+	public void setBuyerrank(String buyerrank) {
+		this.buyerrank = buyerrank;
+	}
+
+	public BigDecimal getBuyerratio() {
+		return buyerratio;
+	}
+
+	public void setBuyerratio(BigDecimal buyerratio) {
+		this.buyerratio = buyerratio;
+	}
+
+	public String getBuyerno() {
+		return buyerno;
+	}
+
+	public void setBuyerno(String buyerno) {
+		this.buyerno = buyerno;
+	}
+
+	public String getBuyerorg() {
+		return buyerorg;
+	}
+
+	public void setBuyerorg(String buyerorg) {
+		this.buyerorg = buyerorg;
+	}
+
+	public Long getBuyerproid() {
+		return buyerproid;
+	}
+
+	public void setBuyerproid(Long buyerproid) {
+		this.buyerproid = buyerproid;
+	}
+
+	public String getBuyerprourl() {
+		return buyerprourl;
+	}
+
+	public void setBuyerprourl(String buyerprourl) {
+		this.buyerprourl = buyerprourl;
+	}
+
+	public BigDecimal getBuyeramount() {
+		return buyeramount;
+	}
+
+	public void setBuyeramount(BigDecimal buyeramount) {
+		this.buyeramount = buyeramount;
+	}
+
+	public String getIspicture() {
+		return ispicture;
+	}
+
+	public void setIspicture(String ispicture) {
+		this.ispicture = ispicture;
 	}
 }
