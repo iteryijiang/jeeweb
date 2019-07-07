@@ -123,7 +123,7 @@
 		update
 			t_buyer_info
 		set
-			buyerName=#{buyername},phoneNum=#{phone},accountLevel=#{accountlevel},update_by=#{updateBy.id},update_date=#{updateDate}
+			buyerName=#{buyername},accountLevel=#{accountlevel},update_by=#{updateBy.id},update_date=#{updateDate}
 		where
 			id = #{id}
 	</update>
