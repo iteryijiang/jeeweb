@@ -80,13 +80,16 @@
         order by tb.data_month desc,tb.buyer_id
     </select>
 
-    <select id="getTBuyerCommissionRecordByBuyerIdAtime" parameterType="HashMap">
+    <select id="getTBuyerCommissionRecordByBuyerIdAtime" parameterType="HashMap" resultMap="TBuyerCommissionRecord">
       select
-        *
+        tb.id,tb.data_month,tb.atime,tb.commission_money,tb.commission_money_init,tb.task_money,tb.task_money_init,tb.group_money,tb.group_money_init,tb.task_num,
+        tb.task_num_init,tb.task_link_num,tb.task_link_num_init,tb.buyer_id, tb.buyer_name,tb.buyer_level,tb.buyer_level_name,tb.dtime,tb. buyer_group_leader,tb.buyer_group,
+        tb.buyer_group_leader_commission_value,tb.create_by,tb.create_date, tb.update_by,tb.update_date,tb.remarks,tb.del_flag
       from
         t_buyer_commission_record tb
       where
-        tb.atime=#{map.atime} and tb.buyer_id=#{map.buyerId}
+        tb.atime=#{map.atime} and tb.buyer_id=#{map.buyerId} and tb.del_flag=0
+      limit 1
     </select>
 
     <!-- 清空临时表数据 -->
