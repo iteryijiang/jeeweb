@@ -47,7 +47,6 @@
 </div>
 </body>
 <script>
-    // var id = "${taskId}";
     // $(function(){
     //     var result = "";
     //     for (var i =1; i<=${tasknum}; i++) {
@@ -65,7 +64,7 @@
         var result = "";
         for (var i =1; i<=${tasknum}; i++) {
             result += "<div class='task_target'><table><tr>\n" +
-                "<td class=\"tdTextRight\">评论图片" + i + "：</td>\n" +
+                "<td class=\"tdTextRight\">评论" + i + "：</td>\n" +
                 "<td class=\"tdTextLeft\" id=\"tdstakeName" + i + "\">\n" +
                 "<a id=\"uploadbutton" + i + "\" class=\"btn btn-primary btn-small\" onclick=\"filePort({title:'图片',tdname:'tdstakeName" + i + "',dataType:'" + i + "',uploadBtnId:'uploadbutton" + i + "'})\">上传</a>\n" +
                 "</td>\n" +

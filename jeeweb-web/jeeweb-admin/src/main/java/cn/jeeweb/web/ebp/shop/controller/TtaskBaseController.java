@@ -101,6 +101,9 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             ispictureDisplay="none";
         }
         model.addAttribute("ispictureDisplay",ispictureDisplay);
+
+        List retuList = new ArrayList();
+        model.addAttribute("retuList",JSON.toJSONString(retuList));
         return displayModelAndView("ReleaseTask");
     }
 
@@ -115,14 +118,13 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         ModelAndView mav = displayModelAndView("couponInfo");
         return mav;
     }
-    @GetMapping(value = "{taskId}/{tasknum}/taskPicture")
-    public ModelAndView taskPicture(@PathVariable("taskId") String taskId,@PathVariable("tasknum") String tasknum, Model model, HttpServletRequest request, HttpServletResponse response) {
-        model.addAttribute("taskId", taskId);
+    @GetMapping(value = "{tasknum}/taskPicture")
+    public ModelAndView taskPicture(@PathVariable("tasknum") String tasknum, Model model, HttpServletRequest request, HttpServletResponse response) {
         model.addAttribute("tasknum", tasknum);
         TtaskBase tb = new TtaskBase();
         model.addAttribute("data",tb);
 
-        ModelAndView mav = displayModelAndView("TaskPicture");
+        ModelAndView mav = displayModelAndView("taskPicture");
         return mav;
     }
 

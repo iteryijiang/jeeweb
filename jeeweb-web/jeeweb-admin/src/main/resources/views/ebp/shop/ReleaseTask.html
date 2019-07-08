@@ -602,7 +602,7 @@
                 alert("请填写任务单数后上传评论图片");
                 return;
             }
-            var url='${adminPath}/shop/TtaskBase/${tb.id==""?"NA":tb.id}/'+tasknum+'/taskPicture';
+            var url='${adminPath}/shop/TtaskBase/'+tasknum+'/taskPicture';
             openDialogTaskApply("图片上传",url,"","100%","100%");
         }
         //打开对话框(查看)
