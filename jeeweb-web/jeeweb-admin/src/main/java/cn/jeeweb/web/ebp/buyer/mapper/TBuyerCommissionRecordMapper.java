@@ -97,6 +97,14 @@ public interface TBuyerCommissionRecordMapper extends BaseMapper<TBuyerCommissio
 	int updateBuyerTaskNum(@Param("map") Map<String, Object> map);
 
 	/**
+	 * 更新买手佣金信息
+	 *
+	 * @param map
+	 * @return
+	 */
+	int updateBuyerCommission(@Param("map") Map<String, Object> map);
+
+	/**
 	 * 清空临时表数据
 	 * 任务数据
 	 *

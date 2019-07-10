@@ -112,23 +112,23 @@
             REPLACE(UUID(),'-','') as id,
             #{map.dataMonth} AS data_month,
             #{map.atime} AS atime,
-           case
-                when leveltb.commission_type=1 then if(sum(ifnull(taskTb.buyerratio, 0))>0,leveltb.commission_value,0)
+            0 as commission_money,
+            0 as commission_money_init,
+            case
+                when leveltb.commission_type=1 then if(count(taskTb.id)>0,leveltb.commission_value,0)
                 else
                     CASE
                       when sum(ifnull(taskTb.buyerratio, 0))>0 then if(sum(ifnull(taskTb.buyerratio, 0))>leveltb.minimum_wage,sum(ifnull(taskTb.buyerratio, 0)),leveltb.minimum_wage)
                       else 0
                     end
-            end  commission_money,
+            end task_money,
             case
-                when leveltb.commission_type=1 then if(sum(ifnull(taskTb.buyerratio, 0))>0,leveltb.commission_value,0)
+                when leveltb.commission_type=1 then if(count(taskTb.id)>0,leveltb.commission_value,0)
                 else
                     CASE when sum(ifnull(taskTb.buyerratio, 0))>0 then if(sum(ifnull(taskTb.buyerratio, 0))>leveltb.minimum_wage,sum(ifnull(taskTb.buyerratio, 0)),leveltb.minimum_wage)
                          else 0
                     end
-            end   commission_money_init,
-            0 AS task_money,
-            0 AS task_money_init,
+            end task_money_init,
             0 AS group_money,
             0 AS group_money_init,
             0 AS task_num,
@@ -141,9 +141,9 @@
             leveltb.level_name AS buyer_level_name,
             NOW() AS dtime,
             grouptb.group_leader AS buyer_group_leader,
-            #{map.createBy} create_by,
             grouptb.id AS buyer_group,
             grouptb.leader_commission as buyer_group_leader_commission_value,
+            #{map.createBy} create_by,
             NOW() AS create_date,
              #{map.createBy} update_by,
             NOW() AS update_date,
@@ -153,7 +153,7 @@
             t_buyer_info bitb
              INNER JOIN t_buyer_level leveltb ON leveltb.id = bitb.accountLevel
              left JOIN t_buyer_group grouptb ON grouptb.id = bitb.group_id and grouptb.del_flag = 0
-             LEFT JOIN t_my_task_detail taskTb ON taskTb.buyerid = bitb.userid AND taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime}
+             LEFT JOIN t_my_task_detail taskTb ON taskTb.buyerid = bitb.userid AND taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and tasktb.taskstate BETWEEN 2 and 4
         WHERE
             bitb.del_flag = 0
         GROUP BY
@@ -167,7 +167,7 @@
             taskTb.buyerid buyer_id,#{map.atime} as atime,count(DISTINCT(taskTb.taskid)) as task_num
         FROM
             t_buyer_info bitb
-            inner join t_my_task_detail taskTb on taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and taskTb.buyerid = bitb.userid
+            inner join t_my_task_detail taskTb on taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and taskTb.buyerid = bitb.userid and tasktb.taskstate BETWEEN 2 and 4
         GROUP BY
             bitb.id
   </insert>
@@ -180,9 +180,9 @@
           bitb.userid buyer_id,#{map.atime} as atime,sum(ifnull(grouptb.leader_commission, 0)) commission_group_money
         FROM
           t_buyer_info bitb
-          INNER JOIN t_buyer_group grouptb ON grouptb.group_leader =bitb.id
+          INNER JOIN t_buyer_group grouptb ON grouptb.group_leader =bitb.userid
           INNER JOIN t_buyer_group_member membertb ON membertb.group_id = grouptb.id AND membertb.del_flag = 0 and membertb.mem_type=0
-          inner JOIN t_my_task_detail taskTb ON taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and membertb.buyer_id=taskTb.buyerid
+          inner JOIN t_my_task_detail taskTb ON taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and membertb.buyer_id=taskTb.buyerid and tasktb.taskstate BETWEEN 2 and 4
         WHERE
           bitb.del_flag = 0
         GROUP BY
@@ -196,7 +196,7 @@
         inner join t_buyer_commission_record_group_temp temp on tb.buyer_id=temp.buyer_id and tb.atime=temp.atime
         set
         tb.group_money=temp.commission_group_money,tb.group_money_init=temp.commission_group_money
-        where tb.atime BETWEEN #{map.beginTime} AND  #{map.endTime}
+        where tb.atime = #{map.atime}
     </update>
 
     <!-- 更改佣金表任务数据 -->
@@ -206,7 +206,15 @@
        inner join t_buyer_commission_record_task_temp temp on tb.buyer_id=temp.buyer_id and tb.atime=temp.atime
         set
         tb.task_num=temp.task_num,tb.task_num_init=temp.task_num
-       where tb.atime BETWEEN #{map.beginTime} AND  #{map.endTime}
+       where tb.atime = #{map.atime}
+    </update>
+    <!-- 更新买手的佣金信息 -->
+    <update id="updateBuyerCommission" parameterType="HashMap">
+       UPDATE
+        t_buyer_commission_record
+      SET commission_money = task_money + group_money,commission_money_init = task_money_init + group_money_init
+      where
+        atime = #{map.atime}
     </update>
 
     <!-- 更改佣金表任务数据 -->

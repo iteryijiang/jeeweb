@@ -87,6 +87,8 @@ public class TBuyerCommissionRecordServiceImpl extends CommonServiceImpl<TBuyerC
 		//更改组长的佣金信息
 		baseMapper.updateBuyerGroupMoney(paramMap);
 		baseMapper.updateBuyerTaskNum(paramMap);
+		//更新买手佣金信息
+		baseMapper.updateBuyerCommission(paramMap);
 	}
 
 	@Override

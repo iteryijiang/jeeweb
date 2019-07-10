@@ -5,9 +5,9 @@
 <#grid:column label="买手名称" name="buyerName" query="true" condition="like" width="140" />
 <#grid:column label="任务数量" name="taskNum"  width="100" />
 <#grid:column label="任务链接" name="taskLinkNum"  width="100" />
-<#grid:column label="任务佣金" name="taskMoney"  width="100" />
-<#grid:column label="小组提成" name="groupMoney"  width="80" align="center"/>
-<#grid:column label="佣金总额" name="commissionMoney" width="80"/>
+<#grid:column label="任务佣金" name="taskMoney"  width="100" formatter="currency" />
+<#grid:column label="小组提成" name="groupMoney"  width="100" align="center" formatter="currency"/>
+<#grid:column label="佣金总额" name="commissionMoney" width="100" formatter="currency"/>
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
 <#grid:button title="详情" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="750px" outclass="btn-danger"  url='${adminPath}/buyer/buyerCommission/monthDetailView/\"+row.dataMonth+\"/\"+row.buyerId+\"' />
 <#grid:toolbar  function="search" />
