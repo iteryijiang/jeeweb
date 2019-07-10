@@ -2,5 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.jeeweb.web.ebp.seller.mapper.TSellerCommissionPowerMapper">
 
+    <!-- 列表查询 -->
+    <select id="selectSellerLevelPageList" resultType="cn.jeeweb.web.ebp.seller.entity.TSellerLevel">
+       SELECT
+            sltb.id,sltb.level_code, sltb.level_name,sltb.pre_level_code,sltb.next_level_code,sltb.salary_base,sltb.remarks,
+            (select sltb.level_name from t_seller_level tmp where tmp.level_code=sltb.pre_level_code) preLevelName,
+            (select sltb.level_name from t_seller_level tmp where tmp.level_code=sltb.next_level_code) nextLevelName
+        FROM
+            t_seller_level sltb
+        WHERE
+            sltb.del_flag = 0
+    </select>
+
+    <!-- 列表查询 -->
+    <select id="selectSellerCommissionRangePageList" resultType="cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange">
+        SELECT
+          scdrtb.id,scdrtb.level_id,scdrtb.begin_day_num,scdrtb.end_day_num,scdrtb.commission_type,scdrtb.commission_ratio,scdrtb.commission_value,scdrtb.remarks,
+          sltb.level_name
+        FROM
+          t_seller_commission_date_range scdrtb
+          INNER JOIN t_seller_level sltb ON sltb.id = scdrtb.level_id AND sltb.del_flag = 0
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
+
+
+
 
 </mapper>

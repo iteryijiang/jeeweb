@@ -21,6 +21,12 @@ public class TSellerCommissionDateRange extends DataEntity<String> {
     @TableId(value = "id", type = IdType.UUID)
     private String id;
     /**
+     * 等级ID
+     */
+    private String levelId;
+    @TableField(exist = false)
+    private String levelName;
+    /**
      * 开始天数
      */
     private int beginDayNum;
@@ -29,6 +35,18 @@ public class TSellerCommissionDateRange extends DataEntity<String> {
      * 结束天数
      */
     private int endDayNum;
+    /**
+     * 佣金类型1按比例1固定
+     */
+    private String commissionType;
+    /**
+     * 每单系数
+     */
+    private String commissionRatio;
+    /**
+     * 固定金额
+     */
+    private String commissionValue;
 
     @Override
     public String getId() {
@@ -54,5 +72,45 @@ public class TSellerCommissionDateRange extends DataEntity<String> {
 
     public void setEndDayNum(int endDayNum) {
         this.endDayNum = endDayNum;
+    }
+
+    public String getLevelId() {
+        return levelId;
+    }
+
+    public void setLevelId(String levelId) {
+        this.levelId = levelId;
+    }
+
+    public String getCommissionType() {
+        return commissionType;
+    }
+
+    public void setCommissionType(String commissionType) {
+        this.commissionType = commissionType;
+    }
+
+    public String getCommissionRatio() {
+        return commissionRatio;
+    }
+
+    public void setCommissionRatio(String commissionRatio) {
+        this.commissionRatio = commissionRatio;
+    }
+
+    public String getCommissionValue() {
+        return commissionValue;
+    }
+
+    public void setCommissionValue(String commissionValue) {
+        this.commissionValue = commissionValue;
+    }
+
+    public String getLevelName() {
+        return levelName;
+    }
+
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
     }
 }

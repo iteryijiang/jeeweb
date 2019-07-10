@@ -12,8 +12,12 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermission
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
+import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
+import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange;
 import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionReport;
+import cn.jeeweb.web.ebp.seller.entity.TSellerLevel;
+import cn.jeeweb.web.ebp.seller.service.TSellerCommissionPowerService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.ui.Model;
@@ -22,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,11 +39,102 @@ import java.io.IOException;
  * @date : 2019/7/9 21:37
  */
 @RestController
-@RequestMapping("${jeeweb.admin.url.prefix}/buyer/TSeller")
+@RequestMapping("${jeeweb.admin.url.prefix}/seller/info")
 @ViewPrefix("ebp/seller")
-@RequiresPathPermission("buyer:TSeller")
+@RequiresPathPermission("seller:info")
 @Log(title = "销售管理")
 public class TSellerController  extends BaseBeanController<TSellerCommissionReport> {
+
+    @Resource(name = "sellerCommissionPowerService")
+    private TSellerCommissionPowerService sellerCommissionPowerService;
+
+    /**
+     * 销售人员等级列表查询
+     *
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value ="level/view" )
+    @RequiresMethodPermissions("level")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView sellerLevelView(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("sellerLevelList");
+        return mav;
+    }
+
+    /**
+     * 销售人员等级列表查询
+     *
+     * @param queryable
+     * @param propertyPreFilterable
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "level/ajax", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("level")
+    @Log(logType = LogType.SELECT)
+    public void sellerLevellist(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) {
+        String content = null;
+        try {
+            EntityWrapper<TSellerLevel> entityWrapper = new EntityWrapper<TSellerLevel>(TSellerLevel.class);
+            propertyPreFilterable.addQueryProperty("id");
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TSellerLevel.class);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(TSellerLevel.class);
+            PageResponse<TSellerLevel> pagejson = new PageResponse<TSellerLevel>(sellerCommissionPowerService.selectSellerLevelPageList(queryable, entityWrapper));
+            content = JSON.toJSONString(pagejson, filter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            StringUtils.printJson(response, content);
+        }
+    }
+
+    /**
+     * 销售人员佣金梯度列表查询
+     *
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value ="commission/range" )
+    @RequiresMethodPermissions("commission")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView sellerCommissionRangeView(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("sellerCommissionDateRangeList");
+        return mav;
+    }
+
+    /**
+     * 销售人员佣金梯度列表查询
+     *
+     * @param queryable
+     * @param propertyPreFilterable
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "commission/range/ajax", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("commission")
+    @Log(logType = LogType.SELECT)
+    public void sellerCommissionRangelist(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) {
+        String content = null;
+        try {
+            EntityWrapper<TSellerCommissionDateRange> entityWrapper = new EntityWrapper<TSellerCommissionDateRange>(TSellerCommissionDateRange.class);
+            propertyPreFilterable.addQueryProperty("id");
+            entityWrapper.orderBy("sltb.id", false);
+            entityWrapper.orderBy("scdrtb.begin_day_num", true);
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TbuyerInfo.class);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(TbuyerInfo.class);
+            PageResponse<TSellerCommissionDateRange> pagejson = new PageResponse<TSellerCommissionDateRange>(sellerCommissionPowerService.selectSellerCommissionDateRangePageList(queryable, entityWrapper));
+            content = JSON.toJSONString(pagejson, filter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            StringUtils.printJson(response, content);
+        }
+    }
 
     /**
      * 列表查询
@@ -49,10 +144,11 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
      * @param response
      * @return
      */
-    @GetMapping
-    @RequiresMethodPermissions("view")
+    @GetMapping(value ="commission/view" )
+    @RequiresMethodPermissions("commission")
+    @Log(logType = LogType.SELECT)
     public ModelAndView list(Model model, HttpServletRequest request, HttpServletResponse response) {
-        ModelAndView mav = displayModelAndView("ReleaseTask");
+        ModelAndView mav = displayModelAndView("sellerCommissionList");
         return mav;
     }
 
@@ -66,7 +162,8 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
      * @throws IOException
      */
     @RequestMapping(value = "ajaxListSellerCommission", method = { RequestMethod.GET, RequestMethod.POST })
-    @RequiresMethodPermissions("view")
+    @RequiresMethodPermissions("commission")
+    @Log(logType = LogType.SELECT)
     public void ajaxListSellerCommissionReport(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String content = null;

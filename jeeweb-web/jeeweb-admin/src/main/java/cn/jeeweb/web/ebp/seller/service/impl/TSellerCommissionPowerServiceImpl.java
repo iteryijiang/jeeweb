@@ -10,6 +10,7 @@ import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 import cn.jeeweb.web.ebp.buyer.mapper.TBuyerLevelMapper;
 import cn.jeeweb.web.ebp.buyer.service.TBuyerLevelService;
 import cn.jeeweb.web.ebp.exception.MyProcessException;
+import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange;
 import cn.jeeweb.web.ebp.seller.entity.TSellerLevel;
 import cn.jeeweb.web.ebp.seller.mapper.TSellerCommissionPowerMapper;
 import cn.jeeweb.web.ebp.seller.service.TSellerCommissionPowerService;
@@ -30,5 +31,27 @@ import java.util.Map;
 @Service("sellerCommissionPowerService")
 public class TSellerCommissionPowerServiceImpl extends CommonServiceImpl<TSellerCommissionPowerMapper, TSellerLevel> implements TSellerCommissionPowerService {
 
+    @Override
+    public Page<TSellerLevel> selectSellerLevelPageList(Queryable queryable, Wrapper<TSellerLevel> wrapper){
+        QueryToWrapper<TSellerLevel> queryToWrapper = new QueryToWrapper<TSellerLevel>();
+        queryToWrapper.parseCondition(wrapper, queryable);
+        queryToWrapper.parseSort(wrapper, queryable);
+        Pageable pageable = queryable.getPageable();
+        com.baomidou.mybatisplus.plugins.Page<TSellerLevel> page = new com.baomidou.mybatisplus.plugins.Page<TSellerLevel>(pageable.getPageNumber(), pageable.getPageSize());
+        wrapper.eq("1", "1");
+        page.setRecords(baseMapper.selectSellerLevelPageList(page, wrapper));
+        return new PageImpl<TSellerLevel>(page.getRecords(), queryable.getPageable(), page.getTotal());
+    }
 
+    @Override
+    public Page<TSellerCommissionDateRange> selectSellerCommissionDateRangePageList(Queryable queryable, Wrapper<TSellerCommissionDateRange> wrapper){
+        QueryToWrapper<TSellerCommissionDateRange> queryToWrapper = new QueryToWrapper<TSellerCommissionDateRange>();
+        queryToWrapper.parseCondition(wrapper, queryable);
+        queryToWrapper.parseSort(wrapper, queryable);
+        Pageable pageable = queryable.getPageable();
+        com.baomidou.mybatisplus.plugins.Page<TSellerCommissionDateRange> page = new com.baomidou.mybatisplus.plugins.Page<TSellerCommissionDateRange>(pageable.getPageNumber(), pageable.getPageSize());
+        wrapper.eq("1", "1");
+        page.setRecords(baseMapper.selectSellerCommissionRangePageList(page, wrapper));
+        return new PageImpl<TSellerCommissionDateRange>(page.getRecords(), queryable.getPageable(), page.getTotal());
+    }
 }

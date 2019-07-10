@@ -50,6 +50,10 @@ public class TSellerCommissionReportDetail extends DataEntity<String> {
      */
     private String dateRangeId;
     /**
+     * 相差天数
+     */
+    private long date_diff = 0;
+    /**
      * 任务数量
      */
     private long taskNum = 0;
@@ -156,5 +160,13 @@ public class TSellerCommissionReportDetail extends DataEntity<String> {
 
     public void setTotalCommissionInit(BigDecimal totalCommissionInit) {
         this.totalCommissionInit = totalCommissionInit;
+    }
+
+    public long getDate_diff() {
+        return date_diff;
+    }
+
+    public void setDate_diff(long date_diff) {
+        this.date_diff = date_diff;
     }
 }

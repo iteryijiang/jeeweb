@@ -76,8 +76,8 @@ public class TshopRoleUserController extends BaseBeanController<TshopRoleUser> {
         List<TshopInfo> lsitShop = tshopInfoService.selectByMap(new HashMap<>());
         model.addAttribute("lsitShop", lsitShop);
 
-        List<TshopBase> lsitBase = tshopBaseService.selectByMap(new HashMap<>());
-        model.addAttribute("lsitBase", lsitBase);
+        //List<TshopBase> lsitBase = tshopBaseService.selectByMap(new HashMap<>());
+        //model.addAttribute("lsitBase", lsitBase);
 
         return displayModelAndView ("edit_TshopRoleUser");
     }

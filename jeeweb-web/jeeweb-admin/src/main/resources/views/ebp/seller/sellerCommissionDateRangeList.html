@@ -1,14 +1,12 @@
-<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手等级',''), libs: ''}){ %>
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('销售佣金区段',''), libs: ''}){ %>
 
-<#grid:grid id="tbuyerLevelGrid" url="${adminPath}/buyer/buyerlevel/ajaxBuyerLevelList" multiselect="false"  sortname="levelCode" sortorder="desc" sortable="false">
-<#grid:column label="等级编号" width="90" name="levelCode" align="center"/>
+<#grid:grid id="tbuyerLevelGrid" url="${adminPath}/seller/info/commission/range/ajax" multiselect="false"  sortname="id" sortorder="desc" sortable="false">
 <#grid:column label="等级名称" name="levelName" width="140" />
-<#grid:column label="上一个等级" name="preLevelName"  width="100" />
-<#grid:column label="下一个等级" name="nextLevelName" width="80" align="center"/>
-<#grid:column label="佣金类型" name="commissionType" dict="buyerCommissionType" width="80" />
-<#grid:column label="每单佣金" name="commissionRatio" width="80" formatter="currency"/>
+<#grid:column label="下限值" name="beginDayNum" width="80" />
+<#grid:column label="上限值" name="endDayNum" width="80" formatterValue="-1:无上限" />
+<#grid:column label="佣金类型" name="commissionType" width="80" dict="buyerCommissionType"  />
+<#grid:column label="买单佣金" name="commissionRatio" width="80" formatter="currency"/>
 <#grid:column label="固定佣金" name="commissionValue" width="80" formatter="currency"/>
-<#grid:column label="保底金额" name="minimumWage" width="80" formatter="currency"/>
 <#grid:toolbar function="update" winwidth="600px" winheight="550px"  />
 </#grid:grid>
 <% } %>

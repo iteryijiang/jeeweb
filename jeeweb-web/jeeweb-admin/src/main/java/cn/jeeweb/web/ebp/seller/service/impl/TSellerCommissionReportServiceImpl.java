@@ -16,6 +16,7 @@ import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionReportDetail;
 import cn.jeeweb.web.ebp.seller.mapper.TSellerCommissionReportMapper;
 import cn.jeeweb.web.ebp.seller.service.TSellerCommissionReportService;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,10 +56,14 @@ public class TSellerCommissionReportServiceImpl extends CommonServiceImpl<TSelle
 		paramMap.put("createBy","schule");
 		paramMap.put("beginTime",beginDate);
 		paramMap.put("endTime",DateUtils.getDateEnd(sourceDate));
+		//清空表
+		baseMapper.updateSellerCommissionDetailTempForTruncate();
+		//生成明细表数据临时表
+		baseMapper.insertSellerCommissionDetailTemp(paramMap);
 		//生成明细表数据
-		baseMapper.insertSellerCommissionReportDetail(paramMap);
+		baseMapper.insertSellerCommissionDetail(paramMap);
 		//汇总明细表数据生成总表数据
-		baseMapper.insertSellerCommissionReport(paramMap);
+		baseMapper.insertSellerCommission(paramMap);
 	}
 
 	@Override

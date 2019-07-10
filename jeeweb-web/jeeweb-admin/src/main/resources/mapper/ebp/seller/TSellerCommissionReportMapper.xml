@@ -2,6 +2,84 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.jeeweb.web.ebp.seller.mapper.TSellerCommissionReportMapper">
 
+    <select id="selectPageList" resultType="cn.jeeweb.web.ebp.seller.entity.TSellerCommissionReport">
+        SELECT
+          tb.id,tb.data_month,tb.atime,tb.seller_id,tb.seller_name,tb.level_id,tb.level_name,tb.task_num,tb.task_num_init,tb.total_commission,tb.total_commission_init
+        FROM
+        t_seller_commission tb
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+        order by tb.atime desc,tb.seller_id
+    </select>
 
+    <!-- 清空临时表数据 -->
+    <update id="updateSellerCommissionDetailTempForTruncate">
+      TRUNCATE TABLE t_seller_commission_detail_temp
+    </update>
 
+    <insert id="insertSellerCommissionDetailTemp" parameterType="HashMap">
+          INSERT into t_seller_commission_detail_temp
+              (id,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,date_diff,create_by,create_date,update_by,update_date,remarks,del_flag)
+          SELECT
+                REPLACE(UUID(),'-','') as id,
+                #{map.dataMonth} AS data_month,
+                #{map.atime} AS atime,
+                seller.userid,
+                useller.username,
+                seller.accountLevel,
+                sellerLevel.level_name,
+                count(*),
+                DATEDIFF(#{map.atime},shop.create_date ) dateDiff,
+                 #{map.createBy} create_by,
+                NOW() AS create_date,
+                 #{map.createBy} update_by,
+                NOW() AS update_date,
+                '' remarks,
+                0 del_flag
+            FROM
+                t_my_task_detail taskTb
+                INNER JOIN t_task_base shopyask ON shopyask.id = taskTb.taskid
+                INNER JOIN t_shop_info shop ON shop.userid = shopyask.shopId AND shop.from_inner_outer = 2
+                INNER JOIN t_shop_role_user sru ON sru.shopid = shop.userid
+                INNER JOIN sys_user useller ON useller.id = sru.userid
+                INNER JOIN t_sold_info seller ON seller.userid = useller.id
+                INNER JOIN t_seller_level sellerLevel ON sellerLevel.id = seller.accountLevel
+            WHERE
+                taskTb.receivingdate #{map.beginTime} AND  #{map.endTime} AND taskTb.taskstate BETWEEN 2 AND 4
+            GROUP BY
+                seller.userid,dateDiff
+    </insert>
+
+    <insert id="insertSellerCommissionDetail" parameterType="HashMap">
+          INSERT into t_seller_commission_detail
+              (id,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,task_num_init,date_diff,date_range_id,total_commission,total_commission_init,create_by,create_date,update_by,update_date,remarks,del_flag)
+          SELECT
+            REPLACE(UUID(),'-','') as id,
+            temptb.data_month,temptb.atime,temptb.seller_id ,temptb.seller_name,temptb.level_id,temptb.level_name,temptb.task_num,temptb.task_num task_num_init,temptb.date_diff,rangetb.id,
+            case WHEN rangetb.commission_type=1 then rangetb.commission_value else rangetb.commission_ratio*temptb.task_num end total_commission,
+            case WHEN rangetb.commission_type=1 then rangetb.commission_value else rangetb.commission_ratio*temptb.task_num end total_commission_init,
+            temptb.create_by,temptb.create_date,temptb.update_by,temptb.update_date,temptb.remarks,temptb.del_flag
+            FROM
+                t_seller_commission_detail_temp temptb
+                INNER JOIN t_seller_commission_date_range rangetb ON temptb.level_id = rangetb.level_id AND temptb.date_diff BETWEEN rangetb.begin_day_num AND IF (rangetb.end_day_num =- 1,temptb.date_diff,rangetb.end_day_num)
+    </insert>
+
+    <insert id="insertSellerCommission" parameterType="HashMap">
+        insert into t_seller_commission
+          (id,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,task_num_init,total_commission,total_commission_init,create_by,create_date,update_by,update_date,remarks,del_flag)
+        select
+        REPLACE(UUID(),'-','') as id,#{map.dataMonth},#{map.atime},seller.userid,
+        useller.username,seller.accountLevel,sellerLevel.level_name,sum(ifnull(tb.task_num,0)),sum(ifnull(tb.task_num_init,0)),
+        sum(ifnull(tb.total_commission,0)),sum(ifnull(tb.total_commission_init,0)),
+        tb.create_by,tb.create_date,tb.update_by,tb.update_date,tb.remarks,tb.del_flag
+        from
+          t_sold_info seller
+          INNER JOIN t_seller_level sellerLevel ON sellerLevel.id = seller.accountLevel
+          INNER JOIN sys_user useller ON useller.id = seller.userid
+          left join t_seller_commission_detail tb on tb.seller_id=seller.userid and tb.atime=#{map.atime}
+        group by seller.userid
+    </insert>
 </mapper>

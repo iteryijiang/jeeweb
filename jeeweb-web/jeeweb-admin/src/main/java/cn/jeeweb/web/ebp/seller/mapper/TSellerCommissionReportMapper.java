@@ -21,12 +21,27 @@ import java.util.Map;
 public interface TSellerCommissionReportMapper extends BaseMapper<TSellerCommissionReport> {
 
 	/**
+	 * 清空临时表
+	 *
+	 * @return
+	 */
+	int updateSellerCommissionDetailTempForTruncate();
+
+	/**
+	 * 生成佣金报表明细临时表
+	 *
+	 * @param map
+	 * @return
+	 */
+	int insertSellerCommissionDetailTemp(@Param("map") Map map);
+
+	/**
 	 * 生成佣金报表明细
 	 *
 	 * @param map
 	 * @return
 	 */
-	int insertSellerCommissionReportDetail(@Param("map") Map map);
+	int insertSellerCommissionDetail(@Param("map") Map map);
 
 	/**
 	 * 生成佣金总表
@@ -34,5 +49,6 @@ public interface TSellerCommissionReportMapper extends BaseMapper<TSellerCommiss
 	 * @param map
 	 * @return
 	 */
-	int insertSellerCommissionReport(@Param("map") Map map);
+	int insertSellerCommission(@Param("map") Map map);
+
 }
