@@ -20,6 +20,26 @@ import java.util.Map;
 @Mapper
 public interface TSellerCommissionReportMapper extends BaseMapper<TSellerCommissionReport> {
 
+
+	/**
+	 * 分页查询佣金明细
+	 *
+	 * @param page
+	 * @param wrapper
+	 * @return
+	 */
+	List<TSellerCommissionReport> selectPageList(Pagination page, @Param("ew") Wrapper<TSellerCommissionReport> wrapper) ;
+
+	/**
+	 * 分页查询佣金汇总数据
+	 *
+	 * @param page
+	 * @param wrapper
+	 * @return
+	 */
+	List<TSellerCommissionReport> selectGroupPageList(Pagination page, @Param("ew") Wrapper<TSellerCommissionReport> wrapper) ;
+
+
 	/**
 	 * 清空临时表
 	 *

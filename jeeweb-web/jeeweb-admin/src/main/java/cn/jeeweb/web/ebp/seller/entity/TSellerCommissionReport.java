@@ -44,12 +44,12 @@ public class TSellerCommissionReport extends DataEntity<String> {
     /**
      * 生成佣金记录时销售等级id
      */
-    private String sellerLevel;
+    private String levelId;
 
     /**
      * 生成佣金记录时销售等级名称
      */
-    private String sellerLevelName;
+    private String levelName;
 
     /**
      * 生成佣金记录时间
@@ -119,20 +119,20 @@ public class TSellerCommissionReport extends DataEntity<String> {
         this.sellerName = sellerName;
     }
 
-    public String getSellerLevel() {
-        return sellerLevel;
+    public String getLevelId() {
+        return levelId;
     }
 
-    public void setSellerLevel(String sellerLevel) {
-        this.sellerLevel = sellerLevel;
+    public void setLevelId(String levelId) {
+        this.levelId = levelId;
     }
 
-    public String getSellerLevelName() {
-        return sellerLevelName;
+    public String getLevelName() {
+        return levelName;
     }
 
-    public void setSellerLevelName(String sellerLevelName) {
-        this.sellerLevelName = sellerLevelName;
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
     }
 
     public Date getDtime() {

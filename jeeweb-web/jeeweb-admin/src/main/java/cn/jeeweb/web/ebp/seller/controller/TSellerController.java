@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.seller.controller;
 
 import cn.jeeweb.common.http.PageResponse;
+import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
@@ -13,18 +14,19 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
+import cn.jeeweb.web.ebp.exception.MyProcessException;
 import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange;
 import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionReport;
 import cn.jeeweb.web.ebp.seller.entity.TSellerLevel;
 import cn.jeeweb.web.ebp.seller.service.TSellerCommissionPowerService;
+import cn.jeeweb.web.ebp.seller.service.TSellerCommissionReportService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -47,6 +49,8 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
 
     @Resource(name = "sellerCommissionPowerService")
     private TSellerCommissionPowerService sellerCommissionPowerService;
+    @Resource(name = "sellerCommissionReportService")
+    private TSellerCommissionReportService sellerCommissionReportService;
 
     /**
      * 销售人员等级列表查询
@@ -136,6 +140,83 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
         }
     }
 
+
+    /**
+     * 新增初始化
+     *
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "commission/addCommissionDateRangeInit")
+    public ModelAndView add(Model model, HttpServletRequest request, HttpServletResponse response) {
+        model.addAttribute("data", new TSellerCommissionDateRange());
+        return displayModelAndView("sellerCommissionDateRangeAdd");
+    }
+
+    /***
+     * 新增保存
+     *
+     * @param entity
+     * @param result
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("commission/addCommissionDateRange")
+    @Log(logType = LogType.INSERT)
+    public Response add(TSellerCommissionDateRange entity, BindingResult result, HttpServletRequest request,HttpServletResponse response) {
+        try {
+            sellerCommissionPowerService.addTSellerCommissionDateRange(entity);
+            return Response.ok("添加成功");
+        }catch (MyProcessException ex){
+            return Response.error(ex.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.error("系统异常");
+        }
+    }
+
+    /**
+     * 初始化编辑
+     *
+     * @param id
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value = "commission/{id}/updateCommissionDateRangeInit")
+    public ModelAndView update(@PathVariable("id") String id, Model model, HttpServletRequest request, HttpServletResponse response) {
+        TSellerCommissionDateRange retObj = sellerCommissionPowerService.selectSellerCommissionDateRangeById(id);
+        model.addAttribute("data", retObj);
+        return displayModelAndView("sellerCommissionDateRangeEdit");
+    }
+
+    /**
+     * 编辑保存
+     *
+     * @param entity
+     * @param result
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("commission/{id}/updateCommissionDateRange")
+    @Log(logType = LogType.UPDATE)
+    public Response update(TSellerCommissionDateRange entity, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            sellerCommissionPowerService.updateTSellerCommissionDateRange(entity);
+            return Response.ok("更新成功");
+        }catch (MyProcessException ex){
+            return Response.error(ex.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.error("系统异常");
+        }
+    }
+
     /**
      * 列表查询
      *
@@ -177,15 +258,59 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
                     entityWrapper.like("tb.group_name", filter_groupName.getValue().toString());
                 }
             }
-            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TbuyerInfo.class);
-            SerializeFilter filter = propertyPreFilterable.constructFilter(TbuyerInfo.class);
-            PageResponse<TSellerCommissionReport> pagejson = new PageResponse<TSellerCommissionReport>();
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TSellerCommissionReport.class);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(TSellerCommissionReport.class);
+            PageResponse<TSellerCommissionReport> pagejson = new PageResponse<TSellerCommissionReport>(sellerCommissionReportService.selectSellerCommissionReportPageList(queryable,entityWrapper));
             content = JSON.toJSONString(pagejson, filter);
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
             StringUtils.printJson(response, content);
         }
+    }
 
+    /**
+     * 列表查询
+     *
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value ="commission/groupView" )
+    @RequiresMethodPermissions("commission")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView groupView(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("sellerCommissionGroupList");
+        return mav;
+    }
+
+    /***
+     * 销售佣金列表查询
+     *
+     * @param queryable
+     * @param propertyPreFilterable
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "ajaxGroupListSellerCommission", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("commission")
+    @Log(logType = LogType.SELECT)
+    public void ajaxGroupListSellerCommissionReport(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String content = null;
+        try {
+            EntityWrapper<TSellerCommissionReport> entityWrapper = new EntityWrapper<TSellerCommissionReport>(entityClass);
+            propertyPreFilterable.addQueryProperty("id");
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TSellerCommissionReport.class);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(TSellerCommissionReport.class);
+            PageResponse<TSellerCommissionReport> pagejson = new PageResponse<TSellerCommissionReport>(sellerCommissionReportService.selectGroupPageList(queryable,entityWrapper));
+            content = JSON.toJSONString(pagejson, filter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            StringUtils.printJson(response, content);
+        }
     }
 }

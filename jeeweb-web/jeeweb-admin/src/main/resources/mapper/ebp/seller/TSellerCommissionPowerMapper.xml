@@ -29,7 +29,34 @@
         </if>
     </select>
 
-
+    <!-- 列表查询 -->
+    <select id="selectSellerCommissionRangeById" resultType="cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange" parameterType="String">
+        SELECT
+            scdrtb.id,scdrtb.level_id,scdrtb.begin_day_num,scdrtb.end_day_num,scdrtb.commission_type,scdrtb.commission_ratio,scdrtb.commission_value,scdrtb.remarks,
+            sltb.level_name
+        FROM
+            t_seller_commission_date_range scdrtb
+            INNER JOIN t_seller_level sltb ON sltb.id = scdrtb.level_id AND sltb.del_flag = 0
+        where
+          scdrtb.id=#{id}
+    </select>
+    <!-- 更新数据 -->
+    <update id="updateSellerCommissionRangeById" parameterType="cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange">
+        update
+          t_seller_commission_date_range scdrtb
+        set
+          scdrtb.begin_day_num=#{beginDayNum},scdrtb.end_day_num=#{endDayNum},scdrtb.commission_type=#{commissionType},scdrtb.commission_ratio=#{commissionRatio},scdrtb.commission_value=#{commissionValue}
+        where
+          scdrtb.id=#{id}
+    </update>
+    <!-- 新增数据 -->
+    <insert id="insertSellerCommissionRange" parameterType="cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange">
+        insert into t_seller_commission_date_range
+          (level_id,begin_day_num,end_day_num,commission_type,commission_ratio,commission_value,create_by,create_date,update_by,update_date,remarks,del_flag)
+        values
+          (#{levelId},#{beginDayNum},#{endDayNum},#{commissionType},#{commissionRatio},#{commissionValue},#{createBy.id},#{createDate},#{updateBy.id},#{updateDate},#{remarks},#{delFlag})
+    </insert>
+    
 
 
 </mapper>

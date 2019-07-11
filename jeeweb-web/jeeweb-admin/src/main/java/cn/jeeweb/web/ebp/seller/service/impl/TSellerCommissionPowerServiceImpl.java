@@ -54,4 +54,25 @@ public class TSellerCommissionPowerServiceImpl extends CommonServiceImpl<TSeller
         page.setRecords(baseMapper.selectSellerCommissionRangePageList(page, wrapper));
         return new PageImpl<TSellerCommissionDateRange>(page.getRecords(), queryable.getPageable(), page.getTotal());
     }
+
+    @Override
+    public TSellerCommissionDateRange selectSellerCommissionDateRangeById(String id){
+        return baseMapper.selectSellerCommissionRangeById(id);
+    }
+
+    @Override
+    public void updateTSellerCommissionDateRange(TSellerCommissionDateRange obj){
+       int updateNum= baseMapper.updateSellerCommissionRangeById(obj);
+       if(updateNum != 1){
+            throw new MyProcessException("数据更新失败");
+       }
+    }
+
+    @Override
+    public void addTSellerCommissionDateRange(TSellerCommissionDateRange obj){
+        int updateNum= baseMapper.updateSellerCommissionRangeById(obj);
+        if(updateNum != 1){
+            throw new MyProcessException("数据保存失败");
+        }
+    }
 }

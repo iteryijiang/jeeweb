@@ -5,6 +5,7 @@ import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange;
+import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionReport;
 import cn.jeeweb.web.ebp.seller.entity.TSellerLevel;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 
@@ -33,5 +34,27 @@ public interface TSellerCommissionPowerService extends ICommonService<TSellerLev
      * @return
      */
     Page<TSellerCommissionDateRange> selectSellerCommissionDateRangePageList(Queryable queryable, Wrapper<TSellerCommissionDateRange> wrapper);
+
+    /***
+     * 主键ID获取数据
+     *
+     * @param id
+     * @return
+     */
+    TSellerCommissionDateRange selectSellerCommissionDateRangeById(String id);
+
+    /**
+     * 更新数据
+     *
+     * @param obj
+     */
+    void updateTSellerCommissionDateRange(TSellerCommissionDateRange obj);
+
+    /***
+     * 新增数据
+     *
+     * @param obj
+     */
+    void addTSellerCommissionDateRange(TSellerCommissionDateRange obj);
 
 }

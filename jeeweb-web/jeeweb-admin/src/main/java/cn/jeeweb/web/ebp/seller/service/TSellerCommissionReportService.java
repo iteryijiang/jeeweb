@@ -28,6 +28,16 @@ public interface TSellerCommissionReportService extends ICommonService<TSellerCo
 	 */
 	Page<TSellerCommissionReport> selectSellerCommissionReportPageList(Queryable queryable, Wrapper<TSellerCommissionReport> wrapper);
 
+
+	/***
+	 * 查询汇总数据(按照销售编号汇总某一段时间之内的数据)
+	 *
+	 * @param queryable
+	 * @param wrapper
+	 * @return
+	 */
+	Page<TSellerCommissionReport> selectGroupPageList(Queryable queryable, Wrapper<TSellerCommissionReport> wrapper);
+
 	/**
 	 * 定时任务生成
 	 *

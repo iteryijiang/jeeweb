@@ -64,6 +64,14 @@ public interface TSellerCommissionPowerMapper extends BaseMapper<TSellerLevel> {
 	int updateSellerCommissionRangeById(TSellerCommissionDateRange obj);
 
 	/**
+	 * 新增数据
+	 *
+	 * @param obj
+	 * @return
+	 */
+	int insertSellerCommissionRange(TSellerCommissionDateRange obj);
+
+	/**
 	 * 判断区间是否发生重复冲突
 	 *
 	 * @param map

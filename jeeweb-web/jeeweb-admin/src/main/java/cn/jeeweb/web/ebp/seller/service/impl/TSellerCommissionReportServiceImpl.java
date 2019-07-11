@@ -43,7 +43,19 @@ public class TSellerCommissionReportServiceImpl extends CommonServiceImpl<TSelle
 		Pageable pageable = queryable.getPageable();
 		com.baomidou.mybatisplus.plugins.Page<TSellerCommissionReport> page = new com.baomidou.mybatisplus.plugins.Page<TSellerCommissionReport>(pageable.getPageNumber(), pageable.getPageSize());
 		wrapper.eq("1", "1");
+		page.setRecords(baseMapper.selectPageList(page, wrapper));
+		return new PageImpl<TSellerCommissionReport>(page.getRecords(), queryable.getPageable(), page.getTotal());
+	}
 
+	@Override
+	public Page<TSellerCommissionReport> selectGroupPageList(Queryable queryable, Wrapper<TSellerCommissionReport> wrapper){
+		QueryToWrapper<TSellerCommissionReport> queryToWrapper = new QueryToWrapper<TSellerCommissionReport>();
+		queryToWrapper.parseCondition(wrapper, queryable);
+		queryToWrapper.parseSort(wrapper, queryable);
+		Pageable pageable = queryable.getPageable();
+		com.baomidou.mybatisplus.plugins.Page<TSellerCommissionReport> page = new com.baomidou.mybatisplus.plugins.Page<TSellerCommissionReport>(pageable.getPageNumber(), pageable.getPageSize());
+		wrapper.eq("1", "1");
+		page.setRecords(baseMapper.selectGroupPageList(page, wrapper));
 		return new PageImpl<TSellerCommissionReport>(page.getRecords(), queryable.getPageable(), page.getTotal());
 	}
 

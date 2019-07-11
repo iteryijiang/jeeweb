@@ -1,12 +1,10 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('销售佣金',''), libs: ''}){ %>
 
-<#grid:grid id="sellerCommissionGrid" url="${adminPath}/seller/info/ajaxListSellerCommission"  multiselect="false" sortname="id" sortorder="desc" sortable="false">
-<#grid:column label="账期" width="90" query="true" queryMode="date"  condition="between"  name="atime" align="center"/>
+<#grid:grid id="sellerCommissionGrid" url="${adminPath}/seller/info/ajaxGroupListSellerCommission"  multiselect="false" sortname="id" sortorder="desc" sortable="false">
+<#grid:column label="月份" width="90" query="true" name="dataMonth" align="center"/>
 <#grid:column label="销售名称" name="sellerName" query="true" condition="like" width="140" />
-<#grid:column label="销售等级" name="levelName"  width="100" />
 <#grid:column label="任务数量" name="taskNum"  width="100" />
 <#grid:column label="佣金总额" name="totalCommission" width="80"/>
-<#grid:column label="佣金生成时间" name="dtime" width="100"/>
 <#grid:toolbar  function="search" />
 <#grid:toolbar  function="reset" />
 </#grid:grid>
