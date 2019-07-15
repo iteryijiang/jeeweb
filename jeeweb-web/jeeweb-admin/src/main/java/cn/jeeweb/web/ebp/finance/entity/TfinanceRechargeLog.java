@@ -1,5 +1,6 @@
 package cn.jeeweb.web.ebp.finance.entity;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import cn.jeeweb.web.common.entity.DataEntity;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -21,27 +22,36 @@ public class TfinanceRechargeLog extends DataEntity<String> {
 	private String shopid;//	varchar	32	0	-1	0	0	0	0		0	商户ID	utf8	utf8_general_ci		0	0
 	private String storeid;//	varchar	32	0	-1	0	0	0	0		0	店铺ID	utf8	utf8_general_ci		0	0
 	private String taskid;//	varchar	32	0	-1	0	0	0	0		0	店铺ID	utf8	utf8_general_ci		0	0
+	@Excel(name = "交易类型", orderNum = "6",width = 20)
 	private String tradetype;//	varchar	32	0	-1	0	0	0	0		0	操作类型	utf8	utf8_general_ci		0	0
 	private BigDecimal producedeposit;//	bigint	255	0	-1	0	0	0	0		0	操作金额				0	0
+	@Excel(name = "账户余额", orderNum = "5",width = 20)
 	private BigDecimal availabledeposit;//	bigint	255	0	-1	0	0	0	0		0	剩余金额				0	0
 	private String rechargeId;//	varchar	32	0	-1	0	0	0	0		0	引用表t_finance_recharge主键ID	utf8	utf8_general_ci		0	0
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Excel(name = "日期", orderNum = "9",format="yyyy-MM-dd HH:mm",width = 30)
 	private Date createDate;
 
 	@TableField(exist = false)
+	@Excel(name = "商户号", orderNum = "1",width = 20)
 	private String loginname;
 	@TableField(exist = false)
+	@Excel(name = "店铺", orderNum = "8",width = 20)
 	private String shopname;
 	@TableField(exist = false)
+	@Excel(name = "收入金额", orderNum = "3",width = 20)
 	private String producedepositIncomeName;//收入
 	@TableField(exist = false)
+	@Excel(name = "支出金额", orderNum = "4",width = 20)
 	private String producedepositPayName;//支出
 	@TableField(exist = false)
+	@Excel(name = "任务编码", orderNum = "7",width = 20)
 	private String taskno;
 	@TableField(exist = false)
+	@Excel(name = "商户来源", orderNum = "2",width = 20)
 	private String fromInnerOuter;
 
 

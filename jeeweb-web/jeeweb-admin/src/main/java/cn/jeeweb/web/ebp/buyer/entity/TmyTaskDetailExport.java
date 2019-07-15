@@ -12,7 +12,7 @@ public class TmyTaskDetailExport {
 	@TableId(value = "id", type = IdType.UUID)
 	private String id;
 
-	@Excel(name = "订单状态", orderNum = "8",replace= {"已接单、待下单_1", "已下单、待发货_2", "已发货、待收货_3", "已收货、完成_4"},width = 30)
+	@Excel(name = "订单状态", orderNum = "8",replace= {"已接单、待下单_1", "已下单、待发货_2", "已发货、待收货_3", "已收货、完成_4", "已退款_5"},width = 30)
 	private String taskstate;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 
 	@Excel(name = "实付金额", orderNum = "9", width = 15)

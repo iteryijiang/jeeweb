@@ -1,5 +1,9 @@
 package cn.jeeweb.web.ebp.finance.controller;
 
+import cn.afterturn.easypoi.entity.vo.NormalExcelConstants;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
+import cn.afterturn.easypoi.view.PoiBaseView;
 import cn.jeeweb.beetl.tags.dict.Dict;
 import cn.jeeweb.beetl.tags.dict.DictUtils;
 import cn.jeeweb.common.http.PageResponse;
@@ -14,10 +18,14 @@ import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.query.utils.QueryableConvertUtils;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
+import cn.jeeweb.common.utils.BeanUtils;
 import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetailExport;
+import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceRecharge;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceRechargeLog;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeLogService;
@@ -30,6 +38,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -188,5 +197,69 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
         StringUtils.printJson(response,content);
     }
 
+
+
+
+    @RequestMapping("export")
+    @PageableDefaults(sort = "create_date=desc")
+    public void export(ModelMap map, Queryable queryable,
+                       PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        EntityWrapper<TfinanceRechargeLog> entityWrapper = new EntityWrapper<>(entityClass);
+        propertyPreFilterable.addQueryProperty("id");
+        String userid = UserUtils.getPrincipal().getId();
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
+            entityWrapper.eq("t.shopid", userid);
+        }
+        entityWrapper.setTableAlias("t");
+        if(queryable.getCondition()!=null) {
+            Condition.Filter filter = queryable.getCondition().getFilterFor("createDate");
+            if (filter != null) {
+                queryable.getCondition().remove(filter);
+                queryable.getCondition().and(Condition.Operator.between, "createDate", TaskUtils.whereDate(filter));
+            }
+            Condition.Filter Filter_loginname = queryable.getCondition().getFilterFor("loginname");
+            if(Filter_loginname!=null){
+                queryable.getCondition().remove(Filter_loginname);
+                entityWrapper.like("s.loginname",Filter_loginname.getValue().toString());
+            }
+
+            Condition.Filter Filter_name = queryable.getCondition().getFilterFor("shopname");
+            if(Filter_name!=null){
+                queryable.getCondition().remove(Filter_name);
+                entityWrapper.like("b.shopname",Filter_name.getValue().toString());
+            }
+            Condition.Filter fromInnerOuter = queryable.getCondition().getFilterFor("fromInnerOuter");
+            if(fromInnerOuter!=null){
+                queryable.getCondition().remove(fromInnerOuter);
+                entityWrapper.eq("s.from_Inner_Outer",fromInnerOuter.getValue().toString());
+            }
+        }else {
+            if(queryable.getCondition()==null||queryable.getCondition().getFilterFor("createDate")==null) {
+                Date date1 = DateUtils.dateAddDay(new Date(),-7);
+                String[] creates = TaskUtils.whereNewDate(DateUtils.formatDate(date1), DateUtils.formatDate(new Date()));
+                entityWrapper.between("t.create_date", creates[0], creates[1]);
+            }
+        }
+        // 预处理
+        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
+        List<TfinanceRechargeLog> userList = tfinanceRechargeLogService.listAll(queryable,entityWrapper);
+        for (TfinanceRechargeLog l:userList) {
+            l.setFromInnerOuter(DictUtils.getDictLabel(l.getFromInnerOuter(), "shopSource", l.getFromInnerOuter()));
+            if(TfinanceRechargeService.rechargetype_2.equals(l.getTradetype())||TfinanceRechargeService.rechargetype_3.equals(l.getTradetype())){
+                l.setProducedepositPayName("-"+l.getProducedeposit());
+            }else {
+                l.setProducedepositIncomeName("+"+l.getProducedeposit());
+            }
+            l.setTradetype(DictUtils.getDictLabel(l.getTradetype(), "tradetype", l.getTradetype()));
+        }
+        String title = "商户余额信息";
+        ExportParams params = new ExportParams(title, title, ExcelType.XSSF);
+        map.put(NormalExcelConstants.DATA_LIST, userList);
+        map.put(NormalExcelConstants.CLASS, TfinanceRechargeLog.class);
+        map.put(NormalExcelConstants.PARAMS, params);
+        map.put("fileName", title + "-" + DateUtils.getDateTime());
+        PoiBaseView.render(map, request, response, NormalExcelConstants.EASYPOI_EXCEL_VIEW);
+    }
 
 }

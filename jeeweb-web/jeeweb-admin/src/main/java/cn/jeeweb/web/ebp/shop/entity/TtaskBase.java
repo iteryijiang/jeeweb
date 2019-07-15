@@ -65,6 +65,8 @@ public class TtaskBase extends DataEntity<String> {
 	private String pattern;//任务模式
 	private String renovationurl;//装修页面链接地址
 	private String ispicture;// varchar(20) DEFAULT NULL COMMENT '是否需要评论',
+	private String accountlevel;//	varchar	32	0	-1	0	0	0	0		0	账号等级	utf8	utf8_general_ci		0	0
+
 
 
 
@@ -515,5 +517,13 @@ public class TtaskBase extends DataEntity<String> {
 
 	public void setPictureurl(String pictureurl) {
 		this.pictureurl = pictureurl;
+	}
+
+	public String getAccountlevel() {
+		return accountlevel;
+	}
+
+	public void setAccountlevel(String accountlevel) {
+		this.accountlevel = accountlevel;
 	}
 }

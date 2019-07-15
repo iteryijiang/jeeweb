@@ -17,6 +17,7 @@ public class TtaskPictureComment extends DataEntity<String> {
 	private String taskid;//	varchar	32	0	-1	0	0	0	0		0	任务ID	utf8	utf8_general_ci		0	0
 	private String taskpictureurl;//	varchar	200	0	-1	0	0	0	0		0	任务图片	utf8	utf8_general_ci		0	0
 	private int taskpicturenum;//	int	10	0	-1	0	0	0	0		0	任务图片数				0	0
+	private String textareaname;//	varchar	200	0	-1	0	0	0	0		0	评论内容	utf8	utf8_general_ci		0	0
 
 
 	@TableField(exist = false)
@@ -71,5 +72,13 @@ public class TtaskPictureComment extends DataEntity<String> {
 
 	public void setTdid(String tdid) {
 		this.tdid = tdid;
+	}
+
+	public String getTextareaname() {
+		return textareaname;
+	}
+
+	public void setTextareaname(String textareaname) {
+		this.textareaname = textareaname;
 	}
 }

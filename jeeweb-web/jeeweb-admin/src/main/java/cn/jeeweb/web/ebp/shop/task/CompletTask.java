@@ -35,11 +35,15 @@ public class CompletTask {
             List<TmyTaskDetail> list = tmyTaskDetailService.listNoSendGood(map);
             System.out.println("开始自动收货完成："+list.size()+"条");
             long starttime = System.currentTimeMillis();
-            Map dmap = new HashMap();
             List yesPictureList = new ArrayList();
             for (TmyTaskDetail tmyTaskDetail:list){
-                if("1".equals(tmyTaskDetail.getIspicture())||yesPictureList.contains(tmyTaskDetail.getBuyerno())){
+                if("1".equals(tmyTaskDetail.getIspicture())){
                     yesPictureList.add(tmyTaskDetail.getBuyerno());
+                }
+            }
+
+            for (TmyTaskDetail tmyTaskDetail:list){
+                if("1".equals(tmyTaskDetail.getIspicture())||yesPictureList.contains(tmyTaskDetail.getBuyerno())){
                     continue;
                 }
                 tmyTaskDetailService.upTaskState("4", tmyTaskDetail,"");

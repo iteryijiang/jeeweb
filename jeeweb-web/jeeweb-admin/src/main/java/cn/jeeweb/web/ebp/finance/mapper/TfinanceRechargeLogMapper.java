@@ -14,4 +14,8 @@ import java.util.List;
 public interface TfinanceRechargeLogMapper extends BaseMapper<TfinanceRechargeLog> {
 	
 	List<TfinanceRechargeLog> selectUserList(Pagination page, @Param("ew") Wrapper<TfinanceRechargeLog> wrapper);
+
+
+
+	List<TfinanceRechargeLog> listTfinanceRechargeLog(@Param("ew") Wrapper<TfinanceRechargeLog> wrapper);
 }

@@ -66,7 +66,8 @@
             result += "<div class='task_target'><table><tr>\n" +
                 "<td class=\"tdTextRight\">评论" + i + "：</td>\n" +
                 "<td class=\"tdTextLeft\" id=\"tdstakeName" + i + "\">\n" +
-                "<a id=\"uploadbutton" + i + "\" class=\"btn btn-primary btn-small\" onclick=\"filePort({title:'图片',tdname:'tdstakeName" + i + "',dataType:'" + i + "',uploadBtnId:'uploadbutton" + i + "'})\">上传</a>\n" +
+				"<textarea id='textareaName"+i+"' style=\"border:0;border-radius:5px;background-color:rgba(241,241,241,.98);width: 355px;height: 100px;padding: 10px;resize: none;\"></textarea><br>"+
+                "<a id=\"uploadbutton" + i + "\" class=\"btn btn-primary btn-small\" onclick=\"filePort({textareaName:'textareaName"+i+"',title:'图片',tdname:'tdstakeName" + i + "',dataType:'" + i + "',uploadBtnId:'uploadbutton" + i + "'})\">上传</a>\n" +
                 "</td>\n" +
                 "</tr></table></div>";
         }
@@ -75,7 +76,7 @@
         if(files!=undefined&&files!=null) {
             $(files).each(function(i,n){
                 if(n.taskpicturenum<=${tasknum}){
-                    addFileShow("tdstakeName"+n.taskpicturenum,n.taskpicturenum,n.taskpictureurl,"uploadbutton"+n.taskpicturenum);
+                    addFileShow("tdstakeName"+n.taskpicturenum,n.taskpicturenum,n.taskpictureurl,"uploadbutton"+n.taskpicturenum,n.textareaName);
                 }
             });
         }
@@ -86,6 +87,11 @@
      */
     var projectFile = [];
     function filePort(conf){
+        var textareaName = $("#"+conf.textareaName).val()
+        if(textareaName==""||textareaName==undefined){
+            alert("请先填写评论内容");
+            return;
+		}
         if(!conf) conf={};
         var url= "${adminPath}/shop/TtaskBase/taskupload";
         top.layer.open({
@@ -100,25 +106,29 @@
                 var iframeWin = layero.find('iframe')[0]; // 得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                 var res = iframeWin.contentWindow.callbackdata();
                 if(res.pourl!=undefined&&res.pourl!=""){
-                    addFileShow(conf.tdname,conf.dataType,res.pourl,conf.uploadBtnId);
+                    addFileShow(conf.tdname,conf.dataType,res.pourl,conf.uploadBtnId,textareaName);
 				}
                 //最后关闭弹出层
                 top.layer.close(index); //再执行关闭
             }
         });
     }
-    function addFileShow(tdname,dataType,data, uploadBtnId){
+    function addFileShow(tdname,dataType,data, uploadBtnId,textareaName){
 		var pourls = data.split(",");
 
 		for(var i=0;i<pourls.length;i++){
-            projectFile.push({taskpicturenum:dataType,taskpictureurl: pourls[i]});
+            var pourlName = pourls[i].substr(pourls[i].lastIndexOf("/")+1);
+            var pourlSuf = pourlName.split(".")[1];
+		    projectFile.push({taskpicturenum:dataType,taskpictureurl: pourls[i],textareaName:textareaName});
 			var td = document.getElementById(tdname);
 			var span = document.createElement("span");
 			span.className = "projectUpload";
-			var imgName = document.createElement("img");
-			imgName.src = pourls[i];
-			imgName.width = "100px";
-			imgName.height = "100px";
+
+			var aName = document.createElement("a");
+            aName.innerText = pourlName;
+            aName.href = pourls[i];
+			aName.download = pourlName;
+            aName.target="_blank";
 			var a = document.createElement("a");
 			a.innerText = "×";
 			a.href = "javaScript:void(0);";
@@ -130,7 +140,7 @@
 				});
 				projectFile.splice(index,1);
 			};
-			span.appendChild(imgName);
+			span.appendChild(aName);
 			span.append("  ");
 			span.appendChild(a);
 			// td.appendChild(span);

@@ -23,5 +23,15 @@
 	   </if>
   </select>
 
+  <select id="listTfinanceRechargeLog" resultMap="TfinanceRechargeLog">
+      select t.*,s.loginname,b.shopname,tb.taskno,s.from_Inner_Outer fromInnerOuter from t_finance_recharge_log t left join t_shop_info s on t.shopid=s.userid
+      left join t_shop_base b on t.storeid=b.id left join t_task_base tb on t.taskid=tb.id
+       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+		  <where>
+		    ${ew.sqlSegment}
+		  </where>
+	   </if>
+  </select>
+
 
 </mapper>

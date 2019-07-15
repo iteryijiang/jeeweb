@@ -29,12 +29,11 @@
 <#grid:column label="搜索关键字"  name="keyword" width="100"/>
 <#grid:column label="货号"  name="article" query="true"  condition="like" width="90"/>
 <#grid:column label="原价"  name="tPrice" width="40"/>
-<#grid:column label="佣金单价"  name="presentdeposit" width="60"/>
 <#grid:column label="实付"  name="actualprice" width="40"/>
 <#grid:column label="发布时间"  name="createDate" width="100"/>
 <#grid:column label="生效时间"  name="effectdate"  query="true" width="100" queryMode="date"  condition="between"  />
 <#grid:column label="任务数"  name="tasknum" width="60" />
-<#grid:column label="评论"  name="ispicture" width="40" dict="sf" queryMode="select"  condition="eq" query="true" />
+<#grid:column label="带图评价"  name="ispicture" width="60" dict="sf" queryMode="select"  condition="eq" query="true" />
 <#grid:column label="已接"  name="receivingnum"  width="40" sortable="true"/>
 <#grid:column label="已下"  name="ordernum"  width="40" sortable="true"/>
 <#grid:column label="已发"  name="deliverynum"  width="40" sortable="false"/>

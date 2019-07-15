@@ -227,6 +227,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
             ttaskBase.setShopid(userid);
             ttaskBase.setSkuid(JdSpider.getGoodId_ByURL(ttaskBase.gettUrl()));
             TshopInfo si = tshopInfoService.selectOne(ttaskBase.getShopid());
+            ttaskBase.setAccountlevel(si.getAccountlevel());
             Map mapSi = new HashMap();//修改商户金额
             mapSi.put("id",si.getId());
             mapSi.put("oldtaskDeposit",si.getTaskdeposit());//原商户冻结金额
@@ -543,6 +544,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         }
         List<Map> list = ttaskBaseService.listFinanceShopReport(par_map);
         Double sumActualprice = 0.0;
+        Double sumPresentdeposit = 0.0;
         Double sumOrderPrice = 0.0;
         Double sumDeliveryPrice = 0.0;
         Double sumFinishPrice = 0.0;
@@ -555,6 +557,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         for (Map map:list) {
             map.put("id",map.get("basenameid")+"_"+map.get("counteffectdate"));
             sumActualprice += Double.parseDouble((map.get("sumActualprice")==null?"0":map.get("sumActualprice")).toString());
+            sumPresentdeposit += Double.parseDouble((map.get("sumPresentdeposit")==null?"0":map.get("sumPresentdeposit")).toString());
             sumOrderPrice += Double.parseDouble((map.get("sumOrderPrice")==null?"0":map.get("sumOrderPrice")).toString());
             sumDeliveryPrice += Double.parseDouble((map.get("sumDeliveryPrice")==null?"0":map.get("sumDeliveryPrice")).toString());
             sumFinishPrice += Double.parseDouble((map.get("sumFinishPrice")==null?"0":map.get("sumFinishPrice")).toString());
@@ -570,6 +573,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         map.put("countCreateDate","");
         map.put("shopname","合计");
         map.put("sumActualprice",sumActualprice);
+        map.put("sumPresentdeposit",sumPresentdeposit);
         map.put("sumOrderPrice",sumOrderPrice);
         map.put("sumDeliveryPrice",sumDeliveryPrice);
         map.put("sumFinishPrice",sumFinishPrice);

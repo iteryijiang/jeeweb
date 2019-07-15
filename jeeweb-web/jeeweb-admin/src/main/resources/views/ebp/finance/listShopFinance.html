@@ -15,6 +15,7 @@
 </div>
 
 <#grid:grid id="TfinanceRechargeLogGrid" url="${adminPath}/finance/TfinanceRechargeLog/ajaxList" sortname="createDate" sortorder="desc" sortable="false">
+<#grid:toolbar title="导出"   icon="fa-download"  onclick="download()"  />
 <#grid:column label="商户号" name="loginname" query="true" condition="like" width="140" />
 <#grid:column label="商户来源" name="fromInnerOuter" hidden="${showHidden}"  query="true" dict="shopSource" queryMode="select" condition="eq" />
 <#grid:column label="收入金额" name="producedepositIncomeName" formatterColor="ALL:green;" width="100"/>
@@ -64,5 +65,12 @@
                 $("#sumTaskdeposit").html(data.sumTaskdeposit==undefined?"0":data.sumTaskdeposit);
             }
         });
+    }
+    /**
+     * 导出
+     * @param rowId
+     */
+    function download() {
+        excelExport("${adminPath}/finance/TfinanceRechargeLog/export","TfinanceRechargeLogGrid");
     }
 </script>

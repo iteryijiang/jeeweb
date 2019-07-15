@@ -27,7 +27,7 @@
     select t.* from t_task_amount t
     where 1=1
     <if test="map.taskid != '' and map.taskid != null">
-      and s.taskid=#{map.taskid}
+      and t.taskid=#{map.taskid}
     </if>
   </select>
 
