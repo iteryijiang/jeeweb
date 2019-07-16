@@ -1,4 +1,4 @@
-<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('买手等级',''), libs: ''}){ %>
+<% layout('/layouts/list.html', {title: @MessageUtils.getMessage('销售列表信息',''), libs: ''}){ %>
 
 <#grid:grid id="tbuyerLevelGrid" url="${adminPath}/buyer/buyerlevel/ajaxBuyerLevelList" multiselect="false"  sortname="levelCode" sortorder="desc" sortable="false">
 <#grid:column label="等级编号" width="90" name="levelCode" align="center"/>

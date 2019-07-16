@@ -44,6 +44,11 @@ public class TSellerCommissionPowerServiceImpl extends CommonServiceImpl<TSeller
     }
 
     @Override
+    public TSellerLevel selectSellerLevelById(String levelId){
+        return baseMapper.selectSellerLevelById(levelId);
+    }
+
+    @Override
     public Page<TSellerCommissionDateRange> selectSellerCommissionDateRangePageList(Queryable queryable, Wrapper<TSellerCommissionDateRange> wrapper){
         QueryToWrapper<TSellerCommissionDateRange> queryToWrapper = new QueryToWrapper<TSellerCommissionDateRange>();
         queryToWrapper.parseCondition(wrapper, queryable);

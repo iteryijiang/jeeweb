@@ -79,6 +79,27 @@ public class TSellerCommissionReportServiceImpl extends CommonServiceImpl<TSelle
 	}
 
 	@Override
+	public void insertSellerCommissionReportForBackTask(Date beginDate,Date endDate){
+		Map<String,Object> paramMap=new HashMap<>();
+		String beginDateStr= DateUtils.formatDate(beginDate,"yyyy-MM-dd");
+		paramMap.put("dataMonth",DateUtils.formatDate(beginDate,"yyyyMM"));
+		paramMap.put("atime",endDate);
+		paramMap.put("createBy","schule");
+		paramMap.put("beginTime",beginDateStr);
+		paramMap.put("endTime",DateUtils.getDateEnd(endDate));
+		//每个月的2号执行汇总数据
+		baseMapper.updateSellerCommissionDetailTempForTruncate();
+		//生成明细表数据临时表
+		baseMapper.insertSellerCommissionDetailTempForBackCommission(paramMap);
+		//生成明细表数据
+		baseMapper.insertSellerCommissionDetailForBackCommission(paramMap);
+		//汇总明细表数据生成总表数据
+		baseMapper.insertSellerCommissionForBackCommission(paramMap);
+
+
+	}
+
+	@Override
 	public List<TSellerCommissionReportDetail> selectSellerCommissionReportDetailList(String seller, Date atime, String dateRange){
 		List<TSellerCommissionReportDetail> retObj=null;
 

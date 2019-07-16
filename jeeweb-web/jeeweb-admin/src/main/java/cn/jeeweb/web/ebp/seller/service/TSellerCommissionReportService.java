@@ -46,6 +46,14 @@ public interface TSellerCommissionReportService extends ICommonService<TSellerCo
 	void insertSellerCommissionReportForCreate(Date sourceDate);
 
 	/**
+	 * 生成时间段内退单的佣金
+	 *
+	 * @param beginDate
+	 * @param endDate
+	 */
+	void insertSellerCommissionReportForBackTask(Date beginDate,Date endDate);
+
+	/**
 	 * 查询明细
 	 *
 	 * @param seller

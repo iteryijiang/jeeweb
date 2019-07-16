@@ -34,12 +34,13 @@
     <update id="updateSellerCommissionDetailTempForTruncate">
       TRUNCATE TABLE t_seller_commission_detail_temp
     </update>
-
+    <!-- 每天定时任务生成 开始 -->
     <insert id="insertSellerCommissionDetailTemp" parameterType="HashMap">
           INSERT into t_seller_commission_detail_temp
-              (id,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,date_diff,create_by,create_date,update_by,update_date,remarks,del_flag)
+              (id,data_type,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,date_diff,create_by,create_date,update_by,update_date,remarks,del_flag)
           SELECT
                 REPLACE(UUID(),'-','') as id,
+                1 AS data_type,
                 #{map.dataMonth} AS data_month,
                 #{map.atime} AS atime,
                 seller.userid,
@@ -70,9 +71,9 @@
 
     <insert id="insertSellerCommissionDetail" parameterType="HashMap">
           INSERT into t_seller_commission_detail
-              (id,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,task_num_init,date_diff,date_range_id,total_commission,total_commission_init,create_by,create_date,update_by,update_date,remarks,del_flag)
+              (id,data_type,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,task_num_init,date_diff,date_range_id,total_commission,total_commission_init,create_by,create_date,update_by,update_date,remarks,del_flag)
           SELECT
-            REPLACE(UUID(),'-','') as id,
+            REPLACE(UUID(),'-','') as id,temptb.data_type,
             temptb.data_month,temptb.atime,temptb.seller_id ,temptb.seller_name,temptb.level_id,temptb.level_name,temptb.task_num,temptb.task_num task_num_init,temptb.date_diff,rangetb.id,
             case WHEN rangetb.commission_type=1 then rangetb.commission_value else rangetb.commission_ratio*temptb.task_num end total_commission,
             case WHEN rangetb.commission_type=1 then rangetb.commission_value else rangetb.commission_ratio*temptb.task_num end total_commission_init,
@@ -84,9 +85,9 @@
 
     <insert id="insertSellerCommission" parameterType="HashMap">
         insert into t_seller_commission
-          (id,data_month,atime,dtime,seller_id,seller_name,level_id,level_name,task_num,task_num_init,total_commission,total_commission_init,create_by,create_date,update_by,update_date,remarks,del_flag)
+          (id,data_type,data_month,atime,dtime,seller_id,seller_name,level_id,level_name,task_num,task_num_init,total_commission,total_commission_init,create_by,create_date,update_by,update_date,remarks,del_flag)
         select
-        REPLACE(UUID(),'-','') as id,#{map.dataMonth},#{map.atime},NOW(),seller.userid,
+        REPLACE(UUID(),'-','') as id,tb.data_type,#{map.dataMonth},#{map.atime},NOW(),seller.userid,
         useller.username,seller.accountLevel,sellerLevel.level_name,sum(ifnull(tb.task_num,0)),sum(ifnull(tb.task_num_init,0)),
         sum(ifnull(tb.total_commission,0)),sum(ifnull(tb.total_commission_init,0)),
         tb.create_by,tb.create_date,tb.update_by,tb.update_date,tb.remarks,tb.del_flag
@@ -97,4 +98,72 @@
           left join t_seller_commission_detail tb on tb.seller_id=seller.userid and tb.atime=#{map.atime}
         group by seller.userid
     </insert>
+    <!-- 每天定时任务生成 结束 -->
+
+
+    <!-- 月初定时任务生成 开始 -->
+    <insert id="insertSellerCommissionDetailTempForBackCommission" parameterType="HashMap">
+          INSERT into t_seller_commission_detail_temp
+              (id,data_type,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,date_diff,create_by,create_date,update_by,update_date,remarks,del_flag)
+          SELECT
+                REPLACE(UUID(),'-','') as id,
+                2 AS data_type,
+                #{map.dataMonth} AS data_month,
+                #{map.atime} AS atime,
+                seller.userid,
+                useller.username,
+                seller.accountLevel,
+                sellerLevel.level_name,
+                count(*),
+                DATEDIFF(#{map.atime},shop.create_date) dateDiff,
+                 #{map.createBy} create_by,
+                NOW() AS create_date,
+                 #{map.createBy} update_by,
+                NOW() AS update_date,
+                '' remarks,
+                0 as del_flag
+            FROM
+                t_my_task_detail taskTb
+                INNER JOIN t_task_base shopyask ON shopyask.id = taskTb.taskid
+                INNER JOIN t_shop_info shop ON shop.userid = shopyask.shopId AND shop.from_inner_outer = 2
+                INNER JOIN t_shop_role_user sru ON sru.shopid = shop.userid
+                INNER JOIN sys_user useller ON useller.id = sru.userid
+                INNER JOIN t_sold_info seller ON seller.userid = useller.id
+                INNER JOIN t_seller_level sellerLevel ON sellerLevel.id = seller.accountLevel
+            WHERE
+                taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} AND taskTb.taskstate=5
+            GROUP BY
+                seller.userid,dateDiff
+    </insert>
+
+    <insert id="insertSellerCommissionDetailForBackCommission" parameterType="HashMap">
+          INSERT into t_seller_commission_detail
+              (id,data_type,data_month,atime,seller_id,seller_name,level_id,level_name,task_num,task_num_init,date_diff,date_range_id,total_commission,total_commission_init,create_by,create_date,update_by,update_date,remarks,del_flag)
+          SELECT
+            REPLACE(UUID(),'-','') as id,temptb.data_type,
+            temptb.data_month,temptb.atime,temptb.seller_id ,temptb.seller_name,temptb.level_id,temptb.level_name,temptb.task_num,temptb.task_num task_num_init,temptb.date_diff,rangetb.id,
+            case WHEN rangetb.commission_type=1 then 0 else -rangetb.commission_ratio*temptb.task_num end total_commission,
+            case WHEN rangetb.commission_type=1 then 0 else -rangetb.commission_ratio*temptb.task_num end total_commission_init,
+            temptb.create_by,temptb.create_date,temptb.update_by,temptb.update_date,temptb.remarks,temptb.del_flag
+            FROM
+                t_seller_commission_detail_temp temptb
+                INNER JOIN t_seller_commission_date_range rangetb ON temptb.level_id = rangetb.level_id AND temptb.date_diff BETWEEN rangetb.begin_day_num AND IF (rangetb.end_day_num =- 1,temptb.date_diff,rangetb.end_day_num)
+    </insert>
+
+    <insert id="insertSellerCommissionForBackCommission" parameterType="HashMap">
+        insert into t_seller_commission
+          (id,data_type,data_month,atime,dtime,seller_id,seller_name,level_id,level_name,task_num,task_num_init,total_commission,total_commission_init,create_by,create_date,update_by,update_date,remarks,del_flag)
+        select
+        REPLACE(UUID(),'-','') as id,tb.data_type,#{map.dataMonth},#{map.atime},NOW(),seller.userid,
+        useller.username,seller.accountLevel,sellerLevel.level_name,sum(ifnull(tb.task_num,0)),sum(ifnull(tb.task_num_init,0)),
+        sum(ifnull(tb.total_commission,0)),sum(ifnull(tb.total_commission_init,0)),
+        tb.create_by,tb.create_date,tb.update_by,tb.update_date,tb.remarks,tb.del_flag
+        from
+          t_sold_info seller
+          INNER JOIN t_seller_level sellerLevel ON sellerLevel.id = seller.accountLevel
+          INNER JOIN sys_user useller ON useller.id = seller.userid
+          left join t_seller_commission_detail tb on tb.seller_id=seller.userid and tb.atime BETWEEN #{map.beginTime} AND  #{map.endTime} and tb.data_type=2
+        group by seller.userid
+    </insert>
+    <!-- 月初定时任务生成 结束 -->
 </mapper>

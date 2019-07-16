@@ -1,0 +1,43 @@
+<% layout('/layouts/form.html', {title: '销售编辑等级信息', formId: 'tbuyerInfoForm', bodyClass: 'white-bg', libs: 'bootstrap-fileinput'}){ %>
+<#form:form id="tsellerInfoForm" modelAttribute="data" method="post" class="form-horizontal">
+<#form:hidden path="id"/>
+<table  class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+    <tbody>
+    <tr>
+        <td  class="width-15 active text-right"><label>销售编号:</label></td>
+        <td  class="width-35" >
+            ${data.loginname}
+        </td>
+        <td  class="width-15 active text-right"><label>销售名称:</label></td>
+        <td  class="width-35" >
+
+        </td>
+    </tr>
+    <tr>
+        <td  class="width-15 active text-right">
+            <label>联系电话:</label>
+        </td>
+        <td class="width-35" >
+
+        </td>
+        <td  class="width-15 active text-right">
+            <label>当前等级:</label>
+        </td>
+        <td class="width-35" >
+            ${data.freezeStatusName}
+        </td>
+    </tr>
+    <tr>
+        <td  class="width-15 active text-right">
+            <label><font color="red">*</font>新等级:</label>
+        </td>
+        <td class="width-35" >
+            <#form:select path="accountlevel" class="form-control" dict="buyerLevel" nullmsg="请输入买手等级！"  htmlEscape="false" />
+            <label class="Validform_checktip"></label>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</#form:form>
+<% } %>
+<#html:js name="suggest" />

@@ -26,6 +26,14 @@ public interface TSellerCommissionPowerService extends ICommonService<TSellerLev
      */
     Page<TSellerLevel> selectSellerLevelPageList(Queryable queryable, Wrapper<TSellerLevel> wrapper);
 
+    /**
+     * 根据主键ID获取等级数据
+     *
+     * @param levelId
+     * @return
+     */
+    TSellerLevel selectSellerLevelById(String levelId);
+
     /***
      * 销售佣金区间
      *

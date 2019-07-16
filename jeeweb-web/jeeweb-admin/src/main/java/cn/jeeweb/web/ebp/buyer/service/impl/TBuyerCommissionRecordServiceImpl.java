@@ -92,6 +92,30 @@ public class TBuyerCommissionRecordServiceImpl extends CommonServiceImpl<TBuyerC
 	}
 
 	@Override
+	public void addBuyerCommissionRecordForbackTask(Date beginDate,Date endDate){
+		Map<String,Object> paramMap=new HashMap<>();
+		String beginDateStr=DateUtils.formatDate(beginDate,"yyyy-MM-dd");
+		paramMap.put("dataMonth",DateUtils.formatDate(beginDate,"yyyyMM"));
+		paramMap.put("atime",beginDateStr);
+		paramMap.put("createBy","schule");
+		paramMap.put("beginTime",beginDate);
+		paramMap.put("endTime",DateUtils.getDateEnd(endDate));
+		baseMapper.updateBuyerCommissionGroupForTruncateTemp();
+		baseMapper.updateBuyerCommissionTaskForTruncateTemp();
+		/*******以下逻辑需要调整*******/
+		//生成所有买手的佣金信息
+		baseMapper.insertBuyerCommissionInfo(paramMap);
+		//生成所有组长的佣金提成
+		baseMapper.insertBuyerCommissionTaskNumTemp(paramMap);
+		baseMapper.insertBuyerCommissionGroupTemp(paramMap);
+		//更改组长的佣金信息
+		baseMapper.updateBuyerGroupMoney(paramMap);
+		baseMapper.updateBuyerTaskNum(paramMap);
+		//更新买手佣金信息
+		baseMapper.updateBuyerCommission(paramMap);
+	}
+
+	@Override
 	public void updateBuyerCommissionRecordForBack(TBuyerCommissionRecord obj) {
 		Map<String,Object> paramMap=new HashMap<>();
 		paramMap.put("atime",DateUtils.formatDate(obj.getAtime(),"yyyy-MM-dd"));

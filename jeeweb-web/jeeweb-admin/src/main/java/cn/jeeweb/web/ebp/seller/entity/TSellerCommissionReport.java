@@ -26,7 +26,11 @@ public class TSellerCommissionReport extends DataEntity<String> {
      */
     @JSONField(format = "yyyy-MM-dd")
     private Date atime;
-
+    /**
+     * 数据来源
+     * 1每天佣金生成2月底退单佣金
+     */
+    private int dataType=1;
     /**
      * 所属月份
      */
@@ -173,5 +177,13 @@ public class TSellerCommissionReport extends DataEntity<String> {
 
     public void setTaskNumInit(long taskNumInit) {
         this.taskNumInit = taskNumInit;
+    }
+
+    public int getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
     }
 }

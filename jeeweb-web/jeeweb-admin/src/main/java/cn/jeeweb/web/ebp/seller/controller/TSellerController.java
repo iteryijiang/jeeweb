@@ -19,9 +19,11 @@ import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.exception.MyProcessException;
 import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange;
 import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionReport;
+import cn.jeeweb.web.ebp.seller.entity.TSellerInfo;
 import cn.jeeweb.web.ebp.seller.entity.TSellerLevel;
 import cn.jeeweb.web.ebp.seller.service.TSellerCommissionPowerService;
 import cn.jeeweb.web.ebp.seller.service.TSellerCommissionReportService;
+import cn.jeeweb.web.ebp.shop.service.TsoldInfoService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.ui.Model;
@@ -51,6 +53,90 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
     private TSellerCommissionPowerService sellerCommissionPowerService;
     @Resource(name = "sellerCommissionReportService")
     private TSellerCommissionReportService sellerCommissionReportService;
+    @Resource(name = "TsoldInfoService")
+    private TsoldInfoService soldInfoService;
+
+
+
+    /**
+     * 销售人员列表查询
+     *
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping(value ="sellefInfo/view" )
+    @RequiresMethodPermissions("sellefInfo")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView sellerInfoView(Model model, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav = displayModelAndView("sellerInfoList");
+        return mav;
+    }
+
+    /**
+     * 销售人员列表查询
+     *
+     * @param queryable
+     * @param propertyPreFilterable
+     * @param request
+     * @param response
+     */
+    @RequestMapping(value = "sellerInfo/ajax", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("sellefInfo")
+    @Log(logType = LogType.SELECT)
+    public void sellerInfolist(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) {
+        String content = null;
+        try {
+            EntityWrapper<TSellerInfo> entityWrapper = new EntityWrapper<TSellerInfo>(TSellerInfo.class);
+            propertyPreFilterable.addQueryProperty("id");
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TSellerInfo.class);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(TSellerInfo.class);
+            PageResponse<TSellerInfo> pagejson = new PageResponse<TSellerInfo>(soldInfoService.selectSellerInfoPageList(queryable, entityWrapper));
+            content = JSON.toJSONString(pagejson, filter);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            StringUtils.printJson(response, content);
+        }
+    }
+
+    /**
+     * 销售人员信息编辑页面
+     *
+     * @param sellerUserId
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "sellerInfo/editLevel/{sellerUserId}", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequiresMethodPermissions("sellefInfo")
+    @Log(logType = LogType.SELECT)
+    public ModelAndView sellerInfoEditLevel(@PathVariable String sellerUserId,Model model, HttpServletRequest request, HttpServletResponse response) {
+        TSellerInfo sellerInfoObj=soldInfoService.selectSellerInfoByUserId(sellerUserId);
+        model.addAttribute("data",sellerInfoObj);
+        return displayModelAndView("sellerInfoLevelEdit");
+    }
+
+    /**
+     * 更改销售等级信息
+     *
+     * @param sellerUserId
+     * @param level
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "sellerInfo/editLevel/{sellerUserId}/{level}")
+    @RequiresMethodPermissions("sellefInfo")
+    @Log(logType = LogType.INSERT)
+    public Response sellerInfoUpdateLevel(@PathVariable String sellerUserId,@PathVariable String level,HttpServletRequest request,HttpServletResponse response) {
+        // 验证错误
+        soldInfoService.updateSellerInfoLevelByUserId(sellerUserId,level);
+        return Response.ok("添加成功");
+    }
+
 
     /**
      * 销售人员等级列表查询

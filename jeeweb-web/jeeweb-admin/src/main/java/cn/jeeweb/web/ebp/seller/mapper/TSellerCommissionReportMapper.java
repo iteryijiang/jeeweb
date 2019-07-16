@@ -71,4 +71,29 @@ public interface TSellerCommissionReportMapper extends BaseMapper<TSellerCommiss
 	 */
 	int insertSellerCommission(@Param("map") Map map);
 
+
+	/**
+	 * 生成佣金报表明细临时表
+	 *
+	 * @param map
+	 * @return
+	 */
+	int insertSellerCommissionDetailTempForBackCommission(@Param("map") Map map);
+
+	/**
+	 * 生成佣金报表明细
+	 *
+	 * @param map
+	 * @return
+	 */
+	int insertSellerCommissionDetailForBackCommission(@Param("map") Map map);
+
+	/**
+	 * 生成佣金总表
+	 *
+	 * @param map
+	 * @return
+	 */
+	int insertSellerCommissionForBackCommission(@Param("map") Map map);
+
 }

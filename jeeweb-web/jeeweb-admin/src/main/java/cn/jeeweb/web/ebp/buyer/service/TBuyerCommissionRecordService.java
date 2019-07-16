@@ -51,6 +51,14 @@ public interface TBuyerCommissionRecordService extends ICommonService<TBuyerComm
 	 * @param sourceDate
 	 */
 	void addBuyerCommissionRecord(Date sourceDate);
+
+	/**
+	 * 生成买手退单的佣金
+	 *
+	 * @param beginDate
+	 * @param endDate
+	 */
+	void addBuyerCommissionRecordForbackTask(Date beginDate,Date endDate);
 	
 	/**
 	 * 退单更改买手佣金信息

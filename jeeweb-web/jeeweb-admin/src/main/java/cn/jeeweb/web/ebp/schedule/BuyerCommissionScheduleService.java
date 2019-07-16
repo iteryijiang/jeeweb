@@ -26,4 +26,19 @@ public class BuyerCommissionScheduleService {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * 每个月2号生成上一个月退单的佣金
+	 *
+	 */
+	public void execBackTaskCommissionJob() {
+		Date currentDate=DateUtils.getCurrentDate();
+		Date beginDate=DateUtils.lastMonthFirstDay(currentDate);
+		Date endDate=DateUtils.lastMonthEndDay(currentDate);
+		try {
+			buyerCommissionRecordService.addBuyerCommissionRecordForbackTask(beginDate,endDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
