@@ -11,11 +11,9 @@ import cn.jeeweb.common.http.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.alibaba.fastjson.JSONArray;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -141,10 +139,10 @@ public class OaNotificationController extends BaseBeanController<OaNotification>
 		retObj.put("retData",retList);
 		return retObj;
 	}
-	
+
 	/**
 	 * 设置查询申请所属的用户ID
-	 * 
+	 *
 	 * @param queryWrapper
 	 */
 	private void setNotifyQueryRoleId(EntityWrapper<OaNotification> queryWrapper) {

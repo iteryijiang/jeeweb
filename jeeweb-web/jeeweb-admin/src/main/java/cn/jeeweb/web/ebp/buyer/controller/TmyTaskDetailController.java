@@ -26,6 +26,7 @@ import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerHandleService;
 import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.enums.BasicRoleEnum;
+import cn.jeeweb.web.ebp.enums.NotificationTypeRangeEnum;
 import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
 import cn.jeeweb.web.ebp.finance.service.TfinanceBuyerReportService;
@@ -991,4 +992,64 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 			return Response.error("操作失败[系统异常]！");
 		}
 	}
+
+	/**
+	 * 动态加载最近的20条需要完成的任务单
+	 *
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "getLatestNeedFinishTaskList", method = { RequestMethod.GET, RequestMethod.POST })
+	@PageableDefaults(sort = "id=desc")
+	@Log(logType = LogType.SELECT)
+	public void getLatestNeedFinishTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(TmyTaskDetail.class);
+		propertyPreFilterable.addQueryProperty("id");
+		//设置检索所属的商户/买手/角色ID
+		setNeedFinishTaskQueryRoleId(entityWrapper);
+		entityWrapper.orderBy("create_date", false);
+		SerializeFilter filter = propertyPreFilterable.constructFilter(TmyTaskDetail.class);
+		PageResponse<TmyTaskDetail> pagejson = new PageResponse<>(tmyTaskDetailService.listNeedFinishTask(queryable,entityWrapper));
+		String content = JSON.toJSONString(pagejson, filter);
+		StringUtils.printJson(response,content);
+	}
+	/**
+	 * 设置查询申请所属的用户ID
+	 *
+	 * @param queryWrapper
+	 */
+	private void setNeedFinishTaskQueryRoleId(EntityWrapper<TmyTaskDetail> queryWrapper) {
+		// 当前登录人
+		Set<String> roleSet = UserUtils.getRoleStringList();
+		User loginUser = UserUtils.getUser();
+		if (!roleSet.isEmpty()) {
+			for (String roleId : roleSet) {
+				// 管理员
+				if (BasicRoleEnum.ADMIN.roleCode.equals(roleId)) {
+					return;
+				}
+				// 商户运营,设置商户的ID
+				if (BasicRoleEnum.SHOP.roleCode.equals(roleId)) {
+					TshopInfo shopObj=tshopInfoService.selectOne(loginUser.getId());
+					queryWrapper.eq("notificationType", shopObj.getFromInnerOuter());
+					queryWrapper.eq("status",1);
+					return;
+				}
+				// 销售当做外部商户处理
+				if (BasicRoleEnum.SELLING.roleCode.equals(roleId)) {
+					queryWrapper.eq("notificationType", NotificationTypeRangeEnum.SHOP_OUTER.code);
+					queryWrapper.eq("status",1);
+					return;
+				}
+				// 买手,设置买手的ID
+				if (BasicRoleEnum.BUYER.roleCode.equals(roleId)) {
+					queryWrapper.eq("notificationType", NotificationTypeRangeEnum.BUYER.code);
+					queryWrapper.eq("status",1);
+					return;
+				}
+			}
+		}
+	}
+
 }

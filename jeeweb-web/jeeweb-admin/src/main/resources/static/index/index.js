@@ -5,6 +5,16 @@ $("#indexNoticePanl").html("<li>暂无通告信息</li>");
  * @returns
  */
 function loadOanotificationFn(basePath){
+	loadLatestNotifyFn(basePath);
+	loadNeedFinishTaskFn(basePath);
+}
+
+/**
+ * 获取最近的20条消息通知信息
+ *
+ * @param basePath
+ */
+function loadLatestNotifyFn(basePath){
 	$("#indexNoticePanl").html("");
 	console.log(basePath);
 	var url=basePath+"/oa/oanotification/getLatestNotifyList";
@@ -29,6 +39,36 @@ function loadOanotificationFn(basePath){
 			console.log("loadOanotificationFn=>"+data);
 		}
 	});
+}
+
+/**
+ * 加载最近的需要确认的任务单
+ */
+function loadNeedFinishTaskFn(basePath){
+	$("#indexNeedFinishTaskPanl").html("");
+	console.log(basePath);
+	jQuery("#needFinishTaskGrid").jqGrid({
+		url:basePath+'/buyer/TmyTaskDetail/getLatestNeedFinishTaskList',
+		datatype: "json",
+		colNames:['buyerjdnick','jdorderno', 'orderdate', 'buyeridLogin','buyeridName','shopLoginname','shopidName'],
+		colModel:[
+			{name:'buyerjdnick',index:'buyerjdnick', width:55},
+			{name:'jdorderno',index:'jdorderno', width:90},
+			{name:'orderdate',index:'orderdate', width:100},
+			{name:'buyeridLogin',index:'buyeridLogin', width:80, align:"right"},
+			{name:'buyeridName',index:'buyeridName', width:80, align:"right"},
+			{name:'shopLoginname',index:'shopLoginname', width:80,align:"right"},
+			{name:'shopidName',index:'shopidName', width:150, sortable:false}
+		],
+		rowNum:10,
+		rowList:[10,20,30],
+		pager: '#needFinishTaskGridPage',
+		sortname: 'id',
+		viewrecords: true,
+		sortorder: "desc",
+		caption:"JSON Example"
+	});
+	jQuery("#needFinishTaskGrid").jqGrid('navGrid','#needFinishTaskGridPage',{edit:false,add:false,del:false});
 }
 
 /**

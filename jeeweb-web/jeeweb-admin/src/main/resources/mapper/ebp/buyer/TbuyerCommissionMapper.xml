@@ -151,6 +151,7 @@
             0 del_flag
         FROM
             t_buyer_info bitb
+             inner join sys_user usertb on usertb.id=bitb.userid and usertb.freeze_status=0
              INNER JOIN t_buyer_level leveltb ON leveltb.id = bitb.accountLevel
              left JOIN t_buyer_group grouptb ON grouptb.id = bitb.group_id and grouptb.del_flag = 0
              LEFT JOIN t_my_task_detail taskTb ON taskTb.buyerid = bitb.userid AND taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and tasktb.taskstate BETWEEN 2 and 4
@@ -180,6 +181,7 @@
           bitb.userid buyer_id,#{map.atime} as atime,sum(ifnull(grouptb.leader_commission, 0)) commission_group_money
         FROM
           t_buyer_info bitb
+          inner join sys_user usertb on usertb.id=bitb.userid and usertb.freeze_status=0
           INNER JOIN t_buyer_group grouptb ON grouptb.group_leader =bitb.userid
           INNER JOIN t_buyer_group_member membertb ON membertb.group_id = grouptb.id AND membertb.del_flag = 0 and membertb.mem_type=0
           inner JOIN t_my_task_detail taskTb ON taskTb.receivingdate BETWEEN #{map.beginTime} AND  #{map.endTime} and membertb.buyer_id=taskTb.buyerid and tasktb.taskstate BETWEEN 2 and 4

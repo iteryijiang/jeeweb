@@ -208,6 +208,19 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
 //        return page;
     }
 
+    @Override
+    public Page<TmyTaskDetail> listNeedFinishTask(Queryable queryable, Wrapper<TmyTaskDetail> wrapper){
+        QueryToWrapper<TmyTaskDetail> queryToWrapper = new QueryToWrapper<TmyTaskDetail>();
+        queryToWrapper.parseCondition(wrapper, queryable);
+        queryToWrapper.parseSort(wrapper, queryable);
+        Pageable pageable = queryable.getPageable();
+        com.baomidou.mybatisplus.plugins.Page<TmyTaskDetail> page = new com.baomidou.mybatisplus.plugins.Page<TmyTaskDetail>(
+                pageable.getPageNumber(), pageable.getPageSize());
+        wrapper.eq("1", "1");
+        page.setRecords(baseMapper.listNeedFinishTask(page, wrapper));
+        return new PageImpl<TmyTaskDetail>(page.getRecords(), queryable.getPageable(), page.getTotal());
+    }
+
     public List<TmyTaskDetail> listNoPageDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper) {
         QueryToWrapper<TmyTaskDetail> queryToWrapper = new QueryToWrapper<TmyTaskDetail>();
 

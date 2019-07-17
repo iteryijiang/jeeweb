@@ -78,7 +78,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	}
 	
 	/**
-	 * 获取当前日期
+	 * 获取当前时间
 	 * 
 	 * @return
 	 */
@@ -185,6 +185,42 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 	}
 
 	/**
+	 * 获取对应时间上一个月的第一天
+	 *
+	 * @param sourceDate
+	 * @return
+	 */
+	public static Date lastMonthFirstDay(Date sourceDate) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(sourceDate);
+		calendar.add(Calendar.MONTH, -1);
+		calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
+
+	/**
+	 * 获取对应时间上一个月的第一天
+	 *
+	 * @param sourceDate
+	 * @return
+	 */
+	public static Date lastMonthEndDay(Date sourceDate) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(sourceDate);
+		calendar.add(Calendar.MONTH, -1);
+		calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
+
+	/**
 	 * 获取过去的天数
 	 * 
 	 * @param date
@@ -281,5 +317,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 		// System.out.println(getDate("yyyy年MM月dd日 E"));
 		// long time = new Date().getTime()-parseDate("2012-11-19").getTime();
 		// System.out.println(time/(24*60*60*1000));
+		Date soureDate=parseDate("2019-05-23");
+		System.out.println(formatDateTime(lastMonthFirstDay(soureDate)));
+		System.out.println(formatDateTime(lastMonthEndDay(soureDate)));
 	}
 }

@@ -7,7 +7,7 @@
 		buytd.id,buytd.id buyerTaskId,buytd.buyerid buyerId,buytd.jdorderno ecommerceOrderNo,buytd.taskid shopTaskId,buytd.taskstate buyTaskStatus,
   		buytd.receivingdate receivingdate,buytd.pays taskPayMoney,
 		buy.buyerName,buy.loginName buyerNo,buyt.mytaskNo buyerTaskNo,
-		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,sttb.presentdeposit taskCommission,
+		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,sttb.presentdeposit taskCommission,sttb.skuid,
 		shoptb.shopName,shoptb.userid shopUserId
 	FROM
 		t_my_task_detail buytd
@@ -27,7 +27,7 @@
 		buytd.id,buytd.id buyerTaskId,buytd.buyerid buyerId,buytd.jdorderno ecommerceOrderNo,buytd.taskid shopTaskId,buytd.taskstate buyTaskStatus,
   		buytd.receivingdate receivingdate,buytd.pays taskPayMoney,
 		buy.buyerName,buy.loginName buyerNo,buyt.mytaskNo buyerTaskNo,
-		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,sttb.presentdeposit taskCommission,
+		sttb.taskno shopTaskNo,sttb.shopId,sttb.t_title goodsName,sttb.presentdeposit taskCommission,sttb.skuid,
 		shoptb.shopName,shoptb.userid shopUserId
 	FROM
 		t_my_task_detail buytd

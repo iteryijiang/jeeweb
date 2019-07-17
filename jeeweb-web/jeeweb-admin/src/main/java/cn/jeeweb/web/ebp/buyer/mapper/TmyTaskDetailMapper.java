@@ -34,6 +34,8 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 
 	List<TmyTaskDetail> listShopBaseDetail(Pagination page, @Param("ew") Wrapper<TmyTaskDetail> wrapper);
 
+	List<TmyTaskDetail> listNeedFinishTask(Pagination page, @Param("ew") Wrapper<TmyTaskDetail> wrapper);
+
 	List<TmyTaskDetail> listDetail(@Param("ew") Wrapper<TmyTaskDetail> wrapper);
 
 	List<TmyTaskDetail> listDetailGroup(@Param("ew") Wrapper<TmyTaskDetail> wrapper);

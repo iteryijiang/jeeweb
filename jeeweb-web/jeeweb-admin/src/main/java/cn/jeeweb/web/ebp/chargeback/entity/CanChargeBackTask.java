@@ -1,8 +1,10 @@
 package cn.jeeweb.web.ebp.chargeback.entity;
 
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.alibaba.fastjson.annotation.JSONField;
 import cn.jeeweb.web.common.entity.DataEntity;
+import com.baomidou.mybatisplus.annotations.TableField;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -62,6 +64,10 @@ public class CanChargeBackTask extends DataEntity<String> {
      * 商品名称
      */
     private String goodsName;
+    /**
+     * SKUID
+     */
+    private String skuid;
     /**
      * 电商平台类型
      */
@@ -239,5 +245,12 @@ public class CanChargeBackTask extends DataEntity<String> {
 	public void setShopUserId(String shopUserId) {
 		this.shopUserId = shopUserId;
 	}
-    
+
+    public String getSkuid() {
+        return skuid;
+    }
+
+    public void setSkuid(String skuid) {
+        this.skuid = skuid;
+    }
 }

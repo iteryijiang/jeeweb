@@ -38,6 +38,15 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
 
     Page<TmyTaskDetail> listShopBaseDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
 
+    /**
+     * 获取需要确认完成的任务单
+     *
+     * @param queryable
+     * @param wrapper
+     * @return
+     */
+    Page<TmyTaskDetail> listNeedFinishTask(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
+
     public List<TmyTaskDetail> listNoPageDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
 
     public List<TmyTaskDetail> listNoPageDetailGroup(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);

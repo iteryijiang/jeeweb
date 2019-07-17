@@ -71,6 +71,19 @@
         </if>
     </select>
 
+    <!-- 需要确认收货的任务单 -->
+    <select id="listNeedFinishTask" resultMap="TmyTaskDetail">
+        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article,
+        tb.t_Title tTitle,tb.t_Url tUrl,tb.brand,tb.keyword,tb.spec1,tb.spec2,tb.skuid
+        from T_my_Task_Detail t left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
+        left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
+
     <select id="selBaseIdMyTaskDetailList" resultMap="TmyTaskDetail">
         select t.*,s.realname buyeridName from T_my_Task_Detail t,sys_user s where t.buyerid=s.id and t.taskId=#{taskId}
     </select>
