@@ -1003,16 +1003,16 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 	@RequestMapping(value = "getLatestNeedFinishTaskList", method = { RequestMethod.GET, RequestMethod.POST })
 	@PageableDefaults(sort = "id=desc")
 	@Log(logType = LogType.SELECT)
-	public void getLatestNeedFinishTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String getLatestNeedFinishTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(TmyTaskDetail.class);
 		propertyPreFilterable.addQueryProperty("id");
 		//设置检索所属的商户/买手/角色ID
 		setNeedFinishTaskQueryRoleId(entityWrapper);
 		entityWrapper.orderBy("create_date", false);
-		SerializeFilter filter = propertyPreFilterable.constructFilter(TmyTaskDetail.class);
+		//SerializeFilter filter = propertyPreFilterable.constructFilter(TmyTaskDetail.class);
 		PageResponse<TmyTaskDetail> pagejson = new PageResponse<>(tmyTaskDetailService.listNeedFinishTask(queryable,entityWrapper));
-		String content = JSON.toJSONString(pagejson, filter);
-		StringUtils.printJson(response,content);
+		//String content = JSON.toJSONString(pagejson, filter);
+		return JSONObject.toJSONString(pagejson);
 	}
 	/**
 	 * 设置查询申请所属的用户ID

@@ -1,0 +1,23 @@
+<div class="row  border-bottom white-bg dashboard-header">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="portlet-header">
+                <div style="float: left;margin-left: 2px;">
+                    <h5>待确认收货的任务单</h5>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div class="portlet-body">
+                    <#grid:grid id="tbuyerGroupGrid" url="${adminPath}/buyer/buyergroup/ajaxBuyerGrouplList" multiselect="false" sortname="id" sortorder="desc" sortable="false">
+                        <#grid:column label="分组编号" width="90" query="true" condition="like"  name="groupCode" align="center"/>
+                        <#grid:column label="分组名称" name="groupName" query="true" condition="like"  width="140" />
+                        <#grid:column label="组长" name="groupLeaderName"  width="100" />
+                        <#grid:column label="组长每单提成" name="leaderCommission"  width="100" />
+                        <#grid:column label="sys.common.opt" name="opt" formatter="button" />
+                        <#grid:button title="组长调整" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="850px" outclass="btn-danger"  url='${adminPath}/buyer/buyergroup/editBuyerGroupLeader/\"+row.id+\"' />
+                        <#grid:button title="组员调整" groupname="opt" function="rowDialogDetailRefresh" winwidth="1000px" winheight="850px" outclass="btn-danger"  url='${adminPath}/buyer/buyergroup/editBuyerGroupMember/\"+row.id+\"' />
+                    </#grid:grid>
+            </div>
+        </div>
+    </div>
+</div>
