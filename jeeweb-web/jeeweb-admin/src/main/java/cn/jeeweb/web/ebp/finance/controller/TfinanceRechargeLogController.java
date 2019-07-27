@@ -174,6 +174,11 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
                 queryable.getCondition().remove(fromInnerOuter);
                 entityWrapper.eq("s.from_Inner_Outer",fromInnerOuter.getValue().toString());
             }
+            Condition.Filter taskno = queryable.getCondition().getFilterFor("taskno");
+            if(taskno!=null){
+                queryable.getCondition().remove(taskno);
+                entityWrapper.eq("tb.taskno",taskno.getValue().toString());
+            }
         }else {
             if(queryable.getCondition()==null||queryable.getCondition().getFilterFor("createDate")==null) {
                 Date date1 = DateUtils.dateAddDay(new Date(),-7);

@@ -2,7 +2,8 @@
 <#grid:grid id="tchargeBackTaskGrid" url="${adminPath}/chargeback/order/getCanChargeBackTaskList" sortname="receivingdate" multiselect="false" sortorder="desc" sortable="false">
 <#grid:column label="任务编号" width="90" query="true" condition="like" name="buyerTaskNo" align="center"/>
 <#grid:column label="京东单号" width="90" query="true" condition="like" name="ecommerceOrderNo" align="center"/>
-<#grid:column label="商品名称" name="goodsName" width="140" />
+<#grid:column label="货号" name="goodsName" width="140" />
+<#grid:column label="SKU" name="skuid" width="140" />
 <#grid:column label="商家名称" name="shopName" query="true" condition="like" width="100" />
 <#grid:column label="买手名称" name="buyerNo" query="true" condition="like" width="80" align="center"/>
 <#grid:column label="下单时间" name="receivingdate" query="true" width="80" queryMode="date"  condition="between" align="center" />
