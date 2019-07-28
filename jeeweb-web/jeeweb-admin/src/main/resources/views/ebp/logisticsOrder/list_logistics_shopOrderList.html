@@ -1,4 +1,47 @@
 <% layout('/layouts/tab.html', {title: @MessageUtils.getMessage('商户订单管理',''), libs: ''}){ %>
+<style>
+    #shopOrderTabs img{
+        width: 75px;
+        height:80px;
+    }
+    #shopOrderTabs table{
+        width: 100%
+    }
+    #shopOrderTabs table th{
+        height: 30px;
+        font-size: 15px;
+    }
+    #shopOrderTabs table td{
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+    .orderTitle{
+        background-color: #cccccc;
+        height: 30px;
+        padding-top: 2px;
+        padding-left: 8px;
+    }
+    .orderTitle span{
+        margin-right: 10px;
+    }
+    .checkbox_td{
+        width: 24px;
+    }
+    #shopOrderTabs table .head_tr td{
+        border-top: 1px solid red;
+        padding-top: 4px;
+    }
+    #shopOrderTabs table .price_num_td{
+        text-align: center;
+        padding-right: 6px;
+    }
+    #shopOrderTabs table .price_num_td div{
+        text-align: right;
+        width: 60%;
+        margin-top: 4px;
+    }
+
+</style>
 <div id="queryForm">
 
 </div>
@@ -16,7 +59,7 @@
                         <th colspan="10"><button>批量操作</button></th>
                     </tr>
                     <tr>
-                        <th style="width: 80px"><input type="checkbox" />全选</th>
+                        <th class="checkbox_td"><input alt="全选" type="checkbox" /></th>
                         <th style="width: 80px">&nbsp;</th>
                         <th style="width:15%">商品信息</th>
                         <th style="width:10%">单价/数量</th>
@@ -29,79 +72,84 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="10" style="background-color: #2D9BDA">
-                            <span><input type="checkbox" /></span>
+                    <tr class="head_tr">
+                        <td class="checkbox_td"><input type="checkbox" /></td>
+                        <td colspan="9" class="orderTitle">
                             <span>订单号:20190313001</span>
                             <span>下单时间:2019-03-19 12:23:30</span>
                             <span>付款时间:2019-03-19 12:23:30</span>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><img style="width: 75px;height:80px;" src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>商品信息</td>
-                        <td>单价/数量</td>
+                        <td colspan="2"><img src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
+                        <td>
+                            <div>基本信息</div>
+                            <div>规格:</div>
+                        </td>
+                        <td class="price_num_td">
+                            <div>￥189.00元</div>
+                            <div>x1</div>
+                        </td>
                         <td rowspan="2" valign="top">货款金额</td>
                         <td rowspan="2" valign="top">下单帐号</td>
                         <td rowspan="2" valign="top">物流信息</td>
                         <td rowspan="2" valign="top">商家备注</td>
                         <td rowspan="2" valign="top">订单状态</td>
-                        <td rowspan="2" valign="top">操作</td>
+                        <td rowspan="2" valign="top">
+                            <div><a>详情</a></div>
+                            <div><a>出库</a></div>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2"><img style="width: 75px;height:80px;" src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>商品信息</td>
-                        <td>单价/数量</td>
+                        <td>
+                            <div>基本信息</div>
+                            <div>规格:</div>
+                        </td>
+                        <td class="price_num_td">
+                            <div>￥189.00元</div>
+                            <div>x1</div>
+                        </td>
                     </tr>
 
-                    <tr>
-                        <td colspan="10" style="background-color: #2D9BDA">
-                            <span><input type="checkbox" /></span>
+                    <tr class="head_tr">
+                        <td class="checkbox_td"><input type="checkbox" /></td>
+                        <td colspan="9" class="orderTitle">
                             <span>订单号:20190313001</span>
                             <span>下单时间:2019-03-19 12:23:30</span>
                             <span>付款时间:2019-03-19 12:23:30</span>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><img style="width: 75px;height:80px;" src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>商品信息</td>
-                        <td>单价/数量</td>
+                        <td colspan="2"><img src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
+                        <td>
+                            <div>基本信息</div>
+                            <div>规格:</div>
+                        </td>
+                        <td class="price_num_td">
+                            <div>￥189.00元</div>
+                            <div>x1</div>
+                        </td>
                         <td rowspan="2" valign="top">货款金额</td>
                         <td rowspan="2" valign="top">下单帐号</td>
                         <td rowspan="2" valign="top">物流信息</td>
                         <td rowspan="2" valign="top">商家备注</td>
                         <td rowspan="2" valign="top">订单状态</td>
-                        <td rowspan="2" valign="top">操作</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><img style="width: 75px;height:80px;" src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>商品信息</td>
-                        <td>单价/数量</td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="10" style="background-color: #2D9BDA">
-                            <span><input type="checkbox" /></span>
-                            <span>订单号:20190313001</span>
-                            <span>下单时间:2019-03-19 12:23:30</span>
-                            <span>付款时间:2019-03-19 12:23:30</span>
+                        <td rowspan="2" valign="top">
+                            <div><a>详情</a></div>
+                            <div><a>出库</a></div>
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><img style="width: 75px;height:80px;" src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>商品信息</td>
-                        <td>单价/数量</td>
-                        <td rowspan="2" valign="top">货款金额</td>
-                        <td rowspan="2" valign="top">下单帐号</td>
-                        <td rowspan="2" valign="top">物流信息</td>
-                        <td rowspan="2" valign="top">商家备注</td>
-                        <td rowspan="2" valign="top">订单状态</td>
-                        <td rowspan="2" valign="top">操作</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><img style="width: 75px;height:80px;" src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>商品信息</td>
-                        <td>单价/数量</td>
+                        <td colspan="2"><img src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
+                        <td>
+                            <div>基本信息</div>
+                            <div>规格:</div>
+                        </td>
+                        <td class="price_num_td">
+                            <div>￥189.00元</div>
+                            <div>x1</div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
