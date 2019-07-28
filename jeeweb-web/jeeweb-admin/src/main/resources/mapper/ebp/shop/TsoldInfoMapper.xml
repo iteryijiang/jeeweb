@@ -1,22 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TsoldInfoMapper" >
-  <resultMap id="TsoldInfo" type="cn.jeeweb.web.ebp.shop.entity.TsoldInfo" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result property="soldname" column="soldname" jdbcType="VARCHAR" />
-    <result property="soldlogin" column="soldlogin" jdbcType="VARCHAR" />
-    <result property="accountlevel" column="accountlevel" jdbcType="VARCHAR" />
-    <result property="totaldeposit" column="totaldeposit" jdbcType="NUMERIC" />
-    <result property="availableDeposit" column="availableDeposit" jdbcType="NUMERIC" />
-    <result property="userid" column="userid" jdbcType="VARCHAR" />
-  </resultMap>
-  
-  <select id="selectUserList" resultMap="TsoldInfo">
-	  select t.* from T_sold_Info t
-       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
-		  <where>
-		    ${ew.sqlSegment}
-		  </where>
-	   </if>
-  </select>
+<mapper namespace="cn.jeeweb.web.ebp.shop.mapper.TsoldInfoMapper">
+    <resultMap id="TsoldInfo" type="cn.jeeweb.web.ebp.shop.entity.TsoldInfo">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result property="soldname" column="soldname" jdbcType="VARCHAR"/>
+        <result property="soldlogin" column="soldlogin" jdbcType="VARCHAR"/>
+        <result property="accountlevel" column="accountlevel" jdbcType="VARCHAR"/>
+        <result property="totaldeposit" column="totaldeposit" jdbcType="NUMERIC"/>
+        <result property="availableDeposit" column="availableDeposit" jdbcType="NUMERIC"/>
+        <result property="userid" column="userid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectUserList" resultMap="TsoldInfo">
+        select t.* from T_sold_Info t
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
+
+    <!-- 列表查询销售信息 -->
+    <select id="selectSellerInfoPageList" resultType="cn.jeeweb.web.ebp.shop.entity.TsoldInfo">
+        SELECT
+        t.id,t.soldname,t.soldlogin,t.accountlevel,t.totaldeposit,t.availabledeposit,t.userid,
+        sltb.level_name levalName,u.freeze_status freezeStatus
+        FROM
+        T_sold_Info t
+        inner join sys_user u on u.id=t.userid
+        inner join t_seller_level sltb on sltb.id=t.accountLevel
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
+
+    <select id="selectSellerInfoBySellerUserId" parameterType="String"
+            resultType="cn.jeeweb.web.ebp.shop.entity.TsoldInfo">
+        SELECT
+        t.id,t.soldname,t.soldlogin,t.accountlevel,t.totaldeposit,t.availabledeposit,t.userid,
+        sltb.level_name levalName,u.freeze_status freezeStatus
+        FROM
+        T_sold_Info t
+        inner join sys_user u on u.id=t.userid
+        inner join t_seller_level sltb on sltb.id=t.accountLevel
+        where t.userid=#{userId}
+        limit 0,1
+    </select>
+
+    <select id="selectSellerInfoById" parameterType="String"
+            resultType="cn.jeeweb.web.ebp.shop.entity.TsoldInfo">
+        SELECT
+        t.id,t.soldname,t.soldlogin,t.accountlevel,t.totaldeposit,t.availabledeposit,t.userid,
+        sltb.level_name levalName,u.freeze_status freezeStatus
+        FROM
+        T_sold_Info t
+        inner join sys_user u on u.id=t.userid
+        inner join t_seller_level sltb on sltb.id=t.accountLevel
+        where t.id=#{id}
+        limit 0,1
+    </select>
+
+    <update id="updateSellerInfoLevelById" parameterType="HashMap">
+      update
+        T_sold_Info t
+      set
+        t.accountlevel=#{levelId},t.update_by=#{updateBy},t.update_date=#{updateTime}
+      where
+        t.id=#{id}
+    </update>
 </mapper>

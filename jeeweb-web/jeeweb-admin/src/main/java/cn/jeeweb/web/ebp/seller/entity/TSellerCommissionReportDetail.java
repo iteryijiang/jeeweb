@@ -5,6 +5,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.Date;
  *
  * @author ytj
  */
+@Data
 @TableName("t_seller_commission_report_detail")
 @SuppressWarnings("serial")
 public class TSellerCommissionReportDetail extends DataEntity<String> {
@@ -84,101 +86,5 @@ public class TSellerCommissionReportDetail extends DataEntity<String> {
     @Override
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Date getAtime() {
-        return atime;
-    }
-
-    public void setAtime(Date atime) {
-        this.atime = atime;
-    }
-
-    public int getDataMonth() {
-        return dataMonth;
-    }
-
-    public void setDataMonth(int dataMonth) {
-        this.dataMonth = dataMonth;
-    }
-
-    public String getSellerId() {
-        return sellerId;
-    }
-
-    public void setSellerId(String sellerId) {
-        this.sellerId = sellerId;
-    }
-
-    public Date getDtime() {
-        return dtime;
-    }
-
-    public void setDtime(Date dtime) {
-        this.dtime = dtime;
-    }
-
-    public String getSellerLevel() {
-        return sellerLevel;
-    }
-
-    public void setSellerLevel(String sellerLevel) {
-        this.sellerLevel = sellerLevel;
-    }
-
-    public String getDateRangeId() {
-        return dateRangeId;
-    }
-
-    public void setDateRangeId(String dateRangeId) {
-        this.dateRangeId = dateRangeId;
-    }
-
-    public long getTaskNum() {
-        return taskNum;
-    }
-
-    public void setTaskNum(long taskNum) {
-        this.taskNum = taskNum;
-    }
-
-    public long getTaskNumInit() {
-        return taskNumInit;
-    }
-
-    public void setTaskNumInit(long taskNumInit) {
-        this.taskNumInit = taskNumInit;
-    }
-
-    public BigDecimal getTotalCommission() {
-        return totalCommission;
-    }
-
-    public void setTotalCommission(BigDecimal totalCommission) {
-        this.totalCommission = totalCommission;
-    }
-
-    public BigDecimal getTotalCommissionInit() {
-        return totalCommissionInit;
-    }
-
-    public void setTotalCommissionInit(BigDecimal totalCommissionInit) {
-        this.totalCommissionInit = totalCommissionInit;
-    }
-
-    public long getDate_diff() {
-        return date_diff;
-    }
-
-    public void setDate_diff(long date_diff) {
-        this.date_diff = date_diff;
-    }
-
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(int dataType) {
-        this.dataType = dataType;
     }
 }

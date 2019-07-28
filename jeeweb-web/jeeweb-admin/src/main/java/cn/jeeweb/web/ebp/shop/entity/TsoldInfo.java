@@ -1,13 +1,16 @@
 package cn.jeeweb.web.ebp.shop.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 @TableName("T_sold_Info")
+@Data
 @SuppressWarnings("serial")
 public class TsoldInfo extends DataEntity<String> {
 
@@ -22,6 +25,17 @@ public class TsoldInfo extends DataEntity<String> {
 	private BigDecimal availabledeposit;//	decimal	10	2	-1	0	0	0	0		0	可用金额				0	0
 	private String userid;//	varchar	32	0	-1	0	0	0	0		0		utf8	utf8_general_ci		0	0
 
+	/**
+	 * 销售登记名称
+	 *
+	 */
+	@TableField(exist = false)
+	private String levalName;
+	/**
+	 * 用户冻结状态
+	 */
+	@TableField(exist = false)
+	private int freezeStatus;
 
 	@Override
 	public String getId() {
@@ -33,52 +47,4 @@ public class TsoldInfo extends DataEntity<String> {
 		this.id = id;
 	}
 
-
-	public String getSoldname() {
-		return soldname;
-	}
-
-	public void setSoldname(String soldname) {
-		this.soldname = soldname;
-	}
-
-	public String getSoldlogin() {
-		return soldlogin;
-	}
-
-	public void setSoldlogin(String soldlogin) {
-		this.soldlogin = soldlogin;
-	}
-
-	public String getAccountlevel() {
-		return accountlevel;
-	}
-
-	public void setAccountlevel(String accountlevel) {
-		this.accountlevel = accountlevel;
-	}
-
-	public BigDecimal getTotaldeposit() {
-		return totaldeposit;
-	}
-
-	public void setTotaldeposit(BigDecimal totaldeposit) {
-		this.totaldeposit = totaldeposit;
-	}
-
-	public BigDecimal getAvailabledeposit() {
-		return availabledeposit;
-	}
-
-	public void setAvailabledeposit(BigDecimal availabledeposit) {
-		this.availabledeposit = availabledeposit;
-	}
-
-	public String getUserid() {
-		return userid;
-	}
-
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
 }

@@ -14,15 +14,14 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
-import cn.jeeweb.web.ebp.buyer.entity.TBuyerLevel;
 import cn.jeeweb.web.ebp.buyer.entity.TbuyerInfo;
 import cn.jeeweb.web.ebp.exception.MyProcessException;
 import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionDateRange;
 import cn.jeeweb.web.ebp.seller.entity.TSellerCommissionReport;
-import cn.jeeweb.web.ebp.seller.entity.TSellerInfo;
 import cn.jeeweb.web.ebp.seller.entity.TSellerLevel;
 import cn.jeeweb.web.ebp.seller.service.TSellerCommissionPowerService;
 import cn.jeeweb.web.ebp.seller.service.TSellerCommissionReportService;
+import cn.jeeweb.web.ebp.shop.entity.TsoldInfo;
 import cn.jeeweb.web.ebp.shop.service.TsoldInfoService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
@@ -88,11 +87,11 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
     public void sellerInfolist(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) {
         String content = null;
         try {
-            EntityWrapper<TSellerInfo> entityWrapper = new EntityWrapper<TSellerInfo>(TSellerInfo.class);
+            EntityWrapper<TsoldInfo> entityWrapper = new EntityWrapper<TsoldInfo>(TsoldInfo.class);
             propertyPreFilterable.addQueryProperty("id");
-            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TSellerInfo.class);
-            SerializeFilter filter = propertyPreFilterable.constructFilter(TSellerInfo.class);
-            PageResponse<TSellerInfo> pagejson = new PageResponse<TSellerInfo>(soldInfoService.selectSellerInfoPageList(queryable, entityWrapper));
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, TsoldInfo.class);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(TsoldInfo.class);
+            PageResponse<TsoldInfo> pagejson = new PageResponse<TsoldInfo>(soldInfoService.selectSellerInfoPageList(queryable, entityWrapper));
             content = JSON.toJSONString(pagejson, filter);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -104,17 +103,17 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
     /**
      * 销售人员信息编辑页面
      *
-     * @param sellerUserId
+     * @param id
      * @param model
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "sellerInfo/editLevel/{sellerUserId}", method = { RequestMethod.GET, RequestMethod.POST })
+    @GetMapping(value = "{id}/update")
     @RequiresMethodPermissions("sellefInfo")
     @Log(logType = LogType.SELECT)
-    public ModelAndView sellerInfoEditLevel(@PathVariable String sellerUserId,Model model, HttpServletRequest request, HttpServletResponse response) {
-        TSellerInfo sellerInfoObj=soldInfoService.selectSellerInfoByUserId(sellerUserId);
+    public ModelAndView sellerInfoEditLevel(@PathVariable String id,Model model, HttpServletRequest request, HttpServletResponse response) {
+        TsoldInfo sellerInfoObj=soldInfoService.selectSellerInfoById(id);
         model.addAttribute("data",sellerInfoObj);
         return displayModelAndView("sellerInfoLevelEdit");
     }
@@ -122,18 +121,17 @@ public class TSellerController  extends BaseBeanController<TSellerCommissionRepo
     /**
      * 更改销售等级信息
      *
-     * @param sellerUserId
-     * @param level
+     * @param entity
      * @param request
      * @param response
      * @return
      */
-    @PostMapping(value = "sellerInfo/editLevel/{sellerUserId}/{level}")
+    @PostMapping("{id}/update")
+    @Log(logType = LogType.UPDATE)
     @RequiresMethodPermissions("sellefInfo")
-    @Log(logType = LogType.INSERT)
-    public Response sellerInfoUpdateLevel(@PathVariable String sellerUserId,@PathVariable String level,HttpServletRequest request,HttpServletResponse response) {
-        // 验证错误
-        soldInfoService.updateSellerInfoLevelByUserId(sellerUserId,level);
+    public Response sellerInfoUpdateLevel(TsoldInfo entity, BindingResult result, HttpServletRequest request,
+                                          HttpServletResponse response) {
+        soldInfoService.updateSellerInfoLevelById(entity.getUserid(),entity.getAccountlevel());
         return Response.ok("添加成功");
     }
 

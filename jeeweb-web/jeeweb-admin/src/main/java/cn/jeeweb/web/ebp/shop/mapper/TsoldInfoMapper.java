@@ -1,6 +1,5 @@
 package cn.jeeweb.web.ebp.shop.mapper;
 
-import cn.jeeweb.web.ebp.seller.entity.TSellerInfo;
 import cn.jeeweb.web.ebp.shop.entity.TsoldInfo;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
@@ -23,7 +22,7 @@ public interface TsoldInfoMapper extends BaseMapper<TsoldInfo> {
 	 * @param wrapper
 	 * @return
 	 */
-	List<TSellerInfo> selectSellerInfoPageList(Pagination page, @Param("ew") Wrapper<TSellerInfo> wrapper);
+	List<TsoldInfo> selectSellerInfoPageList(Pagination page, @Param("ew") Wrapper<TsoldInfo> wrapper);
 
 	/**
 	 * 销售用户ID查询数据
@@ -31,7 +30,15 @@ public interface TsoldInfoMapper extends BaseMapper<TsoldInfo> {
 	 * @param sellerUserId
 	 * @return
 	 */
-	TSellerInfo selectSellerInfoBySellerUserId(String sellerUserId);
+	TsoldInfo selectSellerInfoBySellerUserId(String sellerUserId);
+
+	/**
+	 * 主键 ID获取数据
+	 *
+	 * @param id
+	 * @return
+	 */
+	TsoldInfo selectSellerInfoById(String id);
 
 	/***
 	 * 更新销售等级信息
@@ -39,5 +46,5 @@ public interface TsoldInfoMapper extends BaseMapper<TsoldInfo> {
 	 * @param paramMap
 	 * @return
 	 */
-	int updateSellerInfoLevelByUserId(@Param("map") Map<String,Object> paramMap);
+	int updateSellerInfoLevelById(@Param("map") Map<String,Object> paramMap);
 }

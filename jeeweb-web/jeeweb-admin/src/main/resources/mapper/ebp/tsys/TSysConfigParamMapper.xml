@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.tsys.mapper.TSysConfigParamMapper">
+
+    <sql id="Base_Column_SysConfigParam">
+          id,param_name paramName,param_value paramValue,remarks
+	</sql>
+
+    <select id="selectTSysConfigParamPageList" resultType="cn.jeeweb.web.ebp.tsys.entity.TSysConfigParam">
+        select
+        <include refid="Base_Column_SysConfigParam"/>
+        from
+        t_sys_config_param
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
+
+
+    <select id="selectTSysConfigById" parameterType="String"
+            resultType="cn.jeeweb.web.ebp.tsys.entity.TSysConfigParam">
+        select
+        <include refid="Base_Column_SysConfigParam"/>
+        from
+        t_sys_config_param
+        where id=#{id}
+        limit 0,1
+    </select>
+
+    <select id="selectTSysConfigByConfigParam" parameterType="String"
+            resultType="cn.jeeweb.web.ebp.tsys.entity.TSysConfigParam">
+        select
+        <include refid="Base_Column_SysConfigParam"/>
+        from
+        t_sys_config_param
+        where param_name=#{paramName}
+        limit 0,1
+    </select>
+
+    <insert id="insertTSysConfigParam" parameterType="cn.jeeweb.web.ebp.tsys.entity.TSysConfigParam">
+      insert t_sys_config_param
+        (param_name,param_value,remarks,del_flag,create_date,create_by,update_by,update_date)
+        values
+        (#{paramName},#{paramValue},#{remarks},#{delFlag},#{createDate},#{createBy.id},#{updateBy.id},#{update_date})
+    </insert>
+    <update id="updateTSysConfigParam" parameterType="cn.jeeweb.web.ebp.tsys.entity.TSysConfigParam">
+      update
+        t_sys_config_param t
+      set
+        t.param_value=#{paramValue},t.update_by=#{updateBy.id},t.update_date=#{updateTime}
+      where
+        t.id=#{id}
+    </update>
+</mapper>

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.Date;
  *
  * @author ytj
  */
+@Data
 @TableName("t_seller_commission_report")
 @SuppressWarnings("serial")
 public class TSellerCommissionReport extends DataEntity<String> {
@@ -91,99 +93,4 @@ public class TSellerCommissionReport extends DataEntity<String> {
         this.id = id;
     }
 
-    public Date getAtime() {
-        return atime;
-    }
-
-    public void setAtime(Date atime) {
-        this.atime = atime;
-    }
-
-    public int getDataMonth() {
-        return dataMonth;
-    }
-
-    public void setDataMonth(int dataMonth) {
-        this.dataMonth = dataMonth;
-    }
-
-    public String getSellerId() {
-        return sellerId;
-    }
-
-    public void setSellerId(String sellerId) {
-        this.sellerId = sellerId;
-    }
-
-    public String getSellerName() {
-        return sellerName;
-    }
-
-    public void setSellerName(String sellerName) {
-        this.sellerName = sellerName;
-    }
-
-    public String getLevelId() {
-        return levelId;
-    }
-
-    public void setLevelId(String levelId) {
-        this.levelId = levelId;
-    }
-
-    public String getLevelName() {
-        return levelName;
-    }
-
-    public void setLevelName(String levelName) {
-        this.levelName = levelName;
-    }
-
-    public Date getDtime() {
-        return dtime;
-    }
-
-    public void setDtime(Date dtime) {
-        this.dtime = dtime;
-    }
-
-    public BigDecimal getTotalCommission() {
-        return totalCommission;
-    }
-
-    public void setTotalCommission(BigDecimal totalCommission) {
-        this.totalCommission = totalCommission;
-    }
-
-    public BigDecimal getTotalCommissionInit() {
-        return totalCommissionInit;
-    }
-
-    public void setTotalCommissionInit(BigDecimal totalCommissionInit) {
-        this.totalCommissionInit = totalCommissionInit;
-    }
-
-    public long getTaskNum() {
-        return taskNum;
-    }
-
-    public void setTaskNum(long taskNum) {
-        this.taskNum = taskNum;
-    }
-
-    public long getTaskNumInit() {
-        return taskNumInit;
-    }
-
-    public void setTaskNumInit(long taskNumInit) {
-        this.taskNumInit = taskNumInit;
-    }
-
-    public int getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(int dataType) {
-        this.dataType = dataType;
-    }
 }

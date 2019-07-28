@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.logistics.mapper.TLogisticsOrderMapper">
+
+    <sql id="Base_Column_TLogisticsOrder">
+
+    </sql>
+
+    <!-- 列表查询销售信息 -->
+    <select id="selectTLogisticsOrderPageList" resultType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
+        SELECT
+          <include refid="Base_Column_TLogisticsOrder" />
+        FROM
+        T_sold_Info t
+        inner join sys_user u on u.id=t.userid
+        inner join t_seller_level sltb on sltb.id=t.accountLevel
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
+
+    <select id="selectTLogisticsOrderById" parameterType="String" resultType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
+        SELECT
+        <include refid="Base_Column_TLogisticsOrder" />
+        FROM
+        T_sold_Info t
+        inner join sys_user u on u.id=t.userid
+        inner join t_seller_level sltb on sltb.id=t.accountLevel
+
+    </select>
+
+
+    <update id="updateTLogisticsOrderStatus" parameterType="HashMap">
+      update
+        T_sold_Info t
+      set
+        t.accountlevel=#{levelId},t.update_by=#{updateBy},t.update_date=#{updateTime}
+      where
+        t.id=#{id}
+    </update>
+
+    <insert id="insertTLogisticsOrder" parameterType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
+
+    </insert>
+</mapper>

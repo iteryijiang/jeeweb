@@ -6,8 +6,8 @@
     <select id="selectSellerLevelPageList" resultType="cn.jeeweb.web.ebp.seller.entity.TSellerLevel">
        SELECT
             sltb.id,sltb.level_code, sltb.level_name,sltb.pre_level_code,sltb.next_level_code,sltb.salary_base,sltb.remarks,
-            (select sltb.level_name from t_seller_level tmp where tmp.level_code=sltb.pre_level_code) preLevelName,
-            (select sltb.level_name from t_seller_level tmp where tmp.level_code=sltb.next_level_code) nextLevelName
+            (select tmp.level_name from t_seller_level tmp where tmp.level_code=sltb.pre_level_code) preLevelName,
+            (select tmp.level_name from t_seller_level tmp where tmp.level_code=sltb.next_level_code) nextLevelName
         FROM
             t_seller_level sltb
         WHERE

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.jeeweb.web.ebp.logistics.mapper.TShopOrderShowMapper">
+
+
+    <sql id="Base_Column_TShopOrderShow">
+        tmtd.jdorderno jdOrderNo,tmt.id buyerTaskId,tmt.mytaskNo buyerTaskNo,
+        CONCAT(tmtd.jdorderno,'-',tmtd.buyerid,'-',ttb.shopId) AS 'orderUUID',
+        tbi.buyerName,
+        tmtd.buyerid buyerId,
+        '' buyerLoginNo,
+        '' buyerJdLoginNo,
+        tmtd.id buyerTaskDetailId,
+        tmtd.buyerjdnick buyerJdNickName,
+        tmtd.receivingdate orderDtime,
+        tmtd.receivingdate orderPayTime,
+        tmtd.pays orderTotalMoney,
+        tmtd.commision orderCouponMoney,
+        tmtd.pays orderPayMoney,
+        1 goodsNum,
+        ttb.t_title goodsName,
+        ttb.article,
+        ttb.imgurl,
+        ttb.t_price goodsPrice,
+        ttb.shopId,
+        '' orderStatus,
+        '' logisticsInfo,
+        '' buyerMsg,
+        ttb.storename shopUserId,
+        ttb.storename shopName,
+        '' shopRemark,
+        ttb.id shopTaskId,
+        ttb.taskno shopTaskNo
+    </sql>
+
+    <!-- 列表查询销售信息 -->
+    <select id="selectTShopOrderShowPageList" resultType="cn.jeeweb.web.ebp.logistics.entity.TShopOrderShow">
+        SELECT
+          <include refid="Base_Column_TShopOrderShow" />
+        FROM
+          t_my_task tmt
+          INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate = 4
+          INNER JOIN t_buyer_info tbi ON tbi.userid = tmtd.buyerid
+          INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid AND ttb.shopId = #{map.shopId}
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+        ORDER BY
+        tmtd.jdorderno desc,tmtd.buyerid,tmtd.storename DESC
+        limit 0,10
+    </select>
+
+</mapper>

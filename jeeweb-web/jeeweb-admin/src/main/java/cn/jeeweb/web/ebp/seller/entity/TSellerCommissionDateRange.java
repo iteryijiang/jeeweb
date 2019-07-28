@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
  *
  * @author ytj
  */
+@Data
 @TableName("t_seller_commission_date_range")
 @SuppressWarnings("serial")
 public class TSellerCommissionDateRange extends DataEntity<String> {
@@ -58,59 +60,4 @@ public class TSellerCommissionDateRange extends DataEntity<String> {
         this.id = id;
     }
 
-    public int getBeginDayNum() {
-        return beginDayNum;
-    }
-
-    public void setBeginDayNum(int beginDayNum) {
-        this.beginDayNum = beginDayNum;
-    }
-
-    public int getEndDayNum() {
-        return endDayNum;
-    }
-
-    public void setEndDayNum(int endDayNum) {
-        this.endDayNum = endDayNum;
-    }
-
-    public String getLevelId() {
-        return levelId;
-    }
-
-    public void setLevelId(String levelId) {
-        this.levelId = levelId;
-    }
-
-    public String getCommissionType() {
-        return commissionType;
-    }
-
-    public void setCommissionType(String commissionType) {
-        this.commissionType = commissionType;
-    }
-
-    public String getCommissionRatio() {
-        return commissionRatio;
-    }
-
-    public void setCommissionRatio(String commissionRatio) {
-        this.commissionRatio = commissionRatio;
-    }
-
-    public String getCommissionValue() {
-        return commissionValue;
-    }
-
-    public void setCommissionValue(String commissionValue) {
-        this.commissionValue = commissionValue;
-    }
-
-    public String getLevelName() {
-        return levelName;
-    }
-
-    public void setLevelName(String levelName) {
-        this.levelName = levelName;
-    }
 }
