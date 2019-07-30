@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.jeeweb.web.ebp.logistics.mapper.TShopOrderShowMapper">
 
-
-    <sql id="Base_Column_TShopOrderShow">
+    <sql id="Base_Column_TShopOrderShowData">
         tmtd.jdorderno jdOrderNo,tmt.id buyerTaskId,tmt.mytaskNo buyerTaskNo,
         CONCAT(tmtd.jdorderno,'-',tmtd.buyerid,'-',ttb.shopId) AS 'orderUUID',
         tbi.buyerName,
@@ -33,23 +32,58 @@
         ttb.taskno shopTaskNo
     </sql>
 
-    <!-- 列表查询销售信息 -->
-    <select id="selectTShopOrderShowPageList" resultType="cn.jeeweb.web.ebp.logistics.entity.TShopOrderShow">
+    <sql id="Where_tTShopOrderShowTitlePage">
+      <where>
+          ttb.shopId =#{shopId} and tmtd.receivingdate between #{beginTime} and #{endTime}
+          <if test="map.jdOrderNo !=''  and map.jdOrderNo!=null ">
+            and tmtd.jdorderno = #{map.jdOrderNo}
+          </if>
+      </where>
+    </sql>
+    <!-- 获取商户展示任务单的总数 -->
+    <select id="selectTShopOrderShowTitlePageListCount" resultType="int" parameterType="HashMap">
+      select count(*) from (
         SELECT
-          <include refid="Base_Column_TShopOrderShow" />
+            tmtd.jdorderno
         FROM
           t_my_task tmt
           INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate = 4
           INNER JOIN t_buyer_info tbi ON tbi.userid = tmtd.buyerid
-          INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid AND ttb.shopId = #{map.shopId}
-        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
-            <where>
-                ${ew.sqlSegment}
-            </where>
-        </if>
+          INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid
+          <include refid="Where_tTShopOrderShowTitlePage" />
+        GROUP BY tmtd.jdorderno
+      ) tb
+    </select>
+    <!-- 列表查询销售信息 -->
+    <select id="selectTShopOrderShowTitlePageList" resultType="cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowTitle" parameterType="HashMap">
+        select tb.* from (
+            SELECT
+              tmtd.jdorderno jdOrderNo,tmtd.receivingdate orderDtime,tmtd.receivingdate orderPayTime
+            FROM
+                t_my_task tmt
+                INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate = 4
+                INNER JOIN t_buyer_info tbi ON tbi.userid = tmtd.buyerid
+                INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid
+            <include refid="Where_tTShopOrderShowTitlePage" />
+            GROUP BY tmtd.jdorderno
+        ) tb
         ORDER BY
-        tmtd.jdorderno desc,tmtd.buyerid,tmtd.storename DESC
-        limit 0,10
+          tb.jdorderno desc DESC
+        limit ${map.start},${map.pageSize}
+    </select>
+
+    <select id="selectTShopOrderShowDataList" resultType="cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowData" parameterType="HashMap">
+        SELECT
+          <include refid="Base_Column_TShopOrderShowData" />
+        FROM
+            t_my_task tmt
+            INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate = 4
+            INNER JOIN t_buyer_info tbi ON tbi.userid = tmtd.buyerid
+            INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid
+        where
+            tmtd.jdorderno in (${map.jdOrderNo})
+        ORDER BY
+        tmtd.jdorderno desc DESC
     </select>
 
 </mapper>

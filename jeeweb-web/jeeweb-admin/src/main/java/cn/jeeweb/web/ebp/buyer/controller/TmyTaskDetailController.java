@@ -26,6 +26,7 @@ import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerHandleService;
 import cn.jeeweb.web.ebp.buyer.service.TapplyTaskBuyerService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.enums.BasicRoleEnum;
+import cn.jeeweb.web.ebp.enums.BuyerTaskStatusEnum;
 import cn.jeeweb.web.ebp.enums.NotificationTypeRangeEnum;
 import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.finance.entity.TfinanceBuyerReport;
@@ -1004,15 +1005,25 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 	@PageableDefaults(sort = "id=desc")
 	@Log(logType = LogType.SELECT)
 	public String getLatestNeedFinishTaskList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
-		EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(TmyTaskDetail.class);
-		propertyPreFilterable.addQueryProperty("id");
-		//设置检索所属的商户/买手/角色ID
-		setNeedFinishTaskQueryRoleId(entityWrapper);
-		entityWrapper.orderBy("create_date", false);
-		//SerializeFilter filter = propertyPreFilterable.constructFilter(TmyTaskDetail.class);
-		PageResponse<TmyTaskDetail> pagejson = new PageResponse<>(tmyTaskDetailService.listNeedFinishTask(queryable,entityWrapper));
-		//String content = JSON.toJSONString(pagejson, filter);
-		return JSONObject.toJSONString(pagejson);
+		try{
+			EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(TmyTaskDetail.class);
+			propertyPreFilterable.addQueryProperty("id");
+			entityWrapper.eq("t.ispicture", YesNoEnum.YES.code);
+			entityWrapper.eq("t.taskstate", BuyerTaskStatusEnum.WAITING_ACCEPT.code);
+			Date currentTime=DateUtils.getCurrentTime();
+			entityWrapper.between("t.receivingdate",DateUtils.dateAddDay(currentTime,-3),currentTime);
+			//设置检索所属的商户/买手/角色ID
+			setNeedFinishTaskQueryRoleId(entityWrapper);
+			entityWrapper.orderBy("create_date", false);
+			SerializeFilter filter = propertyPreFilterable.constructFilter(TmyTaskDetail.class);
+			PageResponse<TmyTaskDetail> pagejson = new PageResponse<>(tmyTaskDetailService.listNeedFinishTask(queryable,entityWrapper));
+			//String content = JSON.toJSONString(pagejson, filter);
+			return JSONObject.toJSONString(pagejson);
+		}catch (Exception ex){
+			ex.printStackTrace();
+			return null;
+		}
+
 	}
 	/**
 	 * 设置查询申请所属的用户ID
@@ -1031,21 +1042,16 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 				}
 				// 商户运营,设置商户的ID
 				if (BasicRoleEnum.SHOP.roleCode.equals(roleId)) {
-					TshopInfo shopObj=tshopInfoService.selectOne(loginUser.getId());
-					queryWrapper.eq("notificationType", shopObj.getFromInnerOuter());
-					queryWrapper.eq("status",1);
+					queryWrapper.eq("sb.userid", loginUser.getId());
 					return;
 				}
-				// 销售当做外部商户处理
 				if (BasicRoleEnum.SELLING.roleCode.equals(roleId)) {
-					queryWrapper.eq("notificationType", NotificationTypeRangeEnum.SHOP_OUTER.code);
-					queryWrapper.eq("status",1);
+					queryWrapper.eq("t.buyerid", "***");
 					return;
 				}
 				// 买手,设置买手的ID
 				if (BasicRoleEnum.BUYER.roleCode.equals(roleId)) {
-					queryWrapper.eq("notificationType", NotificationTypeRangeEnum.BUYER.code);
-					queryWrapper.eq("status",1);
+					queryWrapper.eq("t.buyerid", loginUser.getId());
 					return;
 				}
 			}

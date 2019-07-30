@@ -7,11 +7,16 @@ import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShow;
+import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowData;
+import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowQuery;
+import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowTitle;
 import cn.jeeweb.web.ebp.logistics.mapper.TShopOrderShowMapper;
 import cn.jeeweb.web.ebp.logistics.service.TShopOrderShowService;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * 系统参数设置
@@ -22,14 +27,95 @@ import org.springframework.transaction.annotation.Transactional;
 public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowMapper, TShopOrderShow> implements TShopOrderShowService {
 
     @Override
-    public Page<TShopOrderShow> selectTShopOrderShowPageList(Queryable queryable, Wrapper<TShopOrderShow> wrapper) {
-        QueryToWrapper<TShopOrderShow> queryToWrapper = new QueryToWrapper<TShopOrderShow>();
-        queryToWrapper.parseCondition(wrapper, queryable);
-        queryToWrapper.parseSort(wrapper, queryable);
-        Pageable pageable = queryable.getPageable();
-        com.baomidou.mybatisplus.plugins.Page<TShopOrderShow> page = new com.baomidou.mybatisplus.plugins.Page<TShopOrderShow>(pageable.getPageNumber(), pageable.getPageSize());
-        wrapper.eq("1", "1");
-        page.setRecords(baseMapper.selectTShopOrderShowPageList(page, wrapper));
-        return new PageImpl<TShopOrderShow>(page.getRecords(), queryable.getPageable(), page.getTotal());
+    public Page<TShopOrderShow> selectTShopOrderShowPageList(Queryable queryable, TShopOrderShowQuery queryParam) {
+        Map<String,Object> paramMap=installQueryParamMap(queryParam);
+        int total=getTShopOrderShowTitleCount(paramMap);
+        if(total < 1){
+            return null;
+        }
+        List<TShopOrderShowTitle> shopOrderShowTitleList=getTShopOrderShowTitleList(queryable.getPageable().getPageNumber(),queryable.getPageable().getPageSize(),paramMap);
+        List<TShopOrderShowData> shopOrderShowDataList=getTShopOrderShowDataList(shopOrderShowTitleList);
+        List<TShopOrderShow> retRecords=installTShopOrderShow(shopOrderShowTitleList,shopOrderShowDataList);
+        return new PageImpl<TShopOrderShow>(retRecords, queryable.getPageable(),total);
+    }
+
+    /**
+     * 组装检索参数
+     *
+     * @param queryParam
+     * @return
+     */
+    private Map<String,Object> installQueryParamMap(TShopOrderShowQuery queryParam){
+        Map<String,Object> paramMap=new HashMap<>();
+        return paramMap;
+    }
+
+    /**
+     * 获取列表数量
+     *
+     * @param paramMap
+     * @return
+     */
+    private int getTShopOrderShowTitleCount(Map<String,Object> paramMap){
+        return baseMapper.selectTShopOrderShowTitlePageListCount(paramMap);
+    }
+
+    /**
+     * 查询列表数据
+     *
+     * @param current
+     * @param pageSize
+     * @param paramMap
+     * @return
+     */
+    private List<TShopOrderShowTitle> getTShopOrderShowTitleList(int current,int pageSize,Map<String,Object> paramMap){
+        paramMap.put("start",(current-1)*pageSize);
+        paramMap.put("pageSize",pageSize);
+        return baseMapper.selectTShopOrderShowTitlePageList(paramMap);
+    }
+
+    /**
+     * 查询展示的额任务明细数据
+     *
+     * @param shopOrderShowTitleListList
+     * @return
+     */
+    private List<TShopOrderShowData> getTShopOrderShowDataList(List<TShopOrderShowTitle> shopOrderShowTitleListList){
+        StringBuffer jdOrderNo=new StringBuffer("");
+        for(TShopOrderShowTitle obj:shopOrderShowTitleListList){
+            jdOrderNo.append(",'").append(obj.getJdOrderNo()).append("'");
+        }
+        //列表数据查询
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("jdOrderNo",jdOrderNo.substring(1));
+        return baseMapper.selectTShopOrderShowDataList(paramMap);
+    }
+
+    /**
+     * 组装返回的对象信息
+     *
+     * @param shopOrderShowTitleListList
+     * @param shopOrderShowDataList
+     * @return
+     */
+    private List<TShopOrderShow> installTShopOrderShow(List<TShopOrderShowTitle> shopOrderShowTitleListList,List<TShopOrderShowData> shopOrderShowDataList){
+        List<TShopOrderShow> retObj=new ArrayList<>();
+        Iterator<TShopOrderShowData> shopOrderShowDataIterator=shopOrderShowDataList.iterator();
+        for(TShopOrderShowTitle obj:shopOrderShowTitleListList){
+            List<TShopOrderShowData> shopOrderShowDataListTemp=new ArrayList<>();
+            while (shopOrderShowDataIterator.hasNext()){
+                TShopOrderShowData whileObjTemp=shopOrderShowDataIterator.next();
+                if(obj.getJdOrderNo().equals(whileObjTemp.getJdOrderNo())){
+                    shopOrderShowDataListTemp.add(whileObjTemp);
+                    shopOrderShowDataIterator.remove();
+                }
+            }
+            //组装返回对象
+            TShopOrderShow objTemp=new TShopOrderShow();
+            objTemp.setShopOrderShowTitle(obj);
+            objTemp.setShopOrderShowDataList(shopOrderShowDataListTemp);
+            retObj.add(objTemp);
+        }
+        return retObj;
     }
 }

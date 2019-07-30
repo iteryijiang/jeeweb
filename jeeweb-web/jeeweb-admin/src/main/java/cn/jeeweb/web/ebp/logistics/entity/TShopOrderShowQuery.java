@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.logistics.entity;
 
 import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  *
  */
 @Data
-public class TShopOrderShow implements Serializable {
+public class TShopOrderShowQuery implements Serializable {
     /**
      *
      * 商户展示订单头部信息

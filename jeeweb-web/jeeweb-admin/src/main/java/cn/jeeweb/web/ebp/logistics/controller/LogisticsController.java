@@ -15,9 +15,11 @@ import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
 import cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShow;
+import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowQuery;
 import cn.jeeweb.web.ebp.logistics.service.TLogisticsOrderService;
 import cn.jeeweb.web.ebp.logistics.service.TShopOrderShowService;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,7 +38,7 @@ import java.io.IOException;
 @ViewPrefix("ebp/logisticsOrder")
 @RequiresPathPermission("logisticsOrder:logistics")
 @Log(title = "物流信息处理")
-public class LogisticsController  extends BaseBeanController<TLogisticsOrder> {
+public class LogisticsController extends BaseBeanController<TLogisticsOrder> {
 
     @Autowired
     private TShopOrderShowService shopOrderShowService;
@@ -58,6 +61,43 @@ public class LogisticsController  extends BaseBeanController<TLogisticsOrder> {
         return mav;
     }
 
+    /**
+     * 商户订单信息查询
+     *
+     * @param queryable
+     * @param propertyPreFilterable
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "ajaxShopOrderList", method = {RequestMethod.GET, RequestMethod.POST})
+    @PageableDefaults(sort = "create_date=desc")
+    @Log(logType = LogType.SELECT)
+    public String ajaxShopOrderList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) {
+        JSONObject retObj=new JSONObject();
+        retObj.put("retCode",0);
+        retObj.put("retMsg","success");
+        try {
+            EntityWrapper<TShopOrderShow> entityWrapper = new EntityWrapper<>(TShopOrderShow.class);
+            propertyPreFilterable.addQueryProperty("id");
+            // 预处理
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
+            TShopOrderShowQuery queryParam=new TShopOrderShowQuery();
+            PageResponse<TShopOrderShow> pagejson = new PageResponse<>(shopOrderShowService.selectTShopOrderShowPageList(queryable, queryParam));
+            if(pagejson == null ||pagejson.isEmpty() ||pagejson.getTotal()<1){
+                retObj.put("retCode",-1);
+                retObj.put("retMsg","未获取到数据，调整检索条件试一试吧!!!");
+            }else{
+                retObj.put("retData",pagejson);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            retObj.put("retCode",-1);
+            retObj.put("retMsg","查询数据系统异常");
+        }finally {
+            return retObj.toJSONString();
+        }
+    }
 
     /**
      * 商户提出出库申请
@@ -68,11 +108,9 @@ public class LogisticsController  extends BaseBeanController<TLogisticsOrder> {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "addOutStoreOrder", method = { RequestMethod.GET, RequestMethod.POST })
-    @PageableDefaults(sort = "create_date=desc")
+    @RequestMapping(value = "addOutStoreOrder", method = {RequestMethod.GET, RequestMethod.POST})
     @Log(logType = LogType.INSERT)
-    public void addOutStoreOrder(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
-                                  HttpServletResponse response) throws IOException {
+    public void addOutStoreOrder(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
         EntityWrapper<TShopOrderShow> entityWrapper = new EntityWrapper<>(TShopOrderShow.class);
         propertyPreFilterable.addQueryProperty("id");
 
@@ -81,32 +119,7 @@ public class LogisticsController  extends BaseBeanController<TLogisticsOrder> {
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         PageResponse<TShopOrderShow> pagejson = null;
         String content = JSON.toJSONString(pagejson, filter);
-        StringUtils.printJson(response,content);
-    }
-
-    /**
-     * 商户订单信息查询
-     *
-     * @param queryable
-     * @param propertyPreFilterable
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(value = "ajaxShopOrderList", method = { RequestMethod.GET, RequestMethod.POST })
-    @PageableDefaults(sort = "create_date=desc")
-    @Log(logType = LogType.SELECT)
-    public void ajaxShopOrderList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
-                                  HttpServletResponse response) throws IOException {
-        EntityWrapper<TShopOrderShow> entityWrapper = new EntityWrapper<>(TShopOrderShow.class);
-        propertyPreFilterable.addQueryProperty("id");
-
-        // 预处理
-        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
-        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageResponse<TShopOrderShow> pagejson = null;
-        String content = JSON.toJSONString(pagejson, filter);
-        StringUtils.printJson(response,content);
+        StringUtils.printJson(response, content);
     }
 
     /**
@@ -134,20 +147,24 @@ public class LogisticsController  extends BaseBeanController<TLogisticsOrder> {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "ajaxPlatformOrderList", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "ajaxPlatformOrderList", method = {RequestMethod.GET, RequestMethod.POST})
     @PageableDefaults(sort = "create_date=desc")
     @Log(logType = LogType.SELECT)
     public void ajaxPlatformOrderList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
-                                  HttpServletResponse response) throws IOException {
-        EntityWrapper<TShopOrderShow> entityWrapper = new EntityWrapper<>(TShopOrderShow.class);
-        propertyPreFilterable.addQueryProperty("id");
+                                      HttpServletResponse response) {
+        try {
+            EntityWrapper<TShopOrderShow> entityWrapper = new EntityWrapper<>(TShopOrderShow.class);
+            propertyPreFilterable.addQueryProperty("id");
 
-        // 预处理
-        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
-        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageResponse<TShopOrderShow> pagejson = null;
-        String content = JSON.toJSONString(pagejson, filter);
-        StringUtils.printJson(response,content);
+            // 预处理
+            QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
+            SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
+            PageResponse<TShopOrderShow> pagejson = null;
+            String content = JSON.toJSONString(pagejson, filter);
+            StringUtils.printJson(response, content);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -159,11 +176,9 @@ public class LogisticsController  extends BaseBeanController<TLogisticsOrder> {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "updateLogsticsOrderStatus", method = { RequestMethod.GET, RequestMethod.POST })
-    @PageableDefaults(sort = "create_date=desc")
+    @RequestMapping(value = "updateLogsticsOrderStatus", method = {RequestMethod.GET, RequestMethod.POST})
     @Log(logType = LogType.UPDATE)
-    public void updateLogsticsOrderStatus(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
-                                 HttpServletResponse response) throws IOException {
+    public void updateLogsticsOrderStatus(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
         EntityWrapper<TShopOrderShow> entityWrapper = new EntityWrapper<>(TShopOrderShow.class);
         propertyPreFilterable.addQueryProperty("id");
 
@@ -172,6 +187,6 @@ public class LogisticsController  extends BaseBeanController<TLogisticsOrder> {
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         PageResponse<TShopOrderShow> pagejson = null;
         String content = JSON.toJSONString(pagejson, filter);
-        StringUtils.printJson(response,content);
+        StringUtils.printJson(response, content);
     }
 }
