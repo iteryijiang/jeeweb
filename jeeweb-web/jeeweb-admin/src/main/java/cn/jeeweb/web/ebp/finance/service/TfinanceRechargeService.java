@@ -10,6 +10,7 @@ public interface TfinanceRechargeService extends ICommonService<TfinanceRecharge
     public final static String rechargetype_2 = "2";//任务发布
     public final static String rechargetype_3 = "3";//支付撤销
     public final static String rechargetype_4 = "4";//任务撤销
+    public final static String rechargetype_5 = "5";//平台手动确认收货
 
     public boolean addTfinanceRecharge(TshopInfo si, TfinanceRecharge tr);
 

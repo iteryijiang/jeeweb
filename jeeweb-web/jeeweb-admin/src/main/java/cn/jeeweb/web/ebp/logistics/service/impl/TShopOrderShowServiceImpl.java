@@ -6,13 +6,13 @@ import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
+import cn.jeeweb.common.utils.DateUtils;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShow;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowData;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowQuery;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowTitle;
 import cn.jeeweb.web.ebp.logistics.mapper.TShopOrderShowMapper;
 import cn.jeeweb.web.ebp.logistics.service.TShopOrderShowService;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +47,8 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
      */
     private Map<String,Object> installQueryParamMap(TShopOrderShowQuery queryParam){
         Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("beginTime","2019-05-01");
+        paramMap.put("endTime", DateUtils.getCurrentTime());
         return paramMap;
     }
 
@@ -69,7 +71,11 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
      * @return
      */
     private List<TShopOrderShowTitle> getTShopOrderShowTitleList(int current,int pageSize,Map<String,Object> paramMap){
-        paramMap.put("start",(current-1)*pageSize);
+        if(current>1){
+            paramMap.put("start",(current-1)*pageSize);
+        }else{
+            paramMap.put("start",0);
+        }
         paramMap.put("pageSize",pageSize);
         return baseMapper.selectTShopOrderShowTitlePageList(paramMap);
     }
@@ -100,14 +106,11 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
      */
     private List<TShopOrderShow> installTShopOrderShow(List<TShopOrderShowTitle> shopOrderShowTitleListList,List<TShopOrderShowData> shopOrderShowDataList){
         List<TShopOrderShow> retObj=new ArrayList<>();
-        Iterator<TShopOrderShowData> shopOrderShowDataIterator=shopOrderShowDataList.iterator();
         for(TShopOrderShowTitle obj:shopOrderShowTitleListList){
             List<TShopOrderShowData> shopOrderShowDataListTemp=new ArrayList<>();
-            while (shopOrderShowDataIterator.hasNext()){
-                TShopOrderShowData whileObjTemp=shopOrderShowDataIterator.next();
-                if(obj.getJdOrderNo().equals(whileObjTemp.getJdOrderNo())){
-                    shopOrderShowDataListTemp.add(whileObjTemp);
-                    shopOrderShowDataIterator.remove();
+            for (TShopOrderShowData objShowDataTemp:shopOrderShowDataList){
+                if(obj.getJdOrderNo().equals(objShowDataTemp.getJdOrderNo())){
+                    shopOrderShowDataListTemp.add(objShowDataTemp);
                 }
             }
             //组装返回对象
@@ -117,5 +120,13 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
             retObj.add(objTemp);
         }
         return retObj;
+    }
+
+    @Override
+    public List<TShopOrderShowData> getTShopOrderShowDataListByJdOrderNo(String jdOrderNo){
+        //列表数据查询
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("jdOrderNo","'"+jdOrderNo+"'");
+        return baseMapper.selectTShopOrderShowDataList(paramMap);
     }
 }

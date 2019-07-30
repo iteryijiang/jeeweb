@@ -3,6 +3,7 @@ package cn.jeeweb.web.ebp.logistics.entity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 
 /***
@@ -23,4 +24,37 @@ public class TShopOrderShowTitle implements Serializable {
      * 支付时间
      */
     private String orderPayTime;
+
+    /**
+     * 订单商品总数量
+     */
+    private int orderGoodsTotalNum;
+
+    /**
+     *订单总金额
+     */
+    private BigDecimal orderTotalMoney;
+
+    /**
+     * 买手名称
+     */
+    private String buyerLoginName;
+
+    /**
+     * 物流信息
+     *
+     */
+    private String logisticsInfo;
+
+    /**
+     * 订单状态
+     *
+     */
+    private int orderStatus;
+
+    /**
+     * 订单出库佣金
+     *
+     */
+    private BigDecimal outStoreCommissionPrice ;
 }

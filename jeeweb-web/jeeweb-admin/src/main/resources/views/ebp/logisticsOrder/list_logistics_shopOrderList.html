@@ -40,7 +40,13 @@
         width: 60%;
         margin-top: 4px;
     }
-
+    .priceLabel{
+        color: red;
+    }
+    #orderPageDiv {
+        text-align: right;
+        padding-right: 20px;
+    }
 </style>
 <div id="queryForm">
 
@@ -56,101 +62,28 @@
             <table id="showAllShopOrder">
                 <thead>
                     <tr>
-                        <th colspan="10"><button>批量操作</button></th>
+                        <th colspan="4"><button>出&nbsp;&nbsp;库</button></th>
+                        <th colspan="6">
+                            <span>商户余额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">1000.00</label>&nbsp;&nbsp;元</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span>订单佣金总额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">300.00</label>&nbsp;&nbsp;元</span>
+                        </th>
+                        <th colspan="3"></th>
                     </tr>
                     <tr>
-                        <th class="checkbox_td"><input alt="全选" type="checkbox" /></th>
+                        <th class="checkbox_td"><input alt="全选" type="checkbox" onchange="checkAllBoxFn(this)" parantTbId=\"showAllShopOrder\"" /></th>
                         <th style="width: 80px">&nbsp;</th>
                         <th style="width:15%">商品信息</th>
                         <th style="width:10%">单价/数量</th>
                         <th style="width:10%">货款金额</th>
                         <th style="width:10%">下单帐号</th>
                         <th style="width:10%">物流信息</th>
-                        <th style="width:12%">商家备注</th>
+                        <th style="width:12%">出库佣金</th>
                         <th style="width:10%">订单状态</th>
                         <th style="width:70px;">操作</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="head_tr">
-                        <td class="checkbox_td"><input type="checkbox" /></td>
-                        <td colspan="9" class="orderTitle">
-                            <span>订单号:20190313001</span>
-                            <span>下单时间:2019-03-19 12:23:30</span>
-                            <span>付款时间:2019-03-19 12:23:30</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><img src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>
-                            <div>基本信息</div>
-                            <div>规格:</div>
-                        </td>
-                        <td class="price_num_td">
-                            <div>￥189.00元</div>
-                            <div>x1</div>
-                        </td>
-                        <td rowspan="2" valign="top">货款金额</td>
-                        <td rowspan="2" valign="top">下单帐号</td>
-                        <td rowspan="2" valign="top">物流信息</td>
-                        <td rowspan="2" valign="top">商家备注</td>
-                        <td rowspan="2" valign="top">订单状态</td>
-                        <td rowspan="2" valign="top">
-                            <div><a>详情</a></div>
-                            <div><a>出库</a></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><img style="width: 75px;height:80px;" src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>
-                            <div>基本信息</div>
-                            <div>规格:</div>
-                        </td>
-                        <td class="price_num_td">
-                            <div>￥189.00元</div>
-                            <div>x1</div>
-                        </td>
-                    </tr>
-
-                    <tr class="head_tr">
-                        <td class="checkbox_td"><input type="checkbox" /></td>
-                        <td colspan="9" class="orderTitle">
-                            <span>订单号:20190313001</span>
-                            <span>下单时间:2019-03-19 12:23:30</span>
-                            <span>付款时间:2019-03-19 12:23:30</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><img src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>
-                            <div>基本信息</div>
-                            <div>规格:</div>
-                        </td>
-                        <td class="price_num_td">
-                            <div>￥189.00元</div>
-                            <div>x1</div>
-                        </td>
-                        <td rowspan="2" valign="top">货款金额</td>
-                        <td rowspan="2" valign="top">下单帐号</td>
-                        <td rowspan="2" valign="top">物流信息</td>
-                        <td rowspan="2" valign="top">商家备注</td>
-                        <td rowspan="2" valign="top">订单状态</td>
-                        <td rowspan="2" valign="top">
-                            <div><a>详情</a></div>
-                            <div><a>出库</a></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><img src="${staticPath}/common/img/default_avatar_male.jpg"> </td>
-                        <td>
-                            <div>基本信息</div>
-                            <div>规格:</div>
-                        </td>
-                        <td class="price_num_td">
-                            <div>￥189.00元</div>
-                            <div>x1</div>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -180,13 +113,14 @@
                 <tbody></tbody>
             </table>
         </div>
+        <div id="orderPageDiv"></div>
     </div>
 </div>
-<script src="${staticPath}/logistics/shopOrderList.js?v=20190729001"></script>
+<script src="${staticPath}/logistics/shopOrderList.js?v=20190729005"></script>
 <script type="text/javascript">
     $(function () {
         $("#shopOrderTabs").tabs();
-        chooseTabFn(1);
+        chooseTabFn("${adminPath}",1);
     });
 </script>
 <% } %>

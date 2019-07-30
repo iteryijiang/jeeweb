@@ -31,6 +31,14 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
      */
     void updateTaskStatusForChargeBack(String id,String lastRepair);
 
+    /**
+     * 更改买手任务单用于确认收货操作
+     *
+     * @param id
+     * @param lastRepair
+     */
+    void updateTaskStatusForAckReceive(String id,String lastRepair);
+
 
     Page<TmyTaskDetail> listDetail(Queryable queryable, Wrapper<TmyTaskDetail> wrapper);
 

@@ -6,6 +6,9 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 /**
  * 商户订单出库物流信息
  *
@@ -41,17 +44,9 @@ public class TLogisticsOrder  extends DataEntity<String> {
      */
     private String orderPayTime;
     /**
-     * 商品名称
-     */
-    private String goodsName;
-    /**
-     * 商品单价
-     */
-    private String goodsPrice;
-    /**
      * 商品数量
      */
-    private String goodsNum;
+    private String goodsTotalNum;
     /*
     订单总金额
      */
@@ -59,18 +54,17 @@ public class TLogisticsOrder  extends DataEntity<String> {
     /**
      * 订单优惠金额
      */
-    private String orderCouponMoney;
+    private String orderCouponTotalMoney;
     /*
     订单支付金额
      */
-    private String orderPayMoney;
-
+    private String orderPayTotalMoney;
     /**
      * 订单状态
      */
-    private String orderStatus;
+    private int orderStatus=0;
     /**
-     * 顶大物流信息
+     * 订单物流信息
      */
     private String logisticsInfo;
     /**
@@ -94,21 +88,9 @@ public class TLogisticsOrder  extends DataEntity<String> {
      */
     private String buyerJdLoginNo;
     /**
-     * 买手任务 ID
-     */
-    private String buyerTaskId;
-    /**
-     * 买手任务编号
-     */
-    private String buyerTaskNo;
-    /**
-     * 买手任务明细ID
-     */
-    private String buyerTaskDetailId;
-    /**
      * 店铺ID
      */
-    private String shopId;
+    private String shopUserId;
     /**
      * 店铺名称
      */
@@ -156,12 +138,12 @@ public class TLogisticsOrder  extends DataEntity<String> {
      * 商品出库商户佣金支付时间
      *
      */
-    private String outStoreCommissionPayTime;
+    private Date outStoreCommissionPayTime;
 
     /**
      * 商品出库商户支付佣金金额
      */
-    private String outStoreCommissionPayMoney;
+    private BigDecimal outStoreCommissionPayMoney=BigDecimal.ZERO;
 
     @Override
     public String getId() {

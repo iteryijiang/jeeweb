@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.logistics.controller;
 
 import cn.jeeweb.common.http.PageResponse;
+import cn.jeeweb.common.http.Response;
 import cn.jeeweb.common.mvc.annotation.ViewPrefix;
 import cn.jeeweb.common.mvc.controller.BaseBeanController;
 import cn.jeeweb.common.mybatis.mvc.wrapper.EntityWrapper;
@@ -13,6 +14,7 @@ import cn.jeeweb.common.security.shiro.authz.annotation.RequiresPathPermission;
 import cn.jeeweb.common.utils.StringUtils;
 import cn.jeeweb.web.aspectj.annotation.Log;
 import cn.jeeweb.web.aspectj.enums.LogType;
+import cn.jeeweb.web.ebp.exception.MyProcessException;
 import cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShow;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowQuery;
@@ -23,15 +25,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("${jeeweb.admin.url.prefix}/logisticsOrder/logistics")
@@ -74,27 +74,27 @@ public class LogisticsController extends BaseBeanController<TLogisticsOrder> {
     @PageableDefaults(sort = "create_date=desc")
     @Log(logType = LogType.SELECT)
     public String ajaxShopOrderList(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) {
-        JSONObject retObj=new JSONObject();
-        retObj.put("retCode",0);
-        retObj.put("retMsg","success");
+        JSONObject retObj = new JSONObject();
+        retObj.put("retCode", 0);
+        retObj.put("retMsg", "success");
         try {
             EntityWrapper<TShopOrderShow> entityWrapper = new EntityWrapper<>(TShopOrderShow.class);
             propertyPreFilterable.addQueryProperty("id");
             // 预处理
             QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
-            TShopOrderShowQuery queryParam=new TShopOrderShowQuery();
+            TShopOrderShowQuery queryParam = new TShopOrderShowQuery();
             PageResponse<TShopOrderShow> pagejson = new PageResponse<>(shopOrderShowService.selectTShopOrderShowPageList(queryable, queryParam));
-            if(pagejson == null ||pagejson.isEmpty() ||pagejson.getTotal()<1){
-                retObj.put("retCode",-1);
-                retObj.put("retMsg","未获取到数据，调整检索条件试一试吧!!!");
-            }else{
-                retObj.put("retData",pagejson);
+            if (pagejson == null || pagejson.isEmpty() || pagejson.getTotal() < 1) {
+                retObj.put("retCode", -1);
+                retObj.put("retMsg", "未获取到数据，调整检索条件试一试吧!!!");
+            } else {
+                retObj.put("retData", pagejson);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            retObj.put("retCode",-1);
-            retObj.put("retMsg","查询数据系统异常");
-        }finally {
+            retObj.put("retCode", -1);
+            retObj.put("retMsg", "查询数据系统异常");
+        } finally {
             return retObj.toJSONString();
         }
     }
@@ -102,24 +102,34 @@ public class LogisticsController extends BaseBeanController<TLogisticsOrder> {
     /**
      * 商户提出出库申请
      *
-     * @param queryable
-     * @param propertyPreFilterable
+     * @param paramJson
      * @param request
      * @param response
      * @throws IOException
      */
     @RequestMapping(value = "addOutStoreOrder", method = {RequestMethod.GET, RequestMethod.POST})
     @Log(logType = LogType.INSERT)
-    public void addOutStoreOrder(Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        EntityWrapper<TShopOrderShow> entityWrapper = new EntityWrapper<>(TShopOrderShow.class);
-        propertyPreFilterable.addQueryProperty("id");
-
-        // 预处理
-        QueryableConvertUtils.convertQueryValueToEntityValue(queryable, entityClass);
-        SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
-        PageResponse<TShopOrderShow> pagejson = null;
-        String content = JSON.toJSONString(pagejson, filter);
-        StringUtils.printJson(response, content);
+    public Response addOutStoreOrder(@RequestBody JSONObject paramJson, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String jdOrderNoParam=paramJson.getString("jdOrderNo");
+            String[] jdOrderNoArray=jdOrderNoParam.split(",");
+            List<TLogisticsOrder> objList=new ArrayList<>();
+            for(String jdOrderNo:jdOrderNoArray){
+                if(StringUtils.isNotEmpty(jdOrderNo)){
+                    TLogisticsOrder objInsert=new TLogisticsOrder();
+                    objInsert.setJdOrderNo(jdOrderNo);
+                    objList.add(objInsert);
+                }
+            }
+            logisticsOrderService.insertTLogisticsOrder(objList);
+        } catch (MyProcessException ex) {
+            ex.printStackTrace();
+            return Response.error("操作失败[" + ex.getMessage() + "]");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Response.error("操作失败[系统异常]");
+        }
+        return Response.ok();
     }
 
     /**

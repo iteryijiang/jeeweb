@@ -5,6 +5,9 @@ import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import org.apache.catalina.LifecycleState;
+
+import java.util.List;
 
 /**
  * 买手分组
@@ -45,4 +48,11 @@ public interface TLogisticsOrderService extends ICommonService<TLogisticsOrder> 
 	 * @param obj
 	 */
 	void insertTLogisticsOrder(TLogisticsOrder obj);
+
+	/***
+	 * 新增处理
+	 *
+	 * @param objList
+	 */
+	void insertTLogisticsOrder(List<TLogisticsOrder> objList);
 }

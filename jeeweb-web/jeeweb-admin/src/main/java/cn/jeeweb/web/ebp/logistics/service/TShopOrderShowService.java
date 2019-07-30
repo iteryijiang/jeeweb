@@ -4,9 +4,13 @@ import cn.jeeweb.common.mybatis.mvc.service.ICommonService;
 import cn.jeeweb.common.query.data.Page;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShow;
+import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowData;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowQuery;
+import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowTitle;
 import cn.jeeweb.web.ebp.tsys.entity.TSysConfigParam;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+
+import java.util.List;
 
 /**
  * 买手分组
@@ -25,5 +29,13 @@ public interface TShopOrderShowService extends ICommonService<TShopOrderShow> {
 	 */
 	Page<TShopOrderShow> selectTShopOrderShowPageList(Queryable queryable, TShopOrderShowQuery queryParam);
 
+
+	/**
+	 * 根据单个京东订单编号获取任务数据
+	 *
+	 * @param jdOrderNo
+	 * @return
+	 */
+	List<TShopOrderShowData> getTShopOrderShowDataListByJdOrderNo(String jdOrderNo);
 
 }

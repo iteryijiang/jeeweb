@@ -27,6 +27,7 @@ public class TShopOrderShowData implements Serializable {
      * 商品名称
      */
     private String goodsName;
+    private String goodsImgUrl;
     /**
      * 商品单价
      */

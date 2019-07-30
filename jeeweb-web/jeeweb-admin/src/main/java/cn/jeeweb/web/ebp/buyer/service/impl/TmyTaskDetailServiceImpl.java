@@ -180,6 +180,19 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
     	}
     }
 
+    @Override
+    public void updateTaskStatusForAckReceive(String id,String lastRepair){
+        Map<String,Object> paramMap=new HashMap<String,Object>();
+        paramMap.put("taskId",id);
+        paramMap.put("status",BuyerTaskStatusEnum.FINISH.code);
+        paramMap.put("lastTime", Calendar.getInstance().getTime());
+        paramMap.put("lastRepair",lastRepair);
+        int num=baseMapper.updateTaskStatusForChargeBack(paramMap);
+        if(num !=1) {
+            throw new RuntimeException("更改任务单状态失败");
+        }
+    }
+
     public Page<TmyTaskDetail> listDetailGroup(Queryable queryable, Wrapper<TmyTaskDetail> wrapper) {
         QueryToWrapper<TmyTaskDetail> queryToWrapper = new QueryToWrapper<TmyTaskDetail>();
         queryToWrapper.parseCondition(wrapper, queryable);

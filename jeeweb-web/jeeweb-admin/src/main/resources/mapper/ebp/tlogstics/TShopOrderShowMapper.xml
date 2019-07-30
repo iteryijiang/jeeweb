@@ -34,9 +34,12 @@
 
     <sql id="Where_tTShopOrderShowTitlePage">
       <where>
-          ttb.shopId =#{shopId} and tmtd.receivingdate between #{beginTime} and #{endTime}
+          tmtd.receivingdate between #{map.beginTime} and #{map.endTime}
           <if test="map.jdOrderNo !=''  and map.jdOrderNo!=null ">
             and tmtd.jdorderno = #{map.jdOrderNo}
+          </if>
+          <if test="map.shopId !=''  and map.shopId!=null ">
+              and ttb.shopId =#{map.shopId}
           </if>
       </where>
     </sql>
@@ -68,7 +71,7 @@
             GROUP BY tmtd.jdorderno
         ) tb
         ORDER BY
-          tb.jdorderno desc DESC
+          tb.orderDtime desc
         limit ${map.start},${map.pageSize}
     </select>
 
@@ -83,7 +86,7 @@
         where
             tmtd.jdorderno in (${map.jdOrderNo})
         ORDER BY
-        tmtd.jdorderno desc DESC
+        tmtd.receivingdate desc
     </select>
 
 </mapper>
