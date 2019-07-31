@@ -39,7 +39,7 @@ function createShopOrderShowHtmlFn(dataArrays) {
     for (var idx = 0; idx < dataArrays.length; idx++) {
         var dataObj = dataArrays[idx];
         var headTitleHtml=createHeadTitleFn(dataObj.shopOrderShowTitle);
-        var dataBodyHtml=createDataBodyFn(dataObj.shopOrderShowDataList);
+        var dataBodyHtml=createDataBodyFn(dataObj.shopOrderShowTitle,dataObj.shopOrderShowDataList);
         showHtml += headTitleHtml+dataBodyHtml;
     }
     return showHtml;
@@ -66,29 +66,27 @@ function createHeadTitleFn(headTitleObj){
 /**
  * 生成信息展示的主体部分
  *
+ * @param dataHeadObj
  * @param dataBodyObjArray
  * @returns {string}
  */
-function createDataBodyFn(dataBodyObjArray) {
+function createDataBodyFn(dataHeadObj,dataBodyObjArray) {
     var retHtml = "";
     var count = dataBodyObjArray.length;
     for (var idx = 0; idx < count; idx++) {
         var detailObj=dataBodyObjArray[idx];
         var dataBodyHtml = "<tr>";
-        dataBodyHtml += "<td colspan=\"2\"><img src=\""+detailObj.goodsImgUrl+"\"></td>";
-        dataBodyHtml += "<td><div>"+detailObj.goodsName+"</div><div>规格:"+detailObj.goodsName+"</div></td>";
+        dataBodyHtml += "<td colspan=\"2\"><img title='"+detailObj.goodsName+"' src=\""+detailObj.goodsImgUrl+"\"></td>";
+        dataBodyHtml += "<td><div class='goodsInfo' title='"+detailObj.goodsName+"'><a href=''>"+detailObj.goodsNameShort+"</a></div><div class='goodsInfo'>规格:"+detailObj.goodsSpecDesc+"</div></td>";
         dataBodyHtml += "<td class=\"price_num_td\"><div>￥"+detailObj.goodsPrice+"元</div><div>x"+detailObj.goodsNum+"</div></td>";
         if (idx == 0) {
-            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">货款金额</td>";
-            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">下单帐号</td>";
-            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">物流信息</td>";
-            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">商家备注</td>";
-            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">订单状态</td>";
+            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">￥&nbsp;"+dataHeadObj.orderTotalMoney+"&nbsp;元</td>";
+            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">"+dataHeadObj.buyerJdLoginNo+"</td>";
+            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">"+dataHeadObj.logisticsInfo+"</td>";
+            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">￥&nbsp;"+dataHeadObj.outStoreCommissionPrice+"&nbsp;元</td>";
+            dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">"+dataHeadObj.orderStatusName+"</td>";
             dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">";
             dataBodyHtml += "<div><a href='javascript:void(0)' onclick='showOrderInfoFn()'>详&nbsp;&nbsp;情</a></div>";
-            if(detailObj.task==1){
-                dataBodyHtml += "<div><a href='javascript:void(0)' onclick='addOutStoreFn()'>出&nbsp;&nbsp;库</a></div>";
-            }
             dataBodyHtml +="</td>";
         }
         dataBodyHtml += "</tr>";

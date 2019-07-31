@@ -9,7 +9,7 @@
     <!-- 列表查询销售信息 -->
     <select id="selectTLogisticsOrderPageList" resultType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
         SELECT
-          <include refid="Base_Column_TLogisticsOrder" />
+        <include refid="Base_Column_TLogisticsOrder"/>
         FROM
         T_sold_Info t
         inner join sys_user u on u.id=t.userid
@@ -21,27 +21,44 @@
         </if>
     </select>
 
-    <select id="selectTLogisticsOrderById" parameterType="String" resultType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
+    <select id="selectTLogisticsOrderById" parameterType="String"
+            resultType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
         SELECT
-        <include refid="Base_Column_TLogisticsOrder" />
+        <include refid="Base_Column_TLogisticsOrder"/>
         FROM
-        T_sold_Info t
-        inner join sys_user u on u.id=t.userid
-        inner join t_seller_level sltb on sltb.id=t.accountLevel
+        t_logistics_order t
+        where t.id=#{id}
 
     </select>
 
 
-    <update id="updateTLogisticsOrderStatus" parameterType="HashMap">
+    <update id="updateTLogisticsOrderStatus" parameterType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
       update
-        T_sold_Info t
+        t_logistics_order
       set
-        t.accountlevel=#{levelId},t.update_by=#{updateBy},t.update_date=#{updateTime}
+          order_status=#{orderStatus},
+          out_store_ack_pay_man=#{outStoreAckPayMan},
+          out_store_ack_batch_id=#{outStoreAckBatchId},
+          out_store_ack_pay_order_id=#{outStoreAckPayOrderId},
+          out_store_ack_pay_time=#{outStoreAckPayTime},
+          out_store_ack_pay_money=#{outStoreAckPayMoney},
+        update_by=#{updateBy.id},update_date=#{updateTime}
       where
-        t.id=#{id}
+        id=#{id}
     </update>
 
     <insert id="insertTLogisticsOrder" parameterType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
-
+      insert into t_logistics_order
     </insert>
+
+
+    <!-- 明细处理 -->
+    <update id="updateTLogisticsOrderDetailStatus" parameterType="HashMap">
+      update
+        t_logistics_order_detail t
+      set
+        t.status=#{map.status},t.update_by=#{map.updateBy},t.update_date=#{map.updateTime}
+      where
+        t.master_id=#{map.masterId}
+    </update>
 </mapper>

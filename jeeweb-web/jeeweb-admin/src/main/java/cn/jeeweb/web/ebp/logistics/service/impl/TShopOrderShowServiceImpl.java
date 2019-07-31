@@ -7,15 +7,20 @@ import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.utils.DateUtils;
+import cn.jeeweb.web.ebp.enums.SysConfigParamEnum;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShow;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowData;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowQuery;
 import cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowTitle;
 import cn.jeeweb.web.ebp.logistics.mapper.TShopOrderShowMapper;
 import cn.jeeweb.web.ebp.logistics.service.TShopOrderShowService;
+import cn.jeeweb.web.ebp.tsys.entity.TSysConfigParam;
+import cn.jeeweb.web.ebp.tsys.service.TSysConfigParamService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -25,7 +30,8 @@ import java.util.*;
 @Transactional
 @Service("shopOrderShowService")
 public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowMapper, TShopOrderShow> implements TShopOrderShowService {
-
+    @Autowired
+    private TSysConfigParamService sysConfigParamService;
     @Override
     public Page<TShopOrderShow> selectTShopOrderShowPageList(Queryable queryable, TShopOrderShowQuery queryParam) {
         Map<String,Object> paramMap=installQueryParamMap(queryParam);
@@ -33,7 +39,8 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
         if(total < 1){
             return null;
         }
-        List<TShopOrderShowTitle> shopOrderShowTitleList=getTShopOrderShowTitleList(queryable.getPageable().getPageNumber(),queryable.getPageable().getPageSize(),paramMap);
+        TSysConfigParam sysConfigParamObj=sysConfigParamService.selectTSysConfigByConfigParam(SysConfigParamEnum.PLATFORM_LOGISTICS_COMMISSION.configParam);
+        List<TShopOrderShowTitle> shopOrderShowTitleList=getTShopOrderShowTitleList(queryable.getPageable().getPageNumber(),queryable.getPageable().getPageSize(),paramMap,new BigDecimal(sysConfigParamObj.getParamValue()));
         List<TShopOrderShowData> shopOrderShowDataList=getTShopOrderShowDataList(shopOrderShowTitleList);
         List<TShopOrderShow> retRecords=installTShopOrderShow(shopOrderShowTitleList,shopOrderShowDataList);
         return new PageImpl<TShopOrderShow>(retRecords, queryable.getPageable(),total);
@@ -70,14 +77,18 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
      * @param paramMap
      * @return
      */
-    private List<TShopOrderShowTitle> getTShopOrderShowTitleList(int current,int pageSize,Map<String,Object> paramMap){
+    private List<TShopOrderShowTitle> getTShopOrderShowTitleList(int current, int pageSize, Map<String,Object> paramMap, BigDecimal outStoreCommissionPrice){
         if(current>1){
             paramMap.put("start",(current-1)*pageSize);
         }else{
             paramMap.put("start",0);
         }
         paramMap.put("pageSize",pageSize);
-        return baseMapper.selectTShopOrderShowTitlePageList(paramMap);
+        List<TShopOrderShowTitle> retList=baseMapper.selectTShopOrderShowTitlePageList(paramMap);
+        for(TShopOrderShowTitle obj:retList){
+            obj.setOutStoreCommissionPrice(outStoreCommissionPrice);
+        }
+        return retList;
     }
 
     /**
@@ -111,6 +122,7 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
             for (TShopOrderShowData objShowDataTemp:shopOrderShowDataList){
                 if(obj.getJdOrderNo().equals(objShowDataTemp.getJdOrderNo())){
                     shopOrderShowDataListTemp.add(objShowDataTemp);
+                    obj.setOrderTotalMoney(obj.getOrderTotalMoney().add(objShowDataTemp.getGoodsPrice()));
                 }
             }
             //组装返回对象

@@ -1,8 +1,8 @@
 <% layout('/layouts/tab.html', {title: @MessageUtils.getMessage('商户订单管理',''), libs: ''}){ %>
 <style>
     #shopOrderTabs img{
-        width: 75px;
-        height:80px;
+        width: 65px;
+        height:70px;
     }
     #shopOrderTabs table{
         width: 100%
@@ -42,6 +42,9 @@
     }
     .priceLabel{
         color: red;
+    }
+    .goodsInfo{
+        margin-top: 2px;
     }
     #orderPageDiv {
         text-align: right;
@@ -83,40 +86,60 @@
                         <th style="width:70px;">操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                </tbody>
+                <tbody> </tbody>
             </table>
         </div>
         <div id="shopOrderTabs2">
             <table id="showWaitingOutShopOrder">
                 <thead>
                 <tr>
-                    <th>批量操作</th>
+                    <th colspan="4"><button>出&nbsp;&nbsp;库</button></th>
+                    <th colspan="6">
+                        <span>商户余额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">1000.00</label>&nbsp;&nbsp;元</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>订单佣金总额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">300.00</label>&nbsp;&nbsp;元</span>
+                    </th>
+                    <th colspan="3"></th>
                 </tr>
                 <tr>
-                    <th></th>
+                    <th class="checkbox_td"><input alt="全选" type="checkbox" onchange="checkAllBoxFn(this)" parantTbId=\"showWaitingOutShopOrder\"" /></th>
+                    <th style="width: 80px">&nbsp;</th>
+                    <th style="width:15%">商品信息</th>
+                    <th style="width:10%">单价/数量</th>
+                    <th style="width:10%">货款金额</th>
+                    <th style="width:10%">下单帐号</th>
+                    <th style="width:10%">物流信息</th>
+                    <th style="width:12%">出库佣金</th>
+                    <th style="width:10%">订单状态</th>
+                    <th style="width:70px;">操作</th>
                 </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody> </tbody>
             </table>
         </div>
         <div id="shopOrderTabs3">
             <table id="showOutAckShopOrder">
                 <thead>
-                <tr>
-                    <th>批量操作</th>
-                </tr>
-                <tr>
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th class="checkbox_td"><input alt="全选" type="checkbox" onchange="checkAllBoxFn(this)" parantTbId=\"showOutAckShopOrder\"" /></th>
+                        <th style="width: 80px">&nbsp;</th>
+                        <th style="width:15%">商品信息</th>
+                        <th style="width:10%">单价/数量</th>
+                        <th style="width:10%">货款金额</th>
+                        <th style="width:10%">下单帐号</th>
+                        <th style="width:10%">物流信息</th>
+                        <th style="width:12%">出库佣金</th>
+                        <th style="width:10%">订单状态</th>
+                        <th style="width:70px;">操作</th>
+                    </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody> </tbody>
             </table>
         </div>
         <div id="orderPageDiv"></div>
     </div>
 </div>
-<script src="${staticPath}/logistics/shopOrderList.js?v=20190729005"></script>
+<script src="${staticPath}/logistics/shopOrderList.js?v=20190729001"></script>
 <script type="text/javascript">
     $(function () {
         $("#shopOrderTabs").tabs();

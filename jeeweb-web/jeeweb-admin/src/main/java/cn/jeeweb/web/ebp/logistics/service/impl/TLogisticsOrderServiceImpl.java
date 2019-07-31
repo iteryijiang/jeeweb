@@ -95,14 +95,6 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
     private TLogisticsOrderDetail installTLogisticsOrderDetailObj(String masterId,TShopOrderShowData objDataTemp){
         TLogisticsOrderDetail retObj=new TLogisticsOrderDetail();
         retObj.setMasterId(masterId);
-        retObj.setGoodsName(objDataTemp.getGoodsName());
-        retObj.setGoodsPrice(objDataTemp.getGoodsPrice());
-        retObj.setGoodsNum(objDataTemp.getGoodsNum());
-        retObj.setOrderMoney(objDataTemp.getOrderTotalMoney());
-        retObj.setOrderCouponMoney(objDataTemp.getOrderCouponMoney());
-        retObj.setOrderPayMoney(objDataTemp.getOrderPayMoney());
-        retObj.setBuyerTaskId(objDataTemp.getBuyerTaskId());
-        retObj.setBuyerTaskNo(objDataTemp.getBuyerTaskNo());
         retObj.setBuyerTaskDetailId(objDataTemp.getBuyerTaskDetailId());
         retObj.setStatus(YesNoEnum.NO.code);
         retObj.setDelFlag(YesNoEnum.NO.code+"");
@@ -132,11 +124,14 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
         TSysConfigParam sysConfigParamObj=sysConfigParamService.selectTSysConfigByConfigParam(SysConfigParamEnum.PLATFORM_LOGISTICS_COMMISSION.configParam);
         BigDecimal money=new BigDecimal(sysConfigParamObj.getParamValue());
         TshopInfo shopInfo = tshopInfoService.selectOne(objDb.getShopUserId());
+        if(shopInfo.getAvailabledeposit().subtract(money).compareTo(BigDecimal.ZERO)<0){
+            throw  new MyProcessException("商户账户余额不足");
+        }
         TfinanceRechargeLog log =new TfinanceRechargeLog(shopInfo.getUserid(),shopInfo.getShopname(),objDb.getShopTaskId(), TfinanceRechargeService.rechargetype_5,money,shopInfo.getAvailabledeposit().add(money));
         StringBuffer financeLog=new StringBuffer("确认收货=>{总金额:").append(money).append(",佣金:").append(money).append(",实际支付:").append(money).append("}");
         log.setRemarks(financeLog.toString());
         tfinanceRechargeLogService.insert(log);
-        tshopInfoService.updateShopMoney(shopInfo.getUserid(), BigDecimal.ZERO.subtract(money),money,loginUser.getCreateBy().getId());
+        tshopInfoService.updateShopMoney(shopInfo.getUserid(), money,BigDecimal.ZERO.subtract(money),loginUser.getCreateBy().getId());
         //更改买手任务状态
         List<TLogisticsOrderDetail> logisticsOrderDetailList=baseMapper.selectTLogisticsOrderDetailListByMasterid(id);
         for(TLogisticsOrderDetail obj:logisticsOrderDetailList){
@@ -144,13 +139,15 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
         }
         //更改申请状态
         objDb.setOrderStatus(Integer.valueOf(YesNoEnum.YES.code));
-        objDb.setOutStoreCommissionPayOrderId(log.getId());
-        objDb.setOutStoreCommissionPayTime(DateUtils.getCurrentTime());
-        objDb.setOutStoreCommissionPayMoney(money);
+        objDb.setOutStoreAckPayOrderId(log.getId());
+        objDb.setOutStoreAckPayTime(DateUtils.getCurrentTime());
+        objDb.setOutStoreAckPayMoney(money);
         baseMapper.updateTLogisticsOrderStatus(objDb);
         Map<String,Object> updateDetailMap=new HashMap<>();
         updateDetailMap.put("masterId",id);
         updateDetailMap.put("status",Integer.valueOf(YesNoEnum.YES.code));
+        updateDetailMap.put("updateBy",loginUser.getId());
+        updateDetailMap.put("updateTime",DateUtils.getCurrentTime());
         baseMapper.updateTLogisticsOrderDetailStatus(updateDetailMap);
     }
 }

@@ -3,31 +3,22 @@
 <mapper namespace="cn.jeeweb.web.ebp.logistics.mapper.TShopOrderShowMapper">
 
     <sql id="Base_Column_TShopOrderShowData">
-        tmtd.jdorderno jdOrderNo,tmt.id buyerTaskId,tmt.mytaskNo buyerTaskNo,
-        CONCAT(tmtd.jdorderno,'-',tmtd.buyerid,'-',ttb.shopId) AS 'orderUUID',
-        tbi.buyerName,
-        tmtd.buyerid buyerId,
-        '' buyerLoginNo,
-        '' buyerJdLoginNo,
-        tmtd.id buyerTaskDetailId,
-        tmtd.buyerjdnick buyerJdNickName,
+        tmtd.jdorderno jdOrderNo,
         tmtd.receivingdate orderDtime,
         tmtd.receivingdate orderPayTime,
-        tmtd.pays orderTotalMoney,
+        ttb.t_title goodsName,
+        ttb.imgurl goodsImgUrl,
+        CONCAT(ttb.spec1, ' ', ttb.spec2) goodsSpecDesc,
+        ttb.t_price goodsPrice,
+        1 goodsNum,
+        ttb.t_price orderTotalMoney,
         tmtd.commision orderCouponMoney,
         tmtd.pays orderPayMoney,
-        1 goodsNum,
-        ttb.t_title goodsName,
-        ttb.article,
-        ttb.imgurl,
-        ttb.t_price goodsPrice,
-        ttb.shopId,
-        '' orderStatus,
-        '' logisticsInfo,
+        tmtd.taskstate buyerTaskStatus,
         '' buyerMsg,
-        ttb.storename shopUserId,
-        ttb.storename shopName,
-        '' shopRemark,
+        tmt.id buyerTaskId,
+        tmt.mytaskNo buyerTaskNo,
+        tmtd.id buyerTaskDetailId,
         ttb.id shopTaskId,
         ttb.taskno shopTaskNo
     </sql>
@@ -53,6 +44,7 @@
           INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate = 4
           INNER JOIN t_buyer_info tbi ON tbi.userid = tmtd.buyerid
           INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid
+          INNER JOIN t_shop_info shoptb ON shoptb.userid = ttb.shopId
           <include refid="Where_tTShopOrderShowTitlePage" />
         GROUP BY tmtd.jdorderno
       ) tb
@@ -61,12 +53,22 @@
     <select id="selectTShopOrderShowTitlePageList" resultType="cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowTitle" parameterType="HashMap">
         select tb.* from (
             SELECT
-              tmtd.jdorderno jdOrderNo,tmtd.receivingdate orderDtime,tmtd.receivingdate orderPayTime
+                tmtd.jdorderno jdOrderNo,
+                tmtd.receivingdate orderDtime,
+                tmtd.receivingdate orderPayTime,
+                tmtd.buyerno buyerLoginNo,
+                tmtd.buyerid buyerId,
+                tmtd.buyerjdnick,
+                tmtd.taskstate,
+                ttb.shopId,
+                shoptb.shopName,
+                shoptb.userid shopUserId
             FROM
                 t_my_task tmt
                 INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate = 4
                 INNER JOIN t_buyer_info tbi ON tbi.userid = tmtd.buyerid
                 INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid
+                INNER JOIN t_shop_info shoptb ON shoptb.userid = ttb.shopId
             <include refid="Where_tTShopOrderShowTitlePage" />
             GROUP BY tmtd.jdorderno
         ) tb
@@ -83,6 +85,7 @@
             INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate = 4
             INNER JOIN t_buyer_info tbi ON tbi.userid = tmtd.buyerid
             INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid
+            INNER JOIN t_shop_info shoptb ON shoptb.userid = ttb.shopId
         where
             tmtd.jdorderno in (${map.jdOrderNo})
         ORDER BY

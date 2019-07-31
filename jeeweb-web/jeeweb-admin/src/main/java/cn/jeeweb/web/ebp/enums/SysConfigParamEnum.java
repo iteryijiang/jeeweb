@@ -5,7 +5,7 @@ package cn.jeeweb.web.ebp.enums;
  *
  */
 public enum SysConfigParamEnum {
-    PLATFORM_LOGISTICS_COMMISSION("PLATFORM_LOGISTICS_COMMISSION"),
+    PLATFORM_LOGISTICS_COMMISSION("ORDER_OUT_STORE_COMMISSION"),
     ;
     public String configParam;
 

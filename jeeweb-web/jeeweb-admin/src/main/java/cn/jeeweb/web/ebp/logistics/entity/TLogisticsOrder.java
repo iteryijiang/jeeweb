@@ -1,6 +1,7 @@
 package cn.jeeweb.web.ebp.logistics.entity;
 
 import cn.jeeweb.web.common.entity.DataEntity;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -82,10 +83,12 @@ public class TLogisticsOrder  extends DataEntity<String> {
     /**
      * 买家平台登录号
      */
+    @TableField(exist = false)
     private String buyerLoginNo;
     /**
      * 买家京东登录号
      */
+    @TableField(exist = false)
     private String buyerJdLoginNo;
     /**
      * 店铺ID
@@ -94,6 +97,7 @@ public class TLogisticsOrder  extends DataEntity<String> {
     /**
      * 店铺名称
      */
+    @TableField(exist = false)
     private String shopName;
     /**
      * 店铺订单备注
@@ -133,17 +137,17 @@ public class TLogisticsOrder  extends DataEntity<String> {
      *
      * 商品出库商户佣金支付记录编号
      */
-    private String outStoreCommissionPayOrderId;
+    private String outStoreAckPayOrderId;
     /**
      * 商品出库商户佣金支付时间
      *
      */
-    private Date outStoreCommissionPayTime;
+    private Date outStoreAckPayTime;
 
     /**
      * 商品出库商户支付佣金金额
      */
-    private BigDecimal outStoreCommissionPayMoney=BigDecimal.ZERO;
+    private BigDecimal outStoreAckPayMoney=BigDecimal.ZERO;
 
     @Override
     public String getId() {

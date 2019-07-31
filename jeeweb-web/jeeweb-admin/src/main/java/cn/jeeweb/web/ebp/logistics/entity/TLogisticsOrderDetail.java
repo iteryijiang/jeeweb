@@ -7,10 +7,10 @@ import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 
 /**
- * 商户订单关联买手任务明细
+ * 商户任务单出库明细表
  *
  */
-@TableName("t_logistics_order")
+@TableName("t_logistics_order_detail")
 @SuppressWarnings("serial")
 @Data
 public class TLogisticsOrderDetail extends DataEntity<String> {
@@ -19,41 +19,9 @@ public class TLogisticsOrderDetail extends DataEntity<String> {
     private String id;
 
     /**
-     * 出库订单的单号
+     * 出库订单主表ID
      */
     private String masterId;
-    /**
-     * 商品名称
-     */
-    private String goodsName;
-    /**
-     * 商品单价
-     */
-    private String goodsPrice;
-    /**
-     * 商品数量
-     */
-    private String goodsNum;
-    /*
-    订单总金额
-     */
-    private String orderMoney;
-    /**
-     * 订单优惠金额
-     */
-    private String orderCouponMoney;
-    /*
-    订单支付金额
-     */
-    private String orderPayMoney;
-    /**
-     * 买手任务 ID
-     */
-    private String buyerTaskId;
-    /**
-     * 买手任务编号
-     */
-    private String buyerTaskNo;
     /**
      * 买手任务明细ID
      */
