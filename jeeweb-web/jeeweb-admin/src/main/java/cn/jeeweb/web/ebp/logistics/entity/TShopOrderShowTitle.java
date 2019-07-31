@@ -1,5 +1,7 @@
 package cn.jeeweb.web.ebp.logistics.entity;
 
+import cn.jeeweb.common.utils.DateUtils;
+import cn.jeeweb.web.ebp.enums.BuyerTaskStatusEnum;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,14 +18,37 @@ public class TShopOrderShowTitle implements Serializable {
      * 京东单号
      */
     private String jdOrderNo;
+
+    /**
+     * 买手任务单号
+     *
+     */
+    private String buyerTaskNo;
+
+    /**
+     * 商户任务单号
+     *
+     */
+    private String shopTaskNo;
     /**
      * 下单时间
      */
     private Date orderDtime;
+
+    /**
+     * 下单时间格式化
+     */
+    private String orderDtimeFormat;
     /**
      * 支付时间
      */
     private Date orderPayTime;
+
+    /**
+     * 支付时间格式化
+     *
+     */
+    private String orderPayTimeFormat;
 
     /**
      *订单总金额
@@ -82,10 +107,34 @@ public class TShopOrderShowTitle implements Serializable {
     private String shopName;
 
     public String getOrderStatusName() {
+        BuyerTaskStatusEnum obj=BuyerTaskStatusEnum.valueOfCode(getOrderStatus());
+        orderStatusName=(obj == null)?"状态异常":obj.codeName;
         return orderStatusName;
     }
 
     public void setOrderStatusName(String orderStatusName) {
         this.orderStatusName = orderStatusName;
+    }
+
+    public String getOrderDtimeFormat() {
+        if(getOrderDtime() != null){
+            orderDtimeFormat= DateUtils.formatDateTime(getOrderDtime());
+        }
+        return orderDtimeFormat;
+    }
+
+    public void setOrderDtimeFormat(String orderDtimeFormat) {
+        this.orderDtimeFormat = orderDtimeFormat;
+    }
+
+    public String getOrderPayTimeFormat() {
+        if(getOrderPayTime() != null){
+            orderPayTimeFormat= DateUtils.formatDateTime(getOrderPayTime());
+        }
+        return orderPayTimeFormat;
+    }
+
+    public void setOrderPayTimeFormat(String orderPayTimeFormat) {
+        this.orderPayTimeFormat = orderPayTimeFormat;
     }
 }

@@ -3,7 +3,31 @@
 <mapper namespace="cn.jeeweb.web.ebp.logistics.mapper.TLogisticsOrderMapper">
 
     <sql id="Base_Column_TLogisticsOrder">
-
+        tlo.id,
+        tlo.out_store_batch_id outStoreBatchId,
+        tlo.jd_order_no jdOrderNo,
+        tlo.order_dtime orderDtime,
+        tlo.order_pay_time orderPayTime,
+        tlo.goods_total_num goodsTotalNum,
+        tlo.order_total_money orderTotalMoney,
+        tlo.order_coupon_total_money orderCouponTotalMoney,
+        tlo.order_pay_total_money orderPayTotalMoney,
+        tlo.order_status orderStatus,
+        tlo.logistics_info logisticsInfo,
+        tlo.buyer_msg buyerMsg,
+        tlo.buyer_id buyerId,
+        tlo.shop_user_id shopUserId,
+        tlo.shop_remark shopRemark,
+        tlo.shop_task_id shopTaskId,
+        tlo.shop_task_no shopTaskNo,
+        tlo.out_store_time outStoreTime,
+        tlo.out_store_should_pay_money outStoreShouldPayMoney,
+        tlo.out_store_ope_man outStoreOpeMan,
+        tlo.out_store_ack_batch_id outStoreAckBatchId,
+        tlo.out_store_ack_pay_order_id outStoreAckPayOrderId,
+        tlo.out_store_ack_pay_time outStoreAckPayTime,
+        tlo.out_store_ack_pay_money outStoreAckPayMoney,
+        tlo.out_store_ack_pay_man outStoreAckPayMan
     </sql>
 
     <!-- 列表查询销售信息 -->
@@ -11,9 +35,8 @@
         SELECT
         <include refid="Base_Column_TLogisticsOrder"/>
         FROM
-        T_sold_Info t
-        inner join sys_user u on u.id=t.userid
-        inner join t_seller_level sltb on sltb.id=t.accountLevel
+            t_logistics_order tlo
+            inner join t_task_base ttb on ttb.id=tlo.shop_task_id
         <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
             <where>
                 ${ew.sqlSegment}
@@ -21,14 +44,13 @@
         </if>
     </select>
 
-    <select id="selectTLogisticsOrderById" parameterType="String"
-            resultType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
+    <select id="selectTLogisticsOrderById" parameterType="String" resultType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
         SELECT
-        <include refid="Base_Column_TLogisticsOrder"/>
+          <include refid="Base_Column_TLogisticsOrder"/>
         FROM
-        t_logistics_order t
-        where t.id=#{id}
-
+          t_logistics_order t
+        where
+          t.id=#{id}
     </select>
 
 
@@ -42,17 +64,29 @@
           out_store_ack_pay_order_id=#{outStoreAckPayOrderId},
           out_store_ack_pay_time=#{outStoreAckPayTime},
           out_store_ack_pay_money=#{outStoreAckPayMoney},
-        update_by=#{updateBy.id},update_date=#{updateTime}
+          update_by=#{updateBy.id},update_date=#{updateTime}
       where
         id=#{id}
     </update>
 
     <insert id="insertTLogisticsOrder" parameterType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
-      insert into t_logistics_order
+        insert into t_logistics_order
+          (out_store_batch_id,jd_order_no,order_dtime,order_pay_time,goods_total_num,order_total_money,order_coupon_total_money,order_pay_total_money,order_status,logistics_info,buyer_msg,buyer_id,shop_user_id,shop_remark,shop_task_id,shop_task_no,out_store_time,out_store_should_pay_money,out_store_ope_man,out_store_ack_batch_id,out_store_ack_pay_order_id,out_store_ack_pay_time,out_store_ack_pay_money,out_store_ack_pay_man,create_by,create_date,update_by,update_date,remarks,del_flag)
+        values
+          (#{outStoreBatchId},#{jdOrderNo},#{orderDtime},#{orderPayTime},#{goodsTotalNum},#{orderTotalMoney},#{orderCouponTotalMoney},#{orderPayTotalMoney},#{orderStatus},#{logisticsInfo},#{buyerMsg},#{buyerId},#{shopUserId},#{shopRemark},#{shopTaskId},#{shopTaskNo},#{outStoreTime},#{outStoreShouldPayMoney},#{outStoreOpeMan},#{outStoreAckBatchId},#{outStoreAckPayOrderId},#{outStoreAckPayTime},#{outStoreAckPayMoney},#{outStoreAckPayMan},#{createBy.id},#{createDate},#{updateBy.id},#{updateDate},#{remarks},#{delFlag})
     </insert>
 
 
     <!-- 明细处理 -->
+
+    <insert id="insertTLogisticsOrderDetail" parameterType="List">
+        insert into t_logistics_order_detail
+          (master_id,buyer_task_detail_id,status,create_by,create_date,update_by,update_date,remarks,del_flag)
+          <foreach collection="list" item="obj" index="idx">
+              values (#{obj.masterId},#{obj.buyerTaskDetailId},#{obj.status},#{obj.createBy.id},#{obj.createDate},#{obj.updateBy.id},#{obj.updateDate},#{obj.remarks},#{obj.delFlag})
+          </foreach>
+    </insert>
+
     <update id="updateTLogisticsOrderDetailStatus" parameterType="HashMap">
       update
         t_logistics_order_detail t
@@ -61,4 +95,13 @@
       where
         t.master_id=#{map.masterId}
     </update>
+
+    <select id="selectTLogisticsOrderDetailListByMasterid" parameterType="String" resultType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrderDetail">
+      select
+        id,master_id masterId,buyer_task_detail_id buyerTaskDetailId,status,remarks
+      from
+        t_logistics_order_detail
+      where
+        master_id=#{masterId} and del_flag=0
+    </select>
 </mapper>

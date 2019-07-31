@@ -13,15 +13,40 @@ import java.util.List;
 @Data
 public class TShopOrderShowQuery implements Serializable {
     /**
-     *
-     * 商户展示订单头部信息
+     * 开始日期
      */
-    private TShopOrderShowTitle shopOrderShowTitle;
-
+    private String beginDate;
     /**
-     * 商户展示订单明细
-     *
+     * 结束日期
      */
-    List<TShopOrderShowData> shopOrderShowDataList;
+    private String endDate;
+    /**
+     * 京东单号
+     */
+    private String jdOrderNo;
+    /**
+     * 买手任务单号
+     */
+    private String buyerTaskNo;
+    /**
+     * 买手编号
+     */
+    private String buyerNo;
+    /**
+     * 当前页码
+     */
+    private int currentPage;
+    /**
+     * 页码大小
+     */
+    private int pageSize;
+    /**
+     * 检索状态
+     */
+    private int taskStatus;
+    /**
+     * 商户编号
+     */
+    private String shopUserId;
 
 }

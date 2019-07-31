@@ -50,9 +50,43 @@
         text-align: right;
         padding-right: 20px;
     }
+    #queryForm .queryLabel{
+        text-align: right;
+        padding-right: 2px;
+    }
+    #queryForm .queryInput{
+        width: 120px;
+        height: 26px;
+        border: 0.5px solid royalblue;
+        padding-left: 5px;
+     }
 </style>
-<div id="queryForm">
-
+<div id="queryForm" style="width: 100%;text-align: center">
+    <form id="logisticsQueryShopOrderForm">
+        <table>
+            <tr>
+                <td class="queryLabel">下单时间:<input class="queryInput" id="beginDate" name="beginDate" value="${beginDate}" type="text" /></td>
+                <td class="queryLabel">京东单号:<input class="queryInput" id="jdOrderNo" name="jdOrderNo" type="text" /></td>
+                <td class="queryLabel">买手编号:<input class="queryInput" id="buyerNo" name="buyerNo" type="text" /></td>
+                <td>
+                    <input type="hidden" name="currentPage" value="1" />
+                    <input type="hidden" name="pageSize" value="5" />
+                    <input type="hidden" name="queryType" value="0" />
+                    <input type="hidden" name="totalPage" value="0" />
+                    <input type="hidden" id="queryBasePath" value="${adminPath}" />
+                    <button type="button" onclick="gotoPageFn(1)">查&nbsp;&nbsp;询</button>
+                </td>
+            </tr>
+            <tr>
+                <td class="queryLabel">至:<input class="queryInput" id="endDate" name="endDate" value="${endDate}" type="text" /></td>
+                <td class="queryLabel">任务单号:<input class="queryInput" id="buyerTaskNo" name="buyerTaskNo" type="text" /></td>
+                <td>&nbsp;</td>
+                <td>
+                    <button type="reset">重&nbsp;&nbsp;置</button>
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
 <div>
     <div id="shopOrderTabs">
@@ -65,16 +99,16 @@
             <table id="showAllShopOrder">
                 <thead>
                     <tr>
-                        <th colspan="4"><button>出&nbsp;&nbsp;库</button></th>
+                        <th colspan="4"><button type="button" onclick="addOutStoreFn(this)" tableId="showAllShopOrder">出&nbsp;&nbsp;库</button></th>
                         <th colspan="6">
-                            <span>商户余额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">1000.00</label>&nbsp;&nbsp;元</span>
+                            <span>商户余额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">${availabledeposit}</label>&nbsp;&nbsp;元</span>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span>订单佣金总额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">300.00</label>&nbsp;&nbsp;元</span>
+                            <span>订单佣金总额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label name="outStoreCommissionLabel" class="priceLabel">0.00</label>&nbsp;&nbsp;元</span>
                         </th>
                         <th colspan="3"></th>
                     </tr>
                     <tr>
-                        <th class="checkbox_td"><input alt="全选" type="checkbox" onchange="checkAllBoxFn(this)" parantTbId=\"showAllShopOrder\"" /></th>
+                        <th class="checkbox_td"><input type="checkbox" onchange="checkAllBoxFn(this)" parantTbId='showAllShopOrder'" /></th>
                         <th style="width: 80px">&nbsp;</th>
                         <th style="width:15%">商品信息</th>
                         <th style="width:10%">单价/数量</th>
@@ -93,16 +127,16 @@
             <table id="showWaitingOutShopOrder">
                 <thead>
                 <tr>
-                    <th colspan="4"><button>出&nbsp;&nbsp;库</button></th>
+                    <th colspan="4"><button type="button" onclick="addOutStoreFn(this)" tableId="showWaitingOutShopOrder">出&nbsp;&nbsp;库</button></th>
                     <th colspan="6">
-                        <span>商户余额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">1000.00</label>&nbsp;&nbsp;元</span>
+                        <span>商户余额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">${availabledeposit}</label>&nbsp;&nbsp;元</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>订单佣金总额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class="priceLabel">300.00</label>&nbsp;&nbsp;元</span>
+                        <span>订单佣金总额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label name="outStoreCommissionLabel" class="priceLabel">0.00</label>&nbsp;&nbsp;元</span>
                     </th>
                     <th colspan="3"></th>
                 </tr>
                 <tr>
-                    <th class="checkbox_td"><input alt="全选" type="checkbox" onchange="checkAllBoxFn(this)" parantTbId=\"showWaitingOutShopOrder\"" /></th>
+                    <th class="checkbox_td"><input type="checkbox" onchange="checkAllBoxFn(this)" parantTbId='showWaitingOutShopOrder'" /></th>
                     <th style="width: 80px">&nbsp;</th>
                     <th style="width:15%">商品信息</th>
                     <th style="width:10%">单价/数量</th>
@@ -121,7 +155,7 @@
             <table id="showOutAckShopOrder">
                 <thead>
                     <tr>
-                        <th class="checkbox_td"><input alt="全选" type="checkbox" onchange="checkAllBoxFn(this)" parantTbId=\"showOutAckShopOrder\"" /></th>
+                        <th class="checkbox_td"><input type="checkbox" onchange="checkAllBoxFn(this)" parantTbId='showOutAckShopOrder'" /></th>
                         <th style="width: 80px">&nbsp;</th>
                         <th style="width:15%">商品信息</th>
                         <th style="width:10%">单价/数量</th>
@@ -139,11 +173,24 @@
         <div id="orderPageDiv"></div>
     </div>
 </div>
-<script src="${staticPath}/logistics/shopOrderList.js?v=20190729001"></script>
+<script src="${staticPath}/logistics/shopOrderList.js?v=20190729003"></script>
 <script type="text/javascript">
     $(function () {
-        $("#shopOrderTabs").tabs();
-        chooseTabFn("${adminPath}",1);
+        $("#beginDate").datepicker({
+            dateFormat: "yyyy-mm-dd"
+        });
+        $("#endDate").datepicker({
+            dateFormat: "yyyy-mm-dd"
+        });
+        $("#shopOrderTabs").tabs({
+            activate: function( event, ui ) {
+                var activeIdx=$( "#shopOrderTabs" ).tabs( "option", "active" );
+                $("#logisticsQueryShopOrderForm input[name=currentPage]").val(1);
+                $("#logisticsQueryShopOrderForm input[name=pageSize]").val(5);
+                chooseTabFn(activeIdx);
+            }
+        });
+        chooseTabFn(0);
     });
 </script>
 <% } %>

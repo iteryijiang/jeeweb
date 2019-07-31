@@ -24,7 +24,7 @@ public interface TLogisticsOrderService extends ICommonService<TLogisticsOrder> 
 	 * @param wrapper
 	 * @return
 	 */
-	Page<TLogisticsOrder> selectTSysConfigParamPageList(Queryable queryable, Wrapper<TLogisticsOrder> wrapper);
+	Page<TLogisticsOrder> selectTLogisticsOrderPageList(Queryable queryable, Wrapper<TLogisticsOrder> wrapper);
 
 	/**
      * 主键ID获取数据
@@ -37,10 +37,10 @@ public interface TLogisticsOrderService extends ICommonService<TLogisticsOrder> 
 	/**
      * 编辑数据
 	 *
-	 * @param id
+	 * @param ids
 	 * @param status
 	 */
-	void updateTLogisticsOrderStatus(String id,int status);
+	void updateTLogisticsOrderStatus(String ids,int status);
 
 	/**
      * 新增

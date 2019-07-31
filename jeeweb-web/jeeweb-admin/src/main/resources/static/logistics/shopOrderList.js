@@ -5,14 +5,26 @@
  * 2待出库
  * 3已出库
  */
-function chooseTabFn(basePath,tab){
+function chooseTabFn(tab){
+    var basePath=$("#queryBasePath").val();
+    var queryType=0
+    if(1 == tab){
+        queryType=2;
+    }else if(2 == tab){
+        queryType=3;
+    }
+    $("#logisticsQueryShopOrderForm input[name=queryType]").val(queryType);
+    var queryParam={};
+    $("#logisticsQueryShopOrderForm input").each(function(){
+        queryParam[$(this).attr("name")]=$(this).val();
+    });
     $("#shopOrderTabs table tbody").html("");
     var url = basePath + '/logisticsOrder/logistics/ajaxShopOrderList';
     $.ajax({
         type: "POST",
         url: url,
-        contentType: 'application/json;charset=utf-8',
-        data: null,
+        contentType:'application/json;charset=utf-8',
+        data: JSON.stringify(queryParam),
         dataType: "json",
         success: function (data) {
             if (data.retCode != 0) {
@@ -20,12 +32,11 @@ function chooseTabFn(basePath,tab){
                 return;
             }
             var dataArrays=data.retData.results;
-            var htmlData=createShopOrderShowHtmlFn(dataArrays);
-            $("#showAllShopOrder tbody").html(htmlData);
+            createShopOrderShowHtmlFn(tab,dataArrays);
             showPageFn(data.retData.page,data.retData.totalPages,data.retData.total);
         },
         error: function (data) {
-            console.log("loadOanotificationFn=>" + data);
+            console.log("chooseTabFn=>" + data);
         }
     });
 }
@@ -34,15 +45,24 @@ function chooseTabFn(basePath,tab){
  * 查询商户订单信息
  *
  */
-function createShopOrderShowHtmlFn(dataArrays) {
+function createShopOrderShowHtmlFn(tab,dataArrays) {
+    var parantTbId="showAllShopOrder";
+    var showDataTbId="showAllShopOrder";
+    if(1 == tab){
+        parantTbId="showWaitingOutShopOrder";
+        showDataTbId="showWaitingOutShopOrder";
+    }else if(2 == tab){
+        parantTbId="showOutAckShopOrder";
+        showDataTbId="showOutAckShopOrder";
+    }
     var showHtml = "";
     for (var idx = 0; idx < dataArrays.length; idx++) {
         var dataObj = dataArrays[idx];
-        var headTitleHtml=createHeadTitleFn(dataObj.shopOrderShowTitle);
+        var headTitleHtml=createHeadTitleFn(dataObj.shopOrderShowTitle,parantTbId);
         var dataBodyHtml=createDataBodyFn(dataObj.shopOrderShowTitle,dataObj.shopOrderShowDataList);
         showHtml += headTitleHtml+dataBodyHtml;
     }
-    return showHtml;
+    $("#"+showDataTbId+" tbody").html(showHtml);
 }
 
 /**
@@ -51,13 +71,14 @@ function createShopOrderShowHtmlFn(dataArrays) {
  * @param headTitleObj
  * @returns {string}
  */
-function createHeadTitleFn(headTitleObj){
+function createHeadTitleFn(headTitleObj,parantTbId){
     var headTitleHtml = "<tr class=\"head_tr\">";
-    headTitleHtml += "<td class=\"checkbox_td\"><input type=\"checkbox\" /></td>";
+    headTitleHtml += "<td class=\"checkbox_td\"><input type=\"checkbox\" onchange='checkSingleBoxFn(this)' parantTbId='"+parantTbId+"' jdOrderNo='"+headTitleObj.jdOrderNo+"' outStoreCommissionPrice='"+headTitleObj.outStoreCommissionPrice+"' /></td>";
     headTitleHtml += "<td colspan=\"9\" class=\"orderTitle\">";
-    headTitleHtml += "<span>订单号:"+headTitleObj.jdOrderNo+"</span>";
-    headTitleHtml += "<span>下单时间:"+headTitleObj.orderDtime+"</span>";
-    headTitleHtml += "<span>付款时间:"+headTitleObj.orderPayTime+"</span>";
+    headTitleHtml += "<span>京东单号:"+headTitleObj.jdOrderNo+"</span>";
+    headTitleHtml += "<span>买手任务号:"+headTitleObj.buyerTaskNo+"</span>";
+    headTitleHtml += "<span>下单时间:"+headTitleObj.orderDtimeFormat+"</span>";
+    headTitleHtml += "<span>付款时间:"+headTitleObj.orderPayTimeFormat+"</span>";
     headTitleHtml += "</td>";
     headTitleHtml += "</tr>";
     return headTitleHtml;
@@ -86,7 +107,7 @@ function createDataBodyFn(dataHeadObj,dataBodyObjArray) {
             dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">￥&nbsp;"+dataHeadObj.outStoreCommissionPrice+"&nbsp;元</td>";
             dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">"+dataHeadObj.orderStatusName+"</td>";
             dataBodyHtml += "<td rowspan=\"" + count + "\" valign=\"top\">";
-            dataBodyHtml += "<div><a href='javascript:void(0)' onclick='showOrderInfoFn()'>详&nbsp;&nbsp;情</a></div>";
+            dataBodyHtml += "<div><a href='javascript:void(0)' onclick='showOrderInfoFn(\""+dataHeadObj.jdOrderNo+"\")'>详&nbsp;&nbsp;情</a></div>";
             dataBodyHtml +="</td>";
         }
         dataBodyHtml += "</tr>";
@@ -103,10 +124,14 @@ function createDataBodyFn(dataHeadObj,dataBodyObjArray) {
  * @param totalRecord
  */
 function showPageFn(curentPage,totalPage,totalRecord){
-    var pageHtml="<a>第一页</a>&nbsp;&nbsp;<a>上一页</a>&nbsp;&nbsp;<a>下一页</a>&nbsp;&nbsp;<a>尾页</a>";
-    pageHtml+="&nbsp;&nbsp;共&nbsp;<span id='currentPage'>"+curentPage+"</span>&nbsp;/&nbsp;<span id='totalPage'>"+totalPage+"</span>&nbsp;页";
+    var pageHtml="<a href='javascript:void(0)' onclick='gotoPageFn(1)'>首&nbsp;页</a>&nbsp;&nbsp;";
+    pageHtml+="<a href='javascript:void(0)' onclick='gotoPageFn(2)'>上一页</a>&nbsp;&nbsp;";
+    pageHtml+="<a href='javascript:void(0)' onclick='gotoPageFn(3)'>下一页</a>&nbsp;&nbsp;";
+    pageHtml+="<a href='javascript:void(0)' onclick='gotoPageFn(4)'>尾&nbsp;页</a>";
+    pageHtml+="&nbsp;&nbsp;第&nbsp;<span id='currentPage'>"+curentPage+"</span>&nbsp;/&nbsp;<span id='totalPage'>"+totalPage+"</span>&nbsp;页";
     pageHtml+="&nbsp;&nbsp;共&nbsp;<span id='totalRecords'>"+totalRecord+"</span>&nbsp;记录";
     $("#orderPageDiv").html(pageHtml);
+    $("#logisticsQueryShopOrderForm input[name=totalPage]").val(totalPage);
 }
 
 /**
@@ -116,36 +141,82 @@ function showPageFn(curentPage,totalPage,totalRecord){
  */
 function checkAllBoxFn(obj){
     var parantTbId=$(obj).attr("parantTbId");
-    $("#"+parantTbId).find(" tbody input[type=checkbox][parantTbId="+parantTbId+"]").attr("checked",$(obj).attr("checked"));
+    var totalOutCommissionMoney=0;
+    $("#"+parantTbId).find(" tbody input[type=checkbox][parantTbId="+parantTbId+"]").each(function(){
+        $(this).attr("checked",$(obj).attr("checked"));
+        totalOutCommissionMoney=parseFloat(totalOutCommissionMoney)+parseFloat($(this).attr("outStoreCommissionPrice"));
+    });
+    $("#shopOrderTabs label[name=outStoreCommissionLabel]").html(totalOutCommissionMoney);
 }
+
+/**
+ * 单个checkbox选中方法
+ *
+ * @param obj
+ */
+function checkSingleBoxFn(obj){
+    var totalOutCommissionMoney=0;
+    var parantTbId=$(obj).attr("parantTbId");
+    $("#"+parantTbId).find(" tbody input[type=checkbox][parantTbId="+parantTbId+"]:checked").each(function(){
+        totalOutCommissionMoney=parseFloat(totalOutCommissionMoney)+parseFloat($(this).attr("outStoreCommissionPrice"));
+    });
+    $("#shopOrderTabs label[name=outStoreCommissionLabel]").html(totalOutCommissionMoney);
+}
+
 /**
  * 增加订单出库操作
  *
  */
-function addOutStoreFn(jdOrderNo){
-    var url = '${adminPath}/logisticsOrder/logistics/addOutStoreOrder';
+function addOutStoreFn(obj){
+    var basePath=$("#queryBasePath").val();
+    var parantTbId=$(obj).attr("tableId");
+    var jdOrderNo="";
+    $("#"+parantTbId).find(" tbody input[type=checkbox]:checked").each(function(){
+        jdOrderNo=jdOrderNo+","+($(this).attr("jdOrderNo"));
+    });
+    var param={
+        jdOrderNo:jdOrderNo
+    };
+    var url =basePath+ '/logisticsOrder/logistics/addOutStoreOrder';
     $.ajax({
         type: "POST",
         url: url,
         contentType: 'application/json;charset=utf-8',
-        data: null,
+        data: JSON.stringify(param),
         dataType: "json",
         success: function (data) {
             alert(data.msg);
         },
         error: function (data) {
-            console.log("loadOanotificationFn=>" + data);
+            console.log("addOutStoreFn=>" + data);
         }
     });
 }
 
-function addOutStoreBatchFn(obj){
-    var parantTbId=$(obj).attr("parantTbId");
-    var checkedBox="";
-    $("#"+parantTbId).find(" tbody input[type=checkbox][parantTbId="+parantTbId+"]:checked").each(function(){
-
-    });
-};
+/**
+ * 翻页查询
+ *
+ * @param gotoPageType:1首页2上一页3下一页4尾页
+ * @param page
+ */
+function gotoPageFn(gotoPageType){
+    var currentPage=1;
+    if(2 == gotoPageType){
+        var currentPageTemp=$("#logisticsQueryShopOrderForm input[name=currentPage]").val();
+        currentPageTemp=parseInt(currentPageTemp)-1;
+        currentPage=(currentPageTemp<1)?1:currentPageTemp;
+    }else if(3 == gotoPageType){
+        var currentPageTemp=$("#logisticsQueryShopOrderForm input[name=currentPage]").val();
+        var totalPageTemp=$("#logisticsQueryShopOrderForm input[name=totalPage]").val();
+        currentPageTemp=parseInt(currentPageTemp)+1;
+        currentPage=(currentPageTemp<totalPageTemp)?currentPageTemp:totalPageTemp;
+    }else if(4 == gotoPageType){
+        currentPage=$("#logisticsQueryShopOrderForm input[name=totalPage]").val();
+    }
+    $("#logisticsQueryShopOrderForm input[name=currentPage]").val(currentPage);
+    var activeIdx=$( "#shopOrderTabs" ).tabs( "option", "active" );
+    chooseTabFn(activeIdx);
+}
 
 /**
  * 显示订单详情信息

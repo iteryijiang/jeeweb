@@ -54,8 +54,12 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
      */
     private Map<String,Object> installQueryParamMap(TShopOrderShowQuery queryParam){
         Map<String,Object> paramMap=new HashMap<>();
-        paramMap.put("beginTime","2019-05-01");
-        paramMap.put("endTime", DateUtils.getCurrentTime());
+        paramMap.put("beginTime",queryParam.getBeginDate());
+        paramMap.put("endTime", queryParam.getEndDate()+" 23:59:59");
+        paramMap.put("jdOrderNo", queryParam.getJdOrderNo());
+        paramMap.put("buyerNo", queryParam.getBuyerNo());
+        paramMap.put("taskStatus", queryParam.getTaskStatus());
+        paramMap.put("shopUserId", queryParam.getShopUserId());
         return paramMap;
     }
 

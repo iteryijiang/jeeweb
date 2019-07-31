@@ -184,7 +184,7 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
     public void updateTaskStatusForAckReceive(String id,String lastRepair){
         Map<String,Object> paramMap=new HashMap<String,Object>();
         paramMap.put("taskId",id);
-        paramMap.put("status",BuyerTaskStatusEnum.FINISH.code);
+        paramMap.put("status",BuyerTaskStatusEnum.WAITING_ACCEPT.code);
         paramMap.put("lastTime", Calendar.getInstance().getTime());
         paramMap.put("lastRepair",lastRepair);
         int num=baseMapper.updateTaskStatusForChargeBack(paramMap);

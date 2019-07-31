@@ -7,7 +7,10 @@ import cn.jeeweb.common.query.data.PageImpl;
 import cn.jeeweb.common.query.data.Pageable;
 import cn.jeeweb.common.query.data.Queryable;
 import cn.jeeweb.common.utils.DateUtils;
+import cn.jeeweb.common.utils.StringUtils;
+import cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
+import cn.jeeweb.web.ebp.enums.BuyerTaskStatusEnum;
 import cn.jeeweb.web.ebp.enums.SysConfigParamEnum;
 import cn.jeeweb.web.ebp.enums.YesNoEnum;
 import cn.jeeweb.web.ebp.exception.MyProcessException;
@@ -56,7 +59,7 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
     private TmyTaskDetailService tmyTaskDetailService;
 
     @Override
-    public Page<TLogisticsOrder> selectTSysConfigParamPageList(Queryable queryable, Wrapper<TLogisticsOrder> wrapper) {
+    public Page<TLogisticsOrder> selectTLogisticsOrderPageList(Queryable queryable, Wrapper<TLogisticsOrder> wrapper) {
         QueryToWrapper<TLogisticsOrder> queryToWrapper = new QueryToWrapper<TLogisticsOrder>();
         queryToWrapper.parseCondition(wrapper, queryable);
         queryToWrapper.parseSort(wrapper, queryable);
@@ -74,7 +77,10 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
 
     @Override
     public void insertTLogisticsOrder(TLogisticsOrder obj) {
-        baseMapper.insertTLogisticsOrder(obj);
+        int num=baseMapper.insert(obj);
+        if(num != 1){
+            throw  new MyProcessException("数据保存失败");
+        }
         //根据任务单获取明细
         List<TLogisticsOrderDetail> detailList=new ArrayList<>();
         List<TShopOrderShowData> buyerTaskList=shopOrderShowService.getTShopOrderShowDataListByJdOrderNo(obj.getJdOrderNo());
@@ -111,7 +117,21 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
 
 
     @Override
-    public void updateTLogisticsOrderStatus(String id,int status) {
+    public void updateTLogisticsOrderStatus(String ids,int status) {
+        for(String id:ids.split(",")){
+            if(StringUtils.isNotEmpty(id)){
+                updateTLogisticsOrderStatusForOutStore(id,status);
+            }
+        }
+    }
+
+    /**
+     * 单个任务出库操作
+     *
+     * @param id
+     * @param status
+     */
+    private void updateTLogisticsOrderStatusForOutStore(String id,int status){
         TLogisticsOrder objDb=selectTLogisticsOrderById(id);
         if(objDb == null ){
             throw  new MyProcessException("参数错误[未获取到订单记录]");
@@ -135,7 +155,10 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
         //更改买手任务状态
         List<TLogisticsOrderDetail> logisticsOrderDetailList=baseMapper.selectTLogisticsOrderDetailListByMasterid(id);
         for(TLogisticsOrderDetail obj:logisticsOrderDetailList){
-            tmyTaskDetailService.updateTaskStatusForAckReceive(obj.getBuyerTaskDetailId(),loginUser.getCreateBy().getId());
+            TmyTaskDetail buyerTaskDetailObj=tmyTaskDetailService.selectById(obj.getBuyerTaskDetailId());
+            if(Integer.valueOf(buyerTaskDetailObj.getTaskstate()) == BuyerTaskStatusEnum.WAITING_SEND.code){
+                tmyTaskDetailService.updateTaskStatusForAckReceive(obj.getBuyerTaskDetailId(),loginUser.getCreateBy().getId());
+            }
         }
         //更改申请状态
         objDb.setOrderStatus(Integer.valueOf(YesNoEnum.YES.code));
