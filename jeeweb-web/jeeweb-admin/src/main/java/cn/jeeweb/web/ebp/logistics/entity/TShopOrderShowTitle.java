@@ -18,18 +18,22 @@ public class TShopOrderShowTitle implements Serializable {
      * 京东单号
      */
     private String jdOrderNo;
-
     /**
-     * 买手任务单号
-     *
+     * 上屏总数量
      */
-    private String buyerTaskNo;
-
+    private int goodsTotalNum=0;
     /**
-     * 商户任务单号
-     *
+     * 订单总金额
      */
-    private String shopTaskNo;
+    private BigDecimal orderTotalMoney=BigDecimal.ZERO;
+    /**
+     * 订单优惠jine
+     */
+    private BigDecimal orderCouponTotalMoney=BigDecimal.ZERO;
+    /**
+     * 订单实际支付金额
+     */
+    private BigDecimal orderPayTotalMoney=BigDecimal.ZERO;
     /**
      * 下单时间
      */
@@ -49,11 +53,6 @@ public class TShopOrderShowTitle implements Serializable {
      *
      */
     private String orderPayTimeFormat;
-
-    /**
-     *订单总金额
-     */
-    private BigDecimal orderTotalMoney=BigDecimal.ZERO;
 
     /**
      * 买手名称
@@ -102,6 +101,14 @@ public class TShopOrderShowTitle implements Serializable {
      */
     private String shopUserId;
     /**
+     * 商户任务单号
+     */
+    private String shopTaskId;
+    /**
+     * 商户任务单号
+     */
+    private String shopTaskNo;
+    /**
      * 店铺名称
      */
     private String shopName;
@@ -136,5 +143,14 @@ public class TShopOrderShowTitle implements Serializable {
 
     public void setOrderPayTimeFormat(String orderPayTimeFormat) {
         this.orderPayTimeFormat = orderPayTimeFormat;
+    }
+
+    public BigDecimal getOrderCouponTotalMoney() {
+        orderCouponTotalMoney=getOrderTotalMoney().subtract(getOrderPayTotalMoney());
+        return orderCouponTotalMoney;
+    }
+
+    public void setOrderCouponTotalMoney(BigDecimal orderCouponTotalMoney) {
+        this.orderCouponTotalMoney = orderCouponTotalMoney;
     }
 }

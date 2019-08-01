@@ -95,6 +95,15 @@ public class TShopOrderShowServiceImpl extends CommonServiceImpl<TShopOrderShowM
         return retList;
     }
 
+    @Override
+    public TShopOrderShowTitle getTShopOrderShowTitleByJdOrderNo(String jdOrderNo){
+        TSysConfigParam sysConfigParamObj=sysConfigParamService.selectTSysConfigByConfigParam(SysConfigParamEnum.PLATFORM_LOGISTICS_COMMISSION.configParam);
+        Map<String,Object> paramMap=new HashMap<>();
+        paramMap.put("jdOrderNo",jdOrderNo);
+        paramMap.put("outStoreCommissionPrice",sysConfigParamObj.getParamValue());
+        return baseMapper.getTShopOrderShowTitleByJdOrderNo(paramMap);
+    }
+
     /**
      * 查询展示的额任务明细数据
      *

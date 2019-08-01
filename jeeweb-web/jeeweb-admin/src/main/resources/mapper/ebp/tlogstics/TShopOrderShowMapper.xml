@@ -22,6 +22,26 @@
         ttb.id shopTaskId,
         ttb.taskno shopTaskNo
     </sql>
+    <sql id="Base_Column_TShopOrderShowTitle">
+        tmtd.jdorderno jdOrderNo,
+	    tmt.mytaskNo buyerTaskNo,
+        count(*) goodsTotalNum,
+        sum(ttb.t_price) orderTotalMoney,
+        sum(tmtd.pays) orderPayTotalMoney,
+        tmtd.receivingdate orderDtime,
+        tmtd.receivingdate orderPayTime,
+        tmtd.buyerno buyerLoginNo,
+        tbi.buyerName buyerLoginName,
+        tmtd.buyerid buyerId,
+        tmtd.buyerjdnick buyerJdLoginNo,
+        tmtd.taskstate orderStatus,
+        ttb.shopId,
+        ttb.taskno shopTaskNo,
+        tmtd.taskid shopTaskId,
+        shoptb.shopName,
+        shoptb.userid shopUserId,
+        #{map.outStoreCommissionPrice} as outStoreCommissionPrice
+    </sql>
 
     <sql id="Where_tTShopOrderShowTitlePage">
       <where>
@@ -63,18 +83,7 @@
     <select id="selectTShopOrderShowTitlePageList" resultType="cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowTitle" parameterType="HashMap">
         select tb.* from (
             SELECT
-                tmt.mytaskNo buyerTaskNo,
-                tmtd.jdorderno jdOrderNo,
-                tmtd.receivingdate orderDtime,
-                tmtd.receivingdate orderPayTime,
-                tmtd.buyerno buyerLoginNo,
-                tmtd.buyerid buyerId,
-                tmtd.buyerjdnick,
-                tmtd.taskstate,
-                ttb.shopId,
-                ttb.taskno shopTaskNo,
-                shoptb.shopName,
-                shoptb.userid shopUserId
+                <include refid="Base_Column_TShopOrderShowTitle" />
             FROM
                 t_my_task tmt
                 INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate between 2 and 3
@@ -87,6 +96,19 @@
         ORDER BY
           tb.orderDtime desc
         limit ${map.start},${map.pageSize}
+    </select>
+
+    <select id="getTShopOrderShowTitleByJdOrderNo" resultType="cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowTitle" parameterType="HashMap">
+        SELECT
+          <include refid="Base_Column_TShopOrderShowTitle" />
+        FROM
+            t_my_task tmt
+            INNER JOIN t_my_task_detail tmtd ON tmtd.mytaskid = tmt.id AND tmtd.taskstate between 2 and 3
+            INNER JOIN t_buyer_info tbi ON tbi.userid = tmtd.buyerid
+            INNER JOIN t_task_base ttb ON ttb.id = tmtd.taskid
+            INNER JOIN t_shop_info shoptb ON shoptb.userid = ttb.shopId
+        where
+          tmtd.jdorderno = #{map.jdOrderNo}
     </select>
 
     <select id="selectTShopOrderShowDataList" resultType="cn.jeeweb.web.ebp.logistics.entity.TShopOrderShowData" parameterType="HashMap">

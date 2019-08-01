@@ -23,11 +23,6 @@ public class TLogisticsOrder  extends DataEntity<String> {
     private String id;
 
     /**
-     * 出库订单的单号
-     */
-    private String outStoreOrderNo;
-
-    /**
      * 商品申请出库批次编号
      */
     private String outStoreBatchId;
@@ -39,27 +34,27 @@ public class TLogisticsOrder  extends DataEntity<String> {
     /**
      * 下单时间
      */
-    private String orderDtime;
+    private Date orderDtime;
     /**
      * 支付时间
      */
-    private String orderPayTime;
+    private Date orderPayTime;
     /**
      * 商品数量
      */
-    private String goodsTotalNum;
+    private int goodsTotalNum;
     /*
     订单总金额
      */
-    private String orderTotalMoney;
+    private BigDecimal orderTotalMoney;
     /**
      * 订单优惠金额
      */
-    private String orderCouponTotalMoney;
+    private BigDecimal orderCouponTotalMoney;
     /*
     订单支付金额
      */
-    private String orderPayTotalMoney;
+    private BigDecimal orderPayTotalMoney;
     /**
      * 订单状态
      */
@@ -75,6 +70,7 @@ public class TLogisticsOrder  extends DataEntity<String> {
     /**
      * 买家昵称
      */
+    @TableField(exist = false)
     private String buyerJdNickName;
     /**
      * 买手ID
@@ -95,6 +91,17 @@ public class TLogisticsOrder  extends DataEntity<String> {
      */
     private String shopUserId;
     /**
+     * 商户任务单号
+     *
+     */
+    private String shopTaskId;
+
+    /**
+     * 商户任务单号
+     *
+     */
+    private String shopTaskNo;
+    /**
      * 店铺名称
      */
     @TableField(exist = false)
@@ -103,25 +110,17 @@ public class TLogisticsOrder  extends DataEntity<String> {
      * 店铺订单备注
      */
     private String shopRemark;
-    /**
-     * 商户任ID
-     */
-    private String shopTaskId;
-    /**
-     * 商户任务单号
-     */
-    private String shopTaskNo;
 
     /**
      * 商品出库应支付佣金金额
      */
-    private String outStoreShouldPayMoney;
+    private BigDecimal outStoreShouldPayMoney;
 
     /**
      * 出库时间
      *
      */
-    private String outStoreTime;
+    private Date outStoreTime;
 
     /**
      * 出库操作人
@@ -139,10 +138,10 @@ public class TLogisticsOrder  extends DataEntity<String> {
      */
     private String outStoreAckPayOrderId;
     /**
-     * 商品出库商户佣金支付时间
+     * 商品出库商户确认时间
      *
      */
-    private Date outStoreAckPayTime;
+    private Date outStoreAckTime;
 
     /**
      * 商品出库商户支付佣金金额

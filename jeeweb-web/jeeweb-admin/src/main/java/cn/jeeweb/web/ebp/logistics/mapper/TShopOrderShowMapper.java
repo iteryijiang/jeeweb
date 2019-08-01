@@ -30,6 +30,14 @@ public interface TShopOrderShowMapper extends BaseMapper<TShopOrderShow> {
 	List<TShopOrderShowTitle> selectTShopOrderShowTitlePageList(@Param("map") Map<String,Object> paramMap);
 
 	/**
+	 * 京东单号获取单个任务信息
+	 *
+	 * @param paramMap
+	 * @return
+	 */
+	TShopOrderShowTitle getTShopOrderShowTitleByJdOrderNo(@Param("map") Map<String,Object> paramMap);
+
+	/**
 	 * 查询数量
 	 *
 	 * @param paramMap

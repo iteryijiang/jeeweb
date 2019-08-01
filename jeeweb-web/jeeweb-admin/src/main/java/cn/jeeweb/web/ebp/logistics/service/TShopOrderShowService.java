@@ -29,7 +29,13 @@ public interface TShopOrderShowService extends ICommonService<TShopOrderShow> {
 	 */
 	Page<TShopOrderShow> selectTShopOrderShowPageList(Queryable queryable, TShopOrderShowQuery queryParam);
 
-
+	/**
+	 * 京东订单号获取数据
+	 *
+	 * @param jdOrderNo
+	 * @return
+	 */
+	TShopOrderShowTitle getTShopOrderShowTitleByJdOrderNo(String jdOrderNo);
 	/**
 	 * 根据单个京东订单编号获取任务数据
 	 *

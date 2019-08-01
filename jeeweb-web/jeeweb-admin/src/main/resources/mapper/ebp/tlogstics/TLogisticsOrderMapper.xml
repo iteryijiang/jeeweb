@@ -19,13 +19,13 @@
         tlo.shop_user_id shopUserId,
         tlo.shop_remark shopRemark,
         tlo.shop_task_id shopTaskId,
-        tlo.shop_task_no shopTaskNo,
+        ttb.taskno shopTaskNo,
         tlo.out_store_time outStoreTime,
         tlo.out_store_should_pay_money outStoreShouldPayMoney,
         tlo.out_store_ope_man outStoreOpeMan,
         tlo.out_store_ack_batch_id outStoreAckBatchId,
         tlo.out_store_ack_pay_order_id outStoreAckPayOrderId,
-        tlo.out_store_ack_pay_time outStoreAckPayTime,
+        tlo.out_store_ack_time outStoreAckTime,
         tlo.out_store_ack_pay_money outStoreAckPayMoney,
         tlo.out_store_ack_pay_man outStoreAckPayMan
     </sql>
@@ -81,9 +81,10 @@
 
     <insert id="insertTLogisticsOrderDetail" parameterType="List">
         insert into t_logistics_order_detail
-          (master_id,buyer_task_detail_id,status,create_by,create_date,update_by,update_date,remarks,del_flag)
-          <foreach collection="list" item="obj" index="idx">
-              values (#{obj.masterId},#{obj.buyerTaskDetailId},#{obj.status},#{obj.createBy.id},#{obj.createDate},#{obj.updateBy.id},#{obj.updateDate},#{obj.remarks},#{obj.delFlag})
+          (id,master_id,buyer_task_detail_id,status,create_by,create_date,update_by,update_date,remarks,del_flag)
+        values
+          <foreach collection="list" item="obj" index="idx" separator=",">
+              (#{obj.id},#{obj.masterId},#{obj.buyerTaskDetailId},#{obj.status},#{obj.createBy.id},#{obj.createDate},#{obj.updateBy.id},#{obj.updateDate},#{obj.remarks},#{obj.delFlag})
           </foreach>
     </insert>
 

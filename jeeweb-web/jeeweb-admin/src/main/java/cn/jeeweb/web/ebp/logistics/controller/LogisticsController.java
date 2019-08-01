@@ -174,10 +174,12 @@ public class LogisticsController extends BaseBeanController<TLogisticsOrder> {
             String jdOrderNoParam=paramJson.getString("jdOrderNo");
             String[] jdOrderNoArray=jdOrderNoParam.split(",");
             List<TLogisticsOrder> objList=new ArrayList<>();
+            String batchId=StringUtils.randomUUID();
             for(String jdOrderNo:jdOrderNoArray){
                 if(StringUtils.isNotEmpty(jdOrderNo)){
                     TLogisticsOrder objInsert=new TLogisticsOrder();
                     objInsert.setJdOrderNo(jdOrderNo);
+                    objInsert.setOutStoreBatchId(batchId);
                     objList.add(objInsert);
                 }
             }
