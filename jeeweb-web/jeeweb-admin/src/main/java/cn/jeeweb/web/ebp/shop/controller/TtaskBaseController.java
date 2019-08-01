@@ -379,7 +379,7 @@ public class TtaskBaseController extends BaseBeanController<TtaskBase> {
         EntityWrapper<TtaskBase> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
-        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
             entityWrapper.eq("t.create_by", userid);
         }
         entityWrapper.setTableAlias("t");

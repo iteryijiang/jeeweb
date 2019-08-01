@@ -148,7 +148,7 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
         EntityWrapper<TfinanceRechargeLog> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
-        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
             entityWrapper.eq("t.shopid", userid);
         }
         entityWrapper.setTableAlias("t");
@@ -213,7 +213,7 @@ public class TfinanceRechargeLogController extends BaseBeanController<TfinanceRe
         EntityWrapper<TfinanceRechargeLog> entityWrapper = new EntityWrapper<>(entityClass);
         propertyPreFilterable.addQueryProperty("id");
         String userid = UserUtils.getPrincipal().getId();
-        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())) {
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
             entityWrapper.eq("t.shopid", userid);
         }
         entityWrapper.setTableAlias("t");

@@ -136,7 +136,15 @@
         sum(case when taskstate=4 then 1 else 0 end) as sumFinishNum,
         sum(case when taskstate=4 then pays else 0 end) as sumFinishPrice,
         sum(case when taskstate=3 then pays else 0 end) as sumDeliveryPrice,
-        sum(case when taskstate=2 then pays else 0 end) as sumOrderPrice
+        sum(case when taskstate=2 then pays else 0 end) as sumOrderPrice,
+        sum(case
+            when taskstate=2 then buyerratio
+            when taskstate=3 then buyerratio
+            when taskstate=4 then buyerratio
+            else 0 end
+            ) as sumBuyerratio,
+        (select count(1) from t_my_task_detail_question tmdq where tmdq.buyerid = b.userid and (tmdq.create_date BETWEEN #{map.createDate1} and #{map.createDate2})) errornum,
+        (select sum(pays) from t_my_task_detail_question tmdq where tmdq.buyerid = b.userid and (tmdq.create_date BETWEEN #{map.createDate1} and #{map.createDate2})) errorprice
         from t_my_task_detail t,t_buyer_info b where 1=1
         and t.buyerid = b.userid
         <if test="map.buyerName != '' and map.buyerName != null">

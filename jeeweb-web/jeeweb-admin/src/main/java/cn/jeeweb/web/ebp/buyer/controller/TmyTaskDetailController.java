@@ -230,7 +230,12 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 		if (fbr == null) {
 			String[] ids = id.split("_");
 			creates = TaskUtils.whereNewDate(ids[1], ids[1]);
-			entityWrapper.eq("sb.id", ids[0]);
+			if(tshopBaseService.selectById(ids[0])!=null){
+				entityWrapper.eq("sb.id", ids[0]);
+			}else {
+				entityWrapper.eq("bi.userid", ids[0]);
+
+			}
 		} else {
 			creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"),
 					DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"));
@@ -516,7 +521,12 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 		if (fbr == null) {
 			String[] ids = id.split("_");
 			creates = TaskUtils.whereNewDate(ids[1], ids[1]);
-			entityWrapper.eq("sb.id", ids[0]);
+			if(tshopBaseService.selectById(ids[0])!=null){
+				entityWrapper.eq("sb.id", ids[0]);
+			}else {
+				entityWrapper.eq("bi.userid", ids[0]);
+
+			}
 		} else {
 			creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"),
 					DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"));

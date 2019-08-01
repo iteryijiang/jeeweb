@@ -61,6 +61,7 @@
                 if(idlist[i]==list[j].tdid){
                     textareaName = list[j].textareaname;
                     var pourlName = list[j].taskpictureurl.substr(list[j].taskpictureurl.lastIndexOf("/")+1);
+
                     result += "<span class='projectUpload'><a href='"+list[j].taskpictureurl+"' download='"+pourlName+"' target='_blank'>"+pourlName+"</a></span>";
                 }
             }

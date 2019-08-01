@@ -417,24 +417,34 @@ public class TmyTaskController extends BaseBeanController<TmyTask> {
         Double sumFinishPrice = 0.0;
         Long sumNum = 0l;
         Long sumFinishNum = 0l;
+        Long errornum = 0l;
+        Double errorprice = 0.0;
+        Double sumBuyerratio = 0.0;
         for (Map map:list) {
+            map.put("id",map.get("userid")+"_"+map.get("countCreateDate"));
             sumPrice += Double.parseDouble((map.get("sumPrice")==null?"0":map.get("sumPrice")).toString());
             sumOrderPrice += Double.parseDouble((map.get("sumOrderPrice")==null?"0":map.get("sumOrderPrice")).toString());
             sumDeliveryPrice += Double.parseDouble((map.get("sumDeliveryPrice")==null?"0":map.get("sumDeliveryPrice")).toString());
             sumFinishPrice += Double.parseDouble((map.get("sumFinishPrice")==null?"0":map.get("sumFinishPrice")).toString());
             sumNum += Long.parseLong((map.get("sumNum")==null?"0":map.get("sumNum")).toString());
             sumFinishNum += Long.parseLong((map.get("sumFinishNum")==null?"0":map.get("sumFinishNum")).toString());
+            errornum += Long.parseLong((map.get("errornum")==null?"0":map.get("errornum")).toString());
+            errorprice += Double.parseDouble((map.get("errorprice")==null?"0":map.get("errorprice")).toString());
+            sumBuyerratio += Double.parseDouble((map.get("sumBuyerratio")==null?"0":map.get("sumBuyerratio")).toString());
         }
-        Map map = new HashMap();
-        map.put("countCreateDate","");
-        map.put("buyerName","合计");
-        map.put("sumPrice",sumPrice);
-        map.put("sumOrderPrice",sumOrderPrice);
-        map.put("sumDeliveryPrice",sumDeliveryPrice);
-        map.put("sumFinishPrice",sumFinishPrice);
-        map.put("sumNum",sumNum);
-        map.put("sumFinishNum",sumFinishNum);
-        list.add(map);
+//        Map map = new HashMap();
+//        map.put("countCreateDate","");
+//        map.put("buyerName","合计");
+//        map.put("sumPrice",sumPrice);
+//        map.put("sumOrderPrice",sumOrderPrice);
+//        map.put("sumDeliveryPrice",sumDeliveryPrice);
+//        map.put("sumFinishPrice",sumFinishPrice);
+//        map.put("sumNum",sumNum);
+//        map.put("sumFinishNum",sumFinishNum);
+//        map.put("errornum",errornum);
+//        map.put("errorprice",errorprice);
+//        map.put("sumBuyerratio",sumBuyerratio);
+//        list.add(map);
         String content = JSON.toJSONString(list);
         StringUtils.printJson(response,content);
     }

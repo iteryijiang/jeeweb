@@ -198,7 +198,7 @@ public class TfinanceRechargeController extends BaseBeanController<TfinanceRecha
         String[] s = { "id", "recordStatus" };
         propertyPreFilterable.addQueryProperty(s);
         String userid = UserUtils.getPrincipal().getId();
-        if (!StringUtils.isEmpty(userid)) {
+        if (!StringUtils.isEmpty(userid)&&!"admin".equals(UserUtils.getUser().getUsername())&&!UserUtils.getRoleStringList().contains("finance")) {
             entityWrapper.eq("t.create_by", userid);
         }
         if(queryable.getCondition()!=null) {

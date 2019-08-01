@@ -6,9 +6,15 @@
 <#grid:column label="买手号" width="140"  name="loginName" query="true" condition="like"/>
 <#grid:column label="任务总价" width="140"  name="sumPrice" formatter="currency"/>
 <#grid:column label="确认下单金额" width="100"  name="sumOrderPrice"  formatter="currency" />
+<#grid:column label="问题单金额" width="100"  name="errorprice"  formatter="currency" />
 <#grid:column label="链接数" width="100"  name="sumNum"/>
+<#grid:column label="任务佣金" width="100"  name="sumBuyerratio"/>
+<#grid:column label="问题单数" width="100"  name="errornum"/>
+<#grid:column label="sys.common.opt"  name="opt" formatter="button" />
+<#grid:button title="详细"  groupname="opt" function="rowDialogDetailRefresh" winwidth="100%" winheight="100%" outclass="btn-warning btn-xs" innerclass="fa-search" url='${adminPath}/buyer/TmyTaskDetail/\"+row.id+\"/buyerDetail' />
 
 <#grid:toolbar  function="search"  />
 <#grid:toolbar  function="reset" />
 </#grid:grid>
 <% } %>
+
