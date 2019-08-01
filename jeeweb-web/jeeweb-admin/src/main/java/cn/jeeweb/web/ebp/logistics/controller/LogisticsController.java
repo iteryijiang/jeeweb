@@ -119,7 +119,6 @@ public class LogisticsController extends BaseBeanController<TLogisticsOrder> {
             Pageable pageable=new PageRequest(Integer.valueOf(currentPage),Integer.valueOf(pageSize));
             queryable.setPageable(pageable);
             Page<TShopOrderShow> pageObj=shopOrderShowService.selectTShopOrderShowPageList(queryable, queryParam);
-
             if (pageObj == null) {
                 retObj.put("retCode", -1);
                 retObj.put("retMsg", "未获取到数据，调整检索条件试一试吧!!!");
@@ -146,7 +145,7 @@ public class LogisticsController extends BaseBeanController<TLogisticsOrder> {
         // 当前登录人
         Set<String> roleSet = UserUtils.getRoleStringList();
         User loginUser = UserUtils.getUser();
-       // queryParam.setShopUserId(StringUtils.randomUUID());
+        queryParam.setShopUserId(StringUtils.randomUUID());
         if (!roleSet.isEmpty()) {
             for (String roleId : roleSet) {
                 // 商户运营,设置商户的ID
