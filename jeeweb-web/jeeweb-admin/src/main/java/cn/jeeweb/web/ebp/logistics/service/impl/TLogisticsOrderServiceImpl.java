@@ -169,9 +169,10 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
 
     @Override
     public void updateTLogisticsOrderStatus(String ids,int status) {
+        String ackBatchId=StringUtils.randomUUID();
         for(String id:ids.split(",")){
             if(StringUtils.isNotEmpty(id)){
-                updateTLogisticsOrderStatusForOutStore(id,status);
+                updateTLogisticsOrderStatusForOutStore(ackBatchId,id,status);
             }
         }
     }
@@ -182,7 +183,7 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
      * @param id
      * @param status
      */
-    private void updateTLogisticsOrderStatusForOutStore(String id,int status){
+    private void updateTLogisticsOrderStatusForOutStore(String ackBatchId,String id,int status){
         TLogisticsOrder objDb=selectTLogisticsOrderById(id);
         if(objDb == null ){
             throw  new MyProcessException("参数错误[未获取到订单记录]");
@@ -196,12 +197,17 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
         for(TLogisticsOrderDetail obj:logisticsOrderDetailList){
             TmyTaskDetail buyerTaskDetailObj=tmyTaskDetailService.selectById(obj.getBuyerTaskDetailId());
             if(Integer.valueOf(buyerTaskDetailObj.getTaskstate()) == BuyerTaskStatusEnum.WAITING_SEND.code){
-                tmyTaskDetailService.updateTaskStatusForAckReceive(obj.getBuyerTaskDetailId(),loginUser.getCreateBy().getId());
+                tmyTaskDetailService.updateTaskStatusForAckReceive(obj.getBuyerTaskDetailId(),loginUser.getId());
             }
         }
         //更改申请状态
         objDb.setOrderStatus(Integer.valueOf(YesNoEnum.YES.code));
         objDb.setOutStoreAckTime(DateUtils.getCurrentTime());
+        objDb.setOutStoreAckPayMoney(objDb.getOutStoreShouldPayMoney());
+        objDb.setOutStoreAckBatchId(ackBatchId);
+        objDb.setOutStoreAckMan(loginUser.getId());
+        objDb.setUpdateBy(loginUser);
+        objDb.setUpdateDate(DateUtils.getCurrentTime());
         baseMapper.updateTLogisticsOrderStatus(objDb);
         Map<String,Object> updateDetailMap=new HashMap<>();
         updateDetailMap.put("masterId",id);

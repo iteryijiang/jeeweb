@@ -172,6 +172,9 @@ public class LogisticsController extends BaseBeanController<TLogisticsOrder> {
         try {
             JSONObject paramJson=JSONObject.parseObject(paramStr);
             String jdOrderNoParam=paramJson.getString("jdOrderNo");
+            if(StringUtils.isEmpty(jdOrderNoParam)){
+                return Response.error("操作失败[未获取到订单编号信息]");
+            }
             String[] jdOrderNoArray=jdOrderNoParam.split(",");
             List<TLogisticsOrder> objList=new ArrayList<>();
             String batchId=StringUtils.randomUUID();

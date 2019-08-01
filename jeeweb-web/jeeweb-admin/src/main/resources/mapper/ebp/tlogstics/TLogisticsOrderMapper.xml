@@ -27,7 +27,9 @@
         tlo.out_store_ack_pay_order_id outStoreAckPayOrderId,
         tlo.out_store_ack_time outStoreAckTime,
         tlo.out_store_ack_pay_money outStoreAckPayMoney,
-        tlo.out_store_ack_pay_man outStoreAckPayMan
+        tlo.out_store_ack_man outStoreAckMan,
+        tbi.buyerName buyerLoginNo,
+        tsi.shopName
     </sql>
 
     <!-- 列表查询销售信息 -->
@@ -37,6 +39,8 @@
         FROM
             t_logistics_order tlo
             inner join t_task_base ttb on ttb.id=tlo.shop_task_id
+            inner join t_buyer_info tbi on tbi.userid=tlo.buyer_id
+            inner join t_shop_info tsi on tsi.userid=tlo.shop_user_id
         <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
             <where>
                 ${ew.sqlSegment}
@@ -48,9 +52,12 @@
         SELECT
           <include refid="Base_Column_TLogisticsOrder"/>
         FROM
-          t_logistics_order t
+          t_logistics_order tlo
+          inner join t_task_base ttb on ttb.id=tlo.shop_task_id
+        inner join t_buyer_info tbi on tbi.userid=tlo.buyer_id
+        inner join t_shop_info tsi on tsi.userid=tlo.shop_user_id
         where
-          t.id=#{id}
+        tlo.id=#{id}
     </select>
 
 
@@ -59,23 +66,14 @@
         t_logistics_order
       set
           order_status=#{orderStatus},
-          out_store_ack_pay_man=#{outStoreAckPayMan},
-          out_store_ack_batch_id=#{outStoreAckBatchId},
-          out_store_ack_pay_order_id=#{outStoreAckPayOrderId},
-          out_store_ack_pay_time=#{outStoreAckPayTime},
           out_store_ack_pay_money=#{outStoreAckPayMoney},
-          update_by=#{updateBy.id},update_date=#{updateTime}
+          out_store_ack_batch_id=#{outStoreAckBatchId},
+          out_store_ack_time=#{outStoreAckTime},
+          out_store_ack_man=#{outStoreAckMan},
+          update_by=#{updateBy.id},update_date=#{updateDate}
       where
         id=#{id}
     </update>
-
-    <insert id="insertTLogisticsOrder" parameterType="cn.jeeweb.web.ebp.logistics.entity.TLogisticsOrder">
-        insert into t_logistics_order
-          (out_store_batch_id,jd_order_no,order_dtime,order_pay_time,goods_total_num,order_total_money,order_coupon_total_money,order_pay_total_money,order_status,logistics_info,buyer_msg,buyer_id,shop_user_id,shop_remark,shop_task_id,shop_task_no,out_store_time,out_store_should_pay_money,out_store_ope_man,out_store_ack_batch_id,out_store_ack_pay_order_id,out_store_ack_pay_time,out_store_ack_pay_money,out_store_ack_pay_man,create_by,create_date,update_by,update_date,remarks,del_flag)
-        values
-          (#{outStoreBatchId},#{jdOrderNo},#{orderDtime},#{orderPayTime},#{goodsTotalNum},#{orderTotalMoney},#{orderCouponTotalMoney},#{orderPayTotalMoney},#{orderStatus},#{logisticsInfo},#{buyerMsg},#{buyerId},#{shopUserId},#{shopRemark},#{shopTaskId},#{shopTaskNo},#{outStoreTime},#{outStoreShouldPayMoney},#{outStoreOpeMan},#{outStoreAckBatchId},#{outStoreAckPayOrderId},#{outStoreAckPayTime},#{outStoreAckPayMoney},#{outStoreAckPayMan},#{createBy.id},#{createDate},#{updateBy.id},#{updateDate},#{remarks},#{delFlag})
-    </insert>
-
 
     <!-- 明细处理 -->
 

@@ -49,7 +49,7 @@ function createShopOrderShowTbHeadHtmlFn(tab){
     if(0 == tab){
         showDataTbId="showAllShopOrder";
         headHtml="<tr>";
-        headHtml+="<th colspan=\"2\"><button type=\"button\" onclick=\"addOutStoreFn(this)\" tableId=\"showAllShopOrder\">出&nbsp;&nbsp;库</button></th>";
+        headHtml+="<th colspan=\"2\"><button type=\"button\" onclick=\"addOutStoreFn(this)\" tableId=\""+showDataTbId+"\">出&nbsp;&nbsp;库</button></th>";
         headHtml+="<th colspan=\"8\">";
         headHtml+="<span>商户余额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class=\"priceLabel\">"+availabledeposit+"</label>&nbsp;&nbsp;元</span>";
         headHtml+=" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -59,7 +59,7 @@ function createShopOrderShowTbHeadHtmlFn(tab){
     }else if(1 == tab){
         showDataTbId="showWaitingOutShopOrder";
         headHtml="<tr>";
-        headHtml+="<th colspan=\"2\"><button type=\"button\" onclick=\"addOutStoreFn(this)\" tableId=\"showOutAckShopOrder\">出&nbsp;&nbsp;库</button></th>";
+        headHtml+="<th colspan=\"2\"><button type=\"button\" onclick=\"addOutStoreFn(this)\" tableId=\""+showDataTbId+"\">出&nbsp;&nbsp;库</button></th>";
         headHtml+="<th colspan=\"8\">";
         headHtml+="<span>商户余额:&nbsp;&nbsp;￥&nbsp;&nbsp;<label class=\"priceLabel\">"+availabledeposit+"</label>&nbsp;&nbsp;元</span>";
         headHtml+=" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";

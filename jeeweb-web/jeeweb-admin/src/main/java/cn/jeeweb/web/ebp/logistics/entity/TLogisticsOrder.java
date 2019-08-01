@@ -137,6 +137,12 @@ public class TLogisticsOrder  extends DataEntity<String> {
      * 商品出库商户佣金支付记录编号
      */
     private String outStoreAckPayOrderId;
+
+    /**
+     * 确认出库操作人
+     *
+     */
+    private String outStoreAckMan;
     /**
      * 商品出库商户确认时间
      *

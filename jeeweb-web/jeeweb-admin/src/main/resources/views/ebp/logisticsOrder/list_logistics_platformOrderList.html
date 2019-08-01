@@ -6,10 +6,10 @@
 <#grid:column label="买手编号" width="100" query="true" condition="eq"  name="buyerLoginNo" align="center"/>
 <#grid:column label="商户名称" name="shopName" query="true" condition="like" width="100" />
 <#grid:column label="下单时间" name="orderDtime" width="100" />
-<#grid:column label="订单状态" name="orderStatus"  width="100" formatter="currency"/>
+<#grid:column label="订单状态" name="orderStatus"  width="100" formatterValue="0:未出库;1:已出库" />
 <#grid:column label="订单佣金" name="outStoreShouldPayMoney"  width="100" formatter="currency"/>
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="出库" groupname="opt" outclass="btn-danger" onclick="outStoreAckFn('"+row.id+"')" />
+<#grid:button title="出库" groupname="opt" outclass="btn-danger" onclick='outStoreAckFn("\"+row.id+\"")' />
 <#grid:toolbar function="search" />
 <#grid:toolbar function="reset" />
 <#grid:toolbar title="确认出库" onclick="outStoreAckFn('')"/>
