@@ -105,6 +105,19 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 		return mav;
 	}
 
+	@GetMapping(value = "buyerDetailAll")
+	public ModelAndView buyerDetailAll( Model model, HttpServletRequest request,
+									HttpServletResponse response) {
+		boolean bool = false;
+		if (!"admin".equals(UserUtils.getUser().getUsername()) && !UserUtils.getRoleStringList().contains("finance")) {
+			bool = true;
+		}
+		model.addAttribute("showHidden", bool);
+		model.addAttribute("id", "NA");
+		ModelAndView mav = displayModelAndView("list_buyer_detail_all");
+		return mav;
+	}
+
 	@GetMapping(value = "buyerDetailGroup")
 	@RequiresMethodPermissions("buyerDetailGroup")
 	public ModelAndView buyerDetailGroup(Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -227,20 +240,25 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 		EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
 		propertyPreFilterable.addQueryProperty("id");
 		String[] creates = new String[2];
-		if (fbr == null) {
-			String[] ids = id.split("_");
-			creates = TaskUtils.whereNewDate(ids[1], ids[1]);
-			if(tshopBaseService.selectById(ids[0])!=null){
-				entityWrapper.eq("sb.id", ids[0]);
-			}else {
-				entityWrapper.eq("bi.userid", ids[0]);
+		if("NA".equals(id)){
+			creates = TaskUtils.whereNewDate(null,null);
+		}else {
+			if (fbr == null) {
+				String[] ids = id.split("_");
+				creates = TaskUtils.whereNewDate(ids[1], ids[1]);
+				if(tshopBaseService.selectById(ids[0])!=null){
+					entityWrapper.eq("sb.id", ids[0]);
+				}else {
+					entityWrapper.eq("bi.userid", ids[0]);
 
+				}
+			} else {
+				creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"),
+						DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"));
+				entityWrapper.eq("t.buyerid", fbr.getBuyerid());
 			}
-		} else {
-			creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"),
-					DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"));
-			entityWrapper.eq("t.buyerid", fbr.getBuyerid());
 		}
+
 
 		entityWrapper.between("t.create_date", creates[0], creates[1]);
 		entityWrapper.setTableAlias("t");
@@ -518,21 +536,24 @@ public class TmyTaskDetailController extends BaseBeanController<TmyTaskDetail> {
 		EntityWrapper<TmyTaskDetail> entityWrapper = new EntityWrapper<>(entityClass);
 		propertyPreFilterable.addQueryProperty("id");
 		String[] creates = new String[2];
-		if (fbr == null) {
-			String[] ids = id.split("_");
-			creates = TaskUtils.whereNewDate(ids[1], ids[1]);
-			if(tshopBaseService.selectById(ids[0])!=null){
-				entityWrapper.eq("sb.id", ids[0]);
-			}else {
-				entityWrapper.eq("bi.userid", ids[0]);
+		if("NA".equals(id)){
+			creates = TaskUtils.whereNewDate(null,null);
+		}else {
+			if (fbr == null) {
+				String[] ids = id.split("_");
+				creates = TaskUtils.whereNewDate(ids[1], ids[1]);
+				if(tshopBaseService.selectById(ids[0])!=null){
+					entityWrapper.eq("sb.id", ids[0]);
+				}else {
+					entityWrapper.eq("bi.userid", ids[0]);
 
+				}
+			} else {
+				creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"),
+						DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"));
+				entityWrapper.eq("t.buyerid", fbr.getBuyerid());
 			}
-		} else {
-			creates = TaskUtils.whereNewDate(DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"),
-					DateUtils.formatDate(fbr.getCountcreatedate(), "yyyy-MM-dd"));
-			entityWrapper.eq("t.buyerid", fbr.getBuyerid());
 		}
-
 		entityWrapper.between("t.create_date", creates[0], creates[1]);
 		// 预处理
 		if (queryable.getCondition() != null) {
