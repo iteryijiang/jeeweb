@@ -75,4 +75,11 @@ public interface TmyTaskDetailService extends ICommonService<TmyTaskDetail> {
     @Transactional
     void upTaskErrorStatus(String taskId, int status, String lastRepair);
 
+    /**
+     * 将买手任务调整为平台出库
+     *
+     * @param taskIds
+     * @param lastRepair
+     */
+    void updateBuyerTaskDetailOutStoreAck(String taskIds, String lastRepair);
 }

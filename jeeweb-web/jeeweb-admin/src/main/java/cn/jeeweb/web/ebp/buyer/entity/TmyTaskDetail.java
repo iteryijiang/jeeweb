@@ -8,10 +8,13 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
+
 import java.math.BigDecimal;
 
 @TableName("t_my_task_detail")
 @SuppressWarnings("serial")
+@Data
 public class TmyTaskDetail extends DataEntity<String> {
 
 	/** id */
@@ -65,6 +68,11 @@ public class TmyTaskDetail extends DataEntity<String> {
 	 * 0正常1标记为异常
 	 */
 	private int errorStatus=0;
+	/**
+	 * 出库操作确认
+	 * 0初始状态平台默认自动出库1商户提出需要平台出库
+	 */
+	private int outStoreAck=0;
 
 	/** 创建时间 */
 	@TableField(value = "create_date", fill = FieldFill.INSERT)

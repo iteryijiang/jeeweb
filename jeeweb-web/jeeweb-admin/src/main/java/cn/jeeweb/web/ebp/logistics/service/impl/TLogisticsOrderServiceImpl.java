@@ -30,7 +30,6 @@ import cn.jeeweb.web.ebp.tsys.entity.TSysConfigParam;
 import cn.jeeweb.web.ebp.tsys.service.TSysConfigParamService;
 import cn.jeeweb.web.modules.sys.entity.User;
 import cn.jeeweb.web.utils.UserUtils;
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,12 +99,15 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
         //根据任务单获取明细
         List<TLogisticsOrderDetail> detailList=new ArrayList<>();
         List<TShopOrderShowData> buyerTaskList=shopOrderShowService.getTShopOrderShowDataListByJdOrderNo(obj.getJdOrderNo());
+        StringBuffer buyerTaskDetailId=new StringBuffer("");
         for(TShopOrderShowData objDataTemp:buyerTaskList){
             TLogisticsOrderDetail insertDetailObj=installTLogisticsOrderDetailObj(obj.getId(),objDataTemp);
             detailList.add(insertDetailObj);
+            buyerTaskDetailId.append(",'").append(objDataTemp.getBuyerTaskDetailId()).append("'");
         }
         baseMapper.insertTLogisticsOrderDetail(detailList);
-
+        //买手任务调整为平台出库
+        tmyTaskDetailService.updateBuyerTaskDetailOutStoreAck(buyerTaskDetailId.substring(1),UserUtils.getUser().getId());
     }
 
     /**
@@ -116,7 +118,7 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
     private void initProperties(TLogisticsOrder obj){
         TShopOrderShowTitle titleObj=shopOrderShowService.getTShopOrderShowTitleByJdOrderNo(obj.getJdOrderNo());
         if(titleObj.getOrderStatus() != BuyerTaskStatusEnum.WAITING_SEND.code){
-            //throw new MyProcessException("当前订单状态不支持该操作");
+            throw new MyProcessException("当前订单状态不支持该操作");
         }
         obj.setOrderDtime(titleObj.getOrderDtime());
         obj.setOrderPayTime(titleObj.getOrderPayTime());
@@ -189,7 +191,6 @@ public class TLogisticsOrderServiceImpl extends CommonServiceImpl<TLogisticsOrde
             throw  new MyProcessException("参数错误[该订单已经出库]");
         }
         User loginUser=UserUtils.getUser();
-
         //更改买手任务状态
         List<TLogisticsOrderDetail> logisticsOrderDetailList=baseMapper.selectTLogisticsOrderDetailListByMasterid(id);
         for(TLogisticsOrderDetail obj:logisticsOrderDetailList){

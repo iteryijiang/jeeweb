@@ -12,6 +12,7 @@ import cn.jeeweb.web.ebp.buyer.mapper.TmyTaskDetailMapper;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskDetailService;
 import cn.jeeweb.web.ebp.buyer.service.TmyTaskService;
 import cn.jeeweb.web.ebp.enums.BuyerTaskStatusEnum;
+import cn.jeeweb.web.ebp.exception.MyProcessException;
 import cn.jeeweb.web.ebp.finance.service.TfinanceRechargeService;
 import cn.jeeweb.web.ebp.shop.entity.TshopInfo;
 import cn.jeeweb.web.ebp.shop.entity.TtaskBase;
@@ -269,5 +270,17 @@ public class TmyTaskDetailServiceImpl extends CommonServiceImpl<TmyTaskDetailMap
         paramMap.put("lastTime", Calendar.getInstance().getTime());
         paramMap.put("lastRepair",lastRepair);
         baseMapper.upTaskErrorStatus(paramMap);
+    }
+
+    @Override
+    public void updateBuyerTaskDetailOutStoreAck(String taskIds, String lastRepair){
+        Map<String,Object> paramMap=new HashMap<String,Object>();
+        paramMap.put("id",taskIds);
+        paramMap.put("lastTime", Calendar.getInstance().getTime());
+        paramMap.put("lastRepair",lastRepair);
+        int num=baseMapper.updateBuyerTaskDetailOutStoreAck(paramMap);
+        if(num < 1){
+            throw new MyProcessException("操作失败[更改买手任务记录状态失败]");
+        }
     }
 }

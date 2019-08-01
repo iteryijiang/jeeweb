@@ -1,6 +1,6 @@
 <% layout('/layouts/list.html', {title: @MessageUtils.getMessage('订单出库',''), libs: ''}){ %>
 
-<#grid:grid id="buyerCommissionGrid" url="${adminPath}/logisticsOrder/logistics/ajaxPlatformOrderList"  multiselect="false" sortname="applyNo" sortorder="desc" sortable="false">
+<#grid:grid id="outStoreAckGrid" url="${adminPath}/logisticsOrder/logistics/ajaxPlatformOrderList"  multiselect="false" sortname="applyNo" sortorder="desc" sortable="false">
 <#grid:column label="京东单号" width="100" query="true" condition="eq"  name="jdOrderNo" align="center"/>
 <#grid:column label="买手任务号" width="100" query="true" condition="eq"  name="jdOrderNo" align="center"/>
 <#grid:column label="买手编号" width="100" query="true" condition="eq"  name="buyerLoginNo" align="center"/>
@@ -9,8 +9,53 @@
 <#grid:column label="订单状态" name="orderStatus"  width="100" formatter="currency"/>
 <#grid:column label="订单佣金" name="outStoreShouldPayMoney"  width="100" formatter="currency"/>
 <#grid:column label="sys.common.opt" name="opt" formatter="button" />
-<#grid:button title="出库" groupname="opt" outclass="btn-danger"  url='${adminPath}/buyer/TmyTaskDetail/getApplyTaskDetail/1/\"+row.id+\"' />
+<#grid:button title="出库" groupname="opt" outclass="btn-danger" onclick="outStoreAckFn('"+row.id+"')" />
 <#grid:toolbar function="search" />
 <#grid:toolbar function="reset" />
+<#grid:toolbar title="确认出库" onclick="outStoreAckFn('')"/>
 </#grid:grid>
+<script type="text/javascript">
+    function outStoreAckFn(paramId){
+        if(paramId ==''){
+            var selectRows = $("#outStoreAckGrid").jqGrid('getGridParam', 'selarrrow');
+            if(selectRows.length<1){
+                alert("未选择用户信息");
+                return;
+            }
+            paramId=getSelectRecordIdFn(selectRows);
+        }
+
+        var url="${adminPath}/logisticsOrder/logistics/updateLogsticsOrderStatus";
+        var param={
+            outStoreId:paramId
+        };
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType:'application/json;charset=utf-8',
+            data: JSON.stringify(param),
+            dataType: "json",
+            success: function(data){
+                alert(data.msg);
+                search('outStoreAckGrid');
+            },
+            error: function (data) {
+                alert("错误！");
+            }
+        });
+    }
+    /**
+     * 获取选中的记录信息
+     * @param selectRows
+     * @returns {string}
+     */
+    function getSelectRecordIdFn(selectRows){
+        var retStr="";
+        for(var idx=0;idx<selectRows.length;idx++){
+            retStr+=","+selectRows[idx];
+        }
+        return retStr.substring(1);
+    }
+
+</script>
 <% } %>

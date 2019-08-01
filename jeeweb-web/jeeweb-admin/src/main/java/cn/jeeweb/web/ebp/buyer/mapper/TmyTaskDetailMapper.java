@@ -58,4 +58,12 @@ public interface TmyTaskDetailMapper extends BaseMapper<TmyTaskDetail> {
 	 * @return
 	 */
 	int updateTaskStatusForChargeBack(@Param("map") Map<String,Object> paramMap);
+
+	/**
+	 * 将，买手任务状态更改为平台出库
+	 *
+	 * @param paramMap
+	 * @return
+	 */
+	int updateBuyerTaskDetailOutStoreAck(@Param("map") Map<String,Object> paramMap);
 }

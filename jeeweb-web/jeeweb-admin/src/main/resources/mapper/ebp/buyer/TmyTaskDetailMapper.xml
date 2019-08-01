@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TmyTaskDetailMapper" >
-  <resultMap id="TmyTaskDetail" type="cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail" >
-      <id column="id" property="id" jdbcType="VARCHAR" />
-      <result property="buyerid" column="buyerid" jdbcType="VARCHAR" />
-      <result property="taskid" column="taskid" jdbcType="VARCHAR" />
-      <result property="taskstate" column="taskstate" jdbcType="VARCHAR" />
-      <result property="goodsname" column="goodsname" jdbcType="VARCHAR" />
-      <result property="tasktype" column="tasktype" jdbcType="VARCHAR" />
-      <result property="commision" column="commision" jdbcType="DOUBLE" />
-      <result property="pays" column="pays" jdbcType="DOUBLE" />
-      <result property="buyerjdnick" column="buyerjdnick" jdbcType="VARCHAR" />
-      <result property="jdorderno" column="jdorderno" jdbcType="VARCHAR" />
-      <result property="buyerclient" column="buyerclient" jdbcType="VARCHAR" />
-      <result property="expressno" column="expressno" jdbcType="VARCHAR" />
-      <result property="evaluate" column="evaluate" jdbcType="VARCHAR" />
-      <result property="taskstatus" column="taskstatus" jdbcType="VARCHAR" />
-      <result property="mytaskid" column="mytaskid" jdbcType="VARCHAR" />
-      <result property="taskshopurl" column="taskshopurl" jdbcType="VARCHAR" />
-  </resultMap>
-  
-  <sql id="Base_Column_List" >
+<mapper namespace="cn.jeeweb.web.ebp.buyer.mapper.TmyTaskDetailMapper">
+    <resultMap id="TmyTaskDetail" type="cn.jeeweb.web.ebp.buyer.entity.TmyTaskDetail">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result property="buyerid" column="buyerid" jdbcType="VARCHAR"/>
+        <result property="taskid" column="taskid" jdbcType="VARCHAR"/>
+        <result property="taskstate" column="taskstate" jdbcType="VARCHAR"/>
+        <result property="goodsname" column="goodsname" jdbcType="VARCHAR"/>
+        <result property="tasktype" column="tasktype" jdbcType="VARCHAR"/>
+        <result property="commision" column="commision" jdbcType="DOUBLE"/>
+        <result property="pays" column="pays" jdbcType="DOUBLE"/>
+        <result property="buyerjdnick" column="buyerjdnick" jdbcType="VARCHAR"/>
+        <result property="jdorderno" column="jdorderno" jdbcType="VARCHAR"/>
+        <result property="buyerclient" column="buyerclient" jdbcType="VARCHAR"/>
+        <result property="expressno" column="expressno" jdbcType="VARCHAR"/>
+        <result property="evaluate" column="evaluate" jdbcType="VARCHAR"/>
+        <result property="taskstatus" column="taskstatus" jdbcType="VARCHAR"/>
+        <result property="mytaskid" column="mytaskid" jdbcType="VARCHAR"/>
+        <result property="taskshopurl" column="taskshopurl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
     DISTINCT
     t.id
   </sql>
-  
-  <select id="selectUserList" resultMap="TmyTaskDetail">
-	  select
-   	    <include refid="Base_Column_List" />
-      from T_my_Task_Detail t
-       <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
-		  <where>
-		    ${ew.sqlSegment}
-		  </where>
-	   </if>
-  </select>
+
+    <select id="selectUserList" resultMap="TmyTaskDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from T_my_Task_Detail t
+        <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
+            <where>
+                ${ew.sqlSegment}
+            </where>
+        </if>
+    </select>
 
     <select id="listDetail" resultMap="TmyTaskDetail">
-        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article,tb.skuid from T_my_Task_Detail t
+        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname
+        shopLoginname,sb.shopname,tb.article,tb.skuid from T_my_Task_Detail t
         left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
         left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
         <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
@@ -48,8 +49,10 @@
     </select>
 
     <select id="listDetailGroup" resultMap="TmyTaskDetail">
-        select DATE_FORMAT(receivingdate,'%Y-%m-%d %H:%i') receivingdates,DATE_FORMAT(orderdate,'%Y-%m-%d %H:%i') orderdates,buyerjdnick,jdorderno,taskstate,
-        bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,sum(t.pays) pays from T_my_Task_Detail t
+        select DATE_FORMAT(receivingdate,'%Y-%m-%d %H:%i') receivingdates,DATE_FORMAT(orderdate,'%Y-%m-%d %H:%i')
+        orderdates,buyerjdnick,jdorderno,taskstate,
+        bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname
+        shopLoginname,sb.shopname,sum(t.pays) pays from T_my_Task_Detail t
         left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
         left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
         <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
@@ -60,9 +63,11 @@
     </select>
 
     <select id="listShopBaseDetail" resultMap="TmyTaskDetail">
-        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article,
+        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname
+        shopLoginname,sb.shopname,tb.article,
         tb.t_Title tTitle,tb.t_Url tUrl,tb.brand,tb.keyword,tb.spec1,tb.spec2,tb.skuid
-        from T_my_Task_Detail t left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
+        from T_my_Task_Detail t left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on
+        tb.storename=sb.id
         left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
         <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
             <where>
@@ -73,9 +78,11 @@
 
     <!-- 需要确认收货的任务单 -->
     <select id="listNeedFinishTask" resultMap="TmyTaskDetail">
-        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname shopLoginname,sb.shopname,tb.article,
+        select t.*,bi.buyerName buyeridName,bi.loginname buyeridLogin,s.shopname shopidName,s.loginname
+        shopLoginname,sb.shopname,tb.article,
         tb.t_Title tTitle,tb.t_Url tUrl,tb.brand,tb.keyword,tb.spec1,tb.spec2,tb.skuid
-        from T_my_Task_Detail t left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on tb.storename=sb.id
+        from T_my_Task_Detail t left join t_task_base tb on t.taskid=tb.id left join t_shop_base sb on
+        tb.storename=sb.id
         left join t_shop_info s on tb.shopid = s.userid left join t_buyer_info bi on t.buyerid=bi.userid
         <if test="ew.sqlSegment != '' and ew.sqlSegment != null">
             <where>
@@ -114,13 +121,13 @@
         sum(case when taskstate=4 then pays else 0 end) as sumFinishPrice,
         sum(case when taskstate=3 then pays else 0 end) as sumDeliveryPrice,
         sum(case when taskstate=2 then pays else 0 end) as sumOrderPrice
-         from t_my_task_detail t,t_my_task m where 1=1
-         and t.mytaskid = m.id
-         and t.create_by=#{map.userid}
+        from t_my_task_detail t,t_my_task m where 1=1
+        and t.mytaskid = m.id
+        and t.create_by=#{map.userid}
         <if test="map.state != '' and map.state != null">
             and m.state = #{map.state}
         </if>
-         and (t.create_date BETWEEN #{map.create1} and #{map.create2})
+        and (t.create_date BETWEEN #{map.create1} and #{map.create2})
     </select>
 
     <select id="listFinanceBuyerReport" resultType="java.util.Map">
@@ -135,12 +142,17 @@
         <if test="map.buyerName != '' and map.buyerName != null">
             and b.buyerName like #{map.buyerName}
         </if>
-         and (t.create_date BETWEEN #{map.createDate1} and #{map.createDate2})
+        and (t.create_date BETWEEN #{map.createDate1} and #{map.createDate2})
         group by DATE_FORMAT(t.create_date,'%Y-%m-%d'),b.buyerName,b.loginName,b.userid
         order by DATE_FORMAT(t.create_date,'%Y-%m-%d')
     </select>
-    <select id="listNoSendGood"  resultMap="TmyTaskDetail">
-        SELECT * from t_my_task_detail where taskstate=#{map.taskstate} and timestampdiff(hour,orderdate,now()) >= 24;
+    <select id="listNoSendGood" resultMap="TmyTaskDetail">
+        SELECT
+          *
+        from
+          t_my_task_detail
+        where
+          taskstate=#{map.taskstate} and out_store_ack=0 and timestampdiff(hour,orderdate,now()) >= 24;
     </select>
 
     <select id="sumTaskBase" resultType="java.lang.Integer">
@@ -155,8 +167,8 @@
         where
             id=#{map.taskId} and del_flag=0 and taskstate between 0 and 1
     </update>
-    
-     <update id="updateTaskStatusForChargeBack" parameterType="HashMap">
+
+    <update id="updateTaskStatusForChargeBack" parameterType="HashMap">
         update
             t_my_task_detail
         set
@@ -164,6 +176,17 @@
         where
             id=#{map.taskId} and del_flag=0 and taskstate between 0 and 4
     </update>
+
+
+    <update id="updateBuyerTaskDetailOutStoreAck" parameterType="HashMap">
+        update
+            t_my_task_detail
+        set
+            update_by=#{map.lastRepair},update_date=#{map.lastTime},out_store_ack=1
+        where
+            id in (${map.id}) and del_flag=0 and out_store_ack=0 and  taskstate = 2
+    </update>
+
 
     <select id="listTfinanceTaskDoubleReport" resultType="java.util.Map">
 
